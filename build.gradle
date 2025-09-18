@@ -17,7 +17,8 @@ version = mod_version
 group = mod_group_id
 
 repositories {
-    // Add here additional repositories if required by some of the dependencies below.
+    // ModMaven for Mekanism API
+    maven { url 'https://modmaven.dev/' }
 }
 
 base {
@@ -95,6 +96,10 @@ dependencies {
     // And its provides the option to then use net.minecraft as the group, and one of; client, server or joined as the module name, plus the game version as version.
     // For all intends and purposes: You can treat this dependency as if it is a normal library you would use.
     implementation "net.neoforged:neoforge:${neo_version}"
+
+    // Mekanism API for cable and pipe integration
+    compileOnly "mekanism:Mekanism:${mekanism_version}:api"
+    localRuntime "mekanism:Mekanism:${mekanism_version}"
 
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime

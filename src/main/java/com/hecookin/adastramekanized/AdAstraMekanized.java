@@ -3,6 +3,7 @@ package com.hecookin.adastramekanized;
 import com.hecookin.adastramekanized.common.commands.PlanetCommands;
 import com.hecookin.adastramekanized.common.planets.PlanetManager;
 import com.hecookin.adastramekanized.common.planets.PlanetNetworking;
+import com.hecookin.adastramekanized.common.registry.ModBlockEntityTypes;
 import com.hecookin.adastramekanized.common.registry.ModBlocks;
 import com.hecookin.adastramekanized.common.registry.ModCreativeTabs;
 import com.hecookin.adastramekanized.common.registry.ModItems;
@@ -48,6 +49,7 @@ public class AdAstraMekanized {
         // Register items, blocks, and creative tabs
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
+        ModBlockEntityTypes.BLOCK_ENTITY_TYPES.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
 
         // Register mod setup

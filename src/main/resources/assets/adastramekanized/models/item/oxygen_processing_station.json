@@ -1,0 +1,6 @@
+{
+  "parent": "builtin/entity",
+  "textures": {
+    "particle": "adastramekanized:block/oxygen_processing_station"
+  }
+}

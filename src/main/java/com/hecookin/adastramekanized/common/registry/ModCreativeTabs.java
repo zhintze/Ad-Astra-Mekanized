@@ -208,6 +208,10 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.OSTRUM_PILLAR.get());
                         output.accept(ModBlocks.CALORITE_PILLAR.get());
                         output.accept(ModBlocks.MARKED_IRON_PILLAR.get());
+
+                        // Mekanism-Compatible Workstations
+                        output.accept(ModBlocks.OXYGEN_PROCESSING_STATION.get());
+                        output.accept(ModBlocks.ROCKET_ASSEMBLY_STATION.get());
                     })
                     .build());
 

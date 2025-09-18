@@ -2,6 +2,7 @@ package com.hecookin.adastramekanized.common.registry;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.common.blocks.BlockProperties;
+import com.hecookin.adastramekanized.common.blocks.machines.OxygenProcessingStationBlock;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -359,6 +360,14 @@ public class ModBlocks {
 
     public static final Supplier<Block> STROPHAR_STEM = registerBlock("strophar_stem",
             () -> new RotatedPillarBlock(BlockProperties.ALIEN_WOOD));
+
+    // ========== MEKANISM-COMPATIBLE WORKSTATIONS ==========
+
+    public static final Supplier<Block> OXYGEN_PROCESSING_STATION = registerBlock("oxygen_processing_station",
+            () -> new OxygenProcessingStationBlock(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> ROCKET_ASSEMBLY_STATION = registerBlock("rocket_assembly_station",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
 
     /**
      * Helper method to register a block with its corresponding BlockItem

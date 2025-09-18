@@ -1,0 +1,112 @@
+package com.hecookin.adastramekanized.client.renderers.blocks;
+
+import com.hecookin.adastramekanized.AdAstraMekanized;
+import com.hecookin.adastramekanized.common.blockentities.machines.OxygenProcessingStationBlockEntity;
+import com.hecookin.adastramekanized.common.blocks.base.SidedMachineBlock;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
+import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.AttachFace;
+
+public class OxygenProcessingStationBlockEntityRenderer implements BlockEntityRenderer<OxygenProcessingStationBlockEntity> {
+
+    public static final ResourceLocation TOP_MODEL = ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "block/oxygen_processing_station_top");
+
+    @Override
+    public void render(OxygenProcessingStationBlockEntity entity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
+        BlockState state = entity.getBlockState();
+
+        // Get rotation for the spinning part
+        float yRot = Mth.lerp(partialTick, entity.lastYRot(), entity.yRot());
+
+        // Render the rotating top part - always the same regardless of block orientation
+        renderTopPart(state, yRot, poseStack, buffer, packedLight, packedOverlay);
+    }
+
+    private static void renderTopPart(BlockState state, float yRot, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
+        Minecraft minecraft = Minecraft.getInstance();
+        BakedModel topModel = minecraft.getModelManager().getModel(ModelResourceLocation.standalone(TOP_MODEL));
+
+        if (topModel == null) {
+            // Fallback if model is not found
+            return;
+        }
+
+        poseStack.pushPose();
+        try {
+            // Center the rotation
+            poseStack.translate(0.5, 0, 0.5);
+            poseStack.mulPose(Axis.YP.rotationDegrees(-yRot));
+            poseStack.translate(-0.5, 0, -0.5);
+
+            // Render the top model
+            minecraft.getBlockRenderer().getModelRenderer().renderModel(
+                poseStack.last(),
+                buffer.getBuffer(Sheets.cutoutBlockSheet()),
+                state,
+                topModel,
+                1.0f, 1.0f, 1.0f,
+                packedLight, packedOverlay);
+        } finally {
+            poseStack.popPose();
+        }
+    }
+
+
+    // Item renderer for inventory display
+    public static class ItemRenderer extends BlockEntityWithoutLevelRenderer {
+
+        public ItemRenderer() {
+            super(Minecraft.getInstance().getBlockEntityRenderDispatcher(),
+                Minecraft.getInstance().getEntityModels());
+        }
+
+        @Override
+        public void renderByItem(ItemStack stack, ItemDisplayContext displayContext, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
+            BlockState state = BuiltInRegistries.BLOCK.get(BuiltInRegistries.ITEM.getKey(stack.getItem())).defaultBlockState();
+
+            Minecraft minecraft = Minecraft.getInstance();
+            float yRot = Util.getMillis() / 5f % 360f; // Slow rotation in inventory
+
+            poseStack.pushPose();
+            try {
+                // Apply standard block item rotation and scale for GUI display
+                if (displayContext == ItemDisplayContext.GUI) {
+                    poseStack.translate(0.5, 0.5, 0.5);
+                    poseStack.scale(0.625f, 0.625f, 0.625f);
+                    poseStack.mulPose(Axis.XP.rotationDegrees(30));
+                    poseStack.mulPose(Axis.YP.rotationDegrees(225));
+                    poseStack.translate(-0.5, -0.5, -0.5);
+                }
+
+                // Render the base block model
+                BakedModel model = minecraft.getBlockRenderer().getBlockModel(state);
+                minecraft.getBlockRenderer().getModelRenderer().renderModel(poseStack.last(),
+                    buffer.getBuffer(Sheets.cutoutBlockSheet()),
+                    state,
+                    model,
+                    1.0f, 1.0f, 1.0f,
+                    packedLight, packedOverlay);
+
+                // Render the rotating top
+                renderTopPart(state, yRot, poseStack, buffer, packedLight, packedOverlay);
+            } finally {
+                poseStack.popPose();
+            }
+        }
+    }
+}
