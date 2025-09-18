@@ -6,6 +6,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -330,6 +331,34 @@ public class ModBlocks {
 
     public static final Supplier<Block> DEEPSLATE_CALORITE_ORE = registerBlock("deepslate_calorite_ore",
             () -> new Block(BlockProperties.DEEPSLATE_ORE_BLOCK));
+
+    // ========== ALIEN WOOD BLOCKS ==========
+
+    // Glacian Wood Set
+    public static final Supplier<Block> GLACIAN_LOG = registerBlock("glacian_log",
+            () -> new RotatedPillarBlock(BlockProperties.ALIEN_WOOD));
+
+    public static final Supplier<Block> STRIPPED_GLACIAN_LOG = registerBlock("stripped_glacian_log",
+            () -> new RotatedPillarBlock(BlockProperties.ALIEN_WOOD));
+
+    public static final Supplier<Block> GLACIAN_PLANKS = registerBlock("glacian_planks",
+            () -> new Block(BlockProperties.ALIEN_WOOD));
+
+    public static final Supplier<Block> GLACIAN_LEAVES = registerBlock("glacian_leaves",
+            () -> new LeavesBlock(BlockProperties.ALIEN_LEAVES));
+
+    // Alien Mushroom Set
+    public static final Supplier<Block> AERONOS_MUSHROOM = registerBlock("aeronos_mushroom",
+            () -> new Block(BlockProperties.ALIEN_WOOD));
+
+    public static final Supplier<Block> AERONOS_STEM = registerBlock("aeronos_stem",
+            () -> new RotatedPillarBlock(BlockProperties.ALIEN_WOOD));
+
+    public static final Supplier<Block> STROPHAR_MUSHROOM = registerBlock("strophar_mushroom",
+            () -> new Block(BlockProperties.ALIEN_WOOD));
+
+    public static final Supplier<Block> STROPHAR_STEM = registerBlock("strophar_stem",
+            () -> new RotatedPillarBlock(BlockProperties.ALIEN_WOOD));
 
     /**
      * Helper method to register a block with its corresponding BlockItem

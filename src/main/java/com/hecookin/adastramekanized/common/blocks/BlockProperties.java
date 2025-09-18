@@ -59,6 +59,11 @@ public class BlockProperties {
     public static final float ALIEN_WOOD_RESISTANCE = 3.0f;
     public static final boolean ALIEN_WOOD_REQUIRES_TOOL = false;
 
+    // Leaves Properties
+    public static final float ALIEN_LEAVES_HARDNESS = 0.2f;
+    public static final float ALIEN_LEAVES_RESISTANCE = 0.2f;
+    public static final boolean ALIEN_LEAVES_REQUIRES_TOOL = false;
+
     // ========== PROPERTY BUILDERS ==========
 
     /**
@@ -122,6 +127,18 @@ public class BlockProperties {
             .strength(ALIEN_WOOD_HARDNESS, ALIEN_WOOD_RESISTANCE)
             .sound(SoundType.WOOD)
             .ignitedByLava();
+
+    /**
+     * Alien leaves properties
+     */
+    public static final BlockBehaviour.Properties ALIEN_LEAVES = BlockBehaviour.Properties.of()
+            .mapColor(MapColor.PLANT)
+            .strength(ALIEN_LEAVES_HARDNESS, ALIEN_LEAVES_RESISTANCE)
+            .sound(SoundType.GRASS)
+            .noOcclusion()
+            .isValidSpawn((state, level, pos, type) -> false)
+            .isSuffocating((state, level, pos) -> false)
+            .isViewBlocking((state, level, pos) -> false);
 
     /**
      * Standard ore properties

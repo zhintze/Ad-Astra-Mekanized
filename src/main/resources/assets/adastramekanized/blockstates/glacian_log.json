@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "axis=y": { "model": "adastramekanized:block/glacian_log" },
+    "axis=x": { "model": "adastramekanized:block/glacian_log_horizontal", "x": 90, "y": 90 },
+    "axis=z": { "model": "adastramekanized:block/glacian_log_horizontal", "x": 90 }
+  }
+}

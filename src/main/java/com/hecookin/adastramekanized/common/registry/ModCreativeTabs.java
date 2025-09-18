@@ -151,6 +151,16 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.SKY_STONE.get());
                         output.accept(ModBlocks.SKY_STONE_STAIRS.get());
                         output.accept(ModBlocks.SKY_STONE_SLAB.get());
+
+                        // Alien Wood Set
+                        output.accept(ModBlocks.GLACIAN_LOG.get());
+                        output.accept(ModBlocks.STRIPPED_GLACIAN_LOG.get());
+                        output.accept(ModBlocks.GLACIAN_PLANKS.get());
+                        output.accept(ModBlocks.GLACIAN_LEAVES.get());
+                        output.accept(ModBlocks.AERONOS_MUSHROOM.get());
+                        output.accept(ModBlocks.AERONOS_STEM.get());
+                        output.accept(ModBlocks.STROPHAR_MUSHROOM.get());
+                        output.accept(ModBlocks.STROPHAR_STEM.get());
                     })
                     .build());
 
