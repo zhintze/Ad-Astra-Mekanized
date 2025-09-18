@@ -45,6 +45,15 @@ public class BlockProperties {
     public static final float SKY_STONE_RESISTANCE = 6.0f;
     public static final boolean SKY_STONE_REQUIRES_TOOL = true;
 
+    // Ore Properties
+    public static final float ORE_HARDNESS = 3.0f;
+    public static final float ORE_RESISTANCE = 3.0f;
+    public static final boolean ORE_REQUIRES_TOOL = true;
+
+    public static final float DEEPSLATE_ORE_HARDNESS = 4.5f;
+    public static final float DEEPSLATE_ORE_RESISTANCE = 3.0f;
+    public static final boolean DEEPSLATE_ORE_REQUIRES_TOOL = true;
+
     // Wood Properties (Alien Wood)
     public static final float ALIEN_WOOD_HARDNESS = 2.0f;
     public static final float ALIEN_WOOD_RESISTANCE = 3.0f;
@@ -113,6 +122,24 @@ public class BlockProperties {
             .strength(ALIEN_WOOD_HARDNESS, ALIEN_WOOD_RESISTANCE)
             .sound(SoundType.WOOD)
             .ignitedByLava();
+
+    /**
+     * Standard ore properties
+     */
+    public static final BlockBehaviour.Properties ORE_BLOCK = BlockBehaviour.Properties.of()
+            .mapColor(MapColor.STONE)
+            .requiresCorrectToolForDrops()
+            .strength(ORE_HARDNESS, ORE_RESISTANCE)
+            .sound(SoundType.STONE);
+
+    /**
+     * Deepslate ore properties
+     */
+    public static final BlockBehaviour.Properties DEEPSLATE_ORE_BLOCK = BlockBehaviour.Properties.of()
+            .mapColor(MapColor.DEEPSLATE)
+            .requiresCorrectToolForDrops()
+            .strength(DEEPSLATE_ORE_HARDNESS, DEEPSLATE_ORE_RESISTANCE)
+            .sound(SoundType.DEEPSLATE);
 
     // ========== PLANET-SPECIFIC VARIANTS ==========
 

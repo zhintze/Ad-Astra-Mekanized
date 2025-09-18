@@ -87,6 +87,15 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.RAW_OSTRUM_BLOCK.get());
                         output.accept(ModBlocks.RAW_CALORITE_BLOCK.get());
 
+                        // Ore Blocks
+                        output.accept(ModBlocks.DESH_ORE.get());
+                        output.accept(ModBlocks.OSTRUM_ORE.get());
+                        output.accept(ModBlocks.CALORITE_ORE.get());
+                        output.accept(ModBlocks.ICE_SHARD_ORE.get());
+                        output.accept(ModBlocks.DEEPSLATE_DESH_ORE.get());
+                        output.accept(ModBlocks.DEEPSLATE_OSTRUM_ORE.get());
+                        output.accept(ModBlocks.DEEPSLATE_CALORITE_ORE.get());
+
                         // Special Blocks
                         output.accept(ModBlocks.CHEESE_BLOCK.get());
 
@@ -94,11 +103,9 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.MOON_STONE.get());
                         output.accept(ModBlocks.MOON_STONE_STAIRS.get());
                         output.accept(ModBlocks.MOON_STONE_SLAB.get());
-                        output.accept(ModBlocks.MOON_STONE_WALL.get());
                         output.accept(ModBlocks.MOON_COBBLESTONE.get());
                         output.accept(ModBlocks.MOON_COBBLESTONE_STAIRS.get());
                         output.accept(ModBlocks.MOON_COBBLESTONE_SLAB.get());
-                        output.accept(ModBlocks.MOON_COBBLESTONE_WALL.get());
                         output.accept(ModBlocks.MOON_DEEPSLATE.get());
                         output.accept(ModBlocks.MOON_SAND.get());
 
@@ -106,11 +113,9 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.MARS_STONE.get());
                         output.accept(ModBlocks.MARS_STONE_STAIRS.get());
                         output.accept(ModBlocks.MARS_STONE_SLAB.get());
-                        output.accept(ModBlocks.MARS_STONE_WALL.get());
                         output.accept(ModBlocks.MARS_COBBLESTONE.get());
                         output.accept(ModBlocks.MARS_COBBLESTONE_STAIRS.get());
                         output.accept(ModBlocks.MARS_COBBLESTONE_SLAB.get());
-                        output.accept(ModBlocks.MARS_COBBLESTONE_WALL.get());
                         output.accept(ModBlocks.MARS_SAND.get());
                         output.accept(ModBlocks.CONGLOMERATE.get());
                         output.accept(ModBlocks.POLISHED_CONGLOMERATE.get());
@@ -119,11 +124,9 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.VENUS_STONE.get());
                         output.accept(ModBlocks.VENUS_STONE_STAIRS.get());
                         output.accept(ModBlocks.VENUS_STONE_SLAB.get());
-                        output.accept(ModBlocks.VENUS_STONE_WALL.get());
                         output.accept(ModBlocks.VENUS_COBBLESTONE.get());
                         output.accept(ModBlocks.VENUS_COBBLESTONE_STAIRS.get());
                         output.accept(ModBlocks.VENUS_COBBLESTONE_SLAB.get());
-                        output.accept(ModBlocks.VENUS_COBBLESTONE_WALL.get());
                         output.accept(ModBlocks.VENUS_SAND.get());
                         output.accept(ModBlocks.VENUS_SANDSTONE.get());
 
@@ -131,28 +134,23 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.MERCURY_STONE.get());
                         output.accept(ModBlocks.MERCURY_STONE_STAIRS.get());
                         output.accept(ModBlocks.MERCURY_STONE_SLAB.get());
-                        output.accept(ModBlocks.MERCURY_STONE_WALL.get());
                         output.accept(ModBlocks.MERCURY_COBBLESTONE.get());
                         output.accept(ModBlocks.MERCURY_COBBLESTONE_STAIRS.get());
                         output.accept(ModBlocks.MERCURY_COBBLESTONE_SLAB.get());
-                        output.accept(ModBlocks.MERCURY_COBBLESTONE_WALL.get());
 
                         // Glacio Stones
                         output.accept(ModBlocks.GLACIO_STONE.get());
                         output.accept(ModBlocks.GLACIO_STONE_STAIRS.get());
                         output.accept(ModBlocks.GLACIO_STONE_SLAB.get());
-                        output.accept(ModBlocks.GLACIO_STONE_WALL.get());
                         output.accept(ModBlocks.GLACIO_COBBLESTONE.get());
                         output.accept(ModBlocks.GLACIO_COBBLESTONE_STAIRS.get());
                         output.accept(ModBlocks.GLACIO_COBBLESTONE_SLAB.get());
-                        output.accept(ModBlocks.GLACIO_COBBLESTONE_WALL.get());
                         output.accept(ModBlocks.PERMAFROST.get());
 
                         // Sky Stone
                         output.accept(ModBlocks.SKY_STONE.get());
                         output.accept(ModBlocks.SKY_STONE_STAIRS.get());
                         output.accept(ModBlocks.SKY_STONE_SLAB.get());
-                        output.accept(ModBlocks.SKY_STONE_WALL.get());
                     })
                     .build());
 

@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
-import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.bus.api.IEventBus;
@@ -137,8 +136,6 @@ public class ModBlocks {
     public static final Supplier<Block> MOON_STONE_SLAB = registerBlock("moon_stone_slab",
             () -> new SlabBlock(BlockProperties.moonStone()));
 
-    public static final Supplier<Block> MOON_STONE_WALL = registerBlock("moon_stone_wall",
-            () -> new WallBlock(BlockProperties.moonStone()));
 
     public static final Supplier<Block> MOON_COBBLESTONE_STAIRS = registerBlock("moon_cobblestone_stairs",
             () -> new StairBlock(MOON_COBBLESTONE.get().defaultBlockState(), BlockProperties.moonStone()));
@@ -146,8 +143,6 @@ public class ModBlocks {
     public static final Supplier<Block> MOON_COBBLESTONE_SLAB = registerBlock("moon_cobblestone_slab",
             () -> new SlabBlock(BlockProperties.moonStone()));
 
-    public static final Supplier<Block> MOON_COBBLESTONE_WALL = registerBlock("moon_cobblestone_wall",
-            () -> new WallBlock(BlockProperties.moonStone()));
 
     // ========== MARS STONE VARIANTS ==========
 
@@ -157,8 +152,6 @@ public class ModBlocks {
     public static final Supplier<Block> MARS_STONE_SLAB = registerBlock("mars_stone_slab",
             () -> new SlabBlock(BlockProperties.marsStone()));
 
-    public static final Supplier<Block> MARS_STONE_WALL = registerBlock("mars_stone_wall",
-            () -> new WallBlock(BlockProperties.marsStone()));
 
     public static final Supplier<Block> MARS_COBBLESTONE_STAIRS = registerBlock("mars_cobblestone_stairs",
             () -> new StairBlock(MARS_COBBLESTONE.get().defaultBlockState(), BlockProperties.marsStone()));
@@ -166,8 +159,6 @@ public class ModBlocks {
     public static final Supplier<Block> MARS_COBBLESTONE_SLAB = registerBlock("mars_cobblestone_slab",
             () -> new SlabBlock(BlockProperties.marsStone()));
 
-    public static final Supplier<Block> MARS_COBBLESTONE_WALL = registerBlock("mars_cobblestone_wall",
-            () -> new WallBlock(BlockProperties.marsStone()));
 
     // ========== VENUS STONE VARIANTS ==========
 
@@ -177,8 +168,6 @@ public class ModBlocks {
     public static final Supplier<Block> VENUS_STONE_SLAB = registerBlock("venus_stone_slab",
             () -> new SlabBlock(BlockProperties.venusStone()));
 
-    public static final Supplier<Block> VENUS_STONE_WALL = registerBlock("venus_stone_wall",
-            () -> new WallBlock(BlockProperties.venusStone()));
 
     public static final Supplier<Block> VENUS_COBBLESTONE_STAIRS = registerBlock("venus_cobblestone_stairs",
             () -> new StairBlock(VENUS_COBBLESTONE.get().defaultBlockState(), BlockProperties.venusStone()));
@@ -186,8 +175,6 @@ public class ModBlocks {
     public static final Supplier<Block> VENUS_COBBLESTONE_SLAB = registerBlock("venus_cobblestone_slab",
             () -> new SlabBlock(BlockProperties.venusStone()));
 
-    public static final Supplier<Block> VENUS_COBBLESTONE_WALL = registerBlock("venus_cobblestone_wall",
-            () -> new WallBlock(BlockProperties.venusStone()));
 
     // ========== MERCURY STONE VARIANTS ==========
 
@@ -197,8 +184,6 @@ public class ModBlocks {
     public static final Supplier<Block> MERCURY_STONE_SLAB = registerBlock("mercury_stone_slab",
             () -> new SlabBlock(BlockProperties.mercuryStone()));
 
-    public static final Supplier<Block> MERCURY_STONE_WALL = registerBlock("mercury_stone_wall",
-            () -> new WallBlock(BlockProperties.mercuryStone()));
 
     public static final Supplier<Block> MERCURY_COBBLESTONE_STAIRS = registerBlock("mercury_cobblestone_stairs",
             () -> new StairBlock(MERCURY_COBBLESTONE.get().defaultBlockState(), BlockProperties.mercuryStone()));
@@ -206,8 +191,6 @@ public class ModBlocks {
     public static final Supplier<Block> MERCURY_COBBLESTONE_SLAB = registerBlock("mercury_cobblestone_slab",
             () -> new SlabBlock(BlockProperties.mercuryStone()));
 
-    public static final Supplier<Block> MERCURY_COBBLESTONE_WALL = registerBlock("mercury_cobblestone_wall",
-            () -> new WallBlock(BlockProperties.mercuryStone()));
 
     // ========== GLACIO STONE VARIANTS ==========
 
@@ -217,8 +200,6 @@ public class ModBlocks {
     public static final Supplier<Block> GLACIO_STONE_SLAB = registerBlock("glacio_stone_slab",
             () -> new SlabBlock(BlockProperties.glacioStone()));
 
-    public static final Supplier<Block> GLACIO_STONE_WALL = registerBlock("glacio_stone_wall",
-            () -> new WallBlock(BlockProperties.glacioStone()));
 
     public static final Supplier<Block> GLACIO_COBBLESTONE_STAIRS = registerBlock("glacio_cobblestone_stairs",
             () -> new StairBlock(GLACIO_COBBLESTONE.get().defaultBlockState(), BlockProperties.glacioStone()));
@@ -226,8 +207,6 @@ public class ModBlocks {
     public static final Supplier<Block> GLACIO_COBBLESTONE_SLAB = registerBlock("glacio_cobblestone_slab",
             () -> new SlabBlock(BlockProperties.glacioStone()));
 
-    public static final Supplier<Block> GLACIO_COBBLESTONE_WALL = registerBlock("glacio_cobblestone_wall",
-            () -> new WallBlock(BlockProperties.glacioStone()));
 
     // ========== SKY STONE VARIANTS ==========
 
@@ -237,8 +216,6 @@ public class ModBlocks {
     public static final Supplier<Block> SKY_STONE_SLAB = registerBlock("sky_stone_slab",
             () -> new SlabBlock(BlockProperties.SKY_STONE));
 
-    public static final Supplier<Block> SKY_STONE_WALL = registerBlock("sky_stone_wall",
-            () -> new WallBlock(BlockProperties.SKY_STONE));
 
     // ========== INDUSTRIAL BLOCKS ==========
 
@@ -328,6 +305,31 @@ public class ModBlocks {
 
     public static final Supplier<Block> MARKED_IRON_PILLAR = registerBlock("marked_iron_pillar",
             () -> new RotatedPillarBlock(BlockProperties.INDUSTRIAL_BLOCK));
+
+    // ========== ORE BLOCKS ==========
+
+    // Standard Ores
+    public static final Supplier<Block> DESH_ORE = registerBlock("desh_ore",
+            () -> new Block(BlockProperties.ORE_BLOCK));
+
+    public static final Supplier<Block> OSTRUM_ORE = registerBlock("ostrum_ore",
+            () -> new Block(BlockProperties.ORE_BLOCK));
+
+    public static final Supplier<Block> CALORITE_ORE = registerBlock("calorite_ore",
+            () -> new Block(BlockProperties.ORE_BLOCK));
+
+    public static final Supplier<Block> ICE_SHARD_ORE = registerBlock("ice_shard_ore",
+            () -> new Block(BlockProperties.ORE_BLOCK));
+
+    // Deepslate Ores
+    public static final Supplier<Block> DEEPSLATE_DESH_ORE = registerBlock("deepslate_desh_ore",
+            () -> new Block(BlockProperties.DEEPSLATE_ORE_BLOCK));
+
+    public static final Supplier<Block> DEEPSLATE_OSTRUM_ORE = registerBlock("deepslate_ostrum_ore",
+            () -> new Block(BlockProperties.DEEPSLATE_ORE_BLOCK));
+
+    public static final Supplier<Block> DEEPSLATE_CALORITE_ORE = registerBlock("deepslate_calorite_ore",
+            () -> new Block(BlockProperties.DEEPSLATE_ORE_BLOCK));
 
     /**
      * Helper method to register a block with its corresponding BlockItem

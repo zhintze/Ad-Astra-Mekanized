@@ -1,6 +1,0 @@
-{
-  "parent": "block/wall_side_tall",
-  "textures": {
-    "wall": "adastramekanized:block/moon_cobblestone"
-  }
-}
