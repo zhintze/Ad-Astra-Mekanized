@@ -6,6 +6,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
@@ -238,6 +239,95 @@ public class ModBlocks {
 
     public static final Supplier<Block> SKY_STONE_WALL = registerBlock("sky_stone_wall",
             () -> new WallBlock(BlockProperties.SKY_STONE));
+
+    // ========== INDUSTRIAL BLOCKS ==========
+
+    // Factory Blocks
+    public static final Supplier<Block> IRON_FACTORY_BLOCK = registerBlock("iron_factory_block",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> STEEL_FACTORY_BLOCK = registerBlock("steel_factory_block",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
+
+    // Plating Blocks
+    public static final Supplier<Block> IRON_PLATING = registerBlock("iron_plating",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> STEEL_PLATING = registerBlock("steel_plating",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> DESH_PLATING = registerBlock("desh_plating",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> OSTRUM_PLATING = registerBlock("ostrum_plating",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> CALORITE_PLATING = registerBlock("calorite_plating",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
+
+    // Plate Blocks
+    public static final Supplier<Block> IRON_PLATEBLOCK = registerBlock("iron_plateblock",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> STEEL_PLATEBLOCK = registerBlock("steel_plateblock",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> ETRIUM_PLATEBLOCK = registerBlock("etrium_plateblock",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> DESH_PLATEBLOCK = registerBlock("desh_plateblock",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> OSTRUM_PLATEBLOCK = registerBlock("ostrum_plateblock",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> CALORITE_PLATEBLOCK = registerBlock("calorite_plateblock",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
+
+    // Panel Blocks
+    public static final Supplier<Block> IRON_PANEL = registerBlock("iron_panel",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> STEEL_PANEL = registerBlock("steel_panel",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> ETRIUM_PANEL = registerBlock("etrium_panel",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> DESH_PANEL = registerBlock("desh_panel",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> OSTRUM_PANEL = registerBlock("ostrum_panel",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> CALORITE_PANEL = registerBlock("calorite_panel",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
+
+    // Encased Blocks
+    public static final Supplier<Block> ENCASED_IRON_BLOCK = registerBlock("encased_iron_block",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> ENCASED_STEEL_BLOCK = registerBlock("encased_steel_block",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
+
+    // Pillar Blocks (using RotatedPillarBlock for proper orientation)
+    public static final Supplier<Block> IRON_PILLAR = registerBlock("iron_pillar",
+            () -> new RotatedPillarBlock(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> STEEL_PILLAR = registerBlock("steel_pillar",
+            () -> new RotatedPillarBlock(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> DESH_PILLAR = registerBlock("desh_pillar",
+            () -> new RotatedPillarBlock(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> OSTRUM_PILLAR = registerBlock("ostrum_pillar",
+            () -> new RotatedPillarBlock(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> CALORITE_PILLAR = registerBlock("calorite_pillar",
+            () -> new RotatedPillarBlock(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> MARKED_IRON_PILLAR = registerBlock("marked_iron_pillar",
+            () -> new RotatedPillarBlock(BlockProperties.INDUSTRIAL_BLOCK));
 
     /**
      * Helper method to register a block with its corresponding BlockItem

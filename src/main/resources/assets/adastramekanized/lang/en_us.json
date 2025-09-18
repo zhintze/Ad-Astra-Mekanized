@@ -109,5 +109,38 @@
 
   "block.adastramekanized.sky_stone_stairs": "Sky Stone Stairs",
   "block.adastramekanized.sky_stone_slab": "Sky Stone Slab",
-  "block.adastramekanized.sky_stone_wall": "Sky Stone Wall"
+  "block.adastramekanized.sky_stone_wall": "Sky Stone Wall",
+
+  "block.adastramekanized.iron_factory_block": "Iron Factory Block",
+  "block.adastramekanized.steel_factory_block": "Steel Factory Block",
+
+  "block.adastramekanized.iron_plating": "Iron Plating",
+  "block.adastramekanized.steel_plating": "Steel Plating",
+  "block.adastramekanized.desh_plating": "Desh Plating",
+  "block.adastramekanized.ostrum_plating": "Ostrum Plating",
+  "block.adastramekanized.calorite_plating": "Calorite Plating",
+
+  "block.adastramekanized.iron_plateblock": "Iron Plate Block",
+  "block.adastramekanized.steel_plateblock": "Steel Plate Block",
+  "block.adastramekanized.etrium_plateblock": "Etrium Plate Block",
+  "block.adastramekanized.desh_plateblock": "Desh Plate Block",
+  "block.adastramekanized.ostrum_plateblock": "Ostrum Plate Block",
+  "block.adastramekanized.calorite_plateblock": "Calorite Plate Block",
+
+  "block.adastramekanized.iron_panel": "Iron Panel",
+  "block.adastramekanized.steel_panel": "Steel Panel",
+  "block.adastramekanized.etrium_panel": "Etrium Panel",
+  "block.adastramekanized.desh_panel": "Desh Panel",
+  "block.adastramekanized.ostrum_panel": "Ostrum Panel",
+  "block.adastramekanized.calorite_panel": "Calorite Panel",
+
+  "block.adastramekanized.encased_iron_block": "Encased Iron Block",
+  "block.adastramekanized.encased_steel_block": "Encased Steel Block",
+
+  "block.adastramekanized.iron_pillar": "Iron Pillar",
+  "block.adastramekanized.steel_pillar": "Steel Pillar",
+  "block.adastramekanized.desh_pillar": "Desh Pillar",
+  "block.adastramekanized.ostrum_pillar": "Ostrum Pillar",
+  "block.adastramekanized.calorite_pillar": "Calorite Pillar",
+  "block.adastramekanized.marked_iron_pillar": "Marked Iron Pillar"
 }

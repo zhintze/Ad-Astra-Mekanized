@@ -160,10 +160,46 @@ public class ModCreativeTabs {
     public static final Supplier<CreativeModeTab> INDUSTRIAL_TAB = CREATIVE_MODE_TABS.register("industrial",
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("creativetab.adastramekanized.industrial"))
-                    .icon(() -> new ItemStack(ModBlocks.STEEL_BLOCK.get())) // Will update when factory blocks are added
+                    .icon(() -> new ItemStack(ModBlocks.STEEL_FACTORY_BLOCK.get()))
                     .displayItems((parameters, output) -> {
-                        // Industrial blocks will be added here in future batches
-                        // Factory blocks, plating, pillars, sliding doors, etc.
+                        // Factory Blocks
+                        output.accept(ModBlocks.IRON_FACTORY_BLOCK.get());
+                        output.accept(ModBlocks.STEEL_FACTORY_BLOCK.get());
+
+                        // Plating Blocks
+                        output.accept(ModBlocks.IRON_PLATING.get());
+                        output.accept(ModBlocks.STEEL_PLATING.get());
+                        output.accept(ModBlocks.DESH_PLATING.get());
+                        output.accept(ModBlocks.OSTRUM_PLATING.get());
+                        output.accept(ModBlocks.CALORITE_PLATING.get());
+
+                        // Plate Blocks
+                        output.accept(ModBlocks.IRON_PLATEBLOCK.get());
+                        output.accept(ModBlocks.STEEL_PLATEBLOCK.get());
+                        output.accept(ModBlocks.ETRIUM_PLATEBLOCK.get());
+                        output.accept(ModBlocks.DESH_PLATEBLOCK.get());
+                        output.accept(ModBlocks.OSTRUM_PLATEBLOCK.get());
+                        output.accept(ModBlocks.CALORITE_PLATEBLOCK.get());
+
+                        // Panel Blocks
+                        output.accept(ModBlocks.IRON_PANEL.get());
+                        output.accept(ModBlocks.STEEL_PANEL.get());
+                        output.accept(ModBlocks.ETRIUM_PANEL.get());
+                        output.accept(ModBlocks.DESH_PANEL.get());
+                        output.accept(ModBlocks.OSTRUM_PANEL.get());
+                        output.accept(ModBlocks.CALORITE_PANEL.get());
+
+                        // Encased Blocks
+                        output.accept(ModBlocks.ENCASED_IRON_BLOCK.get());
+                        output.accept(ModBlocks.ENCASED_STEEL_BLOCK.get());
+
+                        // Pillar Blocks
+                        output.accept(ModBlocks.IRON_PILLAR.get());
+                        output.accept(ModBlocks.STEEL_PILLAR.get());
+                        output.accept(ModBlocks.DESH_PILLAR.get());
+                        output.accept(ModBlocks.OSTRUM_PILLAR.get());
+                        output.accept(ModBlocks.CALORITE_PILLAR.get());
+                        output.accept(ModBlocks.MARKED_IRON_PILLAR.get());
                     })
                     .build());
 

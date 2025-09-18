@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "end": "adastramekanized:block/marked_iron_pillar_top",
+    "side": "adastramekanized:block/marked_iron_pillar"
+  }
+}
