@@ -1,0 +1,28 @@
+{
+  "id": "adastramekanized:moon",
+  "display_name": "Moon",
+  "properties": {
+    "gravity": 0.16,
+    "temperature": -170.0,
+    "day_length": 708.0,
+    "orbit_distance": 384,
+    "has_rings": false,
+    "moon_count": 0
+  },
+  "atmosphere": {
+    "has_atmosphere": false,
+    "breathable": false,
+    "pressure": 0.0,
+    "oxygen_level": 0.0,
+    "type": "NONE"
+  },
+  "dimension": {
+    "dimension_type": "minecraft:overworld",
+    "biome_source": "minecraft:fixed",
+    "chunk_generator": "minecraft:flat",
+    "is_orbital": false,
+    "sky_color": 0,
+    "fog_color": 1710618,
+    "ambient_light": 0.1
+  }
+}

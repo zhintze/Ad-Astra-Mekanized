@@ -1,0 +1,74 @@
+{
+  "_comment": "Ad Astra Mekanized Localization",
+
+  "creativetab.adastramekanized.materials": "Ad Astra Materials",
+  "creativetab.adastramekanized.building_blocks": "Ad Astra Building Blocks",
+  "creativetab.adastramekanized.industrial": "Ad Astra Industrial",
+  "creativetab.adastramekanized.decorative": "Ad Astra Decorative",
+
+  "item.adastramekanized.steel_ingot": "Steel Ingot",
+  "item.adastramekanized.etrium_ingot": "Etrium Ingot",
+  "item.adastramekanized.desh_ingot": "Desh Ingot",
+  "item.adastramekanized.ostrum_ingot": "Ostrum Ingot",
+  "item.adastramekanized.calorite_ingot": "Calorite Ingot",
+
+  "item.adastramekanized.steel_nugget": "Steel Nugget",
+  "item.adastramekanized.etrium_nugget": "Etrium Nugget",
+  "item.adastramekanized.desh_nugget": "Desh Nugget",
+  "item.adastramekanized.ostrum_nugget": "Ostrum Nugget",
+  "item.adastramekanized.calorite_nugget": "Calorite Nugget",
+
+  "item.adastramekanized.raw_desh": "Raw Desh",
+  "item.adastramekanized.raw_ostrum": "Raw Ostrum",
+  "item.adastramekanized.raw_calorite": "Raw Calorite",
+
+  "item.adastramekanized.iron_plate": "Iron Plate",
+  "item.adastramekanized.iron_rod": "Iron Rod",
+  "item.adastramekanized.steel_plate": "Steel Plate",
+  "item.adastramekanized.steel_rod": "Steel Rod",
+  "item.adastramekanized.etrium_plate": "Etrium Plate",
+  "item.adastramekanized.etrium_rod": "Etrium Rod",
+  "item.adastramekanized.desh_plate": "Desh Plate",
+  "item.adastramekanized.ostrum_plate": "Ostrum Plate",
+  "item.adastramekanized.calorite_plate": "Calorite Plate",
+
+  "item.adastramekanized.etrionic_core": "Etrionic Core",
+  "item.adastramekanized.ice_shard": "Ice Shard",
+  "item.adastramekanized.cheese": "Cheese",
+
+  "block.adastramekanized.steel_block": "Block of Steel",
+  "block.adastramekanized.etrium_block": "Block of Etrium",
+  "block.adastramekanized.desh_block": "Block of Desh",
+  "block.adastramekanized.ostrum_block": "Block of Ostrum",
+  "block.adastramekanized.calorite_block": "Block of Calorite",
+
+  "block.adastramekanized.raw_desh_block": "Block of Raw Desh",
+  "block.adastramekanized.raw_ostrum_block": "Block of Raw Ostrum",
+  "block.adastramekanized.raw_calorite_block": "Block of Raw Calorite",
+
+  "block.adastramekanized.cheese_block": "Cheese Block",
+  "block.adastramekanized.sky_stone": "Sky Stone",
+
+  "block.adastramekanized.moon_stone": "Moon Stone",
+  "block.adastramekanized.moon_cobblestone": "Moon Cobblestone",
+  "block.adastramekanized.moon_deepslate": "Moon Deepslate",
+  "block.adastramekanized.moon_sand": "Moon Sand",
+
+  "block.adastramekanized.mars_stone": "Mars Stone",
+  "block.adastramekanized.mars_cobblestone": "Mars Cobblestone",
+  "block.adastramekanized.mars_sand": "Mars Sand",
+  "block.adastramekanized.conglomerate": "Conglomerate",
+  "block.adastramekanized.polished_conglomerate": "Polished Conglomerate",
+
+  "block.adastramekanized.venus_stone": "Venus Stone",
+  "block.adastramekanized.venus_cobblestone": "Venus Cobblestone",
+  "block.adastramekanized.venus_sand": "Venus Sand",
+  "block.adastramekanized.venus_sandstone": "Venus Sandstone",
+
+  "block.adastramekanized.mercury_stone": "Mercury Stone",
+  "block.adastramekanized.mercury_cobblestone": "Mercury Cobblestone",
+
+  "block.adastramekanized.glacio_stone": "Glacio Stone",
+  "block.adastramekanized.glacio_cobblestone": "Glacio Cobblestone",
+  "block.adastramekanized.permafrost": "Permafrost"
+}

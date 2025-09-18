@@ -1,0 +1,85 @@
+# The name of the mod loader type to load - for regular FML @Mod mods it should be javafml
+modLoader = "javafml"
+# A version range to match for said mod loader - for regular FML @Mod it will be the FML version
+loaderVersion = "[1,)"
+# The license for you mod. This is mandatory metadata and allows for easier comprehension of your redistributive properties.
+# Review your options at https://choosealicense.com/. All rights reserved is the default copyright stance, and is thus the default here.
+license = "All Rights Reserved"
+# A URL to refer people to when problems occur with this mod
+issueTrackerURL = "https://github.com/hecookin/AdAstraMekanized/issues"
+# A list of mods - how many allowed here is determined by the individual mod loader
+
+[[mods]]
+# The modid of the mod
+modId = "adastramekanized"
+# The version number of the mod
+version = "${mod_version}"
+# A display name for the mod
+displayName = "Ad Astra Mekanized"
+# A URL to query for updates for this mod. See the JSON update specification https://docs.neoforged.net/docs/misc/updatechecker/
+#updateJSONURL = "https://change.me.example.invalid/updates.json"
+# A URL for the "homepage" for this mod, displayed in the mod UI
+#displayURL = "https://change.me.to.your.mods.homepage.example.invalid/"
+# A file name (in the root of the mod JAR) containing a logo for display
+logoFile = "logo.png"
+# A text field displayed in the mod UI
+authors = "hecookin"
+# The description text for the mod (multi line!)
+description = '''Space exploration mod integrating Ad Astra features with Mekanism infrastructure.
+Provides rockets, planets, space stations, and integrated oxygen/fuel systems.'''
+
+# The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.
+#[[mixins]]
+#config = "mymod.mixins.json"
+
+# The [[accessTransformers]] block allows you to declare where your AT file is.
+# If this block is omitted, a fallback will attempt to load an AT from META-INF/accesstransformer.cfg
+#[[accessTransformers]]
+#file = "META-INF/accesstransformer.cfg"
+
+# The coremods config file path is not configurable and is always loaded from META-INF/coremods.json
+
+# A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
+[[dependencies.adastramekanized]]
+# the modid of the dependency
+modId = "neoforge"
+# The type of the dependency. Can be one of "required", "optional", "incompatible" or "discouraged" (case insensitive).
+type = "required"
+# The version range of the dependency
+versionRange = "[21.1.209,)"
+# An ordering relationship for the dependency - BEFORE or AFTER required if the dependency is not mandatory
+ordering = "NONE"
+# Side this dependency is applied on - BOTH, CLIENT, or SERVER
+side = "BOTH"
+
+# Here's another dependency
+[[dependencies.adastramekanized]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.1]"
+ordering = "NONE"
+side = "BOTH"
+
+# Mekanism dependency
+[[dependencies.adastramekanized]]
+modId = "mekanism"
+type = "optional"
+versionRange = "[10.7.8,)"
+ordering = "AFTER"
+side = "BOTH"
+
+# Create dependency
+[[dependencies.adastramekanized]]
+modId = "create"
+type = "optional"
+versionRange = "[0.5.1,)"
+ordering = "AFTER"
+side = "BOTH"
+
+# Immersive Engineering dependency
+[[dependencies.adastramekanized]]
+modId = "immersiveengineering"
+type = "optional"
+versionRange = "[12.4.3,)"
+ordering = "AFTER"
+side = "BOTH"
