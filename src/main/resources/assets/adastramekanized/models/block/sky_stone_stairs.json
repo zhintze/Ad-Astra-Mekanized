@@ -1,0 +1,8 @@
+{
+  "parent": "block/stairs",
+  "textures": {
+    "bottom": "adastramekanized:block/sky_stone",
+    "top": "adastramekanized:block/sky_stone",
+    "side": "adastramekanized:block/sky_stone"
+  }
+}

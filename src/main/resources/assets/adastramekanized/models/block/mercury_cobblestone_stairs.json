@@ -1,0 +1,8 @@
+{
+  "parent": "block/stairs",
+  "textures": {
+    "bottom": "adastramekanized:block/mercury_cobblestone",
+    "top": "adastramekanized:block/mercury_cobblestone",
+    "side": "adastramekanized:block/mercury_cobblestone"
+  }
+}

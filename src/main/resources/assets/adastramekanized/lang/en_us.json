@@ -70,5 +70,44 @@
 
   "block.adastramekanized.glacio_stone": "Glacio Stone",
   "block.adastramekanized.glacio_cobblestone": "Glacio Cobblestone",
-  "block.adastramekanized.permafrost": "Permafrost"
+  "block.adastramekanized.permafrost": "Permafrost",
+
+  "block.adastramekanized.moon_stone_stairs": "Moon Stone Stairs",
+  "block.adastramekanized.moon_stone_slab": "Moon Stone Slab",
+  "block.adastramekanized.moon_stone_wall": "Moon Stone Wall",
+  "block.adastramekanized.moon_cobblestone_stairs": "Moon Cobblestone Stairs",
+  "block.adastramekanized.moon_cobblestone_slab": "Moon Cobblestone Slab",
+  "block.adastramekanized.moon_cobblestone_wall": "Moon Cobblestone Wall",
+
+  "block.adastramekanized.mars_stone_stairs": "Mars Stone Stairs",
+  "block.adastramekanized.mars_stone_slab": "Mars Stone Slab",
+  "block.adastramekanized.mars_stone_wall": "Mars Stone Wall",
+  "block.adastramekanized.mars_cobblestone_stairs": "Mars Cobblestone Stairs",
+  "block.adastramekanized.mars_cobblestone_slab": "Mars Cobblestone Slab",
+  "block.adastramekanized.mars_cobblestone_wall": "Mars Cobblestone Wall",
+
+  "block.adastramekanized.venus_stone_stairs": "Venus Stone Stairs",
+  "block.adastramekanized.venus_stone_slab": "Venus Stone Slab",
+  "block.adastramekanized.venus_stone_wall": "Venus Stone Wall",
+  "block.adastramekanized.venus_cobblestone_stairs": "Venus Cobblestone Stairs",
+  "block.adastramekanized.venus_cobblestone_slab": "Venus Cobblestone Slab",
+  "block.adastramekanized.venus_cobblestone_wall": "Venus Cobblestone Wall",
+
+  "block.adastramekanized.mercury_stone_stairs": "Mercury Stone Stairs",
+  "block.adastramekanized.mercury_stone_slab": "Mercury Stone Slab",
+  "block.adastramekanized.mercury_stone_wall": "Mercury Stone Wall",
+  "block.adastramekanized.mercury_cobblestone_stairs": "Mercury Cobblestone Stairs",
+  "block.adastramekanized.mercury_cobblestone_slab": "Mercury Cobblestone Slab",
+  "block.adastramekanized.mercury_cobblestone_wall": "Mercury Cobblestone Wall",
+
+  "block.adastramekanized.glacio_stone_stairs": "Glacio Stone Stairs",
+  "block.adastramekanized.glacio_stone_slab": "Glacio Stone Slab",
+  "block.adastramekanized.glacio_stone_wall": "Glacio Stone Wall",
+  "block.adastramekanized.glacio_cobblestone_stairs": "Glacio Cobblestone Stairs",
+  "block.adastramekanized.glacio_cobblestone_slab": "Glacio Cobblestone Slab",
+  "block.adastramekanized.glacio_cobblestone_wall": "Glacio Cobblestone Wall",
+
+  "block.adastramekanized.sky_stone_stairs": "Sky Stone Stairs",
+  "block.adastramekanized.sky_stone_slab": "Sky Stone Slab",
+  "block.adastramekanized.sky_stone_wall": "Sky Stone Wall"
 }

@@ -1,0 +1,6 @@
+{
+  "parent": "block/wall_side_tall",
+  "textures": {
+    "wall": "adastramekanized:block/venus_cobblestone"
+  }
+}

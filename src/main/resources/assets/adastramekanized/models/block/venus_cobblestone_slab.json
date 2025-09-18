@@ -1,0 +1,8 @@
+{
+  "parent": "block/slab",
+  "textures": {
+    "bottom": "adastramekanized:block/venus_cobblestone",
+    "top": "adastramekanized:block/venus_cobblestone",
+    "side": "adastramekanized:block/venus_cobblestone"
+  }
+}

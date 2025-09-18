@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "adastramekanized:block/mercury_stone_slab"
+    },
+    "type=top": {
+      "model": "adastramekanized:block/mercury_stone_slab_top"
+    },
+    "type=double": {
+      "model": "adastramekanized:block/mercury_stone"
+    }
+  }
+}

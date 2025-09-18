@@ -1,0 +1,8 @@
+{
+  "parent": "block/slab",
+  "textures": {
+    "bottom": "adastramekanized:block/glacio_cobblestone",
+    "top": "adastramekanized:block/glacio_cobblestone",
+    "side": "adastramekanized:block/glacio_cobblestone"
+  }
+}
