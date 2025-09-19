@@ -38,10 +38,9 @@ public class OxygenDistributorBlockEntity extends BlockEntity {
             entity.isActive = entity.canFunction();
 
             if (entity.isActive) {
-                entity.yRot += 10f; // Rotation speed
-                if (entity.yRot >= 360f) {
-                    entity.yRot -= 360f;
-                }
+                entity.yRot += 2f; // Rotation speed (reduced for smoother animation)
+                // Keep rotation within 0-360 range, but handle wraparound properly
+                entity.yRot = entity.yRot % 360f;
             }
         } else {
             // Server-side oxygen distribution

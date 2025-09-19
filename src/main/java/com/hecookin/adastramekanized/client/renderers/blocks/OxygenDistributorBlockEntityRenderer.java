@@ -30,11 +30,29 @@ public class OxygenDistributorBlockEntityRenderer implements BlockEntityRenderer
     public void render(OxygenDistributorBlockEntity entity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
         BlockState state = entity.getBlockState();
 
-        // Get rotation for the spinning part
-        float yRot = Mth.lerp(partialTick, entity.lastYRot(), entity.yRot());
+        // Only spin if the entity is active (has power)
+        float yRot = 0f;
+        if (entity.isActive()) {
+            // Get rotation for the spinning part with proper angle interpolation
+            yRot = lerpAngle(partialTick, entity.lastYRot(), entity.yRot());
+        }
 
-        // Render the rotating top part - always the same regardless of block orientation
+        // Render the rotating top part
         renderTopPart(state, yRot, poseStack, buffer, packedLight, packedOverlay);
+    }
+
+    // Helper method to properly interpolate angles, handling wraparound
+    private static float lerpAngle(float partialTick, float lastAngle, float currentAngle) {
+        float diff = currentAngle - lastAngle;
+
+        // Handle wraparound: if the difference is greater than 180, we crossed the 360/0 boundary
+        if (diff > 180f) {
+            diff -= 360f;
+        } else if (diff < -180f) {
+            diff += 360f;
+        }
+
+        return lastAngle + diff * partialTick;
     }
 
     private static void renderTopPart(BlockState state, float yRot, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
@@ -80,7 +98,7 @@ public class OxygenDistributorBlockEntityRenderer implements BlockEntityRenderer
             BlockState state = BuiltInRegistries.BLOCK.get(BuiltInRegistries.ITEM.getKey(stack.getItem())).defaultBlockState();
 
             Minecraft minecraft = Minecraft.getInstance();
-            float yRot = Util.getMillis() / 5f % 360f; // Slow rotation in inventory
+            float yRot = 0f; // No rotation in inventory/hand - device is inactive
 
             poseStack.pushPose();
             try {
@@ -102,7 +120,7 @@ public class OxygenDistributorBlockEntityRenderer implements BlockEntityRenderer
                     1.0f, 1.0f, 1.0f,
                     packedLight, packedOverlay);
 
-                // Render the rotating top
+                // Render the static top part (no rotation)
                 renderTopPart(state, yRot, poseStack, buffer, packedLight, packedOverlay);
             } finally {
                 poseStack.popPose();
