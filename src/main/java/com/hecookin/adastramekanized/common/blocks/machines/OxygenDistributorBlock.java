@@ -1,6 +1,6 @@
 package com.hecookin.adastramekanized.common.blocks.machines;
 
-import com.hecookin.adastramekanized.common.blockentities.machines.OxygenProcessingStationBlockEntity;
+import com.hecookin.adastramekanized.common.blockentities.machines.OxygenDistributorBlockEntity;
 import com.hecookin.adastramekanized.common.blocks.base.SidedMachineBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
@@ -17,7 +17,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("deprecation")
-public class OxygenProcessingStationBlock extends SidedMachineBlock {
+public class OxygenDistributorBlock extends SidedMachineBlock {
 
     // Collision shapes for different orientations (from Ad Astra)
     public static final VoxelShape BOTTOM_SHAPE = Shapes.join(
@@ -50,7 +50,7 @@ public class OxygenProcessingStationBlock extends SidedMachineBlock {
         Block.box(1, 4, 4, 11, 12, 12),
         BooleanOp.OR);
 
-    public OxygenProcessingStationBlock(Properties properties) {
+    public OxygenDistributorBlock(Properties properties) {
         super(properties);
     }
 
@@ -71,8 +71,8 @@ public class OxygenProcessingStationBlock extends SidedMachineBlock {
 
     @Override
     public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
-        if (level.getBlockEntity(pos) instanceof OxygenProcessingStationBlockEntity entity) {
-            return entity.distributedBlocksCount() / Math.max(1, entity.distributedBlocksLimit()) * 15;
+        if (level.getBlockEntity(pos) instanceof OxygenDistributorBlockEntity entity) {
+            return entity.isActive() ? 15 : 0;
         }
         return 0;
     }
@@ -80,15 +80,15 @@ public class OxygenProcessingStationBlock extends SidedMachineBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new OxygenProcessingStationBlockEntity(pos, state);
+        return new OxygenDistributorBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide ? null : (level1, pos, state1, blockEntity) -> {
-            if (blockEntity instanceof OxygenProcessingStationBlockEntity entity) {
-                OxygenProcessingStationBlockEntity.tick(level1, pos, state1, entity);
+        return (level1, pos, state1, blockEntity) -> {
+            if (blockEntity instanceof OxygenDistributorBlockEntity entity) {
+                OxygenDistributorBlockEntity.tick(level1, pos, state1, entity);
             }
         };
     }

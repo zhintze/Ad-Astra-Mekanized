@@ -1,7 +1,7 @@
 package com.hecookin.adastramekanized.common.registry;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
-import com.hecookin.adastramekanized.common.blockentities.machines.OxygenProcessingStationBlockEntity;
+import com.hecookin.adastramekanized.common.blockentities.machines.OxygenDistributorBlockEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -14,11 +14,11 @@ public class ModBlockEntityTypes {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES =
         DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, AdAstraMekanized.MOD_ID);
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<OxygenProcessingStationBlockEntity>> OXYGEN_PROCESSING_STATION =
-        BLOCK_ENTITY_TYPES.register("oxygen_processing_station",
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<OxygenDistributorBlockEntity>> OXYGEN_DISTRIBUTOR =
+        BLOCK_ENTITY_TYPES.register("oxygen_distributor",
             () -> createBlockEntityType(
-                OxygenProcessingStationBlockEntity::new,
-                ModBlocks.OXYGEN_PROCESSING_STATION.get()));
+                OxygenDistributorBlockEntity::new,
+                ModBlocks.OXYGEN_DISTRIBUTOR.get()));
 
     /**
      * Helper method to create a BlockEntityType

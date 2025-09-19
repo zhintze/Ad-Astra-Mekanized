@@ -1,7 +1,7 @@
 package com.hecookin.adastramekanized.client.renderers.blocks;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
-import com.hecookin.adastramekanized.common.blockentities.machines.OxygenProcessingStationBlockEntity;
+import com.hecookin.adastramekanized.common.blockentities.machines.OxygenDistributorBlockEntity;
 import com.hecookin.adastramekanized.common.blocks.base.SidedMachineBlock;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -22,12 +22,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 
-public class OxygenProcessingStationBlockEntityRenderer implements BlockEntityRenderer<OxygenProcessingStationBlockEntity> {
+public class OxygenDistributorBlockEntityRenderer implements BlockEntityRenderer<OxygenDistributorBlockEntity> {
 
-    public static final ResourceLocation TOP_MODEL = ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "block/oxygen_processing_station_top");
+    public static final ResourceLocation TOP_MODEL = ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "block/oxygen_distributor_top");
 
     @Override
-    public void render(OxygenProcessingStationBlockEntity entity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
+    public void render(OxygenDistributorBlockEntity entity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
         BlockState state = entity.getBlockState();
 
         // Get rotation for the spinning part

@@ -2,7 +2,8 @@ package com.hecookin.adastramekanized.common.registry;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.common.blocks.BlockProperties;
-import com.hecookin.adastramekanized.common.blocks.machines.OxygenProcessingStationBlock;
+import com.hecookin.adastramekanized.common.blocks.machines.OxygenDistributorBlock;
+import com.hecookin.adastramekanized.common.blocks.machines.OxygenLoaderBlock;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -363,8 +364,11 @@ public class ModBlocks {
 
     // ========== MEKANISM-COMPATIBLE WORKSTATIONS ==========
 
-    public static final Supplier<Block> OXYGEN_PROCESSING_STATION = registerBlock("oxygen_processing_station",
-            () -> new OxygenProcessingStationBlock(BlockProperties.INDUSTRIAL_BLOCK));
+    public static final Supplier<Block> OXYGEN_DISTRIBUTOR = registerBlock("oxygen_distributor",
+            () -> new OxygenDistributorBlock(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> OXYGEN_LOADER = registerBlock("oxygen_loader",
+            () -> new OxygenLoaderBlock(BlockProperties.INDUSTRIAL_BLOCK));
 
     public static final Supplier<Block> ROCKET_ASSEMBLY_STATION = registerBlock("rocket_assembly_station",
             () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));

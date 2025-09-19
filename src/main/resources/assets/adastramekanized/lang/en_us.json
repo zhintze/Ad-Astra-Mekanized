@@ -150,6 +150,7 @@
   "block.adastramekanized.strophar_mushroom": "Strophar Mushroom",
   "block.adastramekanized.strophar_stem": "Strophar Stem",
 
-  "block.adastramekanized.oxygen_processing_station": "Oxygen Processing Station",
+  "block.adastramekanized.oxygen_distributor": "Oxygen Distributor",
+  "block.adastramekanized.oxygen_loader": "Oxygen Loader",
   "block.adastramekanized.rocket_assembly_station": "Rocket Assembly Station"
 }

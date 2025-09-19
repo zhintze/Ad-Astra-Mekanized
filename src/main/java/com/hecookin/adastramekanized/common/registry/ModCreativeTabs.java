@@ -210,7 +210,8 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.MARKED_IRON_PILLAR.get());
 
                         // Mekanism-Compatible Workstations
-                        output.accept(ModBlocks.OXYGEN_PROCESSING_STATION.get());
+                        output.accept(ModBlocks.OXYGEN_DISTRIBUTOR.get());
+                        output.accept(ModBlocks.OXYGEN_LOADER.get());
                         output.accept(ModBlocks.ROCKET_ASSEMBLY_STATION.get());
                     })
                     .build());

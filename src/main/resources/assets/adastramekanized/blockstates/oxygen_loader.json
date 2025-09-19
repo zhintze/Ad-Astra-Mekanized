@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "adastramekanized:block/oxygen_loader"
+    },
+    "facing=south": {
+      "model": "adastramekanized:block/oxygen_loader",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "adastramekanized:block/oxygen_loader",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "adastramekanized:block/oxygen_loader",
+      "y": 90
+    }
+  }
+}

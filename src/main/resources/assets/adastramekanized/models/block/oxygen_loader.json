@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "adastramekanized:block/steel_machine_top",
+    "front": "adastramekanized:block/oxygen_loader",
+    "side": "adastramekanized:block/steel_machine_side",
+    "bottom": "adastramekanized:block/steel_machine_bottom"
+  }
+}

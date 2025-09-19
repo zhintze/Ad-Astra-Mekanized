@@ -1,7 +1,7 @@
 package com.hecookin.adastramekanized.client;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
-import com.hecookin.adastramekanized.client.renderers.blocks.OxygenProcessingStationBlockEntityRenderer;
+import com.hecookin.adastramekanized.client.renderers.blocks.OxygenDistributorBlockEntityRenderer;
 import com.hecookin.adastramekanized.common.registry.ModBlockEntityTypes;
 import com.hecookin.adastramekanized.common.registry.ModBlocks;
 import com.hecookin.adastramekanized.common.registry.ModItems;
@@ -36,15 +36,15 @@ public class AdAstraMekanizedClient {
     public static void onRegisterBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         // Register block entity renderers
         event.registerBlockEntityRenderer(
-            ModBlockEntityTypes.OXYGEN_PROCESSING_STATION.get(),
-            context -> new OxygenProcessingStationBlockEntityRenderer()
+            ModBlockEntityTypes.OXYGEN_DISTRIBUTOR.get(),
+            context -> new OxygenDistributorBlockEntityRenderer()
         );
     }
 
     @SubscribeEvent
     public static void onRegisterAdditionalModels(ModelEvent.RegisterAdditional event) {
         // Register the top model for the oxygen processing station
-        event.register(ModelResourceLocation.standalone(OxygenProcessingStationBlockEntityRenderer.TOP_MODEL));
+        event.register(ModelResourceLocation.standalone(OxygenDistributorBlockEntityRenderer.TOP_MODEL));
     }
 
     @SubscribeEvent
@@ -53,9 +53,9 @@ public class AdAstraMekanizedClient {
         event.registerItem(new IClientItemExtensions() {
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return new OxygenProcessingStationBlockEntityRenderer.ItemRenderer();
+                return new OxygenDistributorBlockEntityRenderer.ItemRenderer();
             }
-        }, ModBlocks.OXYGEN_PROCESSING_STATION.get().asItem());
+        }, ModBlocks.OXYGEN_DISTRIBUTOR.get().asItem());
     }
 
     // Register special item renderers (for inventory display)
