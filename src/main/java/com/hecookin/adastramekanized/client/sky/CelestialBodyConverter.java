@@ -117,8 +117,9 @@ public class CelestialBodyConverter {
     private static SkyRenderable convertPlanet(AtmosphericRendering.PlanetConfiguration planet) {
         ResourceLocation texture = planet.texture() != null ? planet.texture() : PLANET_TEXTURE;
 
-        // Planets are typically static in the sky
-        MovementType movementType = MovementType.STATIC;
+        // Planets with distance < 1.0 move with time, others are static
+        // This allows close planets (like Earth from Moon) to move across the sky
+        MovementType movementType = planet.distance() < 1.0 ? MovementType.TIME_OF_DAY : MovementType.STATIC;
 
         // Position planets based on distance parameter
         Vec3 globalRotation = new Vec3(

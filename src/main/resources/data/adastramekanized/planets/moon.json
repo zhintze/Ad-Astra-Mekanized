@@ -51,24 +51,10 @@
       "moons": [],
       "visible_planets": [
         {
-          "texture": "minecraft:textures/block/lapis_block.png",
-          "scale": 2.5,
+          "texture": "adastramekanized:textures/celestial/earth.png",
+          "scale": 0.5,
           "color": 6737151,
-          "distance": 1.0,
-          "visible": true
-        },
-        {
-          "texture": "minecraft:textures/block/iron_block.png",
-          "scale": 0.4,
-          "color": 12632256,
-          "distance": 2.5,
-          "visible": true
-        },
-        {
-          "texture": "minecraft:textures/block/gold_block.png",
-          "scale": 0.6,
-          "color": 16753920,
-          "distance": 1.8,
+          "distance": 0.8,
           "visible": true
         }
       ]
@@ -81,7 +67,7 @@
       "rain_acidity": 0.0
     },
     "particles": {
-      "has_dust": false,
+      "has_dust": true,
       "has_ash": false,
       "has_spores": false,
       "has_snowfall": false,

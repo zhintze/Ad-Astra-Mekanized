@@ -84,9 +84,10 @@ All customization is done through JSON files in `src/main/resources/data/adastra
 ```
 
 **Planet Behavior:**
-- Movement: `STATIC` (fixed in sky)
-- `distance` affects positioning in sky dome
-- Ideal for background objects like Earth from Moon
+- Movement: `TIME_OF_DAY` if `distance < 1.0`, otherwise `STATIC`
+- Planets with `distance < 1.0` move across the sky with time (like Earth from Moon)
+- Planets with `distance >= 1.0` remain fixed (distant background objects)
+- `distance` also affects positioning in sky dome
 
 ## Color System
 
@@ -115,6 +116,16 @@ All colors use RGB hex format **without** the `#` prefix:
 // Vanilla environment textures
 "minecraft:textures/environment/sun.png"
 "minecraft:textures/environment/moon_phases.png"
+
+// Our custom celestial textures (copied from Ad Astra)
+"adastramekanized:textures/celestial/earth.png"
+"adastramekanized:textures/celestial/mars.png"
+"adastramekanized:textures/celestial/venus.png"
+"adastramekanized:textures/celestial/mercury.png"
+"adastramekanized:textures/celestial/glacio.png"
+"adastramekanized:textures/celestial/moon.png"
+"adastramekanized:textures/celestial/phobos.png"      // Mars moon
+"adastramekanized:textures/celestial/deimos.png"      // Mars moon
 
 // Block textures (always available)
 "minecraft:textures/block/stone.png"
@@ -154,7 +165,7 @@ Place in `src/main/resources/assets/adastramekanized/textures/` and reference as
 **Automatic Movement Assignment:**
 - **Sun**: Always `TIME_OF_DAY` (moves with day/night)
 - **Moons**: `TIME_OF_DAY_REVERSED` if `orbit_phase > 0`, else `STATIC`
-- **Planets**: Always `STATIC` (fixed position)
+- **Planets**: `TIME_OF_DAY` if `distance < 1.0`, else `STATIC`
 
 **Movement Behaviors:**
 - `TIME_OF_DAY`: East-to-west arc following day/night cycle
@@ -279,17 +290,62 @@ Place in `src/main/resources/assets/adastramekanized/textures/` and reference as
     "moons": [],
     "visible_planets": [
       {
-        "texture": "minecraft:textures/block/lapis_block.png",
+        "texture": "adastramekanized:textures/celestial/earth.png",
         "scale": 2.5,
         "color": 3361970,
         "distance": 0.3,
         "visible": true
       },
       {
-        "texture": "minecraft:textures/block/iron_block.png",
+        "texture": "adastramekanized:textures/celestial/mars.png",
         "scale": 0.4,
-        "color": 11184810,
+        "color": 16744192,
         "distance": 0.7,
+        "visible": true
+      }
+    ]
+  }
+}
+```
+
+### Authentic Mars Sky (Real Phobos & Deimos Moons)
+```json
+"rendering": {
+  "sky": {
+    "sky_color": 15510660,
+    "has_stars": true,
+    "star_count": 8000,
+    "star_brightness": 0.8
+  },
+  "celestial_bodies": {
+    "sun": {
+      "texture": "minecraft:textures/environment/sun.png",
+      "scale": 0.6,
+      "color": 16769205,
+      "visible": true
+    },
+    "moons": [
+      {
+        "texture": "adastramekanized:textures/celestial/phobos.png",
+        "scale": 0.3,
+        "color": 11184810,
+        "orbit_phase": 0.15,
+        "visible": true
+      },
+      {
+        "texture": "adastramekanized:textures/celestial/deimos.png",
+        "scale": 0.2,
+        "color": 9474192,
+        "orbit_phase": 0.25,
+        "visible": true
+      }
+    ],
+    "visible_planets": [
+      {
+        "texture": "adastramekanized:textures/celestial/earth.png",
+        "scale": 0.8,
+        "color": 3361970,
+        "distance": 0.6,
         "visible": true
       }
     ]

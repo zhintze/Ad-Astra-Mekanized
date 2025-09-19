@@ -50,16 +50,16 @@
       },
       "moons": [
         {
-          "texture": "minecraft:textures/block/stone.png",
-          "scale": 0.4,
+          "texture": "adastramekanized:textures/celestial/phobos.png",
+          "scale": 0.3,
           "color": 11184810,
           "orbit_phase": 0.15,
           "visible": true
         },
         {
-          "texture": "minecraft:textures/block/cobblestone.png",
-          "scale": 0.3,
-          "color": 7566195,
+          "texture": "adastramekanized:textures/celestial/deimos.png",
+          "scale": 0.2,
+          "color": 9474192,
           "orbit_phase": 0.25,
           "visible": true
         }
