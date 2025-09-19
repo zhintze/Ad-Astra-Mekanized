@@ -1,0 +1,28 @@
+{
+  "id": "adastramekanized:mercury",
+  "display_name": "Mercury",
+  "properties": {
+    "gravity": 0.377,
+    "temperature": 167.0,
+    "day_length": 176.0,
+    "orbit_distance": 58,
+    "has_rings": false,
+    "moon_count": 0
+  },
+  "atmosphere": {
+    "has_atmosphere": false,
+    "breathable": false,
+    "pressure": 0.0,
+    "oxygen_level": 0.0,
+    "type": "NONE"
+  },
+  "dimension": {
+    "dimension_type": "adastramekanized:mercury_type",
+    "biome_source": "adastramekanized:mercury_biome_source",
+    "chunk_generator": "adastramekanized:mercury_generator",
+    "is_orbital": false,
+    "sky_color": 9109504,
+    "fog_color": 6571105,
+    "ambient_light": 0.05
+  }
+}

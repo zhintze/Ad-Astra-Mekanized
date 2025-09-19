@@ -1,0 +1,11 @@
+{
+  "type": "adastramekanized:mars",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "adastramekanized:mars_plains"
+    },
+    "settings": "adastramekanized:mars"
+  }
+}

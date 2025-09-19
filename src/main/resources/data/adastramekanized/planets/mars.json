@@ -1,0 +1,85 @@
+{
+  "id": "adastramekanized:mars",
+  "display_name": "Mars",
+  "properties": {
+    "gravity": 0.379,
+    "temperature": -65.0,
+    "day_length": 24.6,
+    "orbit_distance": 228,
+    "has_rings": false,
+    "moon_count": 2
+  },
+  "atmosphere": {
+    "has_atmosphere": true,
+    "breathable": false,
+    "pressure": 0.006,
+    "oxygen_level": 0.001,
+    "type": "THIN"
+  },
+  "dimension": {
+    "dimension_type": "adastramekanized:mars_type",
+    "biome_source": "adastramekanized:mars_biome_source",
+    "chunk_generator": "adastramekanized:mars_generator",
+    "is_orbital": false,
+    "sky_color": 15510660,
+    "fog_color": 13791774,
+    "ambient_light": 0.9
+  },
+  "rendering": {
+    "sky": {
+      "sky_color": 15510660,
+      "sunrise_color": 14349555,
+      "custom_sky": true,
+      "has_stars": true,
+      "star_count": 8000,
+      "star_brightness": 0.8
+    },
+    "fog": {
+      "fog_color": 13791774,
+      "has_fog": true,
+      "fog_density": 0.4,
+      "near_plane": 24.0,
+      "far_plane": 192.0
+    },
+    "celestial_bodies": {
+      "sun": {
+        "texture": "minecraft:textures/environment/sun.png",
+        "scale": 0.6,
+        "color": 16769205,
+        "visible": true
+      },
+      "moons": [
+        {
+          "texture": "minecraft:textures/block/stone.png",
+          "scale": 0.4,
+          "color": 11184810,
+          "orbit_phase": 0.15,
+          "visible": true
+        },
+        {
+          "texture": "minecraft:textures/block/cobblestone.png",
+          "scale": 0.3,
+          "color": 7566195,
+          "orbit_phase": 0.25,
+          "visible": true
+        }
+      ],
+      "visible_planets": []
+    },
+    "weather": {
+      "has_clouds": false,
+      "has_rain": false,
+      "has_snow": false,
+      "has_storms": true,
+      "rain_acidity": 0.0
+    },
+    "particles": {
+      "has_dust": true,
+      "has_ash": false,
+      "has_spores": false,
+      "has_snowfall": false,
+      "particle_density": 0.8,
+      "particle_color": 13791774
+    }
+  }
+}

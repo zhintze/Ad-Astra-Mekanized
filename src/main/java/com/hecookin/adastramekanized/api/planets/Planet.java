@@ -1,5 +1,7 @@
 package com.hecookin.adastramekanized.api.planets;
 
+import com.hecookin.adastramekanized.api.planets.generation.PlanetGenerationSettings;
+import com.hecookin.adastramekanized.api.planets.atmosphere.AtmosphericRendering;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
@@ -16,7 +18,9 @@ public record Planet(
         String displayName,
         PlanetProperties properties,
         AtmosphereData atmosphere,
-        DimensionSettings dimension
+        DimensionSettings dimension,
+        PlanetGenerationSettings generation,
+        AtmosphericRendering rendering
 ) {
 
     public static final Codec<Planet> CODEC = RecordCodecBuilder.create(instance ->
@@ -25,7 +29,9 @@ public record Planet(
                     Codec.STRING.fieldOf("display_name").forGetter(Planet::displayName),
                     PlanetProperties.CODEC.fieldOf("properties").forGetter(Planet::properties),
                     AtmosphereData.CODEC.fieldOf("atmosphere").forGetter(Planet::atmosphere),
-                    DimensionSettings.CODEC.fieldOf("dimension").forGetter(Planet::dimension)
+                    DimensionSettings.CODEC.fieldOf("dimension").forGetter(Planet::dimension),
+                    PlanetGenerationSettings.CODEC.optionalFieldOf("generation", PlanetGenerationSettings.createEarthlike()).forGetter(Planet::generation),
+                    AtmosphericRendering.CODEC.optionalFieldOf("rendering", AtmosphericRendering.createDefault()).forGetter(Planet::rendering)
             ).apply(instance, Planet::new)
     );
 
@@ -147,14 +153,17 @@ public record Planet(
                displayName != null && !displayName.isEmpty() &&
                properties != null && properties.isValid() &&
                atmosphere != null &&
-               dimension != null;
+               dimension != null &&
+               generation != null && generation.isValid();
     }
 
     /**
      * Get the dimension resource location for this planet
      */
     public ResourceLocation getDimensionLocation() {
-        return ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "planets/" + id.getPath());
+        // For our datapack dimensions, the dimension files are at adastramekanized:moon, adastramekanized:mars, etc.
+        // Not in a "planets/" subdirectory
+        return ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath());
     }
 
     /**

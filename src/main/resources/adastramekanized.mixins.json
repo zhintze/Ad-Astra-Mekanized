@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.hecookin.adastramekanized.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "adastramekanized.refmap.json",
+  "mixins": [],
+  "client": [
+    "LevelRendererMixin"
+  ],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

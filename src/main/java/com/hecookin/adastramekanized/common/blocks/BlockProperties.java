@@ -64,6 +64,7 @@ public class BlockProperties {
     public static final float ALIEN_LEAVES_RESISTANCE = 0.2f;
     public static final boolean ALIEN_LEAVES_REQUIRES_TOOL = false;
 
+
     // ========== PROPERTY BUILDERS ==========
 
     /**
@@ -157,6 +158,7 @@ public class BlockProperties {
             .requiresCorrectToolForDrops()
             .strength(DEEPSLATE_ORE_HARDNESS, DEEPSLATE_ORE_RESISTANCE)
             .sound(SoundType.DEEPSLATE);
+
 
     // ========== PLANET-SPECIFIC VARIANTS ==========
 

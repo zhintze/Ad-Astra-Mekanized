@@ -1,0 +1,93 @@
+{
+  "id": "adastramekanized:binary_world",
+  "display_name": "Binary Star World",
+  "properties": {
+    "gravity": 0.8,
+    "temperature": 45.0,
+    "day_length": 18.0,
+    "orbit_distance": 200,
+    "has_rings": false,
+    "moon_count": 2
+  },
+  "atmosphere": {
+    "has_atmosphere": true,
+    "breathable": false,
+    "pressure": 0.8,
+    "oxygen_level": 0.15,
+    "type": "TOXIC"
+  },
+  "dimension": {
+    "dimension_type": "adastramekanized:binary_type",
+    "biome_source": "adastramekanized:binary_biome_source",
+    "chunk_generator": "adastramekanized:binary_generator",
+    "is_orbital": false,
+    "sky_color": 8421631,
+    "fog_color": 6684774,
+    "ambient_light": 0.9
+  },
+  "rendering": {
+    "sky": {
+      "sky_color": 8421631,
+      "sunrise_color": 16744448,
+      "custom_sky": true,
+      "has_stars": true,
+      "star_count": 20000,
+      "star_brightness": 1.2
+    },
+    "fog": {
+      "fog_color": 6684774,
+      "has_fog": true,
+      "fog_density": 0.02,
+      "near_plane": 24.0,
+      "far_plane": 192.0
+    },
+    "celestial_bodies": {
+      "sun": {
+        "texture": "minecraft:textures/environment/sun.png",
+        "scale": 1.2,
+        "color": 16753920,
+        "visible": true
+      },
+      "moons": [
+        {
+          "texture": "minecraft:textures/block/stone.png",
+          "scale": 0.6,
+          "color": 12632256,
+          "orbit_phase": 0.3,
+          "visible": true
+        },
+        {
+          "texture": "minecraft:textures/block/red_sandstone.png",
+          "scale": 0.4,
+          "color": 13408512,
+          "orbit_phase": 0.8,
+          "visible": true
+        }
+      ],
+      "visible_planets": [
+        {
+          "texture": "minecraft:textures/environment/sun.png",
+          "scale": 0.8,
+          "color": 16711680,
+          "distance": 2.0,
+          "visible": true
+        }
+      ]
+    },
+    "weather": {
+      "has_clouds": false,
+      "has_rain": false,
+      "has_snow": false,
+      "has_storms": true,
+      "rain_acidity": 0.3
+    },
+    "particles": {
+      "has_dust": true,
+      "has_ash": false,
+      "has_spores": false,
+      "has_snowfall": false,
+      "particle_density": 0.1,
+      "particle_color": 16753920
+    }
+  }
+}

@@ -362,6 +362,7 @@ public class ModBlocks {
     public static final Supplier<Block> STROPHAR_STEM = registerBlock("strophar_stem",
             () -> new RotatedPillarBlock(BlockProperties.ALIEN_WOOD));
 
+
     // ========== MEKANISM-COMPATIBLE WORKSTATIONS ==========
 
     public static final Supplier<Block> OXYGEN_DISTRIBUTOR = registerBlock("oxygen_distributor",
@@ -384,6 +385,7 @@ public class ModBlocks {
 
         return registeredBlock;
     }
+
 
     /**
      * Register all mod blocks

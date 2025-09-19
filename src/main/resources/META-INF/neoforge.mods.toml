@@ -29,8 +29,8 @@ description = '''Space exploration mod integrating Ad Astra features with Mekani
 Provides rockets, planets, space stations, and integrated oxygen/fuel systems.'''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.
-#[[mixins]]
-#config = "mymod.mixins.json"
+[[mixins]]
+config = "adastramekanized.mixins.json"
 
 # The [[accessTransformers]] block allows you to declare where your AT file is.
 # If this block is omitted, a fallback will attempt to load an AT from META-INF/accesstransformer.cfg

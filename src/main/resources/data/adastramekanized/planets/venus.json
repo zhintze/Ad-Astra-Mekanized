@@ -1,0 +1,28 @@
+{
+  "id": "adastramekanized:venus",
+  "display_name": "Venus",
+  "properties": {
+    "gravity": 0.904,
+    "temperature": 464.0,
+    "day_length": 243.0,
+    "orbit_distance": 108,
+    "has_rings": false,
+    "moon_count": 0
+  },
+  "atmosphere": {
+    "has_atmosphere": true,
+    "breathable": false,
+    "pressure": 92.0,
+    "oxygen_level": 0.000002,
+    "type": "TOXIC"
+  },
+  "dimension": {
+    "dimension_type": "adastramekanized:venus_type",
+    "biome_source": "adastramekanized:venus_biome_source",
+    "chunk_generator": "adastramekanized:venus_generator",
+    "is_orbital": false,
+    "sky_color": 13731922,
+    "fog_color": 13468738,
+    "ambient_light": 0.3
+  }
+}

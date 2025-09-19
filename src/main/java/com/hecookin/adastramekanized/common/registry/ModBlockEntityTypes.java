@@ -20,6 +20,7 @@ public class ModBlockEntityTypes {
                 OxygenDistributorBlockEntity::new,
                 ModBlocks.OXYGEN_DISTRIBUTOR.get()));
 
+
     /**
      * Helper method to create a BlockEntityType
      */

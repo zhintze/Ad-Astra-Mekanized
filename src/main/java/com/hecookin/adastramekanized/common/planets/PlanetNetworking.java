@@ -2,6 +2,8 @@ package com.hecookin.adastramekanized.common.planets;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.api.planets.Planet;
+import com.hecookin.adastramekanized.api.planets.generation.PlanetGenerationSettings;
+import com.hecookin.adastramekanized.api.planets.atmosphere.AtmosphericRendering;
 import com.hecookin.adastramekanized.api.planets.PlanetRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -103,7 +105,9 @@ public class PlanetNetworking {
                         ResourceLocation.fromNamespaceAndPath("minecraft", "fixed"),
                         ResourceLocation.fromNamespaceAndPath("minecraft", "flat"),
                         false, 0, 0, 0.0f
-                )
+                ),
+                null, // TODO: Add proper PlanetGenerationSettings
+                AtmosphericRendering.createDefault()
         );
 
         PlanetUpdatePacket packet = new PlanetUpdatePacket(dummyPlanet, PlanetUpdatePacket.Action.REMOVE);

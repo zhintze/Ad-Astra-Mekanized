@@ -1,0 +1,28 @@
+{
+  "id": "adastramekanized:glacio",
+  "display_name": "Glacio",
+  "properties": {
+    "gravity": 0.379,
+    "temperature": -20.0,
+    "day_length": 24.0,
+    "orbit_distance": 150,
+    "has_rings": false,
+    "moon_count": 1
+  },
+  "atmosphere": {
+    "has_atmosphere": true,
+    "breathable": true,
+    "pressure": 1.0,
+    "oxygen_level": 0.21,
+    "type": "NORMAL"
+  },
+  "dimension": {
+    "dimension_type": "adastramekanized:glacio_type",
+    "biome_source": "adastramekanized:glacio_biome_source",
+    "chunk_generator": "adastramekanized:glacio_generator",
+    "is_orbital": false,
+    "sky_color": 12640255,
+    "fog_color": 10594016,
+    "ambient_light": 0.8
+  }
+}

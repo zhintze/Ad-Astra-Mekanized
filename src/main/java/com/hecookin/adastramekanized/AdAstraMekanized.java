@@ -1,6 +1,7 @@
 package com.hecookin.adastramekanized;
 
 import com.hecookin.adastramekanized.common.commands.PlanetCommands;
+import com.hecookin.adastramekanized.common.commands.DimensionTravelCommand;
 import com.hecookin.adastramekanized.common.planets.PlanetManager;
 import com.hecookin.adastramekanized.common.planets.PlanetNetworking;
 import com.hecookin.adastramekanized.common.registry.ModBlockEntityTypes;
@@ -97,6 +98,7 @@ public class AdAstraMekanized {
     private void registerCommands(final RegisterCommandsEvent event) {
         LOGGER.info("Registering planet commands...");
         PlanetCommands.register(event.getDispatcher());
+        DimensionTravelCommand.register(event.getDispatcher());
         LOGGER.info("Planet commands registration complete");
     }
 
