@@ -1,11 +1,13 @@
 package com.hecookin.adastramekanized;
 
 import com.hecookin.adastramekanized.common.commands.ModCommands;
+import com.hecookin.adastramekanized.common.config.StaticDimensionManager;
 import com.hecookin.adastramekanized.common.teleportation.PlanetTeleportationSystem;
 import com.hecookin.adastramekanized.common.planets.PlanetManager;
 import com.hecookin.adastramekanized.common.planets.PlanetNetworking;
 import com.hecookin.adastramekanized.common.registry.ModBlockEntityTypes;
 import com.hecookin.adastramekanized.common.registry.ModBlocks;
+import com.hecookin.adastramekanized.common.registry.ModChunkGenerators;
 import com.hecookin.adastramekanized.common.registry.ModCreativeTabs;
 import com.hecookin.adastramekanized.common.registry.ModItems;
 import com.hecookin.adastramekanized.config.AdAstraMekanizedConfig;
@@ -56,6 +58,9 @@ public class AdAstraMekanized {
         ModBlockEntityTypes.BLOCK_ENTITY_TYPES.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
 
+        // Register chunk generators
+        ModChunkGenerators.register(modEventBus);
+
         // Register mod setup
         modEventBus.addListener(this::commonSetup);
 
@@ -82,9 +87,16 @@ public class AdAstraMekanized {
         LOGGER.info("Ad Astra Mekanized common setup started");
 
         event.enqueueWork(() -> {
+            // Initialize static dimension management system
+            StaticDimensionManager.initialize();
+
             // Initialize mod integrations
             integrationManager = ModIntegrationManager.getInstance();
             LOGGER.info("Integration manager initialized: {}", integrationManager.getIntegrationStatus());
+
+            // Initialize terrain integration system (Phase 2.1)
+            com.hecookin.adastramekanized.common.worldgen.PlanetTerrainIntegration.initializeIntegration();
+            com.hecookin.adastramekanized.common.worldgen.PlanetTerrainIntegration.detectAndConfigureIntegrations();
 
             // Early planet generation removed - planets are now pre-generated static datapacks
             LOGGER.info("Using pre-generated static planets from datapack system");

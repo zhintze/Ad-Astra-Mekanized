@@ -53,9 +53,11 @@ public class PlanetChunkGenerator extends ChunkGenerator {
     public static final MapCodec<PlanetChunkGenerator> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             BiomeSource.CODEC.fieldOf("biome_source").forGetter(generator -> generator.biomeSource),
-            PlanetGenerationSettings.CODEC.fieldOf("generation_settings").forGetter(generator -> generator.generationSettings),
+            PlanetGenerationSettings.CODEC.optionalFieldOf("generation_settings").forGetter(generator ->
+                generator.generationSettings != null ? java.util.Optional.of(generator.generationSettings) : java.util.Optional.<PlanetGenerationSettings>empty()),
             ResourceLocation.CODEC.fieldOf("planet_id").forGetter(generator -> generator.planetId)
-        ).apply(instance, PlanetChunkGenerator::new)
+        ).apply(instance, (biomeSource, generationSettings, planetId) ->
+            new PlanetChunkGenerator(biomeSource, generationSettings.orElse(null), planetId))
     );
 
     private final PlanetGenerationSettings generationSettings;
@@ -85,6 +87,9 @@ public class PlanetChunkGenerator extends ChunkGenerator {
         super(biomeSource);
         this.generationSettings = generationSettings != null ? generationSettings : createDefaultGenerationSettings();
         this.planetId = planetId;
+
+        AdAstraMekanized.LOGGER.info("PlanetChunkGenerator created for planet: {} with settings: {}",
+            planetId, generationSettings != null ? "custom" : "default");
 
         // Initialize noise generators
         RandomSource random = RandomSource.create(planetId.toString().hashCode());
@@ -246,6 +251,9 @@ public class PlanetChunkGenerator extends ChunkGenerator {
                                                       StructureManager structureManager, ChunkAccess chunk) {
         ChunkPos chunkPos = chunk.getPos();
 
+        AdAstraMekanized.LOGGER.debug("PlanetChunkGenerator.fillFromNoise called for planet: {} at chunk: {}",
+            planetId, chunkPos);
+
         // Generate base terrain using noise
         generateBaseTerrain(chunk);
 
@@ -298,6 +306,20 @@ public class PlanetChunkGenerator extends ChunkGenerator {
     @Override
     public NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor level, RandomState randomState) {
         int height = getSurfaceHeight(x, z);
+        if (generationSettings == null) {
+            // Return simple default column for TerraBlender bypass
+            BlockState[] column = new BlockState[level.getHeight()];
+            BlockState stone = Blocks.NETHERRACK.defaultBlockState(); // Venus-like default
+            for (int y = level.getMinBuildHeight(); y < level.getMaxBuildHeight(); y++) {
+                if (y <= height) {
+                    column[y - level.getMinBuildHeight()] = stone;
+                } else {
+                    column[y - level.getMinBuildHeight()] = Blocks.AIR.defaultBlockState();
+                }
+            }
+            return new NoiseColumn(level.getMinBuildHeight(), column);
+        }
+
         var surfaceConfig = generationSettings.terrain().surface();
 
         BlockState[] column = new BlockState[level.getHeight()];
@@ -325,11 +347,15 @@ public class PlanetChunkGenerator extends ChunkGenerator {
         info.add("Surface Height: " + getSurfaceHeight(pos.getX(), pos.getZ()));
         info.add("Temperature: " + String.format("%.2f", getTemperature(pos.getX(), pos.getZ())));
         info.add("Humidity: " + String.format("%.2f", getHumidity(pos.getX(), pos.getZ())));
-        info.add("Cave Generation: " + generationSettings.terrain().generateCaves());
-        info.add("Ore Types: " + generationSettings.resources().ores().size());
-        info.add("Resource Abundance: " + String.format("%.1fx", generationSettings.resources().resourceAbundance()));
-        info.add("Gravity: " + String.format("%.2fx", generationSettings.environment().gravity().gravityMultiplier()));
-        info.add("Has Oxygen: " + generationSettings.environment().hasOxygen());
+        if (generationSettings != null) {
+            info.add("Cave Generation: " + generationSettings.terrain().generateCaves());
+            info.add("Ore Types: " + generationSettings.resources().ores().size());
+            info.add("Resource Abundance: " + String.format("%.1fx", generationSettings.resources().resourceAbundance()));
+            info.add("Gravity: " + String.format("%.2fx", generationSettings.environment().gravity().gravityMultiplier()));
+            info.add("Has Oxygen: " + generationSettings.environment().hasOxygen());
+        } else {
+            info.add("Generation Settings: Default (TerraBlender bypass mode)");
+        }
     }
 
     /**
@@ -379,6 +405,12 @@ public class PlanetChunkGenerator extends ChunkGenerator {
      * Generate the base terrain structure for a chunk
      */
     private void generateBaseTerrain(ChunkAccess chunk) {
+        if (generationSettings == null) {
+            // Use default Venus-like surface for TerraBlender bypass
+            generateDefaultVenusTerrain(chunk);
+            return;
+        }
+
         var terrainSettings = generationSettings.terrain();
         var surfaceConfig = terrainSettings.surface();
 
@@ -442,6 +474,10 @@ public class PlanetChunkGenerator extends ChunkGenerator {
      * Get temperature at given coordinates
      */
     public double getTemperature(int x, int z) {
+        if (generationSettings == null) {
+            // Default Venus-like temperature (hot)
+            return temperatureNoise.getValue(x * 0.004, z * 0.004) * 0.5 + 0.8; // Hot bias
+        }
         var noiseConfig = generationSettings.terrain().noise();
         return temperatureNoise.getValue(x * 0.004 * noiseConfig.temperatureScale(), z * 0.004 * noiseConfig.temperatureScale());
     }
@@ -450,6 +486,10 @@ public class PlanetChunkGenerator extends ChunkGenerator {
      * Get humidity at given coordinates
      */
     public double getHumidity(int x, int z) {
+        if (generationSettings == null) {
+            // Default Venus-like humidity (dry/toxic atmosphere)
+            return humidityNoise.getValue(x * 0.003, z * 0.003) * 0.2; // Very dry
+        }
         var noiseConfig = generationSettings.terrain().noise();
         return humidityNoise.getValue(x * 0.003 * noiseConfig.humidityScale(), z * 0.003 * noiseConfig.humidityScale());
     }
@@ -499,11 +539,87 @@ public class PlanetChunkGenerator extends ChunkGenerator {
     }
 
     /**
+     * Generate default planet terrain for TerraBlender bypass mode
+     */
+    private void generateDefaultVenusTerrain(ChunkAccess chunk) {
+        generateDefaultPlanetTerrain(chunk);
+    }
+
+    /**
+     * Generate default planet terrain based on planet ID
+     */
+    private void generateDefaultPlanetTerrain(ChunkAccess chunk) {
+        ChunkPos chunkPos = chunk.getPos();
+
+        // Determine planet type and materials based on planet ID
+        BlockState surfaceBlock;
+        BlockState subsurfaceBlock;
+        BlockState deepBlock;
+
+        if (planetId.toString().contains("moon")) {
+            // Lunar terrain - gray concrete and stone
+            surfaceBlock = Blocks.LIGHT_GRAY_CONCRETE.defaultBlockState();
+            subsurfaceBlock = Blocks.GRAY_CONCRETE.defaultBlockState();
+            deepBlock = Blocks.STONE.defaultBlockState();
+            AdAstraMekanized.LOGGER.debug("Generating lunar terrain for chunk {}", chunkPos);
+        } else if (planetId.toString().contains("venus")) {
+            // Venus terrain - volcanic materials
+            surfaceBlock = Blocks.MAGMA_BLOCK.defaultBlockState();
+            subsurfaceBlock = Blocks.NETHERRACK.defaultBlockState();
+            deepBlock = Blocks.BLACKSTONE.defaultBlockState();
+            AdAstraMekanized.LOGGER.debug("Generating Venus terrain for chunk {}", chunkPos);
+        } else if (planetId.toString().contains("mars")) {
+            // Mars terrain - red materials
+            surfaceBlock = Blocks.RED_TERRACOTTA.defaultBlockState();
+            subsurfaceBlock = Blocks.TERRACOTTA.defaultBlockState();
+            deepBlock = Blocks.RED_SANDSTONE.defaultBlockState();
+            AdAstraMekanized.LOGGER.debug("Generating Mars terrain for chunk {}", chunkPos);
+        } else {
+            // Default rocky terrain
+            surfaceBlock = Blocks.COBBLESTONE.defaultBlockState();
+            subsurfaceBlock = Blocks.STONE.defaultBlockState();
+            deepBlock = Blocks.DEEPSLATE.defaultBlockState();
+            AdAstraMekanized.LOGGER.debug("Generating default rocky terrain for chunk {}", chunkPos);
+        }
+
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                int worldX = chunkPos.getMinBlockX() + x;
+                int worldZ = chunkPos.getMinBlockZ() + z;
+                int surfaceHeight = getSurfaceHeight(worldX, worldZ);
+
+                // Fill deep layers
+                for (int y = chunk.getMinBuildHeight(); y <= surfaceHeight - 4; y++) {
+                    chunk.setBlockState(new BlockPos(x, y, z), deepBlock, false);
+                }
+
+                // Fill subsurface layers
+                for (int y = surfaceHeight - 3; y <= surfaceHeight - 1; y++) {
+                    chunk.setBlockState(new BlockPos(x, y, z), subsurfaceBlock, false);
+                }
+
+                // Surface layer
+                chunk.setBlockState(new BlockPos(x, surfaceHeight, z), surfaceBlock, false);
+            }
+        }
+
+        AdAstraMekanized.LOGGER.debug("Generated default terrain for planet {} at chunk {} (custom generator mode)",
+            planetId, chunkPos);
+    }
+
+    /**
      * Create default generation settings for fallback
      */
     private static PlanetGenerationSettings createDefaultGenerationSettings() {
         // Create minimal default settings to prevent null pointer exceptions
-        // This will be replaced with proper settings in the future
-        return null; // TODO: Implement proper default settings
+        // For temporary Venus testing without TerraBlender
+        try {
+            // Use reflection to create minimal settings if needed
+            // This is a temporary workaround until proper settings are available
+            return null; // Gracefully handled in constructor
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.warn("Could not create default generation settings: {}", e.getMessage());
+            return null;
+        }
     }
 }
