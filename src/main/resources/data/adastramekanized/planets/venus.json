@@ -1,0 +1,81 @@
+{
+  "id": "adastramekanized:venus",
+  "display_name": "Venus",
+  "properties": {
+    "gravity": 8.87,
+    "temperature": 464.0,
+    "day_length": 24.0,
+    "orbit_distance": 4821,
+    "has_rings": false,
+    "moon_count": 1
+  },
+  "atmosphere": {
+    "has_atmosphere": true,
+    "breathable": false,
+    "pressure": 1.01,
+    "oxygen_level": 0.01,
+    "type": "THIN"
+  },
+  "dimension": {
+    "dimension_type": "adastramekanized:venus",
+    "biome_source": "adastramekanized:venus_biome_source",
+    "chunk_generator": "adastramekanized:venus_generator",
+    "is_orbital": false,
+    "sky_color": 16737095,
+    "fog_color": 16737095,
+    "ambient_light": 0.3
+  },
+  "rendering": {
+    "sky": {
+      "sky_color": 16737095,
+      "sunrise_color": 16744805,
+      "custom_sky": true,
+      "has_stars": true,
+      "star_count": 18821,
+      "star_brightness": 0.41,
+      "star_visibility": "night_only"
+    },
+    "fog": {
+      "fog_color": 16737095,
+      "has_fog": true,
+      "fog_density": 0.31,
+      "near_plane": 6.0,
+      "far_plane": 121.0
+    },
+    "celestial_bodies": {
+      "sun": {
+        "texture": "minecraft:textures/environment/sun.png",
+        "scale": 0.71,
+        "color": 15421235,
+        "visible": true
+      },
+      "moons": [
+        {
+          "texture": "minecraft:textures/environment/moon_phases.png",
+          "scale": 0.2,
+          "color": 16749945,
+          "horizontal_position": -1.0,
+          "vertical_position": 0.5,
+          "moves_with_time": true,
+          "visible": true
+        }
+      ],
+      "visible_planets": []
+    },
+    "weather": {
+      "has_clouds": true,
+      "has_rain": true,
+      "has_snow": false,
+      "has_storms": false,
+      "rain_acidity": 0.8
+    },
+    "particles": {
+      "has_dust": false,
+      "has_ash": true,
+      "has_spores": false,
+      "has_snowfall": false,
+      "particle_density": 0.31,
+      "particle_color": 16737095
+    }
+  }
+}

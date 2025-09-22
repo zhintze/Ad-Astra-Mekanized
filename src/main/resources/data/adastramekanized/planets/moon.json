@@ -1,0 +1,81 @@
+{
+  "id": "adastramekanized:moon",
+  "display_name": "Moon",
+  "properties": {
+    "gravity": 1.622,
+    "temperature": -173.0,
+    "day_length": 24.0,
+    "orbit_distance": 3441,
+    "has_rings": false,
+    "moon_count": 1
+  },
+  "atmosphere": {
+    "has_atmosphere": false,
+    "breathable": false,
+    "pressure": 0.0,
+    "oxygen_level": 0.0,
+    "type": "NONE"
+  },
+  "dimension": {
+    "dimension_type": "adastramekanized:moon",
+    "biome_source": "adastramekanized:moon_biome_source",
+    "chunk_generator": "adastramekanized:moon_generator",
+    "is_orbital": false,
+    "sky_color": 3092271,
+    "fog_color": 3092271,
+    "ambient_light": 0.1
+  },
+  "rendering": {
+    "sky": {
+      "sky_color": 3092271,
+      "sunrise_color": 5066061,
+      "custom_sky": true,
+      "has_stars": true,
+      "star_count": 22441,
+      "star_brightness": 0.61,
+      "star_visibility": "constant"
+    },
+    "fog": {
+      "fog_color": 3092271,
+      "has_fog": false,
+      "fog_density": 0.0,
+      "near_plane": 6.0,
+      "far_plane": 141.0
+    },
+    "celestial_bodies": {
+      "sun": {
+        "texture": "minecraft:textures/environment/sun.png",
+        "scale": 0.90999997,
+        "color": 1776411,
+        "visible": true
+      },
+      "moons": [
+        {
+          "texture": "minecraft:textures/environment/moon_phases.png",
+          "scale": 0.2,
+          "color": 6381921,
+          "horizontal_position": -1.0,
+          "vertical_position": 0.5,
+          "moves_with_time": true,
+          "visible": true
+        }
+      ],
+      "visible_planets": []
+    },
+    "weather": {
+      "has_clouds": false,
+      "has_rain": false,
+      "has_snow": false,
+      "has_storms": false,
+      "rain_acidity": 0.0
+    },
+    "particles": {
+      "has_dust": true,
+      "has_ash": false,
+      "has_spores": false,
+      "has_snowfall": false,
+      "particle_density": 0.51,
+      "particle_color": 3092271
+    }
+  }
+}

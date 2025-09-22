@@ -204,25 +204,20 @@ public class PlanetChunkGenerator extends ChunkGenerator {
 
     @Override
     public void buildSurface(WorldGenRegion level, StructureManager structures, RandomState randomState, ChunkAccess chunk) {
-        // TODO: Implement comprehensive surface generation system
-        // Surface generation features to implement:
-        // 1. Planet-specific surface materials based on composition
-        // 2. Atmosphere-dependent weathering and erosion patterns
-        // 3. Temperature-based surface states (frozen, molten, crystallized)
-        // 4. Multi-layer soil systems with planet-appropriate materials
-        // 5. Surface liquid systems (water, lava, methane, acid)
-        // 6. Atmospheric pressure effects on surface formation
-        // 7. Gravity-influenced slope stability and landforms
-        // 8. Impact crater generation for airless worlds
-        // 9. Volcanic surface features for volcanic planets
-        // 10. Ice sheet and permafrost systems for cold planets
-        // 11. Salt flats and dried lake beds for arid planets
-        // 12. Crystalline formations for high-pressure worlds
+        // Surface generation is now handled in generateBaseTerrain for custom planets
+        // This method is primarily used by vanilla/TerraBlender generation
 
-        // Temporary basic surface (will be replaced with planet-specific materials)
-        BlockState topBlock = Blocks.GRASS_BLOCK.defaultBlockState();
-        BlockState subsurfaceBlock = Blocks.DIRT.defaultBlockState();
-        BlockState deepBlock = Blocks.STONE.defaultBlockState();
+        if (generationSettings == null) {
+            // For custom planets, terrain is already generated in fillFromNoise
+            return;
+        }
+
+        // If we have generation settings, use the standard surface building approach
+        var terrainSettings = generationSettings.terrain();
+        var surfaceConfig = terrainSettings.surface();
+
+        BlockState topBlock = getBlockState(surfaceConfig.topBlock());
+        BlockState subsurfaceBlock = getBlockState(surfaceConfig.subsurfaceBlock());
 
         ChunkPos chunkPos = chunk.getPos();
 
@@ -230,16 +225,13 @@ public class PlanetChunkGenerator extends ChunkGenerator {
             for (int z = 0; z < 16; z++) {
                 int worldX = chunkPos.getMinBlockX() + x;
                 int worldZ = chunkPos.getMinBlockZ() + z;
-
-                // Get surface height for this position
                 int surfaceHeight = getSurfaceHeight(worldX, worldZ);
 
-                // TODO: Replace with planet-specific surface building:
-                // buildPlanetSpecificSurface(chunk, x, z, worldX, worldZ, surfaceHeight);
-
-                // Build basic surface layers (temporary)
+                // Build surface layers
                 chunk.setBlockState(new BlockPos(x, surfaceHeight, z), topBlock, false);
-                for (int y = surfaceHeight - 1; y > surfaceHeight - 3 && y >= chunk.getMinBuildHeight(); y--) {
+
+                // Add subsurface layers
+                for (int y = surfaceHeight - 1; y > surfaceHeight - surfaceConfig.subsurfaceDepth() && y >= chunk.getMinBuildHeight(); y--) {
                     chunk.setBlockState(new BlockPos(x, y, z), subsurfaceBlock, false);
                 }
             }
@@ -362,43 +354,68 @@ public class PlanetChunkGenerator extends ChunkGenerator {
      * Calculate surface height at given coordinates using planetary noise configuration
      */
     private int getSurfaceHeight(int x, int z) {
-        // Simplified terrain generation (temporarily)
-        // TODO: Re-enable proper terrain settings when generation settings are available
-        int baseHeight = 64; // Default base height
-        int maxVariation = 32; // Default variation
+        // Planet-specific terrain configuration
+        int baseHeight;
+        int maxVariation;
+        double roughnessMultiplier;
 
-        // Sample multiple noise octaves for complex terrain
-        double noise = 0.0;
-        double amplitude = 1.0;
-        double frequency = 0.01;
-
-        for (int octave = 0; octave < 4; octave++) { // Default octaves
-            noise += altitudeNoise.getValue(x * frequency * 1.0f, z * frequency * 1.0f) * amplitude;
-            amplitude *= 0.5f; // Default persistence
-            frequency *= 2.0f; // Default lacunarity
+        if (planetId.toString().contains("moon")) {
+            // Lunar terrain - moderate height variation with craters
+            baseHeight = 70;
+            maxVariation = 25;
+            roughnessMultiplier = 0.7;
+        } else if (planetId.toString().contains("venus")) {
+            // Venus terrain - volcanic with high variation
+            baseHeight = 75;
+            maxVariation = 35;
+            roughnessMultiplier = 0.9;
+        } else if (planetId.toString().contains("mars")) {
+            // Mars terrain - moderate with canyons and mountains
+            baseHeight = 68;
+            maxVariation = 40;
+            roughnessMultiplier = 0.8;
+        } else {
+            // Default rocky terrain
+            baseHeight = 65;
+            maxVariation = 30;
+            roughnessMultiplier = 0.7;
         }
 
-        // Apply roughness and erosion
-        double roughness = 0.8f; // Default roughness
-        double erosion = 0.2f; // Default erosion
-        double continentalness = 0.5f; // Default continentalness
+        // Sample multiple noise octaves for complex, realistic terrain
+        double noise = 0.0;
+        double amplitude = 1.0;
+        double frequency = 0.008; // Lower frequency for larger terrain features
 
-        // Continental vs oceanic influence
-        double continentalFactor = continentalnessNoise.getValue(x * 0.002, z * 0.002) * continentalness;
+        // Generate terrain using fractal noise (multiple octaves)
+        for (int octave = 0; octave < 6; octave++) {
+            double octaveNoise = altitudeNoise.getValue(x * frequency, z * frequency);
+            noise += octaveNoise * amplitude;
+            amplitude *= 0.6; // Persistence - how much each octave contributes
+            frequency *= 1.8; // Lacunarity - frequency multiplier between octaves
+        }
 
-        // Erosion effects (smooths terrain)
-        double erosionFactor = erosionNoise.getValue(x * 0.005, z * 0.005) * erosion;
-        noise *= (1.0 - erosionFactor * 0.5);
+        // Add continental/regional variation for large-scale features
+        double continentalFactor = continentalnessNoise.getValue(x * 0.001, z * 0.001);
+        noise += continentalFactor * 0.3;
 
-        // Apply continental influence
-        noise += continentalFactor * maxVariation * 0.3;
+        // Add erosion effects for more realistic terrain
+        double erosionFactor = erosionNoise.getValue(x * 0.003, z * 0.003);
+        double erosionIntensity = 0.2;
+        noise *= (1.0 - erosionFactor * erosionIntensity);
 
-        // Scale by roughness
-        noise *= roughness;
+        // Add ridge/valley features
+        double ridgeFactor = weirdnessNoise.getValue(x * 0.004, z * 0.004);
+        noise += Math.abs(ridgeFactor) * 0.15; // Create ridges where noise is extreme
 
-        // Convert to height
+        // Apply planet-specific roughness
+        noise *= roughnessMultiplier;
+
+        // Scale and apply variation
         int heightVariation = (int) (noise * maxVariation);
-        return Mth.clamp(baseHeight + heightVariation, -64, 320);
+
+        // Calculate final height with bounds checking
+        int finalHeight = baseHeight + heightVariation;
+        return Mth.clamp(finalHeight, -50, 200); // Keep within reasonable world bounds
     }
 
     /**
@@ -546,7 +563,7 @@ public class PlanetChunkGenerator extends ChunkGenerator {
     }
 
     /**
-     * Generate default planet terrain based on planet ID
+     * Generate default planet terrain based on planet ID with proper terrain features
      */
     private void generateDefaultPlanetTerrain(ChunkAccess chunk) {
         ChunkPos chunkPos = chunk.getPos();
@@ -555,6 +572,7 @@ public class PlanetChunkGenerator extends ChunkGenerator {
         BlockState surfaceBlock;
         BlockState subsurfaceBlock;
         BlockState deepBlock;
+        BlockState bedrockBlock = Blocks.BEDROCK.defaultBlockState();
 
         if (planetId.toString().contains("moon")) {
             // Lunar terrain - gray concrete and stone
@@ -582,28 +600,47 @@ public class PlanetChunkGenerator extends ChunkGenerator {
             AdAstraMekanized.LOGGER.debug("Generating default rocky terrain for chunk {}", chunkPos);
         }
 
+        // Generate proper terrain with height variation
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 int worldX = chunkPos.getMinBlockX() + x;
                 int worldZ = chunkPos.getMinBlockZ() + z;
                 int surfaceHeight = getSurfaceHeight(worldX, worldZ);
 
-                // Fill deep layers
-                for (int y = chunk.getMinBuildHeight(); y <= surfaceHeight - 4; y++) {
-                    chunk.setBlockState(new BlockPos(x, y, z), deepBlock, false);
-                }
+                // Ensure surface height is within valid bounds
+                surfaceHeight = Math.max(surfaceHeight, chunk.getMinBuildHeight() + 10);
+                surfaceHeight = Math.min(surfaceHeight, chunk.getMaxBuildHeight() - 10);
 
-                // Fill subsurface layers
-                for (int y = surfaceHeight - 3; y <= surfaceHeight - 1; y++) {
-                    chunk.setBlockState(new BlockPos(x, y, z), subsurfaceBlock, false);
-                }
+                // Generate from bottom to top
+                for (int y = chunk.getMinBuildHeight(); y <= surfaceHeight; y++) {
+                    BlockPos pos = new BlockPos(x, y, z);
 
-                // Surface layer
-                chunk.setBlockState(new BlockPos(x, surfaceHeight, z), surfaceBlock, false);
+                    if (y <= chunk.getMinBuildHeight() + 5) {
+                        // Bedrock layer at bottom (5 blocks thick with some variation)
+                        if (y <= chunk.getMinBuildHeight() + 1 ||
+                            (y <= chunk.getMinBuildHeight() + 5 && Math.random() < 0.8)) {
+                            chunk.setBlockState(pos, bedrockBlock, false);
+                        } else {
+                            chunk.setBlockState(pos, deepBlock, false);
+                        }
+                    } else if (y <= surfaceHeight - 8) {
+                        // Deep stone/core layer
+                        chunk.setBlockState(pos, deepBlock, false);
+                    } else if (y <= surfaceHeight - 3) {
+                        // Subsurface layer (transition zone)
+                        chunk.setBlockState(pos, subsurfaceBlock, false);
+                    } else if (y == surfaceHeight) {
+                        // Surface layer
+                        chunk.setBlockState(pos, surfaceBlock, false);
+                    } else {
+                        // Fill remaining with subsurface material
+                        chunk.setBlockState(pos, subsurfaceBlock, false);
+                    }
+                }
             }
         }
 
-        AdAstraMekanized.LOGGER.debug("Generated default terrain for planet {} at chunk {} (custom generator mode)",
+        AdAstraMekanized.LOGGER.debug("Generated terrain with height variation for planet {} at chunk {} (custom generator mode)",
             planetId, chunkPos);
     }
 
