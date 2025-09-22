@@ -1,0 +1,71 @@
+{
+  "id": "adastramekanized:xo_4023i",
+  "display_name": "XO-4023i",
+  "properties": {
+    "gravity": 0.561457,
+    "temperature": -263.822540,
+    "day_length": 48.874657,
+    "orbit_distance": 1946,
+    "has_rings": true,
+    "moon_count": 0
+  },
+  "atmosphere": {
+    "has_atmosphere": true,
+    "breathable": false,
+    "pressure": 0.340023,
+    "oxygen_level": 0.162221,
+    "type": "NORMAL"
+  },
+  "dimension": {
+    "dimension_type": "adastramekanized:xo_4023i",
+    "biome_source": "adastramekanized:xo_4023i_biome_source",
+    "chunk_generator": "adastramekanized:xo_4023i_generator",
+    "is_orbital": false,
+    "sky_color": 14093617,
+    "fog_color": 16507680,
+    "ambient_light": 0.1
+  },
+  "rendering": {
+    "sky": {
+      "sky_color": 14093617,
+      "sunrise_color": 16770121,
+      "custom_sky": true,
+      "has_stars": true,
+      "star_count": 21457,
+      "star_brightness": 0.760196,
+      "star_visibility": "night_only"
+    },
+    "fog": {
+      "fog_color": 16507680,
+      "has_fog": true,
+      "fog_density": 0.414705,
+      "near_plane": 20.165257,
+      "far_plane": 215.866669
+    },
+    "celestial_bodies": {
+      "sun": {
+        "texture": "minecraft:textures/environment/sun.png",
+        "scale": 0.669883,
+        "color": 16777202,
+        "visible": true
+      },
+      "moons": [],
+      "visible_planets": []
+    },
+    "weather": {
+      "has_clouds": true,
+      "has_rain": false,
+      "has_snow": false,
+      "has_storms": false,
+      "rain_acidity": 0.0
+    },
+    "particles": {
+      "has_dust": true,
+      "has_ash": false,
+      "has_spores": false,
+      "has_snowfall": true,
+      "particle_density": 0.368927,
+      "particle_color": 16507680
+    }
+  }
+}

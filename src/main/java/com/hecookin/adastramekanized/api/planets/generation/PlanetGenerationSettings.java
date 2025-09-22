@@ -1,5 +1,6 @@
 package com.hecookin.adastramekanized.api.planets.generation;
 
+import com.hecookin.adastramekanized.api.planets.atmosphere.AtmosphericRendering;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
@@ -146,6 +147,7 @@ public record PlanetGenerationSettings(
         boolean hasMoon,                 // Whether moon renders
         boolean hasStars,                // Whether stars render
         float starBrightness,            // Star brightness multiplier
+        AtmosphericRendering.StarVisibility starVisibility, // When stars are visible
         int sunSize,                     // Sun size multiplier
         int moonSize                     // Moon size multiplier
     ) {
@@ -159,6 +161,10 @@ public record PlanetGenerationSettings(
                 Codec.BOOL.optionalFieldOf("has_moon", true).forGetter(SkyConfiguration::hasMoon),
                 Codec.BOOL.optionalFieldOf("has_stars", true).forGetter(SkyConfiguration::hasStars),
                 Codec.FLOAT.optionalFieldOf("star_brightness", 1.0f).forGetter(SkyConfiguration::starBrightness),
+                Codec.STRING.optionalFieldOf("star_visibility", "night_only")
+                    .xmap(s -> AtmosphericRendering.StarVisibility.valueOf(s.toUpperCase()),
+                          v -> v.name().toLowerCase())
+                    .forGetter(SkyConfiguration::starVisibility),
                 Codec.INT.optionalFieldOf("sun_size", 1).forGetter(SkyConfiguration::sunSize),
                 Codec.INT.optionalFieldOf("moon_size", 1).forGetter(SkyConfiguration::moonSize)
             ).apply(instance, SkyConfiguration::new)
@@ -582,7 +588,7 @@ public record PlanetGenerationSettings(
 
     private static AtmosphericSettings createDefaultAtmosphere() {
         return new AtmosphericSettings(
-            new SkyConfiguration(0x87CEEB, 0xFDB813, 0xFFFFFF, true, true, true, true, 1.0f, 1, 1),
+            new SkyConfiguration(0x87CEEB, 0xFDB813, 0xFFFFFF, true, true, true, true, 1.0f, AtmosphericRendering.StarVisibility.NIGHT_ONLY, 1, 1),
             new FogConfiguration(0xC0C0C0, 0.1f, 16.0f, 128.0f, false, 1.0f),
             new LightingConfiguration(0.0f, 1.0f, 0.25f, 0xFFFFFF, true, 1.0f),
             new WeatherConfiguration(true, true, true, 0.1f, 0.05f, 0.1f, ResourceLocation.withDefaultNamespace("water")),
@@ -637,7 +643,7 @@ public record PlanetGenerationSettings(
 
     private static AtmosphericSettings createMoonAtmosphere() {
         return new AtmosphericSettings(
-            new SkyConfiguration(0x000000, 0x101010, 0x000000, false, true, false, true, 3.0f, 1, 0),
+            new SkyConfiguration(0x000000, 0x101010, 0x000000, false, true, false, true, 3.0f, AtmosphericRendering.StarVisibility.CONSTANT, 1, 0),
             new FogConfiguration(0x202020, 0.0f, 256.0f, 512.0f, false, 1.0f),
             new LightingConfiguration(0.0f, 1.5f, 0.0f, 0xFFFFFF, true, 1.0f),
             new WeatherConfiguration(false, false, false, 0.0f, 0.0f, 0.0f, ResourceLocation.withDefaultNamespace("air")),
@@ -698,7 +704,7 @@ public record PlanetGenerationSettings(
 
     private static AtmosphericSettings createMarsAtmosphere() {
         return new AtmosphericSettings(
-            new SkyConfiguration(0xCD853F, 0xA0522D, 0x8B4513, false, true, true, true, 1.5f, 1, 1),
+            new SkyConfiguration(0xCD853F, 0xA0522D, 0x8B4513, false, true, true, true, 1.5f, AtmosphericRendering.StarVisibility.NIGHT_ONLY, 1, 1),
             new FogConfiguration(0xDEB887, 0.3f, 32.0f, 192.0f, true, 0.8f),
             new LightingConfiguration(0.05f, 0.8f, 0.15f, 0xFFDEB3, true, 1.0f),
             new WeatherConfiguration(false, false, true, 0.0f, 0.15f, 0.2f, ResourceLocation.withDefaultNamespace("sand")),

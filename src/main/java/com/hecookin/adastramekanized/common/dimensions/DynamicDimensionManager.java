@@ -56,7 +56,7 @@ public class DynamicDimensionManager {
     }
 
     /**
-     * Get or create a dimension for the given planet
+     * Get or create a dimension for the given planet using runtime registry
      */
     public ServerLevel getOrCreatePlanetDimension(ResourceKey<Level> dimensionKey, String planetName) {
         // First check if dimension already exists in server
@@ -81,33 +81,20 @@ public class DynamicDimensionManager {
             return null;
         }
 
-        AdAstraMekanized.LOGGER.info("Attempting to access datapack dimension for planet: {}", planet.displayName());
+        AdAstraMekanized.LOGGER.info("Creating runtime dimension for planet: {}", planet.displayName());
 
-        // Check if the dimension exists in the server's level stem registry
-        Registry<LevelStem> levelStemRegistry = server.registryAccess().registryOrThrow(Registries.LEVEL_STEM);
-        ResourceKey<LevelStem> levelStemKey = ResourceKey.create(Registries.LEVEL_STEM, dimensionKey.location());
-        var levelStem = levelStemRegistry.getOptional(levelStemKey);
+        // Use RuntimeDimensionRegistry to create dimension at runtime
+        RuntimeDimensionRegistry runtimeRegistry = RuntimeDimensionRegistry.getInstance();
+        runtimeRegistry.initialize(server);
 
-        if (levelStem.isPresent()) {
-            AdAstraMekanized.LOGGER.info("Found level stem for dimension: {}", dimensionKey.location());
-            AdAstraMekanized.LOGGER.info("Level stem generator type: {}", levelStem.get().generator().getClass().getSimpleName());
-
-            // The dimension is defined in datapack but not loaded as a ServerLevel
-            // In NeoForge 1.21, dimensions from datapacks need to be loaded at world creation
-            AdAstraMekanized.LOGGER.warn("Dimension {} exists in datapack but is not loaded as ServerLevel", dimensionKey.location());
-            AdAstraMekanized.LOGGER.warn("Datapack dimensions must be loaded during world creation, not at runtime");
-            AdAstraMekanized.LOGGER.warn("Using Overworld as fallback for testing...");
-
-            return null;
+        ServerLevel serverLevel = runtimeRegistry.registerAndCreateDimension(dimensionKey, planet);
+        if (serverLevel != null) {
+            createdDimensions.put(dimensionKey, serverLevel);
+            AdAstraMekanized.LOGGER.info("Successfully created runtime dimension for planet: {} at {}",
+                planet.displayName(), dimensionKey.location());
+            return serverLevel;
         } else {
-            AdAstraMekanized.LOGGER.error("Dimension {} not found in level stem registry", dimensionKey.location());
-
-            // List available dimensions for debugging
-            AdAstraMekanized.LOGGER.info("Available level stems:");
-            levelStemRegistry.keySet().forEach(key ->
-                AdAstraMekanized.LOGGER.info("  - {}", key)
-            );
-
+            AdAstraMekanized.LOGGER.error("Failed to create runtime dimension for planet: {}", planet.displayName());
             return null;
         }
     }

@@ -87,14 +87,14 @@ public class CelestialBodyConverter {
     private static SkyRenderable convertMoon(AtmosphericRendering.MoonConfiguration moon) {
         ResourceLocation texture = moon.texture() != null ? moon.texture() : MOON_TEXTURE;
 
-        // Moons with orbit phase > 0 move opposite to time, others are static
-        MovementType movementType = moon.orbitPhase() > 0 ? MovementType.TIME_OF_DAY_REVERSED : MovementType.STATIC;
+        // Use explicit movement configuration
+        MovementType movementType = moon.movesWithTime() ? MovementType.TIME_OF_DAY : MovementType.STATIC;
 
-        // Calculate rotation based on orbit phase
+        // Calculate rotation based on horizontal and vertical positioning
         Vec3 globalRotation = new Vec3(
-            moon.orbitPhase() * 360.0,  // X rotation based on orbit phase
-            moon.orbitPhase() * 180.0,  // Y rotation for variety
-            0.0                         // No Z rotation
+            moon.horizontalPosition() * 30.0,  // Horizontal positioning in sky dome
+            moon.horizontalPosition() * 45.0,  // Additional positioning variety
+            moon.verticalPosition() * 90.0     // Vertical positioning (-90° to +90°)
         );
 
         int color = convertRGBToARGB(moon.color());
@@ -117,15 +117,14 @@ public class CelestialBodyConverter {
     private static SkyRenderable convertPlanet(AtmosphericRendering.PlanetConfiguration planet) {
         ResourceLocation texture = planet.texture() != null ? planet.texture() : PLANET_TEXTURE;
 
-        // Planets with distance < 1.0 move with time, others are static
-        // This allows close planets (like Earth from Moon) to move across the sky
-        MovementType movementType = planet.distance() < 1.0 ? MovementType.TIME_OF_DAY : MovementType.STATIC;
+        // Use explicit movement configuration
+        MovementType movementType = planet.movesWithTime() ? MovementType.TIME_OF_DAY : MovementType.STATIC;
 
-        // Position planets based on distance parameter
+        // Position planets based on horizontal and vertical position parameters
         Vec3 globalRotation = new Vec3(
-            planet.distance() * 30.0,   // Spread planets based on distance
-            planet.distance() * 45.0,   // Vary positioning
-            0.0
+            planet.horizontalPosition() * 30.0,   // Horizontal positioning in sky dome
+            planet.horizontalPosition() * 45.0,   // Additional positioning variety
+            planet.verticalPosition() * 90.0      // Vertical positioning (-90° to +90°)
         );
 
         int color = convertRGBToARGB(planet.color());

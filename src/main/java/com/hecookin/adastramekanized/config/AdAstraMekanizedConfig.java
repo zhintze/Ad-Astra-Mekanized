@@ -67,6 +67,8 @@ public class AdAstraMekanizedConfig {
 
         // Planet Generation Settings
         public final ModConfigSpec.BooleanValue enableProceduralPlanets;
+        public final ModConfigSpec.BooleanValue enableAutoPlanetGeneration;
+        public final ModConfigSpec.IntValue initialPlanetCount;
         public final ModConfigSpec.IntValue minPlanetDistance;
         public final ModConfigSpec.IntValue maxPlanetDistance;
 
@@ -144,6 +146,20 @@ public class AdAstraMekanizedConfig {
                             "Allow generation of procedural planets with random characteristics")
                     .translation("adastramekanized.config.enableProceduralPlanets")
                     .define("enableProceduralPlanets", true);
+
+            enableAutoPlanetGeneration = builder
+                    .comment("Enable Auto Planet Generation",
+                            "Automatically generate planets during mod initialization",
+                            "This ensures planets are available when the server starts")
+                    .translation("adastramekanized.config.enableAutoPlanetGeneration")
+                    .define("enableAutoPlanetGeneration", true);
+
+            initialPlanetCount = builder
+                    .comment("Initial Planet Count",
+                            "Number of planets to generate automatically during mod initialization",
+                            "Set to 0 to disable auto-generation")
+                    .translation("adastramekanized.config.initialPlanetCount")
+                    .defineInRange("initialPlanetCount", 10, 0, 100);
 
             minPlanetDistance = builder
                     .comment("Minimum Planet Distance",

@@ -56,7 +56,9 @@ All customization is done through JSON files in `src/main/resources/data/adastra
     "texture": "minecraft:textures/block/stone.png",    // Any texture
     "scale": 0.4,                                       // Size
     "color": 11184810,                                  // RGB hex tint
-    "orbit_phase": 0.15,                               // Orbital position (0.0-1.0)
+    "horizontal_position": 0.4,                        // Horizontal position in sky (-1.0 to 1.0)
+    "vertical_position": 0.15,                         // Vertical position in sky (-1.0 to 1.0)
+    "moves_with_time": true,                           // Whether moon moves with time
     "visible": true                                     // Show/hide moon
   }
 ]
@@ -64,11 +66,11 @@ All customization is done through JSON files in `src/main/resources/data/adastra
 
 **Moon Behavior:**
 - Multiple moons supported (array)
-- Movement: `TIME_OF_DAY_REVERSED` (opposite to sun)
-- `orbit_phase` determines sky position:
-  - `0.0` = one position
-  - `0.5` = opposite side of sky
-  - Similar values = moons appear close together
+- Movement: Configurable via `moves_with_time`
+  - `true` = `TIME_OF_DAY` (same direction as sun, east to west arc)
+  - `false` = `STATIC` (fixed position)
+- `horizontal_position` determines horizontal sky position (-1.0 to 1.0)
+- `vertical_position` determines vertical sky position (-1.0 to 1.0)
 
 ### Planet Configuration
 ```json
@@ -77,17 +79,20 @@ All customization is done through JSON files in `src/main/resources/data/adastra
     "texture": "minecraft:textures/block/lapis_block.png", // Any texture
     "scale": 2.5,                                          // Size
     "color": 3361970,                                      // RGB hex tint
-    "distance": 0.3,                                       // Position factor
+    "horizontal_position": 0.3,                            // Horizontal position in sky (-1.0 to 1.0)
+    "vertical_position": 0.2,                              // Vertical position in sky (-1.0 to 1.0)
+    "moves_with_time": true,                               // Whether planet moves with time
     "visible": true                                        // Show/hide planet
   }
 ]
 ```
 
 **Planet Behavior:**
-- Movement: `TIME_OF_DAY` if `distance < 1.0`, otherwise `STATIC`
-- Planets with `distance < 1.0` move across the sky with time (like Earth from Moon)
-- Planets with `distance >= 1.0` remain fixed (distant background objects)
-- `distance` also affects positioning in sky dome
+- Movement: Configurable via `moves_with_time`
+  - `true` = `TIME_OF_DAY` (east to west arc following day/night cycle)
+  - `false` = `STATIC` (fixed position)
+- `horizontal_position` affects horizontal positioning in sky dome (-1.0 to 1.0)
+- `vertical_position` controls vertical height: `-1.0` = below horizon, `0.0` = horizon level, `1.0` = overhead
 
 ## Color System
 
@@ -163,9 +168,13 @@ Place in `src/main/resources/assets/adastramekanized/textures/` and reference as
 ## Movement Types
 
 **Automatic Movement Assignment:**
-- **Sun**: Always `TIME_OF_DAY` (moves with day/night)
-- **Moons**: `TIME_OF_DAY_REVERSED` if `orbit_phase > 0`, else `STATIC`
-- **Planets**: `TIME_OF_DAY` if `distance < 1.0`, else `STATIC`
+- **Sun**: Always `TIME_OF_DAY` (east to west arc with day/night cycle)
+- **Moons**: Determined by `moves_with_time` boolean
+  - `true` = `TIME_OF_DAY` (same direction as sun, east to west arc)
+  - `false` = `STATIC` (fixed position)
+- **Planets**: Determined by `moves_with_time` boolean
+  - `true` = `TIME_OF_DAY` (same direction as sun, east to west arc)
+  - `false` = `STATIC` (fixed position)
 
 **Movement Behaviors:**
 - `TIME_OF_DAY`: East-to-west arc following day/night cycle
@@ -294,6 +303,7 @@ Place in `src/main/resources/assets/adastramekanized/textures/` and reference as
         "scale": 2.5,
         "color": 3361970,
         "distance": 0.3,
+        "elevation": 0.2,
         "visible": true
       },
       {
@@ -301,6 +311,7 @@ Place in `src/main/resources/assets/adastramekanized/textures/` and reference as
         "scale": 0.4,
         "color": 16744192,
         "distance": 0.7,
+        "elevation": -0.3,
         "visible": true
       }
     ]
@@ -346,6 +357,7 @@ Place in `src/main/resources/assets/adastramekanized/textures/` and reference as
         "scale": 0.8,
         "color": 3361970,
         "distance": 0.6,
+        "elevation": 0.15,
         "visible": true
       }
     ]

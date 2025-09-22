@@ -141,6 +141,21 @@ public class CelestialSkyRenderer {
             return;
         }
 
+        // Check star visibility mode
+        if (skyConfig.starVisibility() == AtmosphericRendering.StarVisibility.NIGHT_ONLY) {
+            // Get time of day (0.0 = sunrise, 0.5 = sunset, 1.0 = next sunrise)
+            float timeOfDay = level.getTimeOfDay(partialTick);
+            // Normalize to 0-1 range
+            timeOfDay = timeOfDay - (float) Math.floor(timeOfDay);
+
+            // Stars visible during night (roughly 0.0-0.25 and 0.75-1.0)
+            // Add fade transition zones
+            boolean isNight = timeOfDay <= 0.3f || timeOfDay >= 0.7f;
+            if (!isNight) {
+                return;
+            }
+        }
+
         poseStack.pushPose();
 
         // Apply the same coordinate system transformation as celestial bodies

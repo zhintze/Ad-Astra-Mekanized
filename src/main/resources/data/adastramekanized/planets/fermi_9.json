@@ -1,0 +1,96 @@
+{
+  "id": "adastramekanized:fermi_9",
+  "display_name": "Fermi 9",
+  "properties": {
+    "gravity": 1.495103,
+    "temperature": 461.634216,
+    "day_length": 35.864853,
+    "orbit_distance": 1703,
+    "has_rings": false,
+    "moon_count": 1
+  },
+  "atmosphere": {
+    "has_atmosphere": true,
+    "breathable": false,
+    "pressure": 1.455673,
+    "oxygen_level": 0.000000,
+    "type": "NORMAL"
+  },
+  "dimension": {
+    "dimension_type": "adastramekanized:fermi_9",
+    "biome_source": "adastramekanized:fermi_9_biome_source",
+    "chunk_generator": "adastramekanized:fermi_9_generator",
+    "is_orbital": false,
+    "sky_color": 15142646,
+    "fog_color": 10600716,
+    "ambient_light": 0.1
+  },
+  "rendering": {
+    "sky": {
+      "sky_color": 15142646,
+      "sunrise_color": 16770185,
+      "custom_sky": true,
+      "has_stars": true,
+      "star_count": 14284,
+      "star_brightness": 0.667856,
+      "star_visibility": "night_only"
+    },
+    "fog": {
+      "fog_color": 10600716,
+      "has_fog": true,
+      "fog_density": 0.639477,
+      "near_plane": 28.540997,
+      "far_plane": 244.647125
+    },
+    "celestial_bodies": {
+      "sun": {
+        "texture": "minecraft:textures/environment/sun.png",
+        "scale": 1.040595,
+        "color": 16777188,
+        "visible": true
+      },
+      "moons": [{
+  "texture": "minecraft:textures/block/gray_concrete.png",
+  "scale": 0.124322,
+  "color": 8844062,
+  "horizontal_position": 0.304021,
+  "vertical_position": 0.717662,
+  "moves_with_time": true,
+  "visible": true
+}],
+      "visible_planets": [{
+  "texture": "minecraft:textures/block/orange_terracotta.png",
+  "scale": 0.332340,
+  "color": 16752597,
+  "horizontal_position": -0.222167,
+  "vertical_position": 1.136753,
+  "moves_with_time": true,
+  "visible": true
+},
+{
+  "texture": "minecraft:textures/environment/sun.png",
+  "scale": 0.167589,
+  "color": 16777201,
+  "horizontal_position": -0.154845,
+  "vertical_position": 0.745070,
+  "moves_with_time": true,
+  "visible": true
+}]
+    },
+    "weather": {
+      "has_clouds": true,
+      "has_rain": true,
+      "has_snow": false,
+      "has_storms": false,
+      "rain_acidity": 0.0
+    },
+    "particles": {
+      "has_dust": true,
+      "has_ash": true,
+      "has_spores": false,
+      "has_snowfall": false,
+      "particle_density": 0.507007,
+      "particle_color": 10600716
+    }
+  }
+}

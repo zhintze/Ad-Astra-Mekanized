@@ -30,6 +30,14 @@ public record AtmosphericRendering(
     );
 
     /**
+     * Star visibility modes
+     */
+    public enum StarVisibility {
+        CONSTANT,   // Stars always visible
+        NIGHT_ONLY  // Stars only visible at night
+    }
+
+    /**
      * Sky rendering configuration
      */
     public record SkyConfiguration(
@@ -39,6 +47,7 @@ public record AtmosphericRendering(
         boolean hasStars,       // Whether stars are visible
         int starCount,          // Number of stars to render
         float starBrightness,   // Star brightness multiplier
+        StarVisibility starVisibility,  // When stars are visible
         Optional<ResourceLocation> skyTexture  // Custom sky texture
     ) {
         public static final Codec<SkyConfiguration> CODEC = RecordCodecBuilder.create(instance ->
@@ -49,6 +58,10 @@ public record AtmosphericRendering(
                 Codec.BOOL.fieldOf("has_stars").forGetter(SkyConfiguration::hasStars),
                 Codec.INT.fieldOf("star_count").forGetter(SkyConfiguration::starCount),
                 Codec.FLOAT.fieldOf("star_brightness").forGetter(SkyConfiguration::starBrightness),
+                Codec.STRING.optionalFieldOf("star_visibility", "constant")
+                    .xmap(s -> StarVisibility.valueOf(s.toUpperCase()),
+                          v -> v.name().toLowerCase())
+                    .forGetter(SkyConfiguration::starVisibility),
                 ResourceLocation.CODEC.optionalFieldOf("sky_texture").forGetter(SkyConfiguration::skyTexture)
             ).apply(instance, SkyConfiguration::new)
         );
@@ -118,7 +131,9 @@ public record AtmosphericRendering(
         ResourceLocation texture,     // Moon texture
         float scale,                 // Moon size scale
         int color,                   // Moon color tint
-        float orbitPhase,           // Current orbital phase (0.0 - 1.0)
+        float horizontalPosition,   // Horizontal positioning in sky dome (-1.0 to 1.0)
+        float verticalPosition,     // Vertical positioning in sky dome (-1.0 to 1.0, 0.0 = horizon)
+        boolean movesWithTime,      // Whether moon moves with time
         boolean visible             // Whether moon is visible
     ) {
         public static final Codec<MoonConfiguration> CODEC = RecordCodecBuilder.create(instance ->
@@ -126,7 +141,9 @@ public record AtmosphericRendering(
                 ResourceLocation.CODEC.fieldOf("texture").forGetter(MoonConfiguration::texture),
                 Codec.FLOAT.fieldOf("scale").forGetter(MoonConfiguration::scale),
                 Codec.INT.fieldOf("color").forGetter(MoonConfiguration::color),
-                Codec.FLOAT.fieldOf("orbit_phase").forGetter(MoonConfiguration::orbitPhase),
+                Codec.FLOAT.optionalFieldOf("horizontal_position", 0.0f).forGetter(MoonConfiguration::horizontalPosition),
+                Codec.FLOAT.optionalFieldOf("vertical_position", 0.0f).forGetter(MoonConfiguration::verticalPosition),
+                Codec.BOOL.optionalFieldOf("moves_with_time", true).forGetter(MoonConfiguration::movesWithTime),
                 Codec.BOOL.fieldOf("visible").forGetter(MoonConfiguration::visible)
             ).apply(instance, MoonConfiguration::new)
         );
@@ -136,18 +153,22 @@ public record AtmosphericRendering(
      * Visible planet rendering configuration
      */
     public record PlanetConfiguration(
-        ResourceLocation texture,     // Planet texture
-        float scale,                 // Planet size scale
-        int color,                   // Planet color tint
-        float distance,             // Distance modifier for visibility
-        boolean visible             // Whether planet is visible
+        ResourceLocation texture,       // Planet texture
+        float scale,                   // Planet size scale
+        int color,                     // Planet color tint
+        float horizontalPosition,      // Horizontal positioning in sky dome (-1.0 to 1.0)
+        float verticalPosition,        // Vertical positioning in sky dome (-1.0 to 1.0, 0.0 = horizon)
+        boolean movesWithTime,         // Whether planet moves across sky with time
+        boolean visible               // Whether planet is visible
     ) {
         public static final Codec<PlanetConfiguration> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                 ResourceLocation.CODEC.fieldOf("texture").forGetter(PlanetConfiguration::texture),
                 Codec.FLOAT.fieldOf("scale").forGetter(PlanetConfiguration::scale),
                 Codec.INT.fieldOf("color").forGetter(PlanetConfiguration::color),
-                Codec.FLOAT.fieldOf("distance").forGetter(PlanetConfiguration::distance),
+                Codec.FLOAT.optionalFieldOf("horizontal_position", 0.0f).forGetter(PlanetConfiguration::horizontalPosition),
+                Codec.FLOAT.optionalFieldOf("vertical_position", 0.0f).forGetter(PlanetConfiguration::verticalPosition),
+                Codec.BOOL.optionalFieldOf("moves_with_time", false).forGetter(PlanetConfiguration::movesWithTime),
                 Codec.BOOL.fieldOf("visible").forGetter(PlanetConfiguration::visible)
             ).apply(instance, PlanetConfiguration::new)
         );
@@ -204,7 +225,7 @@ public record AtmosphericRendering(
      */
     public static AtmosphericRendering createDefault() {
         return new AtmosphericRendering(
-            new SkyConfiguration(0x78A7FF, 0xFFA500, false, true, 1500, 1.0f, Optional.empty()),
+            new SkyConfiguration(0x78A7FF, 0xFFA500, false, true, 1500, 1.0f, StarVisibility.NIGHT_ONLY, Optional.empty()),
             new FogConfiguration(0xC0D8FF, true, 0.3f, 32.0f, 256.0f),
             new CelestialBodies(
                 new SunConfiguration(Optional.empty(), 1.0f, 0xFFFFFF, true),
@@ -221,7 +242,7 @@ public record AtmosphericRendering(
      */
     public static AtmosphericRendering createAirless(int skyColor, int fogColor) {
         return new AtmosphericRendering(
-            new SkyConfiguration(skyColor, skyColor, true, true, 13000, 0.6f, Optional.empty()),
+            new SkyConfiguration(skyColor, skyColor, true, true, 13000, 0.6f, StarVisibility.CONSTANT, Optional.empty()),
             new FogConfiguration(fogColor, true, 0.1f, 16.0f, 128.0f),
             new CelestialBodies(
                 new SunConfiguration(
@@ -241,7 +262,7 @@ public record AtmosphericRendering(
      */
     public static AtmosphericRendering createMarsLike(int skyColor, int fogColor) {
         return new AtmosphericRendering(
-            new SkyConfiguration(skyColor, 0xd85f33, true, true, 8000, 0.8f, Optional.empty()),
+            new SkyConfiguration(skyColor, 0xd85f33, true, true, 8000, 0.8f, StarVisibility.NIGHT_ONLY, Optional.empty()),
             new FogConfiguration(fogColor, true, 0.4f, 24.0f, 192.0f),
             new CelestialBodies(
                 new SunConfiguration(Optional.empty(), 0.6f, 0xFFE4B5, true),
@@ -258,7 +279,7 @@ public record AtmosphericRendering(
      */
     public static AtmosphericRendering createVenusLike(int skyColor, int fogColor) {
         return new AtmosphericRendering(
-            new SkyConfiguration(skyColor, 0xFF6600, true, false, 0, 0.0f, Optional.empty()),
+            new SkyConfiguration(skyColor, 0xFF6600, true, false, 0, 0.0f, StarVisibility.NIGHT_ONLY, Optional.empty()),
             new FogConfiguration(fogColor, true, 0.9f, 8.0f, 64.0f),
             new CelestialBodies(
                 new SunConfiguration(Optional.empty(), 0.3f, 0xFFCC00, false), // Sun barely visible
@@ -275,7 +296,7 @@ public record AtmosphericRendering(
      */
     public static AtmosphericRendering createIcePlanet(int skyColor, int fogColor) {
         return new AtmosphericRendering(
-            new SkyConfiguration(skyColor, 0xB0E0E6, true, true, 2000, 1.2f, Optional.empty()),
+            new SkyConfiguration(skyColor, 0xB0E0E6, true, true, 2000, 1.2f, StarVisibility.NIGHT_ONLY, Optional.empty()),
             new FogConfiguration(fogColor, true, 0.5f, 20.0f, 160.0f),
             new CelestialBodies(
                 new SunConfiguration(Optional.empty(), 0.8f, 0xE6F3FF, true),

@@ -313,6 +313,189 @@ Use extreme values to verify changes are applied:
 
 If atmospheric changes work but celestial bodies don't, this confirms the known limitation above.
 
+## Block Replacement System
+
+### Overview
+
+The planetary generation system in Ad Astra Mekanized uses a **hybrid approach** that combines template dimensions with custom block replacement capabilities. This allows dynamic planets to have unique terrain composition while leveraging existing dimension infrastructure.
+
+### Current Implementation Status
+
+**Template-Based Foundation**:
+- Dynamic planets map to template dimensions (Overworld, Nether, End) based on their `DimensionEffectsType`
+- Template mapping provides basic world structure and physics
+- 5 template types: MOON_LIKE → End, VOLCANIC → Nether, ROCKY/ICE_WORLD/GAS_GIANT → Overworld
+
+**Block Replacement Architecture**:
+- `PlanetChunkGenerator` serves as the core extensible generation system
+- Custom block replacement is handled through the chunk generation pipeline
+- Planet-specific block mappings can override template terrain
+
+### PlanetChunkGenerator Architecture
+
+The current `PlanetChunkGenerator` in `src/main/java/com/hecookin/adastramekanized/common/worldgen/PlanetChunkGenerator.java` provides an extensible foundation for complete terrain customization:
+
+```java
+public class PlanetChunkGenerator extends NoiseBasedChunkGenerator {
+    private final DynamicPlanetData planetData;
+    private final Map<Block, Block> blockReplacements;
+
+    // Core generation methods
+    @Override
+    public CompletableFuture<ChunkAccess> fillFromNoise(...) {
+        // Custom block placement logic
+        // Overrides template terrain with planet-specific blocks
+    }
+
+    @Override
+    public void buildSurface(...) {
+        // Surface layer customization
+        // Applies atmosphere-dependent surface materials
+    }
+}
+```
+
+### Block Replacement Capabilities
+
+**Current Features**:
+- Template dimension mapping for basic structure
+- Chunk-level block replacement during generation
+- Planet-specific surface composition
+- Atmosphere-dependent material selection
+
+**Planned Block Replacement Features** (TODOs in PlanetChunkGenerator):
+
+1. **Terrain Composition**:
+   ```java
+   // TODO: Planet-specific ore distributions
+   // TODO: Rare element concentrations (helium-3, exotic crystals)
+   // TODO: Atmosphere-dependent surface layers
+   // TODO: Temperature-based material selection
+   ```
+
+2. **Resource Generation**:
+   ```java
+   // TODO: Custom ore generation patterns
+   // TODO: Planet-unique resource types
+   // TODO: Gravity-affected ore distribution
+   // TODO: Atmospheric chemistry-based deposits
+   ```
+
+3. **Surface Features**:
+   ```java
+   // TODO: Crater generation for airless worlds
+   // TODO: Volcanic features for high-temperature planets
+   // TODO: Ice formations for cold worlds
+   // TODO: Wind erosion patterns for atmospheric worlds
+   ```
+
+### Integration with Template System
+
+**Template Dimension Usage**:
+- Templates provide basic physics (gravity, atmosphere rendering)
+- Templates handle dimension infrastructure (ServerLevel, registration)
+- Block replacement occurs during chunk generation, not dimension creation
+
+**Block Replacement Process**:
+1. Template dimension provides base world structure
+2. `PlanetChunkGenerator` intercepts chunk generation
+3. Planet-specific block mappings applied during `fillFromNoise()`
+4. Surface customization applied during `buildSurface()`
+5. Features added during `applyCarvers()` and `addFeatures()`
+
+### Extensible Generation Systems
+
+The `PlanetChunkGenerator` is designed for modular expansion:
+
+```java
+// TODO: Modular generation systems
+// private final Map<Class<? extends IWorldGenSystem>, IWorldGenSystem> generationSystems;
+
+// Example future systems:
+// - BiomeGenSystem: Planet-specific biome distributions
+// - OreGenSystem: Custom ore placement algorithms
+// - FeatureGenSystem: Unique planetary features
+// - AtmosphereGenSystem: Atmosphere-dependent generation
+```
+
+### Performance Considerations
+
+**Template Efficiency**:
+- Template mapping avoids creating actual new dimensions
+- Lazy loading with LRU eviction (max 10 loaded simultaneously)
+- Block replacement occurs only during active chunk generation
+
+**Generation Optimization**:
+- Block replacements cached per planet type
+- Chunk-level batching for block updates
+- Minimal overhead for template dimension access
+
+### Configuration Integration
+
+**Planet JSON Integration**:
+Block replacement settings will integrate with existing planet JSON files:
+
+```json
+"terrain": {
+  "surface_block": "adastramekanized:mars_stone",
+  "subsurface_block": "adastramekanized:mars_regolith",
+  "ore_replacements": {
+    "minecraft:iron_ore": "adastramekanized:mars_iron_ore",
+    "minecraft:stone": "adastramekanized:mars_stone"
+  },
+  "rare_elements": [
+    {
+      "type": "adastramekanized:helium_3_ore",
+      "rarity": 0.001,
+      "depth_range": [10, 30]
+    }
+  ]
+}
+```
+
+**Template Type Mapping**:
+- MOON_LIKE: Stone → Lunar regolith, remove water/vegetation
+- ROCKY: Stone → Mars-like rock, iron-rich deposits
+- VOLCANIC: Stone → Volcanic rock, lava pockets, sulfur deposits
+- ICE_WORLD: Stone → Frozen materials, water ice, methane
+- GAS_GIANT: Floating islands, dense atmosphere blocks
+
+### Future Roadmap
+
+**Phase 1 - Basic Block Replacement** (Next Priority):
+- Implement core block mapping system in `PlanetChunkGenerator`
+- Add surface layer customization
+- Integrate with existing template system
+
+**Phase 2 - Advanced Terrain Features**:
+- Custom ore generation patterns
+- Atmosphere-dependent surface features
+- Planet-specific resource distributions
+
+**Phase 3 - Complete Customization**:
+- Full biome system override
+- Custom structure generation
+- Unique planetary features (craters, geysers, etc.)
+
+**Phase 4 - Ecosystem Integration**:
+- Planet-specific mob spawning
+- Atmospheric life support systems
+- Resource extraction mechanics
+
+### Technical Notes
+
+**Block Replacement vs New Dimensions**:
+- Block replacement approach chosen over creating new dimension types
+- Avoids complex dimension registration and mod compatibility issues
+- Maintains compatibility with existing dimension-based systems
+- Allows unlimited planet variety without registry limits
+
+**Integration Points**:
+- `EnhancedRuntimeDimensionRegistry`: Template dimension mapping
+- `DynamicPlanetData`: Planet-specific configuration storage
+- `PlanetChunkGenerator`: Core block replacement implementation
+- Planet JSON files: Configuration data source
+
 ---
 
 *This guide will be updated as new features and generation options are discovered and implemented.*

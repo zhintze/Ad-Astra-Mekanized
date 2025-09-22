@@ -1,0 +1,11 @@
+{
+  "type": "adastramekanized:atlantis",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "adastramekanized:atlantis_plains"
+    },
+    "settings": "adastramekanized:atlantis"
+  }
+}

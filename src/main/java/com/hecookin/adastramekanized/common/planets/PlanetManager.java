@@ -3,6 +3,7 @@ package com.hecookin.adastramekanized.common.planets;
 import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.api.planets.Planet;
 import com.hecookin.adastramekanized.api.planets.PlanetRegistry;
+import com.hecookin.adastramekanized.common.planets.PlanetDiscoveryService;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -60,7 +61,7 @@ public class PlanetManager {
     }
 
     /**
-     * Load all planet data asynchronously
+     * Load all planet data synchronously during server startup
      *
      * @return CompletableFuture that completes when loading is done
      */
@@ -70,8 +71,8 @@ public class PlanetManager {
             return CompletableFuture.completedFuture(null);
         }
 
-        return CompletableFuture.runAsync(() -> {
-            try {
+        // Run synchronously during server startup to avoid thread pool termination issues
+        try {
                 AdAstraMekanized.LOGGER.info("Starting planet data loading...");
 
                 // Clear existing data
@@ -80,6 +81,11 @@ public class PlanetManager {
                 // Load planet data using PlanetDataLoader
                 PlanetDataLoader loader = new PlanetDataLoader(server);
                 loader.loadAllPlanets();
+
+                // Also run discovery service to populate discovery data
+                PlanetDiscoveryService discoveryService = PlanetDiscoveryService.getInstance();
+                discoveryService.initialize(server);
+                discoveryService.discoverAllPlanets();
 
                 // Validate loaded data
                 var invalidPlanets = registry.validateAllPlanets();
@@ -102,10 +108,11 @@ public class PlanetManager {
                 AdAstraMekanized.LOGGER.info("Planet data loading completed. {} planets loaded",
                         registry.getPlanetCount());
 
-            } catch (Exception e) {
-                AdAstraMekanized.LOGGER.error("Failed to load planet data", e);
-            }
-        }, asyncExecutor);
+            return CompletableFuture.completedFuture(null);
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.error("Failed to load planet data", e);
+            return CompletableFuture.failedFuture(e);
+        }
     }
 
     /**

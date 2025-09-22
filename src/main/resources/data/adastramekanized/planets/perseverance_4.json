@@ -1,0 +1,132 @@
+{
+  "id": "adastramekanized:perseverance_4",
+  "display_name": "Perseverance-4",
+  "properties": {
+    "gravity": 0.946023,
+    "temperature": -125.597183,
+    "day_length": 961.327820,
+    "orbit_distance": 545,
+    "has_rings": false,
+    "moon_count": 3
+  },
+  "atmosphere": {
+    "has_atmosphere": false,
+    "breathable": false,
+    "pressure": 0.000000,
+    "oxygen_level": 0.000000,
+    "type": "NONE"
+  },
+  "dimension": {
+    "dimension_type": "adastramekanized:perseverance_4",
+    "biome_source": "adastramekanized:perseverance_4_biome_source",
+    "chunk_generator": "adastramekanized:perseverance_4_generator",
+    "is_orbital": false,
+    "sky_color": 0,
+    "fog_color": 0,
+    "ambient_light": 0.1
+  },
+  "rendering": {
+    "sky": {
+      "sky_color": 0,
+      "sunrise_color": 16741059,
+      "custom_sky": true,
+      "has_stars": true,
+      "star_count": 15006,
+      "star_brightness": 0.929960,
+      "star_visibility": "constant"
+    },
+    "fog": {
+      "fog_color": 0,
+      "has_fog": true,
+      "fog_density": 0.507082,
+      "near_plane": 25.156273,
+      "far_plane": 146.013336
+    },
+    "celestial_bodies": {
+      "sun": {
+        "texture": "minecraft:textures/environment/sun.png",
+        "scale": 1.151185,
+        "color": 16777199,
+        "visible": true
+      },
+      "moons": [{
+  "texture": "minecraft:textures/block/light_gray_concrete.png",
+  "scale": 0.394456,
+  "color": 14057417,
+  "horizontal_position": -0.565310,
+  "vertical_position": 1.361838,
+  "moves_with_time": true,
+  "visible": true
+},
+{
+  "texture": "minecraft:textures/block/gray_concrete.png",
+  "scale": 0.475267,
+  "color": 9059982,
+  "horizontal_position": -0.338591,
+  "vertical_position": 0.540923,
+  "moves_with_time": true,
+  "visible": true
+},
+{
+  "texture": "minecraft:textures/block/white_concrete.png",
+  "scale": 0.396122,
+  "color": 15624437,
+  "horizontal_position": -0.994902,
+  "vertical_position": 0.639349,
+  "moves_with_time": true,
+  "visible": true
+}],
+      "visible_planets": [{
+  "texture": "minecraft:textures/environment/sun.png",
+  "scale": 0.549644,
+  "color": 16777213,
+  "horizontal_position": -0.535981,
+  "vertical_position": 0.467878,
+  "moves_with_time": true,
+  "visible": true
+},
+{
+  "texture": "minecraft:textures/block/orange_terracotta.png",
+  "scale": 0.147574,
+  "color": 16749954,
+  "horizontal_position": -0.261347,
+  "vertical_position": 1.100216,
+  "moves_with_time": true,
+  "visible": true
+},
+{
+  "texture": "minecraft:textures/block/red_terracotta.png",
+  "scale": 0.538279,
+  "color": 16733005,
+  "horizontal_position": -0.304163,
+  "vertical_position": 1.339616,
+  "moves_with_time": true,
+  "visible": true
+},
+{
+  "texture": "minecraft:textures/block/purple_terracotta.png",
+  "scale": 0.136244,
+  "color": 10219600,
+  "horizontal_position": 0.091867,
+  "vertical_position": 1.146022,
+  "moves_with_time": true,
+  "visible": true
+}]
+    },
+    "weather": {
+      "has_clouds": false,
+      "has_rain": false,
+      "has_snow": false,
+      "has_storms": false,
+      "rain_acidity": 0.0
+    },
+    "particles": {
+      "has_dust": true,
+      "has_ash": false,
+      "has_spores": false,
+      "has_snowfall": false,
+      "particle_density": 0.893472,
+      "particle_color": 0
+    }
+  }
+}

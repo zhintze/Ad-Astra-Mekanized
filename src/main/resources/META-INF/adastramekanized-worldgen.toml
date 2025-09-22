@@ -1,0 +1,223 @@
+# Ad Astra Mekanized - World Generation Configuration
+# This file controls the generation of random planets at world creation.
+# All weights are relative - higher numbers = more likely to be selected.
+
+[planet_generation]
+    # Number of random planets to generate per world (1-100)
+    planet_count = 10
+
+    # Use world seed for deterministic generation (same seed = same planets)
+    use_seed_based_generation = true
+
+    # Minimum distance between planets in millions of km
+    min_planet_distance = 50
+
+    # Maximum orbit distance from star in millions of km
+    max_orbit_distance = 2000
+
+[dimension_effects]
+    # Relative weights for different planet types
+    rocky_weight = 35.0           # Mars-like worlds (common)
+    moon_like_weight = 25.0       # Airless rocky worlds (common)
+    ice_world_weight = 20.0       # Frozen worlds (uncommon)
+    volcanic_weight = 15.0        # Hot lava worlds (uncommon)
+    gas_giant_weight = 5.0        # Gas giants with floating islands (rare)
+
+[celestial_bodies]
+    # Relative weights for different sky/celestial configurations
+    single_sun_weight = 40.0      # Standard single star (most common)
+    sun_and_earth_weight = 25.0   # Earth visible in sky (common)
+    two_moons_weight = 20.0       # Dual moon system (uncommon)
+    binary_stars_weight = 10.0    # Binary star system (rare)
+    ring_system_weight = 5.0      # Planet with rings (very rare)
+
+[physical_attributes]
+    # Gravity multiplier ranges (1.0 = Earth gravity)
+    min_gravity = 0.1
+    max_gravity = 3.0
+
+    # Temperature ranges in Celsius
+    min_temperature = -200.0
+    max_temperature = 500.0
+
+    # Day length ranges in hours
+    min_day_length = 6.0
+    max_day_length = 72.0
+
+    # Atmosphere pressure ranges (1.0 = Earth atmosphere)
+    min_atmosphere_pressure = 0.0
+    max_atmosphere_pressure = 5.0
+
+[atmosphere]
+    # Percentage chances for different atmosphere types (must sum to 100)
+    breathable_chance = 15.0      # Earth-like breathable air (rare)
+    toxic_chance = 35.0          # Poisonous but present atmosphere
+    thin_chance = 30.0           # Mars-like thin atmosphere
+    none_chance = 20.0           # Airless like Moon
+
+[ore_generation]
+    # Percentage chance each planet has specific ore categories
+    common_ore_chance = 90.0      # Iron, copper, coal
+    uncommon_ore_chance = 60.0    # Gold, redstone, lapis
+    rare_ore_chance = 25.0        # Diamond, emerald
+    mod_ore_chance = 40.0         # Ad Astra specific ores (desh, ostrum)
+
+    # Individual ore weights and generation parameters
+    [ore_generation.iron]
+        weight = 30.0
+        min_vein_size = 8
+        max_vein_size = 20
+        min_veins_per_chunk = 5
+        max_veins_per_chunk = 15
+
+    [ore_generation.copper]
+        weight = 25.0
+        min_vein_size = 6
+        max_vein_size = 16
+        min_veins_per_chunk = 4
+        max_veins_per_chunk = 12
+
+    [ore_generation.coal]
+        weight = 35.0
+        min_vein_size = 10
+        max_vein_size = 25
+        min_veins_per_chunk = 6
+        max_veins_per_chunk = 18
+
+    [ore_generation.gold]
+        weight = 8.0
+        min_vein_size = 4
+        max_vein_size = 12
+        min_veins_per_chunk = 2
+        max_veins_per_chunk = 6
+
+    [ore_generation.redstone]
+        weight = 12.0
+        min_vein_size = 5
+        max_vein_size = 14
+        min_veins_per_chunk = 3
+        max_veins_per_chunk = 8
+
+    [ore_generation.lapis]
+        weight = 6.0
+        min_vein_size = 3
+        max_vein_size = 10
+        min_veins_per_chunk = 2
+        max_veins_per_chunk = 5
+
+    [ore_generation.diamond]
+        weight = 2.0
+        min_vein_size = 2
+        max_vein_size = 8
+        min_veins_per_chunk = 1
+        max_veins_per_chunk = 3
+
+    [ore_generation.emerald]
+        weight = 1.0
+        min_vein_size = 1
+        max_vein_size = 6
+        min_veins_per_chunk = 1
+        max_veins_per_chunk = 2
+
+    [ore_generation.desh]
+        weight = 15.0
+        min_vein_size = 6
+        max_vein_size = 18
+        min_veins_per_chunk = 3
+        max_veins_per_chunk = 10
+
+    [ore_generation.ostrum]
+        weight = 5.0
+        min_vein_size = 3
+        max_vein_size = 12
+        min_veins_per_chunk = 2
+        max_veins_per_chunk = 6
+
+[mob_spawning]
+    # Percentage distribution of mob presence (must sum to 100)
+    hostile_mobs_chance = 45.0    # Dangerous planets with hostile creatures
+    passive_mobs_chance = 30.0    # Peaceful planets with harmless life
+    no_mobs_chance = 25.0         # Lifeless sterile planets
+
+    # Mob spawn density multipliers
+    min_mob_spawn_rate = 0.5      # Lower spawn rates
+    max_mob_spawn_rate = 2.0      # Higher spawn rates
+
+    # Available mob types for planets
+    hostile_mobs = [
+        "minecraft:zombie",
+        "minecraft:skeleton",
+        "minecraft:spider",
+        "minecraft:creeper",
+        "minecraft:enderman"
+    ]
+
+    passive_mobs = [
+        "minecraft:cow",
+        "minecraft:sheep",
+        "minecraft:pig",
+        "minecraft:chicken"
+    ]
+
+[name_generation]
+    # Components for generating unique planet names
+    use_scientific_naming = true
+
+    # Prefixes inspired by real space missions and astronomy
+    prefixes = [
+        # Space missions/telescopes
+        "Kepler", "Hubble", "Webb", "Spitzer", "Cassini", "Voyager", "Pioneer",
+        "Galileo", "Juno", "Perseverance", "Curiosity", "Opportunity", "Spirit",
+
+        # Stars and astronomical objects
+        "Proxima", "Centauri", "Vega", "Altair", "Rigel", "Betelgeuse", "Sirius",
+        "Polaris", "Arcturus", "Capella", "Aldebaran", "Antares",
+
+        # Sci-fi inspired
+        "Nova", "Stellar", "Cosmic", "Nebula", "Quantum", "Photon", "Ion",
+        "Plasma", "Fusion", "Solar", "Lunar", "Terra", "Astro", "Galactic",
+
+        # Famous scientists/explorers
+        "Newton", "Einstein", "Hawking", "Sagan", "Tycho", "Copernicus",
+        "Galilei", "Tesla", "Darwin", "Mendel", "Curie", "Faraday"
+    ]
+
+    # Number patterns for designations
+    number_patterns = [
+        "-%d", "-%03d", " %d", " %02d",
+        "-%da", "-%db", "-%dc", "-%dd", "-%de", "-%df",
+        " Prime", " Alpha", " Beta", " Gamma", " Delta", " Epsilon"
+    ]
+
+    # Optional suffix modifiers
+    suffixes = [
+        "", " Major", " Minor", " North", " South", " Prime", " Secondary",
+        " A", " B", " C", " I", " II", " III", " IV", " V"
+    ]
+
+# ========== FUTURE EXPANSION AREAS ==========
+# Uncomment and modify these sections as features are added
+
+# [biome_configuration]
+#     # TODO: Biome-specific generation settings
+#     # desert_chance = 30.0
+#     # forest_chance = 25.0
+#     # etc.
+
+# [structure_generation]
+#     # TODO: Alien structure generation
+#     # ruins_chance = 15.0
+#     # technology_artifacts_chance = 5.0
+#     # etc.
+
+# [weather_patterns]
+#     # TODO: Planet-specific weather systems
+#     # storm_frequency = 0.2
+#     # seasonal_variation = true
+#     # etc.
+
+# [resource_economy]
+#     # TODO: Inter-planetary resource distribution
+#     # rare_resource_concentration = 0.1
+#     # trade_route_potential = true
+#     # etc.

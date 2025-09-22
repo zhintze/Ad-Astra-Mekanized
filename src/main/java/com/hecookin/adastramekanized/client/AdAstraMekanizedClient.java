@@ -1,8 +1,8 @@
 package com.hecookin.adastramekanized.client;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
-import com.hecookin.adastramekanized.client.dimension.MoonDimensionEffects;
-import com.hecookin.adastramekanized.client.dimension.MarsDimensionEffects;
+import com.hecookin.adastramekanized.client.dimension.*;
+import com.hecookin.adastramekanized.common.planets.DimensionEffectsType;
 import com.hecookin.adastramekanized.client.renderers.blocks.OxygenDistributorBlockEntityRenderer;
 import com.hecookin.adastramekanized.common.registry.ModBlockEntityTypes;
 import com.hecookin.adastramekanized.common.registry.ModBlocks;
@@ -42,16 +42,29 @@ public class AdAstraMekanizedClient {
 
     @SubscribeEvent
     public static void onRegisterDimensionEffects(RegisterDimensionSpecialEffectsEvent event) {
-        // Register dimension effects
-        event.register(
-            ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "moon"),
-            new MoonDimensionEffects()
-        );
-        event.register(
-            ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "mars"),
-            new MarsDimensionEffects()
-        );
-        AdAstraMekanized.LOGGER.info("Registered planetary dimension effects");
+        // Register template dimension effects for dynamic planets
+        for (DimensionEffectsType type : DimensionEffectsType.values()) {
+            TemplateDimensionEffects effects = createTemplateEffects(type);
+            event.register(type.getResourceLocation(), effects);
+        }
+
+        AdAstraMekanized.LOGGER.info("Registered planetary dimension effects: {} templates",
+            DimensionEffectsType.values().length);
+    }
+
+    /**
+     * Create template dimension effects instance for given type
+     */
+    private static TemplateDimensionEffects createTemplateEffects(DimensionEffectsType type) {
+        return switch (type) {
+            case MOON_LIKE -> new MoonLikeDimensionEffects();
+            case ROCKY -> new RockyDimensionEffects();
+            case GAS_GIANT -> new GasGiantDimensionEffects();
+            case ICE_WORLD -> new IceWorldDimensionEffects();
+            case VOLCANIC -> new VolcanicDimensionEffects();
+            case ASTEROID_LIKE -> new MoonLikeDimensionEffects(); // Use moon-like effects for asteroids
+            case ALTERED_OVERWORLD -> new RockyDimensionEffects(); // Use rocky effects for altered overworld
+        };
     }
 
     @SubscribeEvent

@@ -173,3 +173,18 @@ idea {
         downloadJavadoc = true
     }
 }
+
+// Planet Generation Tool Task
+task generatePlanets(type: JavaExec) {
+    group = 'adastramekanized'
+    description = 'Generate planet dimension files for static loading'
+
+    dependsOn classes
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.hecookin.adastramekanized.tools.PlanetGenerationTool'
+
+    doFirst {
+        println "Running Planet Generation Tool..."
+        println "This will generate static planet files in src/main/resources/"
+    }
+}

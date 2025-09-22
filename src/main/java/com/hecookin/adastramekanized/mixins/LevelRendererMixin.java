@@ -38,6 +38,12 @@ public class LevelRendererMixin {
 
         ResourceKey<Level> dimensionKey = level.dimension();
         ResourceLocation planetId = mapDimensionToPlanetId(dimensionKey.location());
+
+        // Skip if no planet ID mapping exists (e.g., Nether, End)
+        if (planetId == null) {
+            return;
+        }
+
         Planet planet = PlanetRegistry.getInstance().getPlanet(planetId);
 
         // Only replace sky rendering for planets with custom celestial bodies
