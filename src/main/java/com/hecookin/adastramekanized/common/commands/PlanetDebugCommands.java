@@ -23,10 +23,18 @@ import net.minecraft.world.phys.Vec3;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Debug commands for planet teleportation and exploration.
+ * Enhanced planet commands with improved usability and error handling.
  *
- * Provides /planet teleport <planet_name> and /planet list commands
- * for debugging and testing planet functionality.
+ * Commands:
+ * - /planet (lists all planets)
+ * - /planet list (lists all planets)
+ * - /planet tp <planet_name> (teleport to planet)
+ * - /planet teleport <planet_name> (teleport to planet)
+ * - /planet info <planet_name> (show planet details)
+ * - /planet details <planet_name> (show planet details)
+ *
+ * Supports command-safe names (lowercase, no spaces), display names, and resource IDs.
+ * Autocomplete suggestions use command-safe format (e.g., "atlantis", "fermi-9").
  */
 public class PlanetDebugCommands {
 
@@ -36,13 +44,22 @@ public class PlanetDebugCommands {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("planet")
             .requires(source -> source.hasPermission(2)) // Require OP level 2
+            .executes(PlanetDebugCommands::listPlanets) // Default to list when no subcommand
             .then(Commands.literal("list")
                 .executes(PlanetDebugCommands::listPlanets))
             .then(Commands.literal("teleport")
                 .then(Commands.argument("planet", StringArgumentType.string())
                     .suggests(PLANET_SUGGESTIONS)
                     .executes(PlanetDebugCommands::teleportToPlanet)))
+            .then(Commands.literal("tp") // Alias for teleport
+                .then(Commands.argument("planet", StringArgumentType.string())
+                    .suggests(PLANET_SUGGESTIONS)
+                    .executes(PlanetDebugCommands::teleportToPlanet)))
             .then(Commands.literal("info")
+                .then(Commands.argument("planet", StringArgumentType.string())
+                    .suggests(PLANET_SUGGESTIONS)
+                    .executes(PlanetDebugCommands::showPlanetInfo)))
+            .then(Commands.literal("details") // Alias for info
                 .then(Commands.argument("planet", StringArgumentType.string())
                     .suggests(PLANET_SUGGESTIONS)
                     .executes(PlanetDebugCommands::showPlanetInfo)))
@@ -59,21 +76,62 @@ public class PlanetDebugCommands {
                 return Suggestions.empty();
             }
 
-            // Create suggestions for both short names and full IDs
+            // Use command-safe versions of display names (lowercase, no spaces)
             var suggestions = registry.getAllPlanets().stream()
-                .flatMap(planet -> {
-                    var id = planet.id();
-                    // Add both the short name (path) and full ID
-                    return java.util.stream.Stream.of(
-                        id.getPath(),           // Short name like "moon"
-                        id.toString()           // Full ID like "adastramekanized:moon"
-                    );
-                })
+                .map(planet -> toCommandSafeName(planet.displayName()))
                 .distinct()
+                .sorted()  // Sort alphabetically for better UX
                 .toArray(String[]::new);
 
             return SharedSuggestionProvider.suggest(suggestions, builder);
         };
+
+    /**
+     * Convert a display name to a command-safe name (lowercase, spaces to hyphens)
+     */
+    private static String toCommandSafeName(String displayName) {
+        return displayName.toLowerCase().replace(" ", "-");
+    }
+
+    /**
+     * Resolve a planet from either a display name, command-safe name, or resource location
+     */
+    private static Planet resolvePlanet(String input, PlanetManager manager) {
+        // First try direct ID lookup
+        ResourceLocation planetId = null;
+        try {
+            if (input.contains(":")) {
+                planetId = ResourceLocation.parse(input);
+            } else {
+                planetId = ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, input);
+            }
+
+            Planet planet = manager.getPlanet(planetId);
+            if (planet != null) {
+                return planet;
+            }
+        } catch (Exception e) {
+            // Continue to name-based search
+        }
+
+        PlanetRegistry registry = PlanetRegistry.getInstance();
+
+        // Try to find by display name (case-insensitive)
+        Planet byDisplayName = registry.getAllPlanets().stream()
+            .filter(planet -> planet.displayName().equalsIgnoreCase(input))
+            .findFirst()
+            .orElse(null);
+
+        if (byDisplayName != null) {
+            return byDisplayName;
+        }
+
+        // Try to find by command-safe name
+        return registry.getAllPlanets().stream()
+            .filter(planet -> toCommandSafeName(planet.displayName()).equals(input.toLowerCase()))
+            .findFirst()
+            .orElse(null);
+    }
 
     /**
      * List all available planets
@@ -115,8 +173,10 @@ public class PlanetDebugCommands {
             source.sendSuccess(() -> planetInfo, false);
         }
 
-        source.sendSuccess(() -> Component.literal("§7Use '/planet teleport <planet_id>' to teleport to a planet"), false);
-        source.sendSuccess(() -> Component.literal("§7Use '/planet info <planet_id>' for detailed planet information"), false);
+        source.sendSuccess(() -> Component.literal("§7Commands:"), false);
+        source.sendSuccess(() -> Component.literal("  §f/planet tp <planet_name>§7 - Teleport to a planet"), false);
+        source.sendSuccess(() -> Component.literal("  §f/planet info <planet_name>§7 - Show detailed planet information"), false);
+        source.sendSuccess(() -> Component.literal("§7Tip: Use lowercase names with hyphens (e.g., 'atlantis', 'fermi-9')"), false);
 
         return planets.size();
     }
@@ -126,42 +186,31 @@ public class PlanetDebugCommands {
      */
     private static int teleportToPlanet(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         CommandSourceStack source = context.getSource();
-        String planetIdString = StringArgumentType.getString(context, "planet");
+        String planetInput = StringArgumentType.getString(context, "planet");
 
         if (!(source.getEntity() instanceof ServerPlayer player)) {
-            source.sendFailure(Component.literal("This command can only be used by players"));
+            source.sendFailure(Component.literal("§cThis command can only be used by players"));
             return 0;
         }
 
         PlanetManager manager = PlanetManager.getInstance();
         if (!manager.isReady()) {
-            source.sendFailure(Component.literal("Planet system not ready"));
+            source.sendFailure(Component.literal("§cPlanet system not ready. Try again in a moment."));
             return 0;
         }
 
-        // Parse planet ID
-        ResourceLocation planetId;
-        try {
-            if (planetIdString.contains(":")) {
-                planetId = ResourceLocation.parse(planetIdString);
-            } else {
-                planetId = ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, planetIdString);
-            }
-        } catch (Exception e) {
-            source.sendFailure(Component.literal("Invalid planet ID: " + planetIdString));
-            return 0;
-        }
-
-        // Get planet
-        Planet planet = manager.getPlanet(planetId);
+        // Resolve planet using improved resolver
+        Planet planet = resolvePlanet(planetInput, manager);
         if (planet == null) {
-            source.sendFailure(Component.literal("Planet not found: " + planetId));
+            source.sendFailure(Component.literal("§cPlanet not found: §f" + planetInput));
+            source.sendFailure(Component.literal("§7Use '/planet list' to see available planets"));
             return 0;
         }
 
         // Check if dimension is loaded
-        if (!manager.isPlanetDimensionLoaded(planetId)) {
-            source.sendFailure(Component.literal("Planet dimension not loaded: " + planetId));
+        if (!manager.isPlanetDimensionLoaded(planet.id())) {
+            source.sendFailure(Component.literal("§cPlanet dimension not loaded: §f" + planet.displayName()));
+            source.sendFailure(Component.literal("§7The planet may still be generating. Try again in a moment."));
             return 0;
         }
 
@@ -171,7 +220,7 @@ public class PlanetDebugCommands {
         PlanetTeleportationSystem teleportSystem = PlanetTeleportationSystem.getInstance();
 
         CompletableFuture<PlanetTeleportationSystem.TeleportResult> teleportFuture =
-            teleportSystem.teleportToAnyPlanet(player, planetId);
+            teleportSystem.teleportToAnyPlanet(player, planet.id());
 
         teleportFuture.whenComplete((result, throwable) -> {
             if (throwable != null) {
@@ -212,36 +261,24 @@ public class PlanetDebugCommands {
      */
     private static int showPlanetInfo(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         CommandSourceStack source = context.getSource();
-        String planetIdString = StringArgumentType.getString(context, "planet");
+        String planetInput = StringArgumentType.getString(context, "planet");
 
         PlanetManager manager = PlanetManager.getInstance();
         if (!manager.isReady()) {
-            source.sendFailure(Component.literal("Planet system not ready"));
+            source.sendFailure(Component.literal("§cPlanet system not ready. Try again in a moment."));
             return 0;
         }
 
-        // Parse planet ID
-        ResourceLocation planetId;
-        try {
-            if (planetIdString.contains(":")) {
-                planetId = ResourceLocation.parse(planetIdString);
-            } else {
-                planetId = ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, planetIdString);
-            }
-        } catch (Exception e) {
-            source.sendFailure(Component.literal("Invalid planet ID: " + planetIdString));
-            return 0;
-        }
-
-        // Get planet
-        Planet planet = manager.getPlanet(planetId);
+        // Resolve planet using improved resolver
+        Planet planet = resolvePlanet(planetInput, manager);
         if (planet == null) {
-            source.sendFailure(Component.literal("Planet not found: " + planetId));
+            source.sendFailure(Component.literal("§cPlanet not found: §f" + planetInput));
+            source.sendFailure(Component.literal("§7Use '/planet list' to see available planets"));
             return 0;
         }
 
         // Display detailed planet information
-        boolean dimensionLoaded = manager.isPlanetDimensionLoaded(planetId);
+        boolean dimensionLoaded = manager.isPlanetDimensionLoaded(planet.id());
         String habitableIcon = planet.isHabitable() ? "§2🌍" : "§4🪨";
 
         source.sendSuccess(() -> Component.literal("§6=== " + habitableIcon + " " + planet.displayName() + " ==="), false);

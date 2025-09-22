@@ -1,17 +1,9 @@
 package com.hecookin.adastramekanized;
 
-// Runtime planet command systems removed - planets are now static datapacks
 import com.hecookin.adastramekanized.common.commands.ModCommands;
-import com.hecookin.adastramekanized.common.planets.PlanetDiscoveryService;
 import com.hecookin.adastramekanized.common.teleportation.PlanetTeleportationSystem;
 import com.hecookin.adastramekanized.common.planets.PlanetManager;
-import com.hecookin.adastramekanized.common.dimensions.DimensionFileGenerator;
-// Runtime dimension systems removed - using datapack-based approach instead
 import com.hecookin.adastramekanized.common.planets.PlanetNetworking;
-// EarlyPlanetInitializer removed - planets generated via PlanetGenerationTool before server startup
-import com.hecookin.adastramekanized.common.performance.PerformanceMonitor;
-import com.hecookin.adastramekanized.common.performance.BatchOperationManager;
-import com.hecookin.adastramekanized.common.worldgen.WorldStartPlanetGenerator;
 import com.hecookin.adastramekanized.common.registry.ModBlockEntityTypes;
 import com.hecookin.adastramekanized.common.registry.ModBlocks;
 import com.hecookin.adastramekanized.common.registry.ModCreativeTabs;
@@ -81,8 +73,7 @@ public class AdAstraMekanized {
         NeoForge.EVENT_BUS.addListener(this::onServerStarted);
         NeoForge.EVENT_BUS.addListener(this::onServerStopped);
 
-        // Register world start planet generation
-        WorldStartPlanetGenerator.register();
+        // Static planet system - no runtime generation needed
 
         LOGGER.info("Ad Astra Mekanized initialization complete!");
     }
@@ -131,37 +122,17 @@ public class AdAstraMekanized {
      * Initialize planet services when server starts
      */
     private void onServerStarted(final ServerStartedEvent event) {
-        LOGGER.info("Initializing planet services...");
+        LOGGER.info("Initializing static planet services...");
 
-        // Initialize performance monitoring system
-        LOGGER.info("Initializing performance monitoring...");
-        // PerformanceMonitor is singleton, no initialization needed
-
-        // Initialize batch operation manager
-        BatchOperationManager batchManager = BatchOperationManager.getInstance();
-        batchManager.initialize(event.getServer());
-
-        // Initialize planet discovery service and discover existing planets
-        PlanetDiscoveryService discoveryService = PlanetDiscoveryService.getInstance();
-        discoveryService.initialize(event.getServer());
-        discoveryService.discoverAllPlanets();
+        // Initialize planet manager
+        PlanetManager planetManager = PlanetManager.getInstance();
+        planetManager.initialize(event.getServer());
 
         // Initialize teleportation system
         PlanetTeleportationSystem teleportSystem = PlanetTeleportationSystem.getInstance();
         teleportSystem.initialize(event.getServer());
 
-        // Initialize dimension file generator (for legacy support)
-        DimensionFileGenerator dimensionGenerator = DimensionFileGenerator.getInstance();
-        dimensionGenerator.initialize(event.getServer());
-
-        // Note: Runtime dimension creation systems removed due to NeoForge 1.21.1 timing constraints
-        // Dimensions are now generated during mod initialization and loaded via standard datapack system
-        LOGGER.info("Runtime dimension systems disabled - using datapack-based dimension loading");
-
-        // Note: Dynamic planet creators disabled in favor of early generation approach
-        LOGGER.info("Dynamic planet creators disabled - planets generated during mod initialization");
-
-        LOGGER.info("Planet services initialization complete");
+        LOGGER.info("Static planet services initialization complete");
     }
 
     /**
@@ -170,16 +141,9 @@ public class AdAstraMekanized {
     private void onServerStopped(final ServerStoppedEvent event) {
         LOGGER.info("Shutting down planet services...");
 
-        // Shutdown batch operation manager
-        BatchOperationManager batchManager = BatchOperationManager.getInstance();
-        batchManager.shutdown();
-
         // Clear teleportation cache
         PlanetTeleportationSystem teleportSystem = PlanetTeleportationSystem.getInstance();
         teleportSystem.clearCache();
-
-        // Note: Runtime dimension systems removed - no cleanup needed
-        LOGGER.info("Runtime dimension systems were disabled - no cleanup required");
 
         LOGGER.info("Planet services shutdown complete");
     }
