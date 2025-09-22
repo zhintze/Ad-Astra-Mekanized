@@ -180,19 +180,6 @@ public class StaticPlanetConfig {
             Arrays.asList("volcanic_vents", "sulfur_deposits")
         ));
 
-        // Mars configuration (existing)
-        PLANET_CONFIGS.put("adastramekanized:mars", new PlanetDefinition(
-            "adastramekanized:mars",
-            PlanetType.ROCKY,
-            new TerrainConfig(66, 38, "minecraft:red_terracotta", "minecraft:terracotta",
-                            "minecraft:red_sandstone", false, 0.6),
-            new BiomeConfig(
-                Arrays.asList("adastramekanized:mars_highlands", "adastramekanized:mars_valleys", "adastramekanized:mars_polar"),
-                "adastramekanized:mars_highlands",
-                true
-            ),
-            Arrays.asList("dust_storms", "polar_ice_caps")
-        ));
     }
 
     /**

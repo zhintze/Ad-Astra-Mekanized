@@ -48,9 +48,6 @@ public class StaticDimensionManager {
 
         // Venus: Custom chunk generator (for now, will migrate to TerraBlender later)
         DIMENSION_STRATEGIES.put("adastramekanized:venus", GenerationStrategy.CUSTOM_CHUNK_GENERATOR);
-
-        // Mars: Full TerraBlender integration (working)
-        DIMENSION_STRATEGIES.put("adastramekanized:mars", GenerationStrategy.TERRABLENDER);
     }
 
     /**

@@ -1,7 +1,6 @@
 package com.hecookin.adastramekanized.common.biomes;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
-import com.hecookin.adastramekanized.common.biomes.regions.MarsRegion;
 import com.hecookin.adastramekanized.common.biomes.regions.MoonRegion;
 import com.hecookin.adastramekanized.common.biomes.regions.VenusRegion;
 import net.minecraft.resources.ResourceLocation;
@@ -42,7 +41,7 @@ public class TerraBlenderIntegration {
 
             initialized = true;
             AdAstraMekanized.LOGGER.info("TerraBlender integration initialized successfully");
-            AdAstraMekanized.LOGGER.info("Registered 2 planet regions: Mars, Moon (Venus disabled)");
+            AdAstraMekanized.LOGGER.info("Registered 1 planet region: Moon (Venus disabled, Mars removed)");
 
         } catch (Exception e) {
             AdAstraMekanized.LOGGER.error("Failed to initialize TerraBlender integration: {}", e.getMessage(), e);
@@ -54,11 +53,6 @@ public class TerraBlenderIntegration {
      */
     private static void registerPlanetRegions() {
         AdAstraMekanized.LOGGER.debug("Registering planet regions with TerraBlender...");
-
-        // Mars region - weight 2 (low to avoid overworld interference)
-        Regions.register(new MarsRegion(
-            ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "mars_region"), 2));
-        AdAstraMekanized.LOGGER.debug("Registered Mars region with weight 2");
 
         // Moon region - weight 1 (very low as it's mostly uniform)
         Regions.register(new MoonRegion(
@@ -76,15 +70,6 @@ public class TerraBlenderIntegration {
      */
     private static void registerSurfaceRules() {
         AdAstraMekanized.LOGGER.debug("Registering planet surface rules with TerraBlender...");
-
-        // Add Mars surface rules (template-based)
-        SurfaceRuleManager.addSurfaceRules(
-            SurfaceRuleManager.RuleCategory.OVERWORLD,
-            AdAstraMekanized.MOD_ID + "_mars",
-            TemplateSurfaceRules.getPlanetSurfaceRules(
-                ResourceLocation.fromNamespaceAndPath("adastramekanized", "mars"))
-        );
-        AdAstraMekanized.LOGGER.debug("Registered Mars template surface rules");
 
         // Add Moon surface rules (template-based)
         SurfaceRuleManager.addSurfaceRules(

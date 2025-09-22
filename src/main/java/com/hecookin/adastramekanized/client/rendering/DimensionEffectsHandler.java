@@ -3,7 +3,6 @@ package com.hecookin.adastramekanized.client.rendering;
 import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.api.planets.Planet;
 import com.hecookin.adastramekanized.api.planets.PlanetRegistry;
-import com.hecookin.adastramekanized.client.rendering.planet.MarsDimensionEffects;
 import com.hecookin.adastramekanized.client.rendering.planet.MoonDimensionEffects;
 import com.hecookin.adastramekanized.common.planets.PlanetManager;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
@@ -85,7 +84,6 @@ public class DimensionEffectsHandler {
         AdAstraMekanized.LOGGER.info("Registering dimension effects from planet JSON data...");
 
         // Define known planets with their JSON-based properties
-        registerPlanetEffect(event, "mars", createMarsEffects());
         registerPlanetEffect(event, "moon", createMoonEffects());
         registerPlanetEffect(event, "venus", createVenusEffects());
         registerPlanetEffect(event, "mercury", createMercuryEffects());
@@ -101,10 +99,6 @@ public class DimensionEffectsHandler {
     }
 
     // Create dimension effects based on actual planet JSON data
-    private static MarsDimensionEffects createMarsEffects() {
-        // Mars: gravity=0.379, temp=-65.0, thin atmosphere, rust-colored with dust storms
-        return new MarsDimensionEffects();
-    }
 
     private static MoonDimensionEffects createMoonEffects() {
         // Moon: gravity=0.165, temp=-173.0, no atmosphere, black space sky
