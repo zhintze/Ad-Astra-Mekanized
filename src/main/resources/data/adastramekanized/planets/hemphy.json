@@ -1,6 +1,6 @@
 {
-  "id": "adastramekanized:asteroid",
-  "display_name": "Asteroid",
+  "id": "adastramekanized:hemphy",
+  "display_name": "Hemphy",
   "properties": {
     "gravity": 1.0,
     "temperature": 20.0,
@@ -17,12 +17,12 @@
     "type": "NONE"
   },
   "dimension": {
-    "dimension_type": "adastramekanized:asteroid",
-    "biome_source": "asteroid_biome_source",
-    "chunk_generator": "asteroid_generator",
+    "dimension_type": "adastramekanized:hemphy",
+    "biome_source": "hemphy_biome_source",
+    "chunk_generator": "hemphy_generator",
     "is_orbital": false,
     "sky_color": 65280,
     "fog_color": 255,
-    "ambient_light": 0.2
+    "ambient_light": 0.1
   }
 }

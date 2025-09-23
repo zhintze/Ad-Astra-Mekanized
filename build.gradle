@@ -209,6 +209,19 @@ tasks.register('makePlanets', JavaExec) {
 
     doFirst {
         println "Generating planets using PlanetMaker system..."
+
+        // Clean up existing planet files before generating new ones
+        def dataDir = file("src/main/resources/data/adastramekanized")
+
+        println "Cleaning up existing planet files..."
+        delete fileTree(dataDir) {
+            include "planets/*.json"
+            include "dimension/*.json"
+            include "dimension_type/*.json"
+            include "worldgen/noise_settings/*.json"
+        }
+
+        println "Cleanup completed, generating new planets..."
     }
 
     doLast {

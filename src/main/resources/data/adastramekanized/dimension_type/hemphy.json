@@ -1,6 +1,6 @@
 {
-  "ambient_light": 0.2,
-  "effects": "adastramekanized:asteroid",
+  "ambient_light": 0.1,
+  "effects": "adastramekanized:hemphy",
   "has_ceiling": false,
   "has_skylight": true,
   "height": 384,

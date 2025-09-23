@@ -67,12 +67,12 @@ public class PlanetGenerationRunner {
 
 
         // Asteroid planet
-        PlanetMaker.planet("asteroid")
+        PlanetMaker.planet("hemphy")
                 .continentalScale(1.5f)
                 .erosionScale(35f)
                 .ridgeScale(5f)
                 .heightVariation(10f, 2f, 0.8f, 0.5f)
-                .surfaceBlock("minecraft:stone")
+                .surfaceBlock("minecraft:cobblestone")
                 .subsurfaceBlock("minecraft:stone")
                 .deepBlock("minecraft:stone")
                 .seaLevel(48)

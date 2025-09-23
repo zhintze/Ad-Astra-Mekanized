@@ -26,7 +26,7 @@
     "continents": {
       "type": "minecraft:shifted_noise",
       "noise": "minecraft:continentalness",
-      "xz_scale": 1.3072366,
+      "xz_scale": 1.1944389,
       "y_scale": 1,
       "shift_x": "minecraft:shift_x",
       "shift_y": 0,
@@ -35,7 +35,7 @@
     "erosion": {
       "type": "minecraft:shifted_noise",
       "noise": "minecraft:erosion",
-      "xz_scale": 47.669342,
+      "xz_scale": 23.175688,
       "y_scale": 0,
       "shift_x": "minecraft:shift_x",
       "shift_y": 0,
@@ -45,7 +45,7 @@
     "ridges": {
       "type": "minecraft:shifted_noise",
       "noise": "minecraft:ridge",
-      "xz_scale": 4.28863,
+      "xz_scale": 6.4039083,
       "y_scale": 0,
       "shift_x": "minecraft:shift_x",
       "shift_y": 0,
@@ -82,7 +82,7 @@
                 "shift_y": 0,
                 "shift_z": "minecraft:shift_z"
               },
-              "argument2": 11.117571
+              "argument2": 12.482452
             },
             "argument1": {
               "type": "minecraft:mul",
@@ -95,7 +95,7 @@
                 "shift_y": 0,
                 "shift_z": "minecraft:shift_z"
               },
-              "argument2": 2.2235098
+              "argument2": 2.4964898
             }
           },
           "argument2": 0.175
@@ -137,7 +137,7 @@
                     "shift_y": 0,
                     "shift_z": "minecraft:shift_z"
                   },
-                  "argument2": 0.88941646
+                  "argument2": 0.99859667
                 },
                 "argument1": {
                   "type": "minecraft:mul",
@@ -150,7 +150,7 @@
                     "shift_y": 0,
                     "shift_z": "minecraft:shift_z"
                   },
-                  "argument2": 0.5558841
+                  "argument2": 0.62412274
                 }
               },
               "argument2": 0.175
@@ -174,7 +174,7 @@
         "then_run": {
           "type": "minecraft:block",
           "result_state": {
-            "Name": "minecraft:stone"
+            "Name": "minecraft:cobblestone"
           }
         }
       },
