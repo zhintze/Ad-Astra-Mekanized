@@ -3,7 +3,6 @@ package com.hecookin.adastramekanized.common.planets;
 import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.api.planets.Planet;
 import com.hecookin.adastramekanized.api.planets.PlanetRegistry;
-import com.hecookin.adastramekanized.common.planets.PlanetDiscoveryService;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -82,10 +81,7 @@ public class PlanetManager {
                 PlanetDataLoader loader = new PlanetDataLoader(server);
                 loader.loadAllPlanets();
 
-                // Also run discovery service to populate discovery data
-                PlanetDiscoveryService discoveryService = PlanetDiscoveryService.getInstance();
-                discoveryService.initialize(server);
-                discoveryService.discoverAllPlanets();
+                // Static planet system - no discovery service needed
 
                 // Validate loaded data
                 var invalidPlanets = registry.validateAllPlanets();

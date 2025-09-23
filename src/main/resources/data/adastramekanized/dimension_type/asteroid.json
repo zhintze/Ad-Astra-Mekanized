@@ -1,6 +1,6 @@
 {
-  "ambient_light": 0.1,
-  "effects": "adastramekanized:moon",
+  "ambient_light": 0.2,
+  "effects": "adastramekanized:asteroid",
   "has_ceiling": false,
   "has_skylight": true,
   "height": 384,

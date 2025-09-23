@@ -226,7 +226,7 @@ public class PlanetDebugCommands {
             if (throwable != null) {
                 AdAstraMekanized.LOGGER.error("Teleportation failed", throwable);
                 source.sendFailure(Component.literal("§cTeleportation failed: " + throwable.getMessage()));
-            } else if (result.isSuccess()) {
+            } else if (result == PlanetTeleportationSystem.TeleportResult.SUCCESS) {
                 source.sendSuccess(() -> Component.literal("§aTeleportation successful! Welcome to " + planet.displayName()), false);
 
                 // Show planet info after teleportation
@@ -240,16 +240,15 @@ public class PlanetDebugCommands {
                     planet.properties().gravity(),
                     planet.atmosphere().type().name().toLowerCase()
                 )), false);
-
-                if (result.getPosition() != null) {
-                    Vec3 pos = result.getPosition();
-                    source.sendSuccess(() -> Component.literal(String.format(
-                        "§7Location: %.1f, %.1f, %.1f",
-                        pos.x, pos.y, pos.z
-                    )), false);
-                }
             } else {
-                source.sendFailure(Component.literal("§cTeleportation failed: " + result.getMessage()));
+                String errorMessage = switch (result) {
+                    case PLANET_NOT_FOUND -> "Planet not found";
+                    case DIMENSION_NOT_LOADED -> "Planet dimension not loaded";
+                    case PLAYER_ERROR -> "Player error";
+                    case SYSTEM_ERROR -> "System error";
+                    default -> "Unknown error";
+                };
+                source.sendFailure(Component.literal("§cTeleportation failed: " + errorMessage));
             }
         });
 

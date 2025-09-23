@@ -1,6 +1,6 @@
 {
-  "id": "adastramekanized:moon",
-  "display_name": "Moon",
+  "id": "adastramekanized:asteroid",
+  "display_name": "Asteroid",
   "properties": {
     "gravity": 1.0,
     "temperature": 20.0,
@@ -17,12 +17,12 @@
     "type": "NONE"
   },
   "dimension": {
-    "dimension_type": "adastramekanized:moon",
-    "biome_source": "moon_biome_source",
-    "chunk_generator": "moon_generator",
+    "dimension_type": "adastramekanized:asteroid",
+    "biome_source": "asteroid_biome_source",
+    "chunk_generator": "asteroid_generator",
     "is_orbital": false,
-    "sky_color": 657930,
-    "fog_color": 657930,
-    "ambient_light": 0.1
+    "sky_color": 65280,
+    "fog_color": 255,
+    "ambient_light": 0.2
   }
 }

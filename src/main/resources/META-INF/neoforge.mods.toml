@@ -83,3 +83,32 @@ type = "optional"
 versionRange = "[12.4.3,)"
 ordering = "AFTER"
 side = "BOTH"
+
+# World generation mod dependencies (optional for enhanced planet generation)
+[[dependencies.adastramekanized]]
+modId = "terrablender"
+type = "optional"
+versionRange = "[3.0.0,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.adastramekanized]]
+modId = "terralith"
+type = "optional"
+versionRange = "[2.5.0,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.adastramekanized]]
+modId = "tectonic"
+type = "optional"
+versionRange = "[2.3.0,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.adastramekanized]]
+modId = "biomesoplenty"
+type = "optional"
+versionRange = "[21.0.0,)"
+ordering = "AFTER"
+side = "BOTH"

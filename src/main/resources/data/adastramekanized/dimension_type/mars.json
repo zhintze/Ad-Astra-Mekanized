@@ -1,6 +1,6 @@
 {
-  "ambient_light": 0.1,
-  "effects": "adastramekanized:moon",
+  "ambient_light": 0.2,
+  "effects": "adastramekanized:mars",
   "has_ceiling": false,
   "has_skylight": true,
   "height": 384,
@@ -9,7 +9,7 @@
   "coordinate_scale": 1.0,
   "bed_works": true,
   "respawn_anchor_works": false,
-  "has_raids": false,
+  "has_raids": true,
   "logical_height": 384,
   "infiniburn": "#minecraft:infiniburn_overworld",
   "ultrawarm": false,

@@ -1,7 +1,6 @@
 package com.hecookin.adastramekanized;
 
 import com.hecookin.adastramekanized.common.commands.ModCommands;
-import com.hecookin.adastramekanized.common.config.StaticDimensionManager;
 import com.hecookin.adastramekanized.common.teleportation.PlanetTeleportationSystem;
 import com.hecookin.adastramekanized.common.planets.PlanetManager;
 import com.hecookin.adastramekanized.common.planets.PlanetNetworking;
@@ -78,7 +77,7 @@ public class AdAstraMekanized {
         NeoForge.EVENT_BUS.addListener(this::onServerStarted);
         NeoForge.EVENT_BUS.addListener(this::onServerStopped);
 
-        // Static planet system - no runtime generation needed
+        // PlanetMaker system - run './gradlew makePlanets' to generate planets
 
         LOGGER.info("Ad Astra Mekanized initialization complete!");
     }
@@ -87,19 +86,12 @@ public class AdAstraMekanized {
         LOGGER.info("Ad Astra Mekanized common setup started");
 
         event.enqueueWork(() -> {
-            // Initialize static dimension management system
-            StaticDimensionManager.initialize();
-
             // Initialize mod integrations
             integrationManager = ModIntegrationManager.getInstance();
             LOGGER.info("Integration manager initialized: {}", integrationManager.getIntegrationStatus());
 
-            // Initialize terrain integration system (Phase 2.1)
-            com.hecookin.adastramekanized.common.worldgen.PlanetTerrainIntegration.initializeIntegration();
-            com.hecookin.adastramekanized.common.worldgen.PlanetTerrainIntegration.detectAndConfigureIntegrations();
-
-            // Early planet generation removed - planets are now pre-generated static datapacks
-            LOGGER.info("Using pre-generated static planets from datapack system");
+            // Planets are now generated using PlanetMaker system
+            LOGGER.info("Using PlanetMaker for planet generation - run './gradlew makePlanets' to regenerate");
 
             // Initialize planet system components
             LOGGER.info("Planet system initialization complete");
@@ -118,23 +110,18 @@ public class AdAstraMekanized {
     }
 
     /**
-     * Planet commands removed - using static planet system
-     * To generate new planets, use: gradle generatePlanets
-     */
-
-    /**
-     * Server startup logging - planet generation now handled by gradle generatePlanets
+     * Server startup logging - planet generation now handled by PlanetMaker
      */
     private void onServerAboutToStart(final ServerAboutToStartEvent event) {
-        LOGGER.info("Static planet system active - planets loaded from datapacks");
-        LOGGER.info("To generate new planets, run: gradle generatePlanets");
+        LOGGER.info("PlanetMaker system active - planets loaded from generated datapacks");
+        LOGGER.info("To regenerate planets, run: ./gradlew makePlanets");
     }
 
     /**
      * Initialize planet services when server starts
      */
     private void onServerStarted(final ServerStartedEvent event) {
-        LOGGER.info("Initializing static planet services...");
+        LOGGER.info("Initializing planet services...");
 
         // Initialize planet manager
         PlanetManager planetManager = PlanetManager.getInstance();
@@ -144,7 +131,7 @@ public class AdAstraMekanized {
         PlanetTeleportationSystem teleportSystem = PlanetTeleportationSystem.getInstance();
         teleportSystem.initialize(event.getServer());
 
-        LOGGER.info("Static planet services initialization complete");
+        LOGGER.info("Planet services initialization complete");
     }
 
     /**

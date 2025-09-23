@@ -1,21 +1,8 @@
-[21Sep2025 21:51:20.711] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: PlanetRandomizer initialized with seed: 0 (seeded: false)
-[21Sep2025 21:51:20.724] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: PlanetRandomizer initialized with seed: 1758516681724 (seeded: false)
-[21Sep2025 21:51:20.726] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unique planet name: Perseverance-2a (attempts: 1)
-[21Sep2025 21:51:20.734] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: PlanetRandomizer initialized with seed: 1758516682734 (seeded: false)
-[21Sep2025 21:51:20.734] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unique planet name: Discovery Alpha (attempts: 1)
-[21Sep2025 21:51:20.737] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: PlanetRandomizer initialized with seed: 1758516683737 (seeded: false)
-[21Sep2025 21:51:20.737] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unique planet name: CoRoT-3865e (attempts: 1)
-[21Sep2025 21:51:20.738] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: PlanetRandomizer initialized with seed: 1758516684738 (seeded: false)
-[21Sep2025 21:51:20.739] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unique planet name: HAT-P-5440f (attempts: 1)
-[21Sep2025 21:51:20.741] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: PlanetRandomizer initialized with seed: 1758516685741 (seeded: false)
-[21Sep2025 21:51:20.741] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unique planet name: Centauri III (attempts: 1)
-[21Sep2025 21:51:20.742] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: PlanetRandomizer initialized with seed: 1758516686742 (seeded: false)
-[21Sep2025 21:51:20.742] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unique planet name: Mariner-7b (attempts: 1)
-[21Sep2025 21:51:20.743] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: PlanetRandomizer initialized with seed: 1758516687743 (seeded: false)
-[21Sep2025 21:51:20.744] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unique planet name: Neo Haven (attempts: 1)
-[21Sep2025 21:51:20.745] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: PlanetRandomizer initialized with seed: 1758516688745 (seeded: false)
-[21Sep2025 21:51:20.745] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unique planet name: Arcadia Major (attempts: 1)
-[21Sep2025 21:51:20.746] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: PlanetRandomizer initialized with seed: 1758516689746 (seeded: false)
-[21Sep2025 21:51:20.746] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unique planet name: Wolf-2867k (attempts: 1)
-[21Sep2025 21:51:20.747] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: PlanetRandomizer initialized with seed: 1758516690747 (seeded: false)
-[21Sep2025 21:51:20.747] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unique planet name: Polaris South (attempts: 1)
+[23Sep2025 08:52:36.163] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Starting planet generation with PlanetMaker...
+[23Sep2025 08:52:36.179] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating planets using PlanetMaker system...
+[23Sep2025 08:52:36.191] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: moon
+[23Sep2025 08:52:36.194] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: mars
+[23Sep2025 08:52:36.196] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: asteroid
+[23Sep2025 08:52:36.197] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating 3 planets
+[23Sep2025 08:52:36.197] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Planet generation uses multi-noise biome sources for variety
+[23Sep2025 08:52:36.197] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Planet generation completed successfully!

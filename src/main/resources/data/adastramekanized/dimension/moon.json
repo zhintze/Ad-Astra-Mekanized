@@ -1,12 +1,36 @@
 {
   "type": "adastramekanized:moon",
   "generator": {
-    "type": "adastramekanized:planet",
+    "type": "minecraft:noise",
+    "settings": "adastramekanized:moon",
     "biome_source": {
-      "type": "minecraft:fixed",
-      "biome": "minecraft:plains"
-    },
-    "generation_settings": null,
-    "planet_id": "adastramekanized:moon"
+      "type": "minecraft:multi_noise",
+      "biomes": [
+        {
+          "biome": "minecraft:frozen_peaks",
+          "parameters": {
+            "temperature": -0.8,
+            "humidity": -0.9,
+            "continentalness": 0.4,
+            "erosion": 0.2,
+            "depth": 0.0,
+            "weirdness": 0.1,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "minecraft:snowy_slopes",
+          "parameters": {
+            "temperature": -0.6,
+            "humidity": -0.8,
+            "continentalness": -0.2,
+            "erosion": 0.3,
+            "depth": -0.5,
+            "weirdness": -0.1,
+            "offset": 0.0
+          }
+        }
+      ]
+    }
   }
 }

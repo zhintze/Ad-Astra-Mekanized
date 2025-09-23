@@ -19,6 +19,15 @@ group = mod_group_id
 repositories {
     // ModMaven for Mekanism API
     maven { url 'https://modmaven.dev/' }
+
+    // CurseForge Maven for Terralith, Tectonic, TerraBlender and other mods
+    maven {
+        name = 'CurseMaven'
+        url = 'https://cursemaven.com'
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 base {
@@ -101,6 +110,29 @@ dependencies {
     compileOnly "mekanism:Mekanism:${mekanism_version}:api"
     localRuntime "mekanism:Mekanism:${mekanism_version}"
 
+
+    compileOnly "mezz.jei:jei-${jei_minecraft}-common-api:${jei_version}"
+    compileOnly "mezz.jei:jei-${jei_minecraft}-neoforge-api:${jei_version}"
+    localRuntime "mezz.jei:jei-${jei_minecraft}-neoforge:${jei_version}"
+
+    // BIOME GENERATION (Optional runtime dependencies)
+    localRuntime "curse.maven:terralith-513688:6090387"
+    localRuntime "curse.maven:tectonic-686836:6596485"
+    // TerraBlender - Phase 3.1 requires compile-time access for API integration
+    compileOnly "curse.maven:terraBlender-940057:6054947"
+    localRuntime "curse.maven:terraBlender-940057:6054947"
+    localRuntime "curse.maven:biomsOPlenty-220318:6501142"
+    localRuntime "curse.maven:glitchCore-955399:5660740" //dependency: biomsOPlenty
+    localRuntime "curse.maven:incendium-591388:5962249"
+    localRuntime "curse.maven:nullscape-570354:6402757"
+
+    // Lithostitched - dependency for Tectonic
+    localRuntime "curse.maven:lithostitched-936015:6201869" //tectonics dependency
+
+    //JADE (Optional UI enhancement)
+    localRuntime "curse.maven:jade-324717:6011258"
+    localRuntime "curse.maven:jadeAddOns-583345:5829251"
+
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"
@@ -166,6 +198,24 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
 
+// Custom task to generate planets using PlanetMaker
+tasks.register('makePlanets', JavaExec) {
+    description = 'Generate planet JSON files using PlanetMaker system'
+    group = 'adastra'
+
+    dependsOn 'classes'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.hecookin.adastramekanized.common.planets.PlanetGenerationRunner'
+
+    doFirst {
+        println "Generating planets using PlanetMaker system..."
+    }
+
+    doLast {
+        println "Planet generation completed! Check src/main/resources/data/adastramekanized/ for generated files."
+    }
+}
+
 // IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.
 idea {
     module {
@@ -181,7 +231,7 @@ task generatePlanets(type: JavaExec) {
 
     dependsOn classes
     classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'com.hecookin.adastramekanized.tools.PlanetGenerationTool'
+    mainClass = 'com.hecookin.adastramekanized.common.planets.PlanetGenerationRunner'
 
     doFirst {
         println "Running Planet Generation Tool..."
