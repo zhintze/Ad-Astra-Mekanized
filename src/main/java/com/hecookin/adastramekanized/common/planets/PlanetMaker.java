@@ -246,6 +246,23 @@ public class PlanetMaker {
         // Dynamic biome system
         private java.util.List<BiomeEntry> customBiomes = new java.util.ArrayList<>();
 
+        // Structure generation system
+        private java.util.List<StructureEntry> customStructures = new java.util.ArrayList<>();
+        private boolean enableVillages = false;
+        private boolean enableStrongholds = false;
+        private boolean enableMineshafts = false;
+        private boolean enableDungeons = false;
+
+        // Feature placement system (vegetation, rocks, etc.)
+        private java.util.List<FeatureEntry> customFeatures = new java.util.ArrayList<>();
+        private float treeFrequency = 0.0f;
+        private float grassFrequency = 0.0f;
+        private float flowerFrequency = 0.0f;
+        private float rockFrequency = 0.0f;
+        private boolean enableCrystals = false;
+        private boolean enableGeysers = false;
+        private boolean enableGlowLichen = false;
+
         // Liquid system configuration
         private String oceanFluid = "minecraft:water";
         private String lakeFluid = "minecraft:water";
@@ -256,6 +273,22 @@ public class PlanetMaker {
         private String undergroundLiquid = "minecraft:water";
         private int lavaLakeLevel = -60; // Y level for lava lakes
         private float lavaLakeFrequency = 0.05f;
+
+        // Cave system configuration
+        private float caveFrequency = 1.0f; // 0.0-2.0, base cave generation frequency
+        private float caveSize = 1.0f; // 0.5-3.0, cave tunnel size multiplier
+        private float caveYScale = 0.5f; // 0.1-2.0, vertical stretch of caves
+        private float ravineFrequency = 0.1f; // 0.0-1.0, ravine generation chance
+        private float ravineDepth = 3.0f; // 1.0-5.0, ravine depth multiplier
+        private boolean enableCheeseCaves = true; // Large open cave systems
+        private boolean enableSpaghettiCaves = true; // Winding tunnel systems
+        private boolean enableNoodleCaves = true; // Thin winding tunnels
+        private String caveFluid = "minecraft:air"; // Fluid that fills caves
+        private float caveFluidLevel = -64f; // Y level where caves fill with fluid
+        private boolean enableLavaTubes = false; // Special lava tube generation
+        private boolean enableCrystalCaves = false; // Crystal-lined cave systems
+        private boolean enableIceCaves = false; // Ice-themed cave generation
+        private java.util.List<CaveDecorationEntry> caveDecorations = new java.util.ArrayList<>();
 
         // Dimension properties
         private int skyColor = 0x78A7FF;
@@ -790,6 +823,482 @@ public class PlanetMaker {
             return this;
         }
 
+        // ========== STRUCTURE GENERATION METHODS ==========
+
+        /**
+         * Add a custom structure to the planet
+         * @param structureName Structure resource location (e.g., "minecraft:village")
+         * @param spacing Average spacing between structures (chunks)
+         * @param separation Minimum separation between structures (chunks)
+         * @param salt Random salt for placement
+         */
+        public PlanetBuilder addStructure(String structureName, int spacing, int separation, int salt) {
+            this.customStructures.add(new StructureEntry(structureName, spacing, separation, salt));
+            return this;
+        }
+
+        /**
+         * Add a structure with default spacing
+         * @param structureName Structure to add
+         */
+        public PlanetBuilder addStructure(String structureName) {
+            // Default spacing based on structure type
+            int spacing, separation, salt;
+            if (structureName.contains("village")) {
+                spacing = 32; separation = 8; salt = 10387312;
+            } else if (structureName.contains("fortress")) {
+                spacing = 27; separation = 4; salt = 30084232;
+            } else if (structureName.contains("stronghold")) {
+                spacing = 64; separation = 32; salt = 165745296;
+            } else if (structureName.contains("monument")) {
+                spacing = 32; separation = 5; salt = 10387313;
+            } else if (structureName.contains("mansion")) {
+                spacing = 80; separation = 20; salt = 10387319;
+            } else if (structureName.contains("outpost")) {
+                spacing = 32; separation = 8; salt = 165745296;
+            } else if (structureName.contains("bastion")) {
+                spacing = 27; separation = 4; salt = 30084232;
+            } else if (structureName.contains("dungeon") || structureName.contains("mineshaft")) {
+                spacing = 16; separation = 4; salt = 14357618;
+            } else {
+                spacing = 24; separation = 6; salt = 14357618;
+            }
+            return addStructure(structureName, spacing, separation, salt);
+        }
+
+        /**
+         * Enable vanilla structure presets
+         */
+        public PlanetBuilder enableVillages() {
+            this.enableVillages = true;
+            return addStructure("minecraft:village");
+        }
+
+        public PlanetBuilder enableStrongholds() {
+            this.enableStrongholds = true;
+            return addStructure("minecraft:stronghold");
+        }
+
+        public PlanetBuilder enableMineshafts() {
+            this.enableMineshafts = true;
+            return addStructure("minecraft:mineshaft");
+        }
+
+        public PlanetBuilder enableDungeons() {
+            this.enableDungeons = true;
+            // Dungeons are features, not structures in vanilla
+            return this;
+        }
+
+        /**
+         * Add a preset structure set for planet type
+         */
+        public PlanetBuilder addStructurePreset(String preset) {
+            switch(preset.toLowerCase()) {
+                case "overworld":
+                    enableVillages();
+                    enableStrongholds();
+                    enableMineshafts();
+                    enableDungeons();
+                    addStructure("minecraft:desert_pyramid");
+                    addStructure("minecraft:jungle_pyramid");
+                    addStructure("minecraft:igloo");
+                    break;
+                case "nether":
+                    addStructure("minecraft:fortress");
+                    addStructure("minecraft:bastion_remnant");
+                    addStructure("minecraft:nether_fossil");
+                    break;
+                case "end":
+                    addStructure("minecraft:end_city");
+                    break;
+                case "ocean":
+                    addStructure("minecraft:ocean_monument");
+                    addStructure("minecraft:ocean_ruin");
+                    addStructure("minecraft:shipwreck");
+                    break;
+                case "barren":
+                    // Minimal structures for moon-like worlds
+                    addStructure("minecraft:ruined_portal");
+                    break;
+            }
+            return this;
+        }
+
+        /**
+         * Clear all structures
+         */
+        public PlanetBuilder clearStructures() {
+            this.customStructures.clear();
+            this.enableVillages = false;
+            this.enableStrongholds = false;
+            this.enableMineshafts = false;
+            this.enableDungeons = false;
+            return this;
+        }
+
+        // ========== FEATURE PLACEMENT METHODS ==========
+
+        /**
+         * Add a custom feature to the planet
+         * @param featureName Feature resource location (e.g., "minecraft:oak")
+         * @param frequency Spawn frequency (0.0-1.0)
+         * @param placementStep Generation step for this feature
+         */
+        public PlanetBuilder addFeature(String featureName, float frequency, String placementStep) {
+            this.customFeatures.add(new FeatureEntry(featureName, frequency, placementStep));
+            return this;
+        }
+
+        /**
+         * Add a feature with default placement step
+         * @param featureName Feature to add
+         * @param frequency Spawn frequency
+         */
+        public PlanetBuilder addFeature(String featureName, float frequency) {
+            String step = "vegetal_decoration"; // Default step
+            if (featureName.contains("ore") || featureName.contains("geode")) {
+                step = "underground_ores";
+            } else if (featureName.contains("lake") || featureName.contains("spring")) {
+                step = "lakes";
+            } else if (featureName.contains("rock") || featureName.contains("boulder")) {
+                step = "raw_generation";
+            }
+            return addFeature(featureName, frequency, step);
+        }
+
+        /**
+         * Configure vegetation frequencies
+         */
+        public PlanetBuilder vegetation(float trees, float grass, float flowers) {
+            this.treeFrequency = Math.max(0.0f, Math.min(1.0f, trees));
+            this.grassFrequency = Math.max(0.0f, Math.min(1.0f, grass));
+            this.flowerFrequency = Math.max(0.0f, Math.min(1.0f, flowers));
+
+            // Adjust vegetation noise based on frequencies
+            this.vegetationNoise = (trees + grass + flowers) / 3.0f;
+            return this;
+        }
+
+        /**
+         * Add tree features with specific types
+         */
+        public PlanetBuilder addTrees(String treeType, float frequency) {
+            this.treeFrequency = frequency;
+            return addFeature("minecraft:" + treeType, frequency, "vegetal_decoration");
+        }
+
+        /**
+         * Add rock/boulder formations
+         */
+        public PlanetBuilder addRocks(float frequency) {
+            this.rockFrequency = frequency;
+            addFeature("minecraft:forest_rock", frequency * 0.5f, "raw_generation");
+            addFeature("minecraft:iceberg", frequency * 0.3f, "raw_generation");
+            return this;
+        }
+
+        /**
+         * Enable special features
+         */
+        public PlanetBuilder enableCrystals() {
+            this.enableCrystals = true;
+            addFeature("minecraft:amethyst_geode", 0.025f, "underground_decoration");
+            return this;
+        }
+
+        public PlanetBuilder enableGeysers() {
+            this.enableGeysers = true;
+            addFeature("minecraft:delta_feature", 0.1f, "surface_structures");
+            return this;
+        }
+
+        public PlanetBuilder enableGlowLichen() {
+            this.enableGlowLichen = true;
+            addFeature("minecraft:glow_lichen", 0.2f, "underground_decoration");
+            return this;
+        }
+
+        /**
+         * Add feature preset for planet type
+         */
+        public PlanetBuilder addFeaturePreset(String preset) {
+            switch(preset.toLowerCase()) {
+                case "forest":
+                    vegetation(0.8f, 0.9f, 0.4f);
+                    addTrees("oak", 0.4f);
+                    addTrees("birch", 0.2f);
+                    addTrees("fancy_oak", 0.1f);
+                    addFeature("minecraft:flower_default", 0.3f);
+                    break;
+
+                case "desert":
+                    vegetation(0.05f, 0.1f, 0.02f);
+                    addFeature("minecraft:desert_well", 0.001f);
+                    addFeature("minecraft:fossil", 0.01f);
+                    addRocks(0.2f);
+                    break;
+
+                case "volcanic":
+                    addFeature("minecraft:basalt_columns", 0.2f);
+                    addFeature("minecraft:basalt_pillar", 0.1f);
+                    addFeature("minecraft:blackstone_blobs", 0.15f);
+                    addFeature("minecraft:glowstone", 0.1f);
+                    addFeature("minecraft:fire", 0.3f);
+                    enableGeysers();
+                    break;
+
+                case "frozen":
+                    vegetation(0.1f, 0.2f, 0.0f);
+                    addTrees("spruce", 0.1f);
+                    addFeature("minecraft:ice_spike", 0.15f);
+                    addFeature("minecraft:ice_patch", 0.3f);
+                    addFeature("minecraft:freeze_top_layer", 1.0f);
+                    break;
+
+                case "lush":
+                    vegetation(0.9f, 1.0f, 0.6f);
+                    addTrees("jungle", 0.5f);
+                    addFeature("minecraft:bamboo", 0.2f);
+                    addFeature("minecraft:moss_vegetation", 0.4f);
+                    addFeature("minecraft:lush_caves_vegetation", 0.3f);
+                    enableGlowLichen();
+                    break;
+
+                case "barren":
+                    // Minimal features for moon-like worlds
+                    addRocks(0.1f);
+                    addFeature("minecraft:disk_gravel", 0.05f);
+                    break;
+
+                case "ocean":
+                    addFeature("minecraft:kelp", 0.3f);
+                    addFeature("minecraft:seagrass", 0.5f);
+                    addFeature("minecraft:coral_reef", 0.1f);
+                    addFeature("minecraft:sea_pickle", 0.05f);
+                    break;
+            }
+            return this;
+        }
+
+        /**
+         * Clear all features
+         */
+        public PlanetBuilder clearFeatures() {
+            this.customFeatures.clear();
+            this.treeFrequency = 0.0f;
+            this.grassFrequency = 0.0f;
+            this.flowerFrequency = 0.0f;
+            this.rockFrequency = 0.0f;
+            this.enableCrystals = false;
+            this.enableGeysers = false;
+            this.enableGlowLichen = false;
+            return this;
+        }
+
+        // Cave system configuration methods
+
+        /**
+         * Configure basic cave generation parameters
+         * @param frequency Cave generation frequency (0.0-2.0)
+         * @param size Cave size multiplier (0.5-3.0)
+         */
+        public PlanetBuilder caveConfig(float frequency, float size) {
+            this.caveFrequency = Math.max(0.0f, Math.min(2.0f, frequency));
+            this.caveSize = Math.max(0.5f, Math.min(3.0f, size));
+            return this;
+        }
+
+        /**
+         * Configure cave vertical scale
+         * @param yScale Vertical stretch of caves (0.1-2.0)
+         */
+        public PlanetBuilder caveYScale(float yScale) {
+            this.caveYScale = Math.max(0.1f, Math.min(2.0f, yScale));
+            return this;
+        }
+
+        /**
+         * Configure ravine generation
+         * @param frequency Ravine frequency (0.0-1.0)
+         * @param depth Ravine depth multiplier (1.0-5.0)
+         */
+        public PlanetBuilder ravineConfig(float frequency, float depth) {
+            this.ravineFrequency = Math.max(0.0f, Math.min(1.0f, frequency));
+            this.ravineDepth = Math.max(1.0f, Math.min(5.0f, depth));
+            return this;
+        }
+
+        /**
+         * Enable/disable different cave types
+         */
+        public PlanetBuilder cheeseCaves(boolean enabled) {
+            this.enableCheeseCaves = enabled;
+            return this;
+        }
+
+        public PlanetBuilder spaghettiCaves(boolean enabled) {
+            this.enableSpaghettiCaves = enabled;
+            return this;
+        }
+
+        public PlanetBuilder noodleCaves(boolean enabled) {
+            this.enableNoodleCaves = enabled;
+            return this;
+        }
+
+        /**
+         * Configure flooded caves
+         * @param fluid Fluid to fill caves with
+         * @param level Y level where caves flood
+         */
+        public PlanetBuilder floodedCaves(String fluid, float level) {
+            this.caveFluid = fluid;
+            this.caveFluidLevel = level;
+            return this;
+        }
+
+        /**
+         * Enable special cave types
+         */
+        public PlanetBuilder lavaTubes(boolean enabled) {
+            this.enableLavaTubes = enabled;
+            if (enabled) {
+                // Lava tubes have specific characteristics
+                this.caveSize = 2.5f;
+                this.caveYScale = 0.3f; // Flatter
+                this.caveFluid = "minecraft:lava";
+                this.enableCheeseCaves = false;
+                this.enableNoodleCaves = false;
+            }
+            return this;
+        }
+
+        public PlanetBuilder crystalCaves(boolean enabled) {
+            this.enableCrystalCaves = enabled;
+            if (enabled) {
+                // Add crystal decorations
+                addCaveDecoration("minecraft:amethyst_cluster", 0.15f, -64, 320, true);
+                addCaveDecoration("minecraft:amethyst_cluster", 0.1f, -64, 320, false);
+                addCaveDecoration("minecraft:glowstone", 0.05f, -64, 320, true);
+            }
+            return this;
+        }
+
+        public PlanetBuilder iceCaves(boolean enabled) {
+            this.enableIceCaves = enabled;
+            if (enabled) {
+                // Configure for ice-themed caves
+                addCaveDecoration("minecraft:ice", 0.3f, -64, 320, false);
+                addCaveDecoration("minecraft:packed_ice", 0.2f, -64, 320, true);
+                addCaveDecoration("minecraft:blue_ice", 0.1f, -64, 320, false);
+            }
+            return this;
+        }
+
+        /**
+         * Add cave decoration
+         * @param block Block to use as decoration
+         * @param frequency How often it appears (0.0-1.0)
+         * @param minHeight Minimum Y level
+         * @param maxHeight Maximum Y level
+         * @param ceiling True for ceiling, false for floor
+         */
+        public PlanetBuilder addCaveDecoration(String block, float frequency, int minHeight, int maxHeight, boolean ceiling) {
+            this.caveDecorations.add(new CaveDecorationEntry(block, frequency, minHeight, maxHeight, ceiling));
+            return this;
+        }
+
+        /**
+         * Apply cave preset configurations
+         */
+        public PlanetBuilder addCavePreset(String preset) {
+            switch (preset.toLowerCase()) {
+                case "standard":
+                    caveConfig(1.0f, 1.0f);
+                    cheeseCaves(true);
+                    spaghettiCaves(true);
+                    noodleCaves(true);
+                    ravineConfig(0.1f, 3.0f);
+                    break;
+
+                case "volcanic":
+                case "lava_tubes":
+                    lavaTubes(true);
+                    ravineConfig(0.2f, 4.0f);
+                    floodedCaves("minecraft:lava", -32f);
+                    addCaveDecoration("minecraft:magma_block", 0.2f, -64, 64, false);
+                    addCaveDecoration("minecraft:obsidian", 0.1f, -64, 64, false);
+                    break;
+
+                case "underwater":
+                case "flooded":
+                    caveConfig(1.2f, 1.5f);
+                    cheeseCaves(true);
+                    spaghettiCaves(true);
+                    floodedCaves("minecraft:water", 0f);
+                    addCaveDecoration("minecraft:prismarine", 0.1f, -64, 64, true);
+                    addCaveDecoration("minecraft:sea_lantern", 0.02f, -64, 64, true);
+                    break;
+
+                case "crystal":
+                    crystalCaves(true);
+                    caveConfig(0.8f, 1.8f);
+                    cheeseCaves(true);
+                    spaghettiCaves(false);
+                    noodleCaves(false);
+                    break;
+
+                case "frozen":
+                case "ice":
+                    iceCaves(true);
+                    caveConfig(0.9f, 1.2f);
+                    ravineConfig(0.05f, 2.5f);
+                    break;
+
+                case "massive":
+                    caveConfig(1.5f, 2.5f);
+                    cheeseCaves(true);
+                    spaghettiCaves(false);
+                    noodleCaves(false);
+                    ravineConfig(0.3f, 5.0f);
+                    break;
+
+                case "dense":
+                    caveConfig(2.0f, 0.8f);
+                    cheeseCaves(false);
+                    spaghettiCaves(true);
+                    noodleCaves(true);
+                    ravineConfig(0.2f, 2.0f);
+                    break;
+
+                case "minimal":
+                    caveConfig(0.3f, 0.7f);
+                    cheeseCaves(false);
+                    spaghettiCaves(true);
+                    noodleCaves(false);
+                    ravineConfig(0.02f, 1.5f);
+                    break;
+
+                case "none":
+                    caveConfig(0.0f, 0.0f);
+                    cheeseCaves(false);
+                    spaghettiCaves(false);
+                    noodleCaves(false);
+                    ravineConfig(0.0f, 0.0f);
+                    break;
+            }
+            return this;
+        }
+
+        /**
+         * Clear all cave decorations
+         */
+        public PlanetBuilder clearCaveDecorations() {
+            this.caveDecorations.clear();
+            return this;
+        }
+
         /**
          * Generate this planet and add it to the generation queue
          */
@@ -821,6 +1330,57 @@ public class PlanetMaker {
                 this.weirdness = weirdness;
             }
         }
+
+        /**
+         * Inner class for structure entries
+         */
+        private static class StructureEntry {
+            final String structureName;
+            final int spacing;
+            final int separation;
+            final int salt;
+
+            StructureEntry(String structureName, int spacing, int separation, int salt) {
+                this.structureName = structureName;
+                this.spacing = spacing;
+                this.separation = separation;
+                this.salt = salt;
+            }
+        }
+
+        /**
+         * Inner class for feature entries
+         */
+        private static class FeatureEntry {
+            final String featureName;
+            final float frequency;
+            final String placementStep;
+
+            FeatureEntry(String featureName, float frequency, String placementStep) {
+                this.featureName = featureName;
+                this.frequency = frequency;
+                this.placementStep = placementStep;
+            }
+        }
+
+        /**
+         * Inner class for cave decoration entries
+         */
+        private static class CaveDecorationEntry {
+            final String decorationBlock;
+            final float frequency;
+            final int minHeight;
+            final int maxHeight;
+            final boolean ceiling; // true for ceiling decorations, false for floor
+
+            CaveDecorationEntry(String decorationBlock, float frequency, int minHeight, int maxHeight, boolean ceiling) {
+                this.decorationBlock = decorationBlock;
+                this.frequency = frequency;
+                this.minHeight = minHeight;
+                this.maxHeight = maxHeight;
+                this.ceiling = ceiling;
+            }
+        }
     }
 
     private static void createDirectories() {
@@ -828,6 +1388,9 @@ public class PlanetMaker {
         new File(RESOURCES_PATH + "dimension").mkdirs();
         new File(RESOURCES_PATH + "dimension_type").mkdirs();
         new File(RESOURCES_PATH + "worldgen/noise_settings").mkdirs();
+        new File(RESOURCES_PATH + "worldgen/configured_feature").mkdirs();
+        new File(RESOURCES_PATH + "worldgen/placed_feature").mkdirs();
+        new File(RESOURCES_PATH + "worldgen/biome").mkdirs();
     }
 
     /**
@@ -838,6 +1401,14 @@ public class PlanetMaker {
         generateDimensionData(planet);
         generateDimensionType(planet);
         generateNoiseSettings(planet);
+
+        // Generate ore features if enabled
+        if (planet.oreVeinsEnabled || planet.customOreVeins.size() > 0) {
+            generateOreFeatures(planet);
+        }
+
+        // Generate custom biomes with features
+        generateCustomBiomes(planet);
     }
 
     /**
@@ -941,7 +1512,12 @@ public class PlanetMaker {
         int effectiveSeaLevel = (planet.oceanLevel > 0) ? planet.oceanLevel : planet.seaLevel;
         noiseSettings.addProperty("sea_level", effectiveSeaLevel);
         noiseSettings.addProperty("disable_mob_generation", planet.disableMobGeneration);
-        noiseSettings.addProperty("aquifers_enabled", planet.aquifersEnabled);
+        // Always enable aquifers for proper cave generation
+        boolean enableAquifers = planet.aquifersEnabled ||
+                                (planet.caveFrequency > 0) ||
+                                (planet.enableCheeseCaves || planet.enableSpaghettiCaves || planet.enableNoodleCaves);
+        // Force aquifers on for all planets to ensure cave generation
+        noiseSettings.addProperty("aquifers_enabled", true);
         noiseSettings.addProperty("ore_veins_enabled", planet.oreVeinsEnabled);
         noiseSettings.addProperty("legacy_random_source", planet.legacyRandomSource);
 
@@ -1144,7 +1720,88 @@ public class PlanetMaker {
     }
 
     /**
-     * Create final density using Moon's pattern with configurable parameters
+     * Create cave density functions for carving
+     */
+    private static JsonObject createCaveDensity(PlanetBuilder planet) {
+        JsonObject caves = new JsonObject();
+
+        if (planet.caveFrequency <= 0) {
+            // No caves - return a constant 0 (no carving)
+            caves.addProperty("type", "minecraft:constant");
+            caves.addProperty("argument", 0.0);
+            return caves;
+        }
+
+        // Create combined cave carving function
+        caves.addProperty("type", "minecraft:max");
+
+        JsonArray caveTypes = new JsonArray();
+
+        // Cheese caves (large open caverns)
+        if (planet.enableCheeseCaves) {
+            JsonObject cheese = new JsonObject();
+            cheese.addProperty("type", "minecraft:mul");
+
+            JsonObject cheeseNoise = new JsonObject();
+            cheeseNoise.addProperty("type", "minecraft:noise");
+            cheeseNoise.addProperty("noise", "minecraft:cave_cheese");
+            cheeseNoise.addProperty("xz_scale", 1.0 / planet.caveSize);
+            cheeseNoise.addProperty("y_scale", 1.0 / (planet.caveSize * planet.caveYScale));
+            cheese.add("argument1", cheeseNoise);
+
+            cheese.addProperty("argument2", -planet.caveFrequency * 0.3);
+            caveTypes.add(cheese);
+        }
+
+        // Spaghetti caves (winding tunnels)
+        if (planet.enableSpaghettiCaves) {
+            JsonObject spaghetti = new JsonObject();
+            spaghetti.addProperty("type", "minecraft:add");
+
+            JsonObject spaghettiNoise = new JsonObject();
+            spaghettiNoise.addProperty("type", "minecraft:noise");
+            spaghettiNoise.addProperty("noise", "minecraft:spaghetti_2d");
+            spaghettiNoise.addProperty("xz_scale", 1.0 / planet.caveSize);
+            spaghettiNoise.addProperty("y_scale", 1.0 / (planet.caveSize * planet.caveYScale));
+            spaghetti.add("argument1", spaghettiNoise);
+
+            JsonObject spaghettiModulator = new JsonObject();
+            spaghettiModulator.addProperty("type", "minecraft:noise");
+            spaghettiModulator.addProperty("noise", "minecraft:spaghetti_roughness");
+            spaghettiModulator.addProperty("xz_scale", 1.0 / planet.caveSize);
+            spaghettiModulator.addProperty("y_scale", 1.0 / (planet.caveSize * planet.caveYScale));
+            spaghetti.add("argument2", spaghettiModulator);
+
+            caveTypes.add(spaghetti);
+        }
+
+        // Noodle caves (thin winding tunnels)
+        if (planet.enableNoodleCaves) {
+            JsonObject noodle = new JsonObject();
+            noodle.addProperty("type", "minecraft:noise");
+            noodle.addProperty("noise", "minecraft:noodle");
+            noodle.addProperty("xz_scale", 1.0 / (planet.caveSize * 0.5));
+            noodle.addProperty("y_scale", 1.0 / (planet.caveSize * planet.caveYScale * 0.5));
+            caveTypes.add(noodle);
+        }
+
+        if (caveTypes.size() == 0) {
+            caves.addProperty("type", "minecraft:constant");
+            caves.addProperty("argument", 0.0);
+        } else if (caveTypes.size() == 1) {
+            return caveTypes.get(0).getAsJsonObject();
+        } else {
+            caves.add("argument1", caveTypes.get(0));
+            if (caveTypes.size() > 1) {
+                caves.add("argument2", caveTypes.get(1));
+            }
+        }
+
+        return caves;
+    }
+
+    /**
+     * Create final density using Moon's pattern with configurable parameters and cave carving
      */
     private static JsonObject createFinalDensity(PlanetBuilder planet) {
         JsonObject finalDensity = new JsonObject();
@@ -1153,6 +1810,7 @@ public class PlanetMaker {
         JsonObject argument = new JsonObject();
         argument.addProperty("type", "minecraft:blend_density");
 
+        // Create base terrain density (without caves)
         JsonObject blendArgument = new JsonObject();
         blendArgument.addProperty("type", "minecraft:add");
 
@@ -1218,7 +1876,30 @@ public class PlanetMaker {
         argument2.add("argument2", mulArgument2);
         blendArgument.add("argument2", argument2);
 
-        argument.add("argument", blendArgument);
+        // Now subtract cave density if caves are enabled
+        if (planet.caveFrequency > 0 &&
+            (planet.enableCheeseCaves || planet.enableSpaghettiCaves || planet.enableNoodleCaves)) {
+
+            // Use min operation to carve out caves properly
+            JsonObject withCaves = new JsonObject();
+            withCaves.addProperty("type", "minecraft:min");
+            withCaves.add("argument1", blendArgument);
+
+            // Wrap cave density in multiplication by -1 to make it negative for carving
+            JsonObject negativeCaves = new JsonObject();
+            negativeCaves.addProperty("type", "minecraft:mul");
+
+            JsonObject caveDensity = createCaveDensity(planet);
+            negativeCaves.add("argument1", caveDensity);
+            negativeCaves.addProperty("argument2", -1.0);
+
+            withCaves.add("argument2", negativeCaves);
+
+            argument.add("argument", withCaves);
+        } else {
+            argument.add("argument", blendArgument);
+        }
+
         finalDensity.add("argument", argument);
 
         return finalDensity;
@@ -1248,12 +1929,8 @@ public class PlanetMaker {
             addBlockPreventionRule(sequence, "minecraft:red_sand", planet.surfaceBlock);
         }
 
-        // Custom ore vein placements (if enabled)
-        if (!planet.customOreVeins.isEmpty()) {
-            for (String oreBlock : planet.customOreVeins) {
-                addOreVeinRule(sequence, oreBlock, planet);
-            }
-        }
+        // Note: Ore generation should happen through configured features, not surface rules
+        // Surface rules are only for surface/subsurface blocks
 
         // Surface layer (top block) - above preliminary surface
         JsonObject surfaceLayer = new JsonObject();
@@ -1413,5 +2090,294 @@ public class PlanetMaker {
         try (FileWriter writer = new FileWriter(path)) {
             GSON.toJson(json, writer);
         }
+    }
+
+    /**
+     * Generate ore feature configurations for a planet
+     */
+    private static void generateOreFeatures(PlanetBuilder planet) throws IOException {
+        AdAstraMekanized.LOGGER.info("Generating ore features for planet: {}", planet.name);
+
+        // Standard ore types with their configurations
+        String[] oreTypes = {"coal", "iron", "gold", "diamond", "redstone", "lapis", "copper", "emerald"};
+
+        for (String ore : oreTypes) {
+            // Generate configured feature
+            JsonObject configuredFeature = createOreConfiguredFeature(ore, planet);
+            String configuredPath = RESOURCES_PATH + "worldgen/configured_feature/" + planet.name + "_ore_" + ore + ".json";
+            AdAstraMekanized.LOGGER.debug("Writing configured feature to: {}", configuredPath);
+            writeJsonFile(configuredPath, configuredFeature);
+
+            // Generate multiple placed features for different Y levels
+            generateOrePlacedFeatures(ore, planet);
+        }
+
+        AdAstraMekanized.LOGGER.info("Completed generating ore features for planet: {}", planet.name);
+    }
+
+    /**
+     * Create configured feature for an ore type
+     */
+    private static JsonObject createOreConfiguredFeature(String oreType, PlanetBuilder planet) {
+        JsonObject feature = new JsonObject();
+        feature.addProperty("type", "minecraft:ore");
+
+        JsonObject config = new JsonObject();
+
+        // Ore targets with size
+        JsonArray targets = new JsonArray();
+
+        JsonObject target = new JsonObject();
+        JsonObject targetPredicate = new JsonObject();
+        targetPredicate.addProperty("predicate_type", "minecraft:tag_match");
+        targetPredicate.addProperty("tag", "minecraft:stone_ore_replaceables");
+        target.add("target", targetPredicate);
+
+        JsonObject state = new JsonObject();
+        state.addProperty("Name", "minecraft:" + oreType + "_ore");
+        target.add("state", state);
+        targets.add(target);
+
+        // Add deepslate variant for deeper ores
+        if (!oreType.equals("coal") && !oreType.equals("emerald")) {
+            JsonObject deepslateTarget = new JsonObject();
+            JsonObject deepslatePredicate = new JsonObject();
+            deepslatePredicate.addProperty("predicate_type", "minecraft:tag_match");
+            deepslatePredicate.addProperty("tag", "minecraft:deepslate_ore_replaceables");
+            deepslateTarget.add("target", deepslatePredicate);
+
+            JsonObject deepslateState = new JsonObject();
+            deepslateState.addProperty("Name", "minecraft:deepslate_" + oreType + "_ore");
+            deepslateTarget.add("state", deepslateState);
+            targets.add(deepslateTarget);
+        }
+
+        config.add("targets", targets);
+        config.addProperty("size", getOreVeinSize(oreType, planet));
+        config.addProperty("discard_chance_on_air_exposure", 0.5f);
+
+        feature.add("config", config);
+        return feature;
+    }
+
+    /**
+     * Generate placed features for different Y levels
+     */
+    private static void generateOrePlacedFeatures(String oreType, PlanetBuilder planet) throws IOException {
+        // Different placement strategies for different ore types
+        switch (oreType) {
+            case "coal":
+                createPlacedFeature(oreType, planet, "upper", 136, 320, 30);
+                createPlacedFeature(oreType, planet, "lower", 0, 192, 20);
+                break;
+            case "iron":
+                createPlacedFeature(oreType, planet, "upper", 80, 320, 10);
+                createPlacedFeature(oreType, planet, "middle", -24, 56, 10);
+                createPlacedFeature(oreType, planet, "lower", -64, -24, 30);
+                break;
+            case "gold":
+                createPlacedFeature(oreType, planet, "extra", -64, 32, 50);
+                createPlacedFeature(oreType, planet, "lower", -64, -48, 4);
+                break;
+            case "diamond":
+                createPlacedFeature(oreType, planet, "large", -64, -4, 7);
+                createPlacedFeature(oreType, planet, "small", -64, -4, 4);
+                break;
+            case "redstone":
+                createPlacedFeature(oreType, planet, "lower", -64, 15, 8);
+                createPlacedFeature(oreType, planet, "deep", -64, -32, 2);
+                break;
+            case "lapis":
+                createPlacedFeature(oreType, planet, "normal", -64, 64, 4);
+                createPlacedFeature(oreType, planet, "deep", -64, -32, 2);
+                break;
+            case "copper":
+                createPlacedFeature(oreType, planet, "normal", -16, 112, 16);
+                createPlacedFeature(oreType, planet, "large", -16, 112, 8);
+                break;
+            case "emerald":
+                createPlacedFeature(oreType, planet, "normal", -16, 320, 100);
+                break;
+        }
+    }
+
+    /**
+     * Create a placed feature for ore generation
+     */
+    private static void createPlacedFeature(String oreType, PlanetBuilder planet,
+                                           String variant, int minY, int maxY, int count) throws IOException {
+        JsonObject placed = new JsonObject();
+        placed.addProperty("feature", "adastramekanized:" + planet.name + "_ore_" + oreType);
+
+        JsonArray placement = new JsonArray();
+
+        // Count placement
+        JsonObject countPlacement = new JsonObject();
+        countPlacement.addProperty("type", "minecraft:count");
+        countPlacement.addProperty("count", (int)(count * planet.oreVeinDensity));
+        placement.add(countPlacement);
+
+        // Square spread
+        JsonObject spread = new JsonObject();
+        spread.addProperty("type", "minecraft:in_square");
+        placement.add(spread);
+
+        // Height range with absolute values
+        JsonObject heightRange = new JsonObject();
+        heightRange.addProperty("type", "minecraft:height_range");
+        JsonObject height = new JsonObject();
+        height.addProperty("type", "minecraft:uniform");
+
+        // Min Y with absolute wrapper
+        JsonObject minInclusive = new JsonObject();
+        minInclusive.addProperty("absolute", minY);
+        height.add("min_inclusive", minInclusive);
+
+        // Max Y with absolute wrapper
+        JsonObject maxInclusive = new JsonObject();
+        maxInclusive.addProperty("absolute", maxY);
+        height.add("max_inclusive", maxInclusive);
+
+        heightRange.add("height", height);
+        placement.add(heightRange);
+
+        // Biome check
+        JsonObject biomeCheck = new JsonObject();
+        biomeCheck.addProperty("type", "minecraft:biome");
+        placement.add(biomeCheck);
+
+        placed.add("placement", placement);
+
+        String filename = planet.name + "_ore_" + oreType + "_" + variant + ".json";
+        writeJsonFile(RESOURCES_PATH + "worldgen/placed_feature/" + filename, placed);
+    }
+
+    /**
+     * Get ore vein size based on type
+     */
+    private static int getOreVeinSize(String oreType, PlanetBuilder planet) {
+        int baseSize;
+        switch (oreType) {
+            case "coal": baseSize = 17; break;
+            case "iron": baseSize = 9; break;
+            case "gold": baseSize = 9; break;
+            case "diamond": baseSize = 8; break;
+            case "redstone": baseSize = 8; break;
+            case "lapis": baseSize = 7; break;
+            case "copper": baseSize = 10; break;
+            case "emerald": baseSize = 3; break;
+            default: baseSize = 8;
+        }
+        return (int)(baseSize * planet.oreVeinSize);
+    }
+
+    /**
+     * Generate custom biomes with ore features
+     */
+    private static void generateCustomBiomes(PlanetBuilder planet) throws IOException {
+        // For each biome in the planet, create a custom version with features
+        for (PlanetBuilder.BiomeEntry biomeEntry : planet.customBiomes) {
+            JsonObject biome = createCustomBiome(biomeEntry, planet);
+            String biomeName = biomeEntry.biomeName.replace("minecraft:", "");
+            String filename = planet.name + "_" + biomeName + ".json";
+            writeJsonFile(RESOURCES_PATH + "worldgen/biome/" + filename, biome);
+        }
+    }
+
+    /**
+     * Create a custom biome with features
+     */
+    private static JsonObject createCustomBiome(PlanetBuilder.BiomeEntry biomeEntry, PlanetBuilder planet) {
+        JsonObject biome = new JsonObject();
+
+        // Climate parameters
+        biome.addProperty("temperature", biomeEntry.temperature);
+        biome.addProperty("downfall", biomeEntry.humidity);
+        biome.addProperty("has_precipitation", biomeEntry.humidity > 0);
+
+        // Effects
+        JsonObject effects = new JsonObject();
+        effects.addProperty("fog_color", planet.fogColor);
+        effects.addProperty("sky_color", planet.skyColor);
+        effects.addProperty("water_color", 4159204);
+        effects.addProperty("water_fog_color", 329011);
+        biome.add("effects", effects);
+
+        // Spawners (empty for now)
+        JsonObject spawners = new JsonObject();
+        for (String category : new String[]{"monster", "creature", "ambient", "water_creature", "water_ambient", "misc"}) {
+            spawners.add(category, new JsonArray());
+        }
+        biome.add("spawners", spawners);
+
+        // Spawn costs
+        biome.add("spawn_costs", new JsonObject());
+
+        // Features by generation step
+        JsonArray features = new JsonArray();
+
+        // Generation steps in order
+        String[] steps = {
+            "raw_generation", "lakes", "local_modifications", "underground_structures",
+            "surface_structures", "strongholds", "underground_ores", "underground_decoration",
+            "fluid_springs", "vegetal_decoration", "top_layer_modification"
+        };
+
+        for (String step : steps) {
+            JsonArray stepFeatures = new JsonArray();
+
+            if (step.equals("underground_ores") && planet.oreVeinsEnabled) {
+                // Add ore features matching the actual placed feature names
+                String[] oreTypes = {"coal", "iron", "gold", "diamond", "redstone", "lapis", "copper", "emerald"};
+                for (String ore : oreTypes) {
+                    // Add different variants based on ore type
+                    switch (ore) {
+                        case "coal":
+                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_upper");
+                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_lower");
+                            break;
+                        case "iron":
+                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_upper");
+                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_middle");
+                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_lower");
+                            break;
+                        case "gold":
+                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_extra");
+                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_lower");
+                            break;
+                        case "diamond":
+                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_large");
+                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_small");
+                            break;
+                        case "redstone":
+                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_lower");
+                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_deep");
+                            break;
+                        case "lapis":
+                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_normal");
+                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_deep");
+                            break;
+                        case "copper":
+                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_normal");
+                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_large");
+                            break;
+                        case "emerald":
+                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_normal");
+                            break;
+                    }
+                }
+            }
+
+            features.add(stepFeatures);
+        }
+
+        biome.add("features", features);
+
+        // Carvers
+        JsonObject carvers = new JsonObject();
+        carvers.add("air", new JsonArray());
+        biome.add("carvers", carvers);
+
+        return biome;
     }
 }

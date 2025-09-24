@@ -1,0 +1,53 @@
+{
+  "temperature": 0.2,
+  "downfall": 0.3,
+  "has_precipitation": true,
+  "effects": {
+    "fog_color": 65535,
+    "sky_color": 16711935,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "spawners": {
+    "monster": [],
+    "creature": [],
+    "ambient": [],
+    "water_creature": [],
+    "water_ambient": [],
+    "misc": []
+  },
+  "spawn_costs": {},
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "adastramekanized:hemphy_ore_coal_upper",
+      "adastramekanized:hemphy_ore_coal_lower",
+      "adastramekanized:hemphy_ore_iron_upper",
+      "adastramekanized:hemphy_ore_iron_middle",
+      "adastramekanized:hemphy_ore_iron_lower",
+      "adastramekanized:hemphy_ore_gold_extra",
+      "adastramekanized:hemphy_ore_gold_lower",
+      "adastramekanized:hemphy_ore_diamond_large",
+      "adastramekanized:hemphy_ore_diamond_small",
+      "adastramekanized:hemphy_ore_redstone_lower",
+      "adastramekanized:hemphy_ore_redstone_deep",
+      "adastramekanized:hemphy_ore_lapis_normal",
+      "adastramekanized:hemphy_ore_lapis_deep",
+      "adastramekanized:hemphy_ore_copper_normal",
+      "adastramekanized:hemphy_ore_copper_large",
+      "adastramekanized:hemphy_ore_emerald_normal"
+    ],
+    [],
+    [],
+    [],
+    []
+  ],
+  "carvers": {
+    "air": []
+  }
+}

@@ -1,9 +1,17 @@
-[24Sep2025 00:17:32.952] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Starting planet generation with PlanetMaker...
-[24Sep2025 00:17:32.978] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating planets using PlanetMaker system...
-[24Sep2025 00:17:32.991] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: moon
-[24Sep2025 00:17:32.994] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: mars
-[24Sep2025 00:17:32.999] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: hemphy
-[24Sep2025 00:17:33.002] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: oretest
-[24Sep2025 00:17:33.002] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating 4 planets
-[24Sep2025 00:17:33.002] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Planet generation uses multi-noise biome sources for variety
-[24Sep2025 00:17:33.003] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Planet generation completed successfully!
+[24Sep2025 07:07:14.592] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Starting planet generation with PlanetMaker...
+[24Sep2025 07:07:14.610] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating planets using PlanetMaker system...
+[24Sep2025 07:07:14.624] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: moon
+[24Sep2025 07:07:14.633] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: moon
+[24Sep2025 07:07:14.634] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: moon
+[24Sep2025 07:07:14.637] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: mars
+[24Sep2025 07:07:14.642] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: mars
+[24Sep2025 07:07:14.642] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: mars
+[24Sep2025 07:07:14.644] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: hemphy
+[24Sep2025 07:07:14.648] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: hemphy
+[24Sep2025 07:07:14.650] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: hemphy
+[24Sep2025 07:07:14.652] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: oretest
+[24Sep2025 07:07:14.656] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: oretest
+[24Sep2025 07:07:14.658] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: oretest
+[24Sep2025 07:07:14.658] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating 4 planets
+[24Sep2025 07:07:14.658] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Planet generation uses multi-noise biome sources for variety
+[24Sep2025 07:07:14.659] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Planet generation completed successfully!

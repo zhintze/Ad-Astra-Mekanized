@@ -138,6 +138,31 @@ dependencies {
     implementation "curse.maven:journeyMap-32274:6689206"
     implementation "curse.maven:journeyMapIntegration-525447:6508946"
 
+
+    // FTB
+    implementation "curse.maven:FTBLibrary-404465:6016745"
+    implementation "curse.maven:FTBChunks-314906:5968500"
+    implementation "curse.maven:FTBTeams-404468:5882217"
+    implementation "curse.maven:FTBXMod-889915:6048646"
+    implementation "curse.maven:FTBQuests-289412:5882270"
+    implementation "curse.maven:FTBUltimine-386134:5671703"
+    implementation "curse.maven:architecturyAPI-419699:5786327"
+
+    //---- PERFORMANCE ----//
+    implementation "curse.maven:ferriteCore-429235:5850121"
+    implementation "curse.maven:betterChunkLoading-899487:6005149"
+    implementation "curse.maven:cupboard-326652:5570763" //betterChunkLoading dependency
+    implementation "curse.maven:clumps-256717:5623731"
+    implementation "curse.maven:getItTogetherDrops-411045:5575483"
+    implementation "curse.maven:immediatelyFast-686911:5959911"
+    implementation "curse.maven:Embeddium-908741:5681729"
+    implementation "curse.maven:EmbeddiumExtras-558905:6041699"
+    implementation "curse.maven:EmbeddiumDynamicLights-551736:6044477"
+    implementation "curse.maven:chunky-485681:5437053"
+    // https://www.curseforge.com/minecraft/mc-mods/chunky-pregenerator-forge
+    implementation "curse.maven:badOptimizations-949555:5961419"
+    //---- END PERFORMANCE ----//
+
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"

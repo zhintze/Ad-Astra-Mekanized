@@ -449,6 +449,78 @@ To regenerate planets:
 2. Run PlanetGenerationTool to regenerate all planet files
 3. Restart Minecraft to load new configurations
 
+## Cave Generation System
+
+The cave generation system provides comprehensive control over underground cave networks, ravines, and cave decorations.
+
+### Cave Configuration
+
+#### Basic Cave Parameters
+- **caveConfig(float frequency, float size)**: Configure cave generation
+  - frequency: Cave generation frequency (0.0-2.0)
+  - size: Cave tunnel size multiplier (0.5-3.0)
+- **caveYScale(float)**: Vertical stretch of caves (0.1-2.0)
+- **ravineConfig(float frequency, float depth)**: Configure ravines
+  - frequency: Ravine generation chance (0.0-1.0)
+  - depth: Ravine depth multiplier (1.0-5.0)
+
+#### Cave Types
+- **cheeseCaves(boolean)**: Enable/disable large open cave systems
+- **spaghettiCaves(boolean)**: Enable/disable winding tunnel systems
+- **noodleCaves(boolean)**: Enable/disable thin winding tunnels
+
+#### Special Cave Types
+- **lavaTubes(boolean)**: Enable lava tube generation with specific characteristics
+- **crystalCaves(boolean)**: Enable crystal-lined cave systems
+- **iceCaves(boolean)**: Enable ice-themed cave generation
+
+#### Flooded Caves
+- **floodedCaves(String fluid, float level)**: Configure fluid-filled caves
+  - fluid: Fluid type (e.g., "minecraft:water", "minecraft:lava")
+  - level: Y level where caves flood
+
+#### Cave Decorations
+- **addCaveDecoration(String block, float frequency, int minHeight, int maxHeight, boolean ceiling)**
+  - block: Block to use as decoration
+  - frequency: How often it appears (0.0-1.0)
+  - minHeight/maxHeight: Y level range
+  - ceiling: true for ceiling decorations, false for floor
+
+### Cave Presets
+
+```java
+.addCavePreset("standard")    // Normal Earth-like caves
+.addCavePreset("volcanic")    // Lava tubes and volcanic caves
+.addCavePreset("underwater")  // Flooded cave systems
+.addCavePreset("crystal")     // Crystal-decorated caves
+.addCavePreset("frozen")      // Ice cave systems
+.addCavePreset("massive")     // Large open caverns
+.addCavePreset("dense")       // Many interconnected tunnels
+.addCavePreset("minimal")     // Sparse cave generation
+.addCavePreset("none")        // No caves
+```
+
+### Example Cave Configurations
+
+#### Volcanic Planet (Hemphy)
+```java
+.addCavePreset("lava_tubes")
+.ravineConfig(0.3f, 5.0f)
+.addCaveDecoration("minecraft:blackstone", 0.3f, -128, 128, false)
+.addCaveDecoration("minecraft:basalt", 0.2f, -128, 128, true)
+.addCaveDecoration("minecraft:ancient_debris", 0.01f, -64, 32, false)
+```
+
+#### Earth-like Planet (Oretest)
+```java
+.addCavePreset("standard")
+.floodedCaves("minecraft:water", 10f)
+.addCaveDecoration("minecraft:dripstone_block", 0.1f, -64, 64, true)
+.addCaveDecoration("minecraft:pointed_dripstone", 0.08f, -64, 64, true)
+.addCaveDecoration("minecraft:moss_block", 0.05f, -32, 64, false)
+.addCaveDecoration("minecraft:glow_lichen", 0.15f, -64, 256, true)
+```
+
 ## Common Issues and Solutions
 
 ### Ore Generation Problems

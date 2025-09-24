@@ -178,32 +178,18 @@ public class PlanetGenerationRunner {
 
                 // ========== EXTREME GENERATION CONTROLS ==========
                 .disableMobGeneration(true)     // MAX: No mobs (too dangerous)
-                .aquifersEnabled(true)          // MAX: Full aquifer generation
-                .oreVeinsEnabled(true)          // MAX: Maximum ore generation
+                .aquifersEnabled(true)          // Enable aquifers for cave generation
+                .oreVeinsEnabled(true)          // Enable Minecraft's ore vein system
                 .abovePreliminaryRule(false)    // MAX: Disable surface smoothing
                 .waterRule(false)               // MAX: No water rules (lava only)
                 .surfaceDepthMultiplier(10)     // MAX: Deep surface layers
                 .addStoneDepth(true)            // MAX: Extra stone depth
 
-                // ========== MAXED VEIN GENERATION ==========
-                .veinToggle(1.0f)               // MAX: Full vein activation
-                .veinRidged(1.0f)               // MAX: Maximum ridged veins
-                .veinGap(0.0f)                  // MIN: No gaps (solid veins)
-                // Enhanced ore vein configuration
-                .oreVeinDensity(3.0f)           // MAX: Triple ore density
-                .oreVeinSize(2.0f)              // MAX: Double vein size
-                .maxOreVeinCount(50)            // MAX: 50 different ore types
-                .enableRareOres(true)           // MAX: All rare ores
-                .enableCommonOres(true)         // MAX: All common ores
-                .enableDeepslateOres(true)      // MAX: All deepslate variants
-                .addCustomOreVein("minecraft:diamond_ore")
-                .addCustomOreVein("minecraft:emerald_ore")
-                .addCustomOreVein("minecraft:ancient_debris")
-                .addCustomOreVein("minecraft:gold_ore")
-                .addCustomOreVein("minecraft:iron_ore")
-                .addCustomOreVein("minecraft:copper_ore")
-                .addCustomOreVein("minecraft:redstone_ore")
-                .addCustomOreVein("minecraft:lapis_ore")
+                // ========== ORE GENERATION - Use vanilla ore veins ==========
+                .veinToggle(0.0f)               // Disable custom vein generation (use vanilla features)
+                .veinRidged(0.0f)               // No ridged veins
+                .veinGap(0.0f)                  // No vein gaps
+                .oreVeinsEnabled(true)          // Enable Minecraft's built-in ore vein system
 
                 // ========== EXTREME BIOME DISTRIBUTION ==========
                 .biomeDistribution(1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f)  // MAX: All parameters at maximum
@@ -227,6 +213,30 @@ public class PlanetGenerationRunner {
                 .lakeConfig("minecraft:lava", 0.3f)             // Frequent lava lakes
                 .lavaLakes(-20, 0.4f)                           // Deep lava pools
                 .undergroundLiquids("minecraft:lava", true)     // Lava aquifers
+
+                // ========== STRUCTURE SYSTEM - NETHER FORTRESS WORLD ==========
+                .clearStructures()                               // Clear defaults
+                .addStructurePreset("nether")                   // Nether structures (fortress, bastion, fossils)
+                .addStructure("minecraft:ruined_portal")        // Ruined portals for escape
+
+                // ========== FEATURE SYSTEM - VOLCANIC HELLSCAPE ==========
+                .clearFeatures()                                 // Clear defaults
+                .addFeaturePreset("volcanic")                   // Basalt columns, pillars, fire
+                .addFeature("minecraft:crimson_fungus", 0.2f)  // Crimson fungus growth
+                .addFeature("minecraft:warped_fungus", 0.15f)  // Warped fungus growth
+                .addFeature("minecraft:nether_sprouts", 0.3f)  // Nether vegetation
+                .addFeature("minecraft:weeping_vines", 0.25f)  // Hanging vines
+                .addFeature("minecraft:twisting_vines", 0.2f)  // Twisting vines
+                .enableCrystals()                               // Amethyst geodes
+
+                // ========== CAVE SYSTEM - LAVA TUBES & VOLCANIC CAVES ==========
+                .addCavePreset("lava_tubes")                    // Massive lava tube cave system
+                .ravineConfig(0.3f, 5.0f)                       // Deep volcanic ravines
+                .addCaveDecoration("minecraft:blackstone", 0.3f, -128, 128, false)        // Blackstone floor
+                .addCaveDecoration("minecraft:basalt", 0.2f, -128, 128, true)             // Basalt ceiling
+                .addCaveDecoration("minecraft:ancient_debris", 0.01f, -64, 32, false)     // Rare ancient debris
+                .addCaveDecoration("minecraft:gilded_blackstone", 0.02f, -128, 64, false) // Rare gilded blackstone
+                .addCaveDecoration("minecraft:nether_gold_ore", 0.05f, -128, 128, false)  // Gold ore pockets
                 .generate();
 
         // ========== ORE TEST PLANET - OVERWORLD-LIKE SETTINGS ==========
@@ -326,6 +336,41 @@ public class PlanetGenerationRunner {
                 .lakeConfig("minecraft:water", 0.15f)            // Occasional lakes
                 .lavaLakes(-55, 0.02f)                           // Rare deep lava pools
                 .undergroundLiquids("minecraft:water", true)     // Water aquifers
+
+                // ========== STRUCTURE SYSTEM - OVERWORLD-LIKE CIVILIZATION ==========
+                .clearStructures()                                // Clear defaults
+                .enableVillages()                                 // Villages with villagers
+                .enableStrongholds()                              // Strongholds with end portals
+                .enableMineshafts()                               // Abandoned mineshafts
+                .enableDungeons()                                 // Monster spawner dungeons
+                .addStructure("minecraft:pillager_outpost")      // Pillager outposts
+                .addStructure("minecraft:ruined_portal")         // Ruined nether portals
+
+                // ========== FEATURE SYSTEM - EARTH-LIKE ECOSYSTEM ==========
+                .clearFeatures()                                  // Clear defaults
+                .vegetation(0.6f, 0.8f, 0.3f)                   // Trees, grass, flowers
+                .addTrees("oak", 0.3f)                          // Oak trees
+                .addTrees("birch", 0.15f)                       // Birch trees
+                .addTrees("spruce", 0.1f)                       // Spruce trees
+                .addFeature("minecraft:flower_default", 0.2f)  // Various flowers
+                .addFeature("minecraft:grass", 0.8f)           // Tall grass
+                .addFeature("minecraft:pumpkin", 0.01f)        // Rare pumpkins
+                .addFeature("minecraft:sugar_cane", 0.1f)      // Sugar cane near water
+                .addRocks(0.05f)                                // Occasional rocks
+                .enableGlowLichen()                              // Cave glow lichen
+
+                // ========== CAVE SYSTEM - STANDARD OVERWORLD CAVES ==========
+                .addCavePreset("standard")                       // Normal Earth-like caves
+                .floodedCaves("minecraft:water", 10f)           // Water-filled caves below Y=10
+                .addCaveDecoration("minecraft:stone", 0.5f, -64, 256, false)              // Stone floor patches
+                .addCaveDecoration("minecraft:dripstone_block", 0.1f, -64, 64, true)      // Dripstone ceiling
+                .addCaveDecoration("minecraft:pointed_dripstone", 0.08f, -64, 64, true)   // Stalactites
+                .addCaveDecoration("minecraft:pointed_dripstone", 0.08f, -64, 64, false)  // Stalagmites
+                .addCaveDecoration("minecraft:moss_block", 0.05f, -32, 64, false)         // Mossy cave floors
+                .addCaveDecoration("minecraft:glow_lichen", 0.15f, -64, 256, true)        // Glowing lichen
+                .addCaveDecoration("minecraft:coal_ore", 0.2f, 0, 256, false)             // Coal ore deposits
+                .addCaveDecoration("minecraft:iron_ore", 0.15f, -64, 72, false)           // Iron ore deposits
+                .addCaveDecoration("minecraft:copper_ore", 0.12f, -16, 112, false)        // Copper ore deposits
                 .generate();
 
     }
