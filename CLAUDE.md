@@ -213,32 +213,57 @@ When creating block models, **always use the correct parent namespace**:
 - JSON-based planet loading and client-server networking
 - Planet registry system with thread-safe management
 
-### 🔄 Current Phase: Enhanced Planetary Generation
+### ✅ Phase 3 Complete: Comprehensive PlanetMaker System
+**Status**: ✅ Completed September 2025
+
+#### Advanced Planet Generation System:
+1. **PlanetMaker API**:
+   - ✅ Fluent builder pattern with 50+ configurable parameters
+   - ✅ Complete noise router control (continents, erosion, ridges, jaggedness)
+   - ✅ Advanced terrain shaping (height variations, density factors, gradients)
+   - ✅ Comprehensive surface block configuration
+   - ✅ Noise-based ore generation with proper rarity distribution
+
+2. **Planet Examples Implemented**:
+   - ✅ **Moon**: Craterous lunar landscape with moon-specific materials
+   - ✅ **Mars**: Dramatic Martian terrain with canyons and highlands
+   - ✅ **Hemphy**: Extreme stress test planet (lava world with maximum parameters)
+   - ✅ **Oretest**: Balanced test planet with Earth-like characteristics
+
+3. **Technical Features**:
+   - ✅ Automatic JSON generation for dimensions and noise settings
+   - ✅ Noise-based ore distribution using `minecraft:ore_gap` threshold system
+   - ✅ Surface rule validation with proper `surface_type` parameters
+   - ✅ Multi-parameter terrain control (continental, erosion, ridge scales)
+   - ✅ Advanced hill/mountain generation with jaggedness controls
+
+#### Current Working Features:
+- ✅ Planet teleportation: `/planet teleport moon`, `/planet teleport mars`, `/planet teleport hemphy`, `/planet teleport oretest`
+- ✅ Planet information: `/planet info <planet_name>` for detailed planet characteristics
+- ✅ Planet listing: `/planet list` to view all available worlds
+- ✅ Automatic planet file generation with `PlanetGenerationRunner`
+
+#### Advanced Terrain Controls:
+1. **Noise Parameters**: Continental scale (1.0-100.0), erosion scale (1.0-100.0), ridge scale (1.0-50.0)
+2. **Height Variation**: Four-parameter system for base/secondary/tertiary/fine height control
+3. **Mountain Generation**: Jaggedness scale (0.1-1.0), noise scale (100.0-2000.0), depth factors
+4. **Ore Distribution**: Threshold-based rarity (Diamond: 8%, Iron: 30%, Copper: 35%)
+5. **Surface Control**: Complete block override system with prevention flags
+
+#### Technical Implementation:
+- **PlanetMaker.java**: Core builder class with comprehensive parameter control
+- **PlanetGenerationRunner.java**: Example configurations and planet setup
+- **Generated JSON files**: Automatic creation of dimension and noise settings
+- **Ore generation**: Noise-based system using proper threshold validation
+
+### 🔄 Current Phase: Documentation and Polish
 **Status**: 🔄 In Progress
 
-#### Active Systems:
-1. **TerraBlender Integration**:
-   - ✅ Moon dimension with TerraBlender (2 biomes: highlands + maria)
-   - ✅ Venus dimension with custom chunk generator bypass
-   - ✅ Custom surface rules and template-based generation
-   - ✅ Celestial body configuration system
-
-2. **Current Working Features**:
-   - ✅ Planet teleportation: `/planet teleport moon`, `/planet teleport venus`
-   - ✅ Celestial body customization via JSON (suns, moons, planets, stars)
-   - ✅ Custom sky rendering with configurable star fields
-   - ✅ Atmospheric effects and dimension-specific environments
-
-#### Current Issues Being Addressed:
-1. **Venus Terrain Quality**: Replace basic netherrack with volcanic landscapes
-2. **Moon Lava Generation**: Fix Moon generating as "giant pile of lava" instead of lunar terrain
-3. **Enhanced Noise Systems**: Implement sophisticated terrain algorithms beyond basic noise
-
-#### Next Immediate Priorities:
-1. **Terrain Quality Improvements**: Enhance `generateDefaultVenusTerrain()` method in PlanetChunkGenerator
-2. **TerraBlender Expansion**: Migrate Venus back to TerraBlender, re-enable Mars
-3. **Multi-biome Planets**: Implement varied biome distribution per world
-4. **Geological Features**: Add proper mountain ranges, valleys, crater systems
+#### Next Priorities:
+1. **Documentation Updates**: Complete planetary generation documentation
+2. **Performance Optimization**: Optimize chunk generation for complex planets
+3. **Visual Enhancements**: Improve sky rendering and atmospheric effects
+4. **Resource Balancing**: Fine-tune ore distribution and terrain features
 
 **For detailed TerraBlender information, see [TERRABLENDER_INTEGRATION.md](./TERRABLENDER_INTEGRATION.md)**
 **For celestial configuration, see [CELESTIAL_CONFIGURATION.md](./CELESTIAL_CONFIGURATION.md)**
@@ -250,14 +275,76 @@ When creating block models, **always use the correct parent namespace**:
 ./gradlew runClient                    # Launch development client
 ./gradlew runData                      # Test mod loading and integrations
 
-# Planet teleportation (current working commands)
-/planet teleport moon                  # Travel to Moon (TerraBlender)
-/planet teleport venus                 # Travel to Venus (custom generator)
+# Planet generation and testing
+# Run PlanetGenerationRunner to generate all planets
+# Set OVERWRITE_EXISTING = true to regenerate existing planets
+
+# Planet commands (in-game)
+/planet list                          # View all generated planets
+/planet teleport moon                 # Travel to Moon (craterous lunar landscape)
+/planet teleport mars                 # Travel to Mars (dramatic Martian terrain)
+/planet teleport hemphy               # Travel to Hemphy (extreme stress test planet)
+/planet teleport oretest              # Travel to Oretest (balanced test planet)
+/planet info <planet_name>           # View detailed planet characteristics
 
 # Time progression testing
 /time set day                          # Test day cycle
 /time set night                        # Test night cycle
 ```
+
+## Planet Generation System
+
+### PlanetMaker API Usage
+
+The comprehensive PlanetMaker system provides complete control over planetary generation. Key usage:
+
+```java
+// Example: Balanced test planet
+PlanetMaker.planet("oretest")
+    .continentalScale(25.0f)           // Continental landmass control
+    .erosionScale(35.0f)               // Erosion pattern intensity
+    .ridgeScale(15.0f)                 // Ridge formation strength
+    .heightVariation(15.0f, 10.0f, 5.0f, 3.0f)  // Multi-level height control
+    .jaggednessScale(0.3f)             // Mountain sharpness
+    .jaggednessNoiseScale(800.0f)      // Mountain feature scale
+    .surfaceBlock("minecraft:grass_block")      // Surface material
+    .subsurfaceBlock("minecraft:dirt")          // Subsurface layer
+    .veinToggle(0.8f)                  // Ore vein activation
+    .addCustomOreVein("minecraft:diamond_ore")  // Specific ore types
+    .oreVeinDensity(1.0f)              // Ore density multiplier
+    .worldDimensions(-64, 384)         // World height bounds
+    .seaLevel(64)                      // Sea level height
+    .skyColor(0x87CEEB)                # Sky color (hex)
+    .generate();
+```
+
+### Ore Generation System
+
+The noise-based ore generation uses threshold-based rarity:
+- **Diamond**: 0.92-1.0 threshold (8% spawn chance)
+- **Gold**: 0.85-1.0 threshold (15% spawn chance)
+- **Iron**: 0.7-1.0 threshold (30% spawn chance)
+- **Copper**: 0.65-1.0 threshold (35% spawn chance)
+
+Ore distribution is controlled by `minecraft:ore_gap` noise with proper depth conditions.
+
+### Planet Configuration Examples
+
+**For detailed planet generation documentation, see [planetary_generation.md](./planetary_generation.md)**
+
+#### Extreme Testing (Hemphy)
+- Continental scale: 50.0 (maximum landmass variation)
+- Erosion scale: 100.0 (extreme erosion patterns)
+- Jaggedness: 1.0 with 2000.0 noise scale (maximum terrain drama)
+- Ore density: 3.0x (triple normal ore spawning)
+- World height: -128 to 512 (640 total height)
+
+#### Balanced Testing (Oretest)
+- Continental scale: 25.0 (moderate landmass variation)
+- Erosion scale: 35.0 (normal erosion patterns)
+- Jaggedness: 0.3 with 800.0 noise scale (moderate mountains)
+- Ore density: 1.0x (normal ore spawning)
+- World height: -64 to 384 (standard Minecraft range)
 
 ## Project Documentation References
 

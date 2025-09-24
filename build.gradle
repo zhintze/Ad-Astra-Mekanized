@@ -133,6 +133,11 @@ dependencies {
     localRuntime "curse.maven:jade-324717:6011258"
     localRuntime "curse.maven:jadeAddOns-583345:5829251"
 
+
+    // JourneyMap
+    implementation "curse.maven:journeyMap-32274:6689206"
+    implementation "curse.maven:journeyMapIntegration-525447:6508946"
+
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"

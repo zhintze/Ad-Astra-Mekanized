@@ -10,19 +10,19 @@
     "moon_count": 0
   },
   "atmosphere": {
-    "has_atmosphere": false,
-    "breathable": false,
-    "pressure": 0.0,
-    "oxygen_level": 0.0,
-    "type": "NONE"
+    "has_atmosphere": true,
+    "breathable": true,
+    "pressure": 1.0,
+    "oxygen_level": 0.21,
+    "type": "NORMAL"
   },
   "dimension": {
     "dimension_type": "adastramekanized:hemphy",
     "biome_source": "hemphy_biome_source",
     "chunk_generator": "hemphy_generator",
     "is_orbital": false,
-    "sky_color": 65280,
-    "fog_color": 255,
-    "ambient_light": 0.1
+    "sky_color": 16711935,
+    "fog_color": 65535,
+    "ambient_light": 1.0
   }
 }

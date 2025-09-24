@@ -1,0 +1,28 @@
+{
+  "id": "adastramekanized:oretest",
+  "display_name": "Oretest",
+  "properties": {
+    "gravity": 1.0,
+    "temperature": 20.0,
+    "day_length": 24.0,
+    "orbit_distance": 1000,
+    "has_rings": false,
+    "moon_count": 0
+  },
+  "atmosphere": {
+    "has_atmosphere": true,
+    "breathable": true,
+    "pressure": 1.0,
+    "oxygen_level": 0.21,
+    "type": "NORMAL"
+  },
+  "dimension": {
+    "dimension_type": "adastramekanized:oretest",
+    "biome_source": "oretest_biome_source",
+    "chunk_generator": "oretest_generator",
+    "is_orbital": false,
+    "sky_color": 8900331,
+    "fog_color": 12632256,
+    "ambient_light": 0.8
+  }
+}

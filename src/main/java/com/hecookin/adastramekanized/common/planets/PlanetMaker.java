@@ -62,28 +62,45 @@ public class PlanetMaker {
         // Create biome entries for this planet
         JsonArray biomes = new JsonArray();
 
-        switch (planet.name.toLowerCase()) {
-            case "moon":
-                // Moon biomes using existing cold/barren biomes
-                biomes.add(createBiomeEntry("minecraft:frozen_peaks",
-                    -0.8f, -0.9f, 0.4f, 0.2f, 0.0f, 0.1f)); // Cold, dry, highlands (lunar highlands)
-                biomes.add(createBiomeEntry("minecraft:snowy_slopes",
-                    -0.6f, -0.8f, -0.2f, 0.3f, -0.5f, -0.1f)); // Cold, dry, lowlands (lunar maria)
-                break;
-            case "mars":
-                // Mars biomes using existing desert/cold biomes
-                biomes.add(createBiomeEntry("minecraft:badlands",
-                    -0.2f, -0.7f, 0.6f, -0.1f, 0.5f, 0.0f)); // Cool, dry, elevated (mars highlands)
-                biomes.add(createBiomeEntry("minecraft:desert",
-                    0.1f, -0.6f, 0.2f, 0.4f, -0.3f, -0.1f)); // Warmer, dry, valleys (mars valleys)
-                biomes.add(createBiomeEntry("minecraft:frozen_peaks",
-                    -0.9f, -0.8f, 0.8f, 0.0f, 0.2f, 0.3f)); // Very cold, polar (mars polar)
-                break;
-            default:
-                // Default single biome for other planets
-                biomes.add(createBiomeEntry("minecraft:plains",
-                    0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f));
-                break;
+        // Use custom biomes if defined, otherwise use legacy hardcoded biomes
+        if (!planet.customBiomes.isEmpty()) {
+            // Use the dynamic biome system
+            for (PlanetBuilder.BiomeEntry biomeEntry : planet.customBiomes) {
+                biomes.add(createBiomeEntry(
+                    biomeEntry.biomeName,
+                    biomeEntry.temperature,
+                    biomeEntry.humidity,
+                    biomeEntry.continentalness,
+                    biomeEntry.erosion,
+                    biomeEntry.depth,
+                    biomeEntry.weirdness
+                ));
+            }
+        } else {
+            // Fallback to hardcoded biomes for legacy planets
+            switch (planet.name.toLowerCase()) {
+                case "moon":
+                    // Moon biomes using existing cold/barren biomes
+                    biomes.add(createBiomeEntry("minecraft:frozen_peaks",
+                        -0.8f, -0.9f, 0.4f, 0.2f, 0.0f, 0.1f)); // Cold, dry, highlands (lunar highlands)
+                    biomes.add(createBiomeEntry("minecraft:snowy_slopes",
+                        -0.6f, -0.8f, -0.2f, 0.3f, -0.5f, -0.1f)); // Cold, dry, lowlands (lunar maria)
+                    break;
+                case "mars":
+                    // Mars biomes using existing desert/cold biomes
+                    biomes.add(createBiomeEntry("minecraft:badlands",
+                        -0.2f, -0.7f, 0.6f, -0.1f, 0.5f, 0.0f)); // Cool, dry, elevated (mars highlands)
+                    biomes.add(createBiomeEntry("minecraft:desert",
+                        0.1f, -0.6f, 0.2f, 0.4f, -0.3f, -0.1f)); // Warmer, dry, valleys (mars valleys)
+                    biomes.add(createBiomeEntry("minecraft:frozen_peaks",
+                        -0.9f, -0.8f, 0.8f, 0.0f, 0.2f, 0.3f)); // Very cold, polar (mars polar)
+                    break;
+                default:
+                    // Default single biome for other planets
+                    biomes.add(createBiomeEntry("minecraft:plains",
+                        0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f));
+                    break;
+            }
         }
 
         biomeSource.add("biomes", biomes);
@@ -120,7 +137,7 @@ public class PlanetMaker {
         // Unique seed for this planet's terrain generation
         private long seed;
 
-        // Noise configuration (the 6 parameters we modified + important ones)
+        // Noise configuration - Primary terrain shaping
         private float continentalScale = 1.0f;
         private float erosionScale = 0.25f;
         private float ridgeScale = 0.25f;
@@ -129,10 +146,60 @@ public class PlanetMaker {
         private float heightVariation3 = 0.1f;
         private float heightVariation4 = 0.05f;
 
+        // Advanced noise parameters
+        private float temperatureScale = 1.0f;
+        private float humidityScale = 1.0f;
+        private float weirdnessScale = 1.0f;
+        private float densityFactor = 1.0f;
+        private float densityOffset = 0.0f;
+
+        // Noise routing parameters
+        private float barrierNoise = 0.0f;
+        private float fluidLevelFloodedness = 0.0f;
+        private float fluidLevelSpread = 0.0f;
+        private float lavaNoise = 0.0f;
+        private float temperatureNoise = 0.0f;
+        private float vegetationNoise = 0.0f;
+
+        // Hill and mountain generation parameters (based on Ad Astra research)
+        private float jaggednessScale = 0.0f;              // Controls mountain peak sharpness
+        private float jaggednessNoiseScale = 1500.0f;      // High-scale jagged noise for dramatic terrain
+        private float depthFactor = 1.0f;                  // Terrain height scaling factor
+        private float depthOffset = 0.0f;                  // Baseline terrain elevation offset
+        private float terrainFactor = 1.0f;                // Overall terrain intensity multiplier
+        private float base3DNoiseXZScale = 0.25f;          // Horizontal terrain frequency
+        private float base3DNoiseYScale = 0.2f;            // Vertical terrain frequency
+        private float base3DNoiseXZFactor = 80.0f;         // Horizontal terrain amplitude
+        private float base3DNoiseYFactor = 90.0f;          // Vertical terrain amplitude
+        private float smearScaleMultiplier = 8.0f;         // Terrain smoothing factor
+
+        // Y-gradient parameters for vertical density
+        private int gradientFromY = -64;
+        private int gradientToY = 320;
+        private float gradientFromValue = 1.5f;
+        private float gradientToValue = -1.5f;
+        private float gradientMultiplier = 0.64f;
+
+        // Advanced terrain shaping
+        private float initialDensityOffset = -0.234375f;
+        private float terrainShapingFactor = 0.175f;
+        private boolean legacyRandomSource = false;
+
         // Surface configuration
         private String surfaceBlock = "minecraft:stone";
         private String subsurfaceBlock = "minecraft:cobblestone";
         private String deepBlock = "minecraft:stone";
+        private String underwaterBlock = "minecraft:stone";
+        private String shallowUnderwaterBlock = "minecraft:stone";
+        private String deepUnderwaterBlock = "minecraft:stone";
+        private String bedrockBlock = "minecraft:bedrock";
+
+        // Advanced surface controls
+        private boolean enableCustomSurfaceRules = true;
+        private boolean disableDefaultSurfaceGeneration = true;
+        private boolean preventGrassGeneration = true;
+        private boolean preventGravelGeneration = true;
+        private boolean preventSandGeneration = false;
 
         // Basic planet properties
         private int seaLevel = 63;
@@ -140,6 +207,55 @@ public class PlanetMaker {
         private boolean aquifersEnabled = false;
         private boolean oreVeinsEnabled = true;
         private String defaultFluid = "minecraft:air";
+
+        // World height and structure
+        private int minY = -64;
+        private int worldHeight = 384;
+        private int horizontalNoiseSize = 2;
+        private int verticalNoiseSize = 1;
+
+        // Surface rules and generation
+        private String defaultBlock = "minecraft:stone";
+        private boolean hasAbovePreliminaryRule = true;
+        private boolean hasWaterRule = true;
+        private int surfaceDepthMultiplier = 0;
+        private boolean addStoneDepth = false;
+
+        // Vein generation controls
+        private float veinToggle = 0.0f;
+        private float veinRidged = 0.0f;
+        private float veinGap = 0.0f;
+
+        // Enhanced ore vein configuration
+        private java.util.List<String> customOreVeins = new java.util.ArrayList<>();
+        private float oreVeinDensity = 1.0f;
+        private float oreVeinSize = 1.0f;
+        private int maxOreVeinCount = 20;
+        private boolean enableRareOres = true;
+        private boolean enableCommonOres = true;
+        private boolean enableDeepslateOres = true;
+
+        // Biome distribution controls
+        private float biomeContinentalness = 0.0f;
+        private float biomeErosion = 0.0f;
+        private float biomeDepth = 0.0f;
+        private float biomeWeirdness = 0.0f;
+        private float biomeTemperature = 0.0f;
+        private float biomeHumidity = 0.0f;
+
+        // Dynamic biome system
+        private java.util.List<BiomeEntry> customBiomes = new java.util.ArrayList<>();
+
+        // Liquid system configuration
+        private String oceanFluid = "minecraft:water";
+        private String lakeFluid = "minecraft:water";
+        private int oceanLevel = -1; // -1 means use seaLevel
+        private float oceanFrequency = 0.3f; // 0.0-1.0, controls ocean size
+        private float lakeFrequency = 0.1f; // 0.0-1.0, controls lake generation
+        private boolean enableUndergroundLiquids = false;
+        private String undergroundLiquid = "minecraft:water";
+        private int lavaLakeLevel = -60; // Y level for lava lakes
+        private float lavaLakeFrequency = 0.05f;
 
         // Dimension properties
         private int skyColor = 0x78A7FF;
@@ -182,6 +298,136 @@ public class PlanetMaker {
             return this;
         }
 
+        // Advanced noise parameter methods
+        public PlanetBuilder temperatureScale(float scale) {
+            this.temperatureScale = scale;
+            return this;
+        }
+
+        public PlanetBuilder humidityScale(float scale) {
+            this.humidityScale = scale;
+            return this;
+        }
+
+        public PlanetBuilder weirdnessScale(float scale) {
+            this.weirdnessScale = scale;
+            return this;
+        }
+
+        public PlanetBuilder densityFactor(float factor) {
+            this.densityFactor = factor;
+            return this;
+        }
+
+        public PlanetBuilder densityOffset(float offset) {
+            this.densityOffset = offset;
+            return this;
+        }
+
+        // Noise routing methods
+        public PlanetBuilder barrierNoise(float noise) {
+            this.barrierNoise = noise;
+            return this;
+        }
+
+        public PlanetBuilder fluidLevelFloodedness(float floodedness) {
+            this.fluidLevelFloodedness = floodedness;
+            return this;
+        }
+
+        public PlanetBuilder fluidLevelSpread(float spread) {
+            this.fluidLevelSpread = spread;
+            return this;
+        }
+
+        public PlanetBuilder lavaNoise(float noise) {
+            this.lavaNoise = noise;
+            return this;
+        }
+
+        public PlanetBuilder temperatureNoise(float noise) {
+            this.temperatureNoise = noise;
+            return this;
+        }
+
+        public PlanetBuilder vegetationNoise(float noise) {
+            this.vegetationNoise = noise;
+            return this;
+        }
+
+        // Hill and mountain generation methods (based on Ad Astra research)
+        public PlanetBuilder jaggednessScale(float scale) {
+            this.jaggednessScale = scale;
+            return this;
+        }
+
+        public PlanetBuilder jaggednessNoiseScale(float scale) {
+            this.jaggednessNoiseScale = scale;
+            return this;
+        }
+
+        public PlanetBuilder depthFactor(float factor) {
+            this.depthFactor = factor;
+            return this;
+        }
+
+        public PlanetBuilder depthOffset(float offset) {
+            this.depthOffset = offset;
+            return this;
+        }
+
+        public PlanetBuilder terrainFactor(float factor) {
+            this.terrainFactor = factor;
+            return this;
+        }
+
+        public PlanetBuilder base3DNoiseScale(float xzScale, float yScale) {
+            this.base3DNoiseXZScale = xzScale;
+            this.base3DNoiseYScale = yScale;
+            return this;
+        }
+
+        public PlanetBuilder base3DNoiseFactor(float xzFactor, float yFactor) {
+            this.base3DNoiseXZFactor = xzFactor;
+            this.base3DNoiseYFactor = yFactor;
+            return this;
+        }
+
+        public PlanetBuilder smearScaleMultiplier(float multiplier) {
+            this.smearScaleMultiplier = multiplier;
+            return this;
+        }
+
+        // Y-gradient configuration methods
+        public PlanetBuilder verticalGradient(int fromY, int toY, float fromValue, float toValue) {
+            this.gradientFromY = fromY;
+            this.gradientToY = toY;
+            this.gradientFromValue = fromValue;
+            this.gradientToValue = toValue;
+            return this;
+        }
+
+        public PlanetBuilder gradientMultiplier(float multiplier) {
+            this.gradientMultiplier = multiplier;
+            return this;
+        }
+
+        // Advanced terrain shaping methods
+        public PlanetBuilder initialDensityOffset(float offset) {
+            this.initialDensityOffset = offset;
+            return this;
+        }
+
+        public PlanetBuilder terrainShapingFactor(float factor) {
+            this.terrainShapingFactor = factor;
+            return this;
+        }
+
+        public PlanetBuilder legacyRandomSource(boolean legacy) {
+            this.legacyRandomSource = legacy;
+            return this;
+        }
+
         // Surface configuration methods
         public PlanetBuilder surfaceBlock(String block) {
             this.surfaceBlock = block;
@@ -195,6 +441,84 @@ public class PlanetMaker {
 
         public PlanetBuilder deepBlock(String block) {
             this.deepBlock = block;
+            return this;
+        }
+
+        // Additional surface block configuration
+        public PlanetBuilder underwaterBlock(String block) {
+            this.underwaterBlock = block;
+            return this;
+        }
+
+        public PlanetBuilder shallowUnderwaterBlock(String block) {
+            this.shallowUnderwaterBlock = block;
+            return this;
+        }
+
+        public PlanetBuilder deepUnderwaterBlock(String block) {
+            this.deepUnderwaterBlock = block;
+            return this;
+        }
+
+        public PlanetBuilder bedrockBlock(String block) {
+            this.bedrockBlock = block;
+            return this;
+        }
+
+        // Advanced surface generation controls
+        public PlanetBuilder preventGrassGeneration(boolean prevent) {
+            this.preventGrassGeneration = prevent;
+            return this;
+        }
+
+        public PlanetBuilder preventGravelGeneration(boolean prevent) {
+            this.preventGravelGeneration = prevent;
+            return this;
+        }
+
+        public PlanetBuilder preventSandGeneration(boolean prevent) {
+            this.preventSandGeneration = prevent;
+            return this;
+        }
+
+        public PlanetBuilder disableDefaultSurfaceGeneration(boolean disable) {
+            this.disableDefaultSurfaceGeneration = disable;
+            return this;
+        }
+
+        // Enhanced ore vein configuration methods
+        public PlanetBuilder addCustomOreVein(String oreBlock) {
+            this.customOreVeins.add(oreBlock);
+            return this;
+        }
+
+        public PlanetBuilder oreVeinDensity(float density) {
+            this.oreVeinDensity = density;
+            return this;
+        }
+
+        public PlanetBuilder oreVeinSize(float size) {
+            this.oreVeinSize = size;
+            return this;
+        }
+
+        public PlanetBuilder maxOreVeinCount(int count) {
+            this.maxOreVeinCount = count;
+            return this;
+        }
+
+        public PlanetBuilder enableRareOres(boolean enable) {
+            this.enableRareOres = enable;
+            return this;
+        }
+
+        public PlanetBuilder enableCommonOres(boolean enable) {
+            this.enableCommonOres = enable;
+            return this;
+        }
+
+        public PlanetBuilder enableDeepslateOres(boolean enable) {
+            this.enableDeepslateOres = enable;
             return this;
         }
 
@@ -245,12 +569,257 @@ public class PlanetMaker {
             return this;
         }
 
+        // World structure configuration methods
+        public PlanetBuilder worldDimensions(int minY, int height) {
+            this.minY = minY;
+            this.worldHeight = height;
+            return this;
+        }
+
+        public PlanetBuilder noiseSize(int horizontal, int vertical) {
+            this.horizontalNoiseSize = horizontal;
+            this.verticalNoiseSize = vertical;
+            return this;
+        }
+
+        // Surface rule configuration methods
+        public PlanetBuilder defaultBlock(String block) {
+            this.defaultBlock = block;
+            return this;
+        }
+
+        public PlanetBuilder abovePreliminaryRule(boolean enabled) {
+            this.hasAbovePreliminaryRule = enabled;
+            return this;
+        }
+
+        public PlanetBuilder waterRule(boolean enabled) {
+            this.hasWaterRule = enabled;
+            return this;
+        }
+
+        public PlanetBuilder surfaceDepthMultiplier(int multiplier) {
+            this.surfaceDepthMultiplier = multiplier;
+            return this;
+        }
+
+        public PlanetBuilder addStoneDepth(boolean add) {
+            this.addStoneDepth = add;
+            return this;
+        }
+
+        // Vein generation control methods
+        public PlanetBuilder veinToggle(float toggle) {
+            this.veinToggle = toggle;
+            return this;
+        }
+
+        public PlanetBuilder veinRidged(float ridged) {
+            this.veinRidged = ridged;
+            return this;
+        }
+
+        public PlanetBuilder veinGap(float gap) {
+            this.veinGap = gap;
+            return this;
+        }
+
+        // Biome distribution control methods
+        public PlanetBuilder biomeDistribution(float continentalness, float erosion, float depth, float weirdness, float temperature, float humidity) {
+            this.biomeContinentalness = continentalness;
+            this.biomeErosion = erosion;
+            this.biomeDepth = depth;
+            this.biomeWeirdness = weirdness;
+            this.biomeTemperature = temperature;
+            this.biomeHumidity = humidity;
+            return this;
+        }
+
+        /**
+         * Add a biome to this planet with custom climate parameters
+         * @param biomeName Full biome resource location (e.g., "minecraft:plains")
+         * @param temperature Temperature parameter (-1.0 to 1.0)
+         * @param humidity Humidity parameter (-1.0 to 1.0)
+         * @param continentalness Continental parameter (-1.0 to 1.0)
+         * @param erosion Erosion parameter (-1.0 to 1.0)
+         * @param depth Depth parameter (-1.0 to 1.0)
+         * @param weirdness Weirdness parameter (-1.0 to 1.0)
+         */
+        public PlanetBuilder addBiome(String biomeName, float temperature, float humidity,
+                                     float continentalness, float erosion, float depth, float weirdness) {
+            this.customBiomes.add(new BiomeEntry(biomeName, temperature, humidity,
+                                                continentalness, erosion, depth, weirdness));
+            return this;
+        }
+
+        /**
+         * Add a biome with simplified parameters (good for common biomes)
+         * @param biomeName Full biome resource location
+         * @param weight Relative weight/frequency of this biome (0.1-1.0)
+         */
+        public PlanetBuilder addBiome(String biomeName, float weight) {
+            // Generate climate parameters based on weight and biome type
+            float baseParam = (weight - 0.5f) * 2; // Convert weight to -1 to 1 range
+
+            // Auto-generate reasonable climate parameters based on biome name
+            if (biomeName.contains("desert") || biomeName.contains("badlands")) {
+                // Hot, dry biomes
+                this.customBiomes.add(new BiomeEntry(biomeName, 0.8f, -0.8f, baseParam, baseParam * 0.5f, 0.0f, 0.0f));
+            } else if (biomeName.contains("frozen") || biomeName.contains("snowy") || biomeName.contains("ice")) {
+                // Cold biomes
+                this.customBiomes.add(new BiomeEntry(biomeName, -0.8f, -0.2f, baseParam, baseParam * 0.3f, 0.0f, 0.1f));
+            } else if (biomeName.contains("jungle") || biomeName.contains("swamp")) {
+                // Hot, wet biomes
+                this.customBiomes.add(new BiomeEntry(biomeName, 0.7f, 0.9f, baseParam, -baseParam * 0.4f, -0.2f, 0.0f));
+            } else if (biomeName.contains("forest") || biomeName.contains("taiga")) {
+                // Temperate biomes
+                this.customBiomes.add(new BiomeEntry(biomeName, 0.2f, 0.3f, baseParam, baseParam * 0.2f, 0.0f, 0.0f));
+            } else if (biomeName.contains("ocean") || biomeName.contains("river")) {
+                // Water biomes
+                this.customBiomes.add(new BiomeEntry(biomeName, 0.5f, 0.5f, baseParam, -0.5f, -0.8f, 0.0f));
+            } else if (biomeName.contains("mountain") || biomeName.contains("peaks")) {
+                // Mountain biomes
+                this.customBiomes.add(new BiomeEntry(biomeName, -0.3f, -0.1f, baseParam * 0.8f, 0.6f, 0.8f, 0.2f));
+            } else if (biomeName.contains("plains") || biomeName.contains("meadow")) {
+                // Plains biomes
+                this.customBiomes.add(new BiomeEntry(biomeName, 0.4f, 0.0f, baseParam, 0.0f, 0.0f, 0.0f));
+            } else if (biomeName.contains("savanna")) {
+                // Savanna biomes
+                this.customBiomes.add(new BiomeEntry(biomeName, 0.9f, -0.5f, baseParam, baseParam * 0.3f, 0.1f, 0.0f));
+            } else if (biomeName.contains("basalt") || biomeName.contains("soul") || biomeName.contains("nether")) {
+                // Nether-like biomes for volcanic planets
+                this.customBiomes.add(new BiomeEntry(biomeName, 1.0f, -1.0f, baseParam, baseParam * 0.7f, 0.3f, 0.5f));
+            } else {
+                // Default parameters
+                this.customBiomes.add(new BiomeEntry(biomeName, 0.0f, 0.0f, baseParam, 0.0f, 0.0f, 0.0f));
+            }
+            return this;
+        }
+
+        /**
+         * Clear all biomes (useful before adding custom set)
+         */
+        public PlanetBuilder clearBiomes() {
+            this.customBiomes.clear();
+            return this;
+        }
+
+        // ========== LIQUID SYSTEM METHODS ==========
+
+        /**
+         * Configure ocean generation
+         * @param fluid Fluid type (e.g., "minecraft:water", "minecraft:lava")
+         * @param level Ocean level (Y coordinate, or -1 to use seaLevel)
+         * @param frequency Ocean frequency (0.0-1.0, higher = more ocean)
+         */
+        public PlanetBuilder oceanConfig(String fluid, int level, float frequency) {
+            this.oceanFluid = fluid;
+            this.oceanLevel = level;
+            this.oceanFrequency = Math.max(0.0f, Math.min(1.0f, frequency));
+            return this;
+        }
+
+        /**
+         * Simple ocean configuration with just fluid type
+         * @param fluid Ocean fluid type
+         */
+        public PlanetBuilder oceanFluid(String fluid) {
+            this.oceanFluid = fluid;
+            return this;
+        }
+
+        /**
+         * Set ocean level (useful for planets with different sea levels)
+         * @param level Y level for ocean surface
+         */
+        public PlanetBuilder oceanLevel(int level) {
+            this.oceanLevel = level;
+            // Also update seaLevel if ocean level is set
+            if (level > 0) {
+                this.seaLevel = level;
+            }
+            return this;
+        }
+
+        /**
+         * Configure lake generation
+         * @param fluid Lake fluid type
+         * @param frequency Lake frequency (0.0-1.0)
+         */
+        public PlanetBuilder lakeConfig(String fluid, float frequency) {
+            this.lakeFluid = fluid;
+            this.lakeFrequency = Math.max(0.0f, Math.min(1.0f, frequency));
+            return this;
+        }
+
+        /**
+         * Configure underground liquid pools (aquifers)
+         * @param fluid Underground liquid type
+         * @param enabled Whether to generate underground liquids
+         */
+        public PlanetBuilder undergroundLiquids(String fluid, boolean enabled) {
+            this.undergroundLiquid = fluid;
+            this.enableUndergroundLiquids = enabled;
+            this.aquifersEnabled = enabled; // Sync with aquifer system
+            return this;
+        }
+
+        /**
+         * Configure lava lakes (or other hot liquid pools)
+         * @param level Y level for lava lake generation
+         * @param frequency Frequency of lava lakes (0.0-1.0)
+         */
+        public PlanetBuilder lavaLakes(int level, float frequency) {
+            this.lavaLakeLevel = level;
+            this.lavaLakeFrequency = Math.max(0.0f, Math.min(1.0f, frequency));
+            // Increase lava noise proportionally
+            this.lavaNoise = frequency;
+            return this;
+        }
+
+        /**
+         * Disable all liquid generation (for dry worlds)
+         */
+        public PlanetBuilder noLiquids() {
+            this.oceanFrequency = 0.0f;
+            this.lakeFrequency = 0.0f;
+            this.lavaLakeFrequency = 0.0f;
+            this.enableUndergroundLiquids = false;
+            this.aquifersEnabled = false;
+            this.defaultFluid = "minecraft:air";
+            return this;
+        }
+
         /**
          * Generate this planet and add it to the generation queue
          */
         public PlanetBuilder generate() {
             PLANETS.add(this);
             return this;
+        }
+
+        /**
+         * Inner class for biome entries
+         */
+        private static class BiomeEntry {
+            final String biomeName;
+            final float temperature;
+            final float humidity;
+            final float continentalness;
+            final float erosion;
+            final float depth;
+            final float weirdness;
+
+            BiomeEntry(String biomeName, float temperature, float humidity,
+                      float continentalness, float erosion, float depth, float weirdness) {
+                this.biomeName = biomeName;
+                this.temperature = temperature;
+                this.humidity = humidity;
+                this.continentalness = continentalness;
+                this.erosion = erosion;
+                this.depth = depth;
+                this.weirdness = weirdness;
+            }
         }
     }
 
@@ -367,27 +936,32 @@ public class PlanetMaker {
     private static void generateNoiseSettings(PlanetBuilder planet) throws IOException {
         JsonObject noiseSettings = new JsonObject();
 
-        noiseSettings.addProperty("sea_level", planet.seaLevel);
+        // All configurable basic properties
+        // Use ocean level if configured, otherwise use default sea level
+        int effectiveSeaLevel = (planet.oceanLevel > 0) ? planet.oceanLevel : planet.seaLevel;
+        noiseSettings.addProperty("sea_level", effectiveSeaLevel);
         noiseSettings.addProperty("disable_mob_generation", planet.disableMobGeneration);
         noiseSettings.addProperty("aquifers_enabled", planet.aquifersEnabled);
         noiseSettings.addProperty("ore_veins_enabled", planet.oreVeinsEnabled);
-        noiseSettings.addProperty("legacy_random_source", false);
+        noiseSettings.addProperty("legacy_random_source", planet.legacyRandomSource);
 
-        // Default blocks
+        // Configurable default blocks
         JsonObject defaultBlock = new JsonObject();
-        defaultBlock.addProperty("Name", planet.deepBlock);
+        defaultBlock.addProperty("Name", planet.defaultBlock);
         noiseSettings.add("default_block", defaultBlock);
 
+        // Use ocean fluid as default fluid if oceans are enabled
         JsonObject defaultFluid = new JsonObject();
-        defaultFluid.addProperty("Name", planet.defaultFluid);
+        String fluidToUse = planet.oceanFrequency > 0 ? planet.oceanFluid : planet.defaultFluid;
+        defaultFluid.addProperty("Name", fluidToUse);
         noiseSettings.add("default_fluid", defaultFluid);
 
-        // Noise configuration (Moon's working pattern)
+        // Configurable noise/world structure
         JsonObject noise = new JsonObject();
-        noise.addProperty("min_y", -64);
-        noise.addProperty("height", 384);
-        noise.addProperty("size_horizontal", 2);
-        noise.addProperty("size_vertical", 1);
+        noise.addProperty("min_y", planet.minY);
+        noise.addProperty("height", planet.worldHeight);
+        noise.addProperty("size_horizontal", planet.horizontalNoiseSize);
+        noise.addProperty("size_vertical", planet.verticalNoiseSize);
         noiseSettings.add("noise", noise);
 
         // Noise router using Moon's exact working pattern with configurable parameters
@@ -420,13 +994,20 @@ public class PlanetMaker {
     private static JsonObject createNoiseRouter(PlanetBuilder planet) {
         JsonObject router = new JsonObject();
 
-        // Basic required fields (Moon's values)
-        router.addProperty("barrier", 0);
-        router.addProperty("fluid_level_floodedness", 0);
-        router.addProperty("fluid_level_spread", 0);
-        router.addProperty("lava", 0);
-        router.addProperty("temperature", 0);
-        router.addProperty("vegetation", 0);
+        // Noise routing parameters with liquid system integration
+        router.addProperty("barrier", planet.barrierNoise);
+
+        // Fluid level controls based on liquid system settings
+        router.addProperty("fluid_level_floodedness",
+            planet.oceanFrequency > 0 ? planet.fluidLevelFloodedness * planet.oceanFrequency : 0.0f);
+        router.addProperty("fluid_level_spread",
+            planet.lakeFrequency > 0 ? planet.fluidLevelSpread + (planet.lakeFrequency * 0.2f) : planet.fluidLevelSpread);
+
+        // Lava controlled by lava lake settings
+        router.addProperty("lava", planet.lavaLakeFrequency > 0 ? planet.lavaNoise : 0.0f);
+
+        router.addProperty("temperature", planet.temperatureNoise);
+        router.addProperty("vegetation", planet.vegetationNoise);
 
         // Continents with configurable scale and seed variation
         JsonObject continents = new JsonObject();
@@ -463,16 +1044,29 @@ public class PlanetMaker {
         ridges.addProperty("shift_z", "minecraft:shift_z");
         router.add("ridges", ridges);
 
+        // Jaggedness for mountain peak generation (based on Ad Astra research)
+        if (planet.jaggednessScale > 0.0f) {
+            JsonObject jaggedness = new JsonObject();
+            jaggedness.addProperty("type", "minecraft:shifted_noise");
+            jaggedness.addProperty("noise", "minecraft:jagged");
+            jaggedness.addProperty("xz_scale", planet.jaggednessNoiseScale);
+            jaggedness.addProperty("y_scale", 0);
+            jaggedness.addProperty("shift_x", "minecraft:shift_x");
+            jaggedness.addProperty("shift_y", 0);
+            jaggedness.addProperty("shift_z", "minecraft:shift_z");
+            router.add("jaggedness", jaggedness);
+        }
+
         // Initial density with configurable height variations
         router.add("initial_density_without_jaggedness", createInitialDensity(planet));
 
         // Final density with configurable height variations
         router.add("final_density", createFinalDensity(planet));
 
-        // Ore vein settings
-        router.addProperty("vein_toggle", 0);
-        router.addProperty("vein_ridged", 0);
-        router.addProperty("vein_gap", 0);
+        // Configurable ore vein settings
+        router.addProperty("vein_toggle", planet.veinToggle);
+        router.addProperty("vein_ridged", planet.veinRidged);
+        router.addProperty("vein_gap", planet.veinGap);
 
         return router;
     }
@@ -489,18 +1083,18 @@ public class PlanetMaker {
 
         JsonObject yGradient = new JsonObject();
         yGradient.addProperty("type", "minecraft:y_clamped_gradient");
-        yGradient.addProperty("from_y", -64);
-        yGradient.addProperty("to_y", 320);
-        yGradient.addProperty("from_value", 1.5);
-        yGradient.addProperty("to_value", -1.5);
+        yGradient.addProperty("from_y", planet.gradientFromY);
+        yGradient.addProperty("to_y", planet.gradientToY);
+        yGradient.addProperty("from_value", planet.gradientFromValue);
+        yGradient.addProperty("to_value", planet.gradientToValue);
         argument1.add("argument1", yGradient);
 
-        argument1.addProperty("argument2", 0.64);
+        argument1.addProperty("argument2", planet.gradientMultiplier);
         initialDensity.add("argument1", argument1);
 
         JsonObject argument2 = new JsonObject();
         argument2.addProperty("type", "minecraft:add");
-        argument2.addProperty("argument1", -0.234375);
+        argument2.addProperty("argument1", planet.initialDensityOffset + planet.depthOffset);
 
         JsonObject mulArgument2 = new JsonObject();
         mulArgument2.addProperty("type", "minecraft:mul");
@@ -521,7 +1115,7 @@ public class PlanetMaker {
         continentalnessNoise.addProperty("shift_z", "minecraft:shift_z");
         mulContinentalness.add("argument1", continentalnessNoise);
 
-        mulContinentalness.addProperty("argument2", getSeedVariation(planet, "height_var1", planet.heightVariation1, planet.heightVariation1 * 0.25f));
+        mulContinentalness.addProperty("argument2", getSeedVariation(planet, "height_var1", planet.heightVariation1 * planet.depthFactor * planet.terrainFactor, planet.heightVariation1 * 0.25f));
         addArgument1.add("argument2", mulContinentalness);
 
         JsonObject mulErosion = new JsonObject();
@@ -537,11 +1131,11 @@ public class PlanetMaker {
         erosionNoise.addProperty("shift_z", "minecraft:shift_z");
         mulErosion.add("argument1", erosionNoise);
 
-        mulErosion.addProperty("argument2", getSeedVariation(planet, "height_var2", planet.heightVariation2, planet.heightVariation2 * 0.25f));
+        mulErosion.addProperty("argument2", getSeedVariation(planet, "height_var2", planet.heightVariation2 * planet.depthFactor * planet.terrainFactor, planet.heightVariation2 * 0.25f));
         addArgument1.add("argument1", mulErosion);
 
         mulArgument2.add("argument1", addArgument1);
-        mulArgument2.addProperty("argument2", 0.175);
+        mulArgument2.addProperty("argument2", planet.terrainShapingFactor);
 
         argument2.add("argument2", mulArgument2);
         initialDensity.add("argument2", argument2);
@@ -567,18 +1161,18 @@ public class PlanetMaker {
 
         JsonObject yGradient = new JsonObject();
         yGradient.addProperty("type", "minecraft:y_clamped_gradient");
-        yGradient.addProperty("from_y", -64);
-        yGradient.addProperty("to_y", 320);
-        yGradient.addProperty("from_value", 1.5);
-        yGradient.addProperty("to_value", -1.5);
+        yGradient.addProperty("from_y", planet.gradientFromY);
+        yGradient.addProperty("to_y", planet.gradientToY);
+        yGradient.addProperty("from_value", planet.gradientFromValue);
+        yGradient.addProperty("to_value", planet.gradientToValue);
         argument1.add("argument1", yGradient);
 
-        argument1.addProperty("argument2", 0.64);
+        argument1.addProperty("argument2", planet.gradientMultiplier);
         blendArgument.add("argument1", argument1);
 
         JsonObject argument2 = new JsonObject();
         argument2.addProperty("type", "minecraft:add");
-        argument2.addProperty("argument1", -0.234375);
+        argument2.addProperty("argument1", planet.initialDensityOffset + planet.depthOffset);
 
         JsonObject mulArgument2 = new JsonObject();
         mulArgument2.addProperty("type", "minecraft:mul");
@@ -619,7 +1213,7 @@ public class PlanetMaker {
         addArgument1.add("argument1", mulErosion);
 
         mulArgument2.add("argument1", addArgument1);
-        mulArgument2.addProperty("argument2", 0.175);
+        mulArgument2.addProperty("argument2", planet.terrainShapingFactor);
 
         argument2.add("argument2", mulArgument2);
         blendArgument.add("argument2", argument2);
@@ -639,7 +1233,29 @@ public class PlanetMaker {
 
         JsonArray sequence = new JsonArray();
 
-        // Surface layer (top block)
+        // Block prevention rules - prevent unwanted default blocks
+        if (planet.preventGrassGeneration) {
+            addBlockPreventionRule(sequence, "minecraft:grass_block", planet.surfaceBlock);
+            addBlockPreventionRule(sequence, "minecraft:dirt", planet.surfaceBlock);
+        }
+
+        if (planet.preventGravelGeneration) {
+            addBlockPreventionRule(sequence, "minecraft:gravel", planet.subsurfaceBlock);
+        }
+
+        if (planet.preventSandGeneration) {
+            addBlockPreventionRule(sequence, "minecraft:sand", planet.surfaceBlock);
+            addBlockPreventionRule(sequence, "minecraft:red_sand", planet.surfaceBlock);
+        }
+
+        // Custom ore vein placements (if enabled)
+        if (!planet.customOreVeins.isEmpty()) {
+            for (String oreBlock : planet.customOreVeins) {
+                addOreVeinRule(sequence, oreBlock, planet);
+            }
+        }
+
+        // Surface layer (top block) - above preliminary surface
         JsonObject surfaceLayer = new JsonObject();
         surfaceLayer.addProperty("type", "minecraft:condition");
 
@@ -656,7 +1272,7 @@ public class PlanetMaker {
 
         sequence.add(surfaceLayer);
 
-        // Subsurface layer
+        // Underwater/subsurface layer
         JsonObject subsurfaceLayer = new JsonObject();
         subsurfaceLayer.addProperty("type", "minecraft:condition");
 
@@ -670,13 +1286,13 @@ public class PlanetMaker {
         JsonObject subsurfaceResult = new JsonObject();
         subsurfaceResult.addProperty("type", "minecraft:block");
         JsonObject subsurfaceState = new JsonObject();
-        subsurfaceState.addProperty("Name", planet.subsurfaceBlock);
+        subsurfaceState.addProperty("Name", planet.underwaterBlock);
         subsurfaceResult.add("result_state", subsurfaceState);
         subsurfaceLayer.add("then_run", subsurfaceResult);
 
         sequence.add(subsurfaceLayer);
 
-        // Deep layer (default)
+        // Deep layer (default fallback)
         JsonObject deepLayer = new JsonObject();
         deepLayer.addProperty("type", "minecraft:block");
         JsonObject deepState = new JsonObject();
@@ -687,6 +1303,106 @@ public class PlanetMaker {
 
         surfaceRule.add("sequence", sequence);
         return surfaceRule;
+    }
+
+    /**
+     * Helper method to add block prevention rules that override default generation
+     * Creates a universal rule that always replaces with the specified block
+     */
+    private static void addBlockPreventionRule(JsonArray sequence, String blockToPrevent, String replacementBlock) {
+        JsonObject preventionRule = new JsonObject();
+        preventionRule.addProperty("type", "minecraft:condition");
+
+        // Create a surface depth condition with proper surface_type
+        JsonObject condition = new JsonObject();
+        condition.addProperty("type", "minecraft:stone_depth");
+        condition.addProperty("offset", 0);
+        condition.addProperty("surface_type", "floor");
+        condition.addProperty("add_surface_depth", false);
+        condition.addProperty("secondary_depth_range", 0);
+        preventionRule.add("if_true", condition);
+
+        // Replace with our desired block
+        JsonObject result = new JsonObject();
+        result.addProperty("type", "minecraft:block");
+        JsonObject state = new JsonObject();
+        state.addProperty("Name", replacementBlock);
+        result.add("result_state", state);
+        preventionRule.add("then_run", result);
+
+        sequence.add(preventionRule);
+    }
+
+    /**
+     * Helper method to add ore vein rules for custom ore placement with noise-based rarity
+     */
+    private static void addOreVeinRule(JsonArray sequence, String oreBlock, PlanetBuilder planet) {
+        JsonObject oreRule = new JsonObject();
+        oreRule.addProperty("type", "minecraft:condition");
+
+        // Create complex condition using noise for realistic ore distribution
+        JsonObject condition = new JsonObject();
+        condition.addProperty("type", "minecraft:noise_threshold");
+        condition.addProperty("noise", "minecraft:ore_gap"); // Use ore gap noise for realistic distribution
+        condition.addProperty("min_threshold", getOreThreshold(oreBlock, planet)); // Rarity based on ore type
+        condition.addProperty("max_threshold", 1.0);
+        oreRule.add("if_true", condition);
+
+        // Create nested condition for depth requirement
+        JsonObject depthCondition = new JsonObject();
+        depthCondition.addProperty("type", "minecraft:condition");
+
+        JsonObject stoneDepth = new JsonObject();
+        stoneDepth.addProperty("type", "minecraft:stone_depth");
+        stoneDepth.addProperty("offset", getOreDepth(oreBlock)); // Different depths for different ores
+        stoneDepth.addProperty("surface_type", "floor");
+        stoneDepth.addProperty("add_surface_depth", false);
+        stoneDepth.addProperty("secondary_depth_range", (int)(16 * planet.oreVeinSize)); // Smaller vein range
+        depthCondition.add("if_true", stoneDepth);
+
+        // Place the ore block
+        JsonObject result = new JsonObject();
+        result.addProperty("type", "minecraft:block");
+        JsonObject state = new JsonObject();
+        state.addProperty("Name", oreBlock);
+        result.add("result_state", state);
+        depthCondition.add("then_run", result);
+
+        oreRule.add("then_run", depthCondition);
+        sequence.add(oreRule);
+    }
+
+    /**
+     * Get ore rarity threshold - higher values = rarer ores
+     */
+    private static double getOreThreshold(String oreBlock, PlanetBuilder planet) {
+        double baseThreshold = switch (oreBlock) {
+            case "minecraft:diamond_ore" -> 0.92; // Very rare
+            case "minecraft:emerald_ore" -> 0.94; // Very rare
+            case "minecraft:ancient_debris" -> 0.96; // Extremely rare
+            case "minecraft:gold_ore" -> 0.85; // Rare
+            case "minecraft:iron_ore" -> 0.7; // Common
+            case "minecraft:copper_ore" -> 0.65; // Common
+            case "minecraft:redstone_ore" -> 0.75; // Uncommon
+            case "minecraft:lapis_ore" -> 0.8; // Uncommon
+            default -> 0.9; // Default rare
+        };
+
+        // Adjust for planet ore density setting
+        return Math.max(0.1, baseThreshold - (planet.oreVeinDensity - 1.0) * 0.1);
+    }
+
+    /**
+     * Get ore depth offset - different ores at different depths
+     */
+    private static int getOreDepth(String oreBlock) {
+        return switch (oreBlock) {
+            case "minecraft:diamond_ore", "minecraft:ancient_debris" -> 16; // Deep
+            case "minecraft:emerald_ore", "minecraft:gold_ore" -> 12; // Medium-deep
+            case "minecraft:iron_ore", "minecraft:copper_ore" -> 8; // Medium
+            case "minecraft:redstone_ore", "minecraft:lapis_ore" -> 10; // Medium
+            default -> 8; // Default medium depth
+        };
     }
 
     private static String capitalizeFirst(String str) {

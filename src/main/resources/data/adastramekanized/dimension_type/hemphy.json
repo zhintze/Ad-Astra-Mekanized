@@ -1,5 +1,5 @@
 {
-  "ambient_light": 0.1,
+  "ambient_light": 1.0,
   "effects": "adastramekanized:hemphy",
   "has_ceiling": false,
   "has_skylight": true,
@@ -9,7 +9,7 @@
   "coordinate_scale": 1.0,
   "bed_works": true,
   "respawn_anchor_works": false,
-  "has_raids": false,
+  "has_raids": true,
   "logical_height": 384,
   "infiniburn": "#minecraft:infiniburn_overworld",
   "ultrawarm": false,
