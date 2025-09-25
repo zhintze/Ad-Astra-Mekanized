@@ -100,10 +100,7 @@ public class PlanetGravityHandler {
         if (entity instanceof LivingEntity living) {
             applyLivingEntityGravity(living, gravity);
         }
-        // Store gravity for item entities to use in tick
-        else if (entity instanceof ItemEntity) {
-            entity.getPersistentData().putFloat("adastramekanized:planet_gravity", gravity);
-        }
+        // Items don't need special handling on spawn - we'll get gravity from level in tick
     }
 
     /**
@@ -185,7 +182,7 @@ public class PlanetGravityHandler {
 
     /**
      * Apply gravity to dropped items during tick
-     * Items use a simple gravity system
+     * Uses the same gravity value from planet data that living entities use
      */
     @SubscribeEvent
     public static void onItemTick(EntityTickEvent.Post event) {
@@ -195,9 +192,9 @@ public class PlanetGravityHandler {
         // Skip if in water, lava, or has no gravity
         if (item.isInWater() || item.isInLava() || item.isNoGravity()) return;
 
-        // Get stored gravity value
-        float gravity = item.getPersistentData().getFloat("adastramekanized:planet_gravity");
-        if (gravity == 0.0f || gravity == 1.0f) return; // No modification needed
+        // Get gravity directly from the level - same source as living entities
+        float gravity = getGravity(item.level());
+        if (gravity == 1.0f) return; // No modification needed for Earth gravity
 
         // Only apply when falling (negative Y velocity)
         Vec3 motion = item.getDeltaMovement();
