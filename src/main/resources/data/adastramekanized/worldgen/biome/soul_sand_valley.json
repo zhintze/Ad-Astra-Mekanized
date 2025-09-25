@@ -1,0 +1,115 @@
+{
+  "temperature": 1.0,
+  "downfall": -1.0,
+  "has_precipitation": false,
+  "effects": {
+    "fog_color": 65535,
+    "sky_color": 16711935,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "spawners": {
+    "monster": [
+      {
+        "type": {
+          "type": "minecraft:magma_cube"
+        },
+        "weight": 100,
+        "spawn_data": {
+          "min_count": 2,
+          "max_count": 4
+        }
+      },
+      {
+        "type": {
+          "type": "minecraft:blaze"
+        },
+        "weight": 50,
+        "spawn_data": {
+          "min_count": 1,
+          "max_count": 3
+        }
+      },
+      {
+        "type": {
+          "type": "minecraft:ghast"
+        },
+        "weight": 20,
+        "spawn_data": {
+          "min_count": 1,
+          "max_count": 1
+        }
+      },
+      {
+        "type": {
+          "type": "minecraft:wither_skeleton"
+        },
+        "weight": 30,
+        "spawn_data": {
+          "min_count": 2,
+          "max_count": 4
+        }
+      },
+      {
+        "type": {
+          "type": "minecraft:zombified_piglin"
+        },
+        "weight": 80,
+        "spawn_data": {
+          "min_count": 4,
+          "max_count": 4
+        }
+      }
+    ],
+    "creature": [
+      {
+        "type": {
+          "type": "minecraft:strider"
+        },
+        "weight": 60,
+        "spawn_data": {
+          "min_count": 1,
+          "max_count": 2
+        }
+      }
+    ],
+    "ambient": [],
+    "water_creature": [],
+    "water_ambient": [],
+    "misc": []
+  },
+  "spawn_costs": {},
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "adastramekanized:hemphy_ore_coal_upper",
+      "adastramekanized:hemphy_ore_coal_lower",
+      "adastramekanized:hemphy_ore_iron_upper",
+      "adastramekanized:hemphy_ore_iron_middle",
+      "adastramekanized:hemphy_ore_iron_lower",
+      "adastramekanized:hemphy_ore_gold_extra",
+      "adastramekanized:hemphy_ore_gold_lower",
+      "adastramekanized:hemphy_ore_diamond_large",
+      "adastramekanized:hemphy_ore_diamond_small",
+      "adastramekanized:hemphy_ore_redstone_lower",
+      "adastramekanized:hemphy_ore_redstone_deep",
+      "adastramekanized:hemphy_ore_lapis_normal",
+      "adastramekanized:hemphy_ore_lapis_deep",
+      "adastramekanized:hemphy_ore_copper_normal",
+      "adastramekanized:hemphy_ore_copper_large",
+      "adastramekanized:hemphy_ore_emerald_normal"
+    ],
+    [],
+    [],
+    [],
+    []
+  ],
+  "carvers": {
+    "air": []
+  }
+}

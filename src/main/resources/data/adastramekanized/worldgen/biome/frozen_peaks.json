@@ -1,0 +1,94 @@
+{
+  "temperature": -0.9,
+  "downfall": -0.8,
+  "has_precipitation": false,
+  "effects": {
+    "fog_color": 13468991,
+    "sky_color": 13789470,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "spawners": {
+    "monster": [
+      {
+        "type": {
+          "type": "minecraft:husk"
+        },
+        "weight": 50,
+        "spawn_data": {
+          "min_count": 2,
+          "max_count": 4
+        }
+      },
+      {
+        "type": {
+          "type": "minecraft:spider"
+        },
+        "weight": 30,
+        "spawn_data": {
+          "min_count": 1,
+          "max_count": 2
+        }
+      },
+      {
+        "type": {
+          "type": "minecraft:phantom"
+        },
+        "weight": 10,
+        "spawn_data": {
+          "min_count": 1,
+          "max_count": 2
+        }
+      },
+      {
+        "type": {
+          "type": "minecraft:enderman"
+        },
+        "weight": 15,
+        "spawn_data": {
+          "min_count": 1,
+          "max_count": 1
+        }
+      }
+    ],
+    "creature": [],
+    "ambient": [],
+    "water_creature": [],
+    "water_ambient": [],
+    "misc": []
+  },
+  "spawn_costs": {},
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "adastramekanized:mars_ore_coal_upper",
+      "adastramekanized:mars_ore_coal_lower",
+      "adastramekanized:mars_ore_iron_upper",
+      "adastramekanized:mars_ore_iron_middle",
+      "adastramekanized:mars_ore_iron_lower",
+      "adastramekanized:mars_ore_gold_extra",
+      "adastramekanized:mars_ore_gold_lower",
+      "adastramekanized:mars_ore_diamond_large",
+      "adastramekanized:mars_ore_diamond_small",
+      "adastramekanized:mars_ore_redstone_lower",
+      "adastramekanized:mars_ore_redstone_deep",
+      "adastramekanized:mars_ore_lapis_normal",
+      "adastramekanized:mars_ore_lapis_deep",
+      "adastramekanized:mars_ore_copper_normal",
+      "adastramekanized:mars_ore_copper_large",
+      "adastramekanized:mars_ore_emerald_normal"
+    ],
+    [],
+    [],
+    [],
+    []
+  ],
+  "carvers": {
+    "air": []
+  }
+}

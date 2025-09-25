@@ -1,0 +1,28 @@
+{
+  "id": "adastramekanized:cavetest",
+  "display_name": "Cavetest",
+  "properties": {
+    "gravity": 1.0,
+    "temperature": 20.0,
+    "day_length": 24.0,
+    "orbit_distance": 1000,
+    "has_rings": false,
+    "moon_count": 0
+  },
+  "atmosphere": {
+    "has_atmosphere": true,
+    "breathable": true,
+    "pressure": 1.0,
+    "oxygen_level": 0.21,
+    "type": "NORMAL"
+  },
+  "dimension": {
+    "dimension_type": "adastramekanized:cavetest",
+    "biome_source": "cavetest_biome_source",
+    "chunk_generator": "cavetest_generator",
+    "is_orbital": false,
+    "sky_color": 7907327,
+    "fog_color": 12638463,
+    "ambient_light": 0.1
+  }
+}

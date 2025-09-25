@@ -1,0 +1,186 @@
+{
+  "temperature": 0.2,
+  "downfall": 0.3,
+  "has_precipitation": true,
+  "effects": {
+    "fog_color": 12632256,
+    "sky_color": 8900331,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "spawners": {
+    "monster": [
+      {
+        "type": {
+          "type": "minecraft:zombie"
+        },
+        "weight": 95,
+        "spawn_data": {
+          "min_count": 4,
+          "max_count": 4
+        }
+      },
+      {
+        "type": {
+          "type": "minecraft:skeleton"
+        },
+        "weight": 100,
+        "spawn_data": {
+          "min_count": 4,
+          "max_count": 4
+        }
+      },
+      {
+        "type": {
+          "type": "minecraft:spider"
+        },
+        "weight": 100,
+        "spawn_data": {
+          "min_count": 4,
+          "max_count": 4
+        }
+      },
+      {
+        "type": {
+          "type": "minecraft:creeper"
+        },
+        "weight": 100,
+        "spawn_data": {
+          "min_count": 4,
+          "max_count": 4
+        }
+      },
+      {
+        "type": {
+          "type": "minecraft:enderman"
+        },
+        "weight": 10,
+        "spawn_data": {
+          "min_count": 1,
+          "max_count": 4
+        }
+      },
+      {
+        "type": {
+          "type": "minecraft:witch"
+        },
+        "weight": 5,
+        "spawn_data": {
+          "min_count": 1,
+          "max_count": 1
+        }
+      },
+      {
+        "type": {
+          "type": "minecraft:cave_spider"
+        },
+        "weight": 25,
+        "spawn_data": {
+          "min_count": 1,
+          "max_count": 3
+        }
+      }
+    ],
+    "creature": [
+      {
+        "type": {
+          "type": "minecraft:sheep"
+        },
+        "weight": 12,
+        "spawn_data": {
+          "min_count": 4,
+          "max_count": 4
+        }
+      },
+      {
+        "type": {
+          "type": "minecraft:pig"
+        },
+        "weight": 10,
+        "spawn_data": {
+          "min_count": 4,
+          "max_count": 4
+        }
+      },
+      {
+        "type": {
+          "type": "minecraft:chicken"
+        },
+        "weight": 10,
+        "spawn_data": {
+          "min_count": 4,
+          "max_count": 4
+        }
+      },
+      {
+        "type": {
+          "type": "minecraft:cow"
+        },
+        "weight": 8,
+        "spawn_data": {
+          "min_count": 4,
+          "max_count": 4
+        }
+      },
+      {
+        "type": {
+          "type": "minecraft:rabbit"
+        },
+        "weight": 10,
+        "spawn_data": {
+          "min_count": 2,
+          "max_count": 3
+        }
+      }
+    ],
+    "ambient": [
+      {
+        "type": {
+          "type": "minecraft:bat"
+        },
+        "weight": 10,
+        "spawn_data": {
+          "min_count": 8,
+          "max_count": 8
+        }
+      }
+    ],
+    "water_creature": [],
+    "water_ambient": [],
+    "misc": []
+  },
+  "spawn_costs": {},
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "adastramekanized:oretest_ore_coal_upper",
+      "adastramekanized:oretest_ore_coal_lower",
+      "adastramekanized:oretest_ore_iron_upper",
+      "adastramekanized:oretest_ore_iron_middle",
+      "adastramekanized:oretest_ore_iron_lower",
+      "adastramekanized:oretest_ore_gold_extra",
+      "adastramekanized:oretest_ore_gold_lower",
+      "adastramekanized:oretest_ore_diamond_large",
+      "adastramekanized:oretest_ore_diamond_small",
+      "adastramekanized:oretest_ore_redstone_lower",
+      "adastramekanized:oretest_ore_redstone_deep",
+      "adastramekanized:oretest_ore_lapis_normal",
+      "adastramekanized:oretest_ore_lapis_deep",
+      "adastramekanized:oretest_ore_copper_normal",
+      "adastramekanized:oretest_ore_copper_large",
+      "adastramekanized:oretest_ore_emerald_normal"
+    ],
+    [],
+    [],
+    [],
+    []
+  ],
+  "carvers": {
+    "air": []
+  }
+}

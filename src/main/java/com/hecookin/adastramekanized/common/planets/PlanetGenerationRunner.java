@@ -26,15 +26,53 @@ public class PlanetGenerationRunner {
     }
 
     /**
+     * Apply Moon mob preset
+     */
+    private static void applyMoonMobPreset(PlanetMaker.PlanetBuilder planet) {
+        // Increased spawn rates for testing - hostile mobs
+        planet.addMobSpawn("monster", "minecraft:enderman", 100, 2, 4)    // More common for testing
+              .addMobSpawn("monster", "minecraft:phantom", 50, 1, 3)       // More phantoms
+              .addMobSpawn("monster", "minecraft:husk", 200, 3, 5)         // Very common husks
+              .addMobSpawn("monster", "minecraft:zombie", 150, 2, 4)       // Add regular zombies for testing
+              .addMobSpawn("monster", "minecraft:spider", 120, 2, 3)       // Add spiders for testing
+              .addMobSpawn("monster", "minecraft:skeleton", 100, 2, 3);    // Add skeletons for testing
+    }
+
+    /**
+     * Apply Mars mob preset
+     */
+    private static void applyMarsMobPreset(PlanetMaker.PlanetBuilder planet) {
+        // Hostile mobs for Mars - harsh environment
+        planet.addMobSpawn("monster", "minecraft:husk", 30, 2, 4)
+              .addMobSpawn("monster", "minecraft:spider", 20, 1, 2)
+              .addMobSpawn("monster", "minecraft:phantom", 10, 1, 2)
+              .addMobSpawn("monster", "minecraft:enderman", 5, 1, 1);
+    }
+
+    /**
+     * Apply test planet mob preset
+     */
+    private static void applyTestPlanetMobPreset(PlanetMaker.PlanetBuilder planet) {
+        // Standard overworld mobs for testing
+        planet.addMobSpawn("monster", "minecraft:zombie", 25, 2, 4)
+              .addMobSpawn("monster", "minecraft:skeleton", 25, 2, 4)
+              .addMobSpawn("monster", "minecraft:creeper", 25, 1, 2)
+              .addMobSpawn("monster", "minecraft:spider", 25, 1, 3)
+              .addMobSpawn("creature", "minecraft:sheep", 10, 2, 3)
+              .addMobSpawn("creature", "minecraft:pig", 10, 2, 3);
+    }
+
+    /**
      * Configure planets using PlanetMaker builder pattern
      */
     private static void configurePlanets() {
         // Moon planet with advanced terrain controls - craterous lunar landscape
-        PlanetMaker.planet("moon")
-            .continentalScale(2.5f)
-            .erosionScale(8f)
-            .ridgeScale(3f)
-            .heightVariation(4f, 2.5f, 1.0f, 0.6f)
+        PlanetMaker.PlanetBuilder moon = PlanetMaker.planet("moon")
+            // Gentle, connected terrain for Moon
+            .continentalScale(0.3f)  // Very low for fully connected terrain
+            .erosionScale(0.5f)      // Minimal erosion for smooth landmasses
+            .ridgeScale(0.1f)        // Almost no ridges for gentle hills
+            .heightVariation(0.8f, 0.5f, 0.3f, 0.2f)  // Much gentler height variation
             // Advanced noise parameters for crater-like terrain
             .temperatureScale(0.5f)
             .humidityScale(0.2f)
@@ -53,29 +91,107 @@ public class PlanetGenerationRunner {
             .depthFactor(1.2f)              // Slightly enhanced depth variation
             .depthOffset(-0.1f)             // Lower baseline for crater floors
             .terrainFactor(1.1f)            // Slightly enhanced terrain
-            // Surface configuration
+            // Surface configuration - use vanilla blocks for ore compatibility
             .surfaceBlock("adastramekanized:moon_sand")
-            .subsurfaceBlock("adastramekanized:moon_stone")
-            .deepBlock("adastramekanized:moon_deepslate")
-            .defaultBlock("adastramekanized:moon_deepslate")
+            .subsurfaceBlock("minecraft:stone")  // Use vanilla stone for ore compatibility
+            .deepBlock("minecraft:deepslate")
+            .defaultBlock("minecraft:stone")  // Use vanilla stone for ore compatibility
+            .bedrockBlock("minecraft:bedrock")  // Add bedrock floor for moon
             // World structure
-            .worldDimensions(-64, 384)
+            .worldDimensions(-32, 256)  // Reduced underground space
             .noiseSize(2, 1)
             .seaLevel(63)
-            .disableMobGeneration(true)
+            .disableMobGeneration(false)  // Enable mob generation
             .aquifersEnabled(false)
+            .oreVeinsEnabled(true)  // Enable ore generation
+            // Ore vein configuration for Moon minerals
+            .veinToggle(0.7f)  // Enable ore veins
+            .veinRidged(0.5f)  // Some ridged veins
+            .veinGap(0.4f)     // Moderate vein gaps
+            // CAVES DISABLED for stable terrain
+            .caveConfig(0.0f, 0.0f)  // No caves
+            .cheeseCaves(false)      // Disabled
+            .spaghettiCaves(false)   // Disabled
+            .noodleCaves(false)      // Disabled
+            // Custom Moon biomes (will be properly created)
+            .clearBiomes()  // Clear default biomes
+            .addBiome("adastramekanized:moon_highlands", -0.8f, -0.9f, 0.4f, 0.2f, 0.0f, 0.1f)  // Lunar highlands
+            .addBiome("adastramekanized:moon_maria", -0.6f, -0.8f, -0.2f, 0.3f, -0.5f, -0.1f)  // Lunar lowlands
+            .addBiome("adastramekanized:moon_craters", 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f)  // Crater biome
             // Visual properties
             .skyColor(0x0A0A0A)
             .fogColor(0x0A0A0A)
             .hasAtmosphere(false)
-            .ambientLight(0.1f)
-            .generate();
+            .ambientLight(0.0f)  // No ambient light for proper mob spawning
+            // Sun and spawn settings
+            .hasSkylight(false)  // No sun damage on the Moon
+            .monsterSpawnLightLevel(15);  // Monsters spawn in any light level
 
+        // Apply Moon mob preset
+        applyMoonMobPreset(moon);
+        moon.generate();
+
+        // CAVETEST PLANET - Extreme cave generation test
+        PlanetMaker.PlanetBuilder cavetest = PlanetMaker.planet("cavetest")
+            // Moderate terrain for cave visibility
+            .continentalScale(0.5f)
+            .erosionScale(1.0f)
+            .ridgeScale(0.3f)
+            .heightVariation(2f, 1f, 0.5f, 0.3f)
+            // Surface configuration
+            .surfaceBlock("minecraft:grass_block")
+            .subsurfaceBlock("minecraft:stone")
+            .deepBlock("minecraft:deepslate")
+            .defaultBlock("minecraft:stone")
+            .bedrockBlock("minecraft:bedrock")
+            // World structure
+            .worldDimensions(-64, 320)
+            .noiseSize(2, 2)
+            .seaLevel(-32)  // Much lower sea level to expose caves
+            .disableMobGeneration(false)
+            .aquifersEnabled(true)  // Enable water in caves
+            .oreVeinsEnabled(true)
+            // EXTREME CAVE SETTINGS
+            .caveConfig(2.0f, 3.0f)  // Maximum frequency and size
+            .caveYScale(2.0f)  // Tall caves
+            .caveHeightRange(-64, 256)  // Caves throughout world
+            .cheeseCaves(true)  // Enable all cave types
+            .spaghettiCaves(true)
+            .noodleCaves(true)
+            .ravineConfig(1.0f, 5.0f)  // Maximum ravines
+            // Add cave decorations
+            .addCaveDecoration("minecraft:glowstone", 0.1f, -64, 256, true)  // Light sources
+            .addCaveDecoration("minecraft:amethyst_block", 0.05f, -64, 128, false)
+            // Ore configuration
+            .veinToggle(0.8f)
+            .veinRidged(0.6f)
+            .veinGap(0.5f)
+            // Visual properties
+            .skyColor(0x78A7FF)
+            .fogColor(0xC0D8FF)
+            .hasAtmosphere(true)
+            .ambientLight(0.1f)
+            // Sun and spawn settings for testing
+            .hasSkylight(false)  // No sun damage for testing
+            .monsterSpawnLightLevel(15);  // Spawn everywhere for cave testing
+
+        // Apply aggressive mob spawning for cave testing
+        cavetest.addMobSpawn("monster", "minecraft:zombie", 200, 4, 8)
+                .addMobSpawn("monster", "minecraft:skeleton", 200, 4, 8)
+                .addMobSpawn("monster", "minecraft:spider", 150, 3, 6)
+                .addMobSpawn("monster", "minecraft:creeper", 100, 2, 4)
+                .addMobSpawn("monster", "minecraft:cave_spider", 150, 4, 8)
+                .addMobSpawn("monster", "minecraft:enderman", 50, 1, 3);
+
+        cavetest.generate();
+
+        // Other planets temporarily disabled to focus on Moon stability
+        /*
         // Mars planet with advanced atmospheric controls and varied terrain
         PlanetMaker.planet("mars")
-            .continentalScale(1.5f)
-            .erosionScale(15f)
-            .ridgeScale(2f)
+            .continentalScale(0.4f)  // Very low for fully connected Mars terrain
+            .erosionScale(0.8f)      // Minimal erosion to prevent separation
+            .ridgeScale(0.2f)        // Almost no ridges for stability
             .heightVariation(3f, 2f, 0.8f, 0.5f)
             // Advanced atmospheric noise for dust storms and weather
             .temperatureNoise(0.3f)
@@ -101,10 +217,26 @@ public class PlanetGenerationRunner {
             .subsurfaceBlock("adastramekanized:mars_stone")
             .deepBlock("minecraft:stone")
             .defaultBlock("minecraft:stone")
+            .bedrockBlock("minecraft:bedrock")  // Add bedrock floor for mars
             .seaLevel(48)
             .disableMobGeneration(false)
             .aquifersEnabled(false)
             .oreVeinsEnabled(true)
+            // CAVES DISABLED for stable terrain
+            .caveConfig(0.0f, 0.0f)  // No caves for now
+            .cheeseCaves(false)      // Disabled
+            .spaghettiCaves(false)   // Disabled
+            .noodleCaves(false)      // Disabled
+            // Mob spawning - Mars hostile environment
+            .addMobSpawn("monster", "minecraft:husk", 50, 2, 4)  // Desert zombies common on Mars
+            .addMobSpawn("monster", "minecraft:spider", 30, 1, 2)  // Cave spiders in Martian caves
+            .addMobSpawn("monster", "minecraft:phantom", 10, 1, 2)  // Flying threats in thin atmosphere
+            .addMobSpawn("monster", "minecraft:enderman", 15, 1, 1)  // Dimensional visitors
+            // Add custom biomes for Mars
+            .clearBiomes()
+            .addBiome("adastramekanized:mars_highlands", -0.2f, -0.7f, 0.6f, -0.1f, 0.5f, 0.0f)  // Mars highlands
+            .addBiome("adastramekanized:mars_canyons", 0.1f, -0.6f, 0.2f, 0.4f, -0.3f, -0.1f)  // Mars valleys
+            .addBiome("adastramekanized:mars_polar", -0.9f, -0.8f, 0.8f, 0.0f, 0.2f, 0.3f)  // Mars polar
             // Enhanced atmospheric rendering
             .skyColor(0xD2691E)
             .fogColor(0xCD853F)
@@ -117,10 +249,10 @@ public class PlanetGenerationRunner {
         // WARNING: This planet pushes EVERY parameter to extreme values!
         // Use this as a reference for the maximum safe bounds of each setting.
         PlanetMaker.planet("hemphy")
-                // ========== EXTREME TERRAIN SHAPING ==========
-                .continentalScale(50.0f)        // MAX: Massive continental variations
-                .erosionScale(100.0f)           // MAX: Extreme erosion patterns
-                .ridgeScale(25.0f)              // MAX: Towering ridge formations
+                // ========== STABILIZED TERRAIN SHAPING ==========
+                .continentalScale(0.5f)         // Very low for connected hellscape
+                .erosionScale(1.0f)             // Minimal erosion for stable terrain
+                .ridgeScale(0.3f)               // Almost no ridges for stability
                 .heightVariation(50f, 25f, 15f, 10f)  // MAX: All height variations pushed to limits
 
                 // ========== EXTREME NOISE PARAMETERS ==========
@@ -164,7 +296,7 @@ public class PlanetGenerationRunner {
                 .defaultBlock("minecraft:crying_obsidian")  // Alien default material
                 .defaultFluid("minecraft:lava")             // Lava world
                 .underwaterBlock("minecraft:obsidian")      // Underwater areas
-                .bedrockBlock("minecraft:crying_obsidian")  // Custom bedrock
+                .bedrockBlock("minecraft:bedrock")  // Standard bedrock floor
                 // Prevent unwanted default blocks from appearing
                 .preventGrassGeneration(true)               // MAX: No grass on alien world
                 .preventGravelGeneration(true)              // MAX: No gravel generation
@@ -172,13 +304,26 @@ public class PlanetGenerationRunner {
                 .disableDefaultSurfaceGeneration(true)      // MAX: Full surface control
 
                 // ========== EXTREME WORLD DIMENSIONS ==========
-                .worldDimensions(-128, 512)     // MAX: Extended world height (640 total)
+                .worldDimensions(-64, 384)     // Reduced from extreme to manageable
                 .noiseSize(4, 4)                // MAX: Highest resolution noise (4,4 is maximum)
                 .seaLevel(0)                    // MIN: No sea level (all lava)
 
+                // ========== CAVES DISABLED for stable terrain ==========
+                .caveConfig(0.0f, 0.0f)         // No caves for now
+                .cheeseCaves(false)             // Disabled
+                .spaghettiCaves(false)          // Disabled
+                .noodleCaves(false)             // Disabled
+
                 // ========== EXTREME GENERATION CONTROLS ==========
-                .disableMobGeneration(true)     // MAX: No mobs (too dangerous)
+                .disableMobGeneration(false)    // Enable mobs for hellish world
                 .aquifersEnabled(true)          // Enable aquifers for cave generation
+                // ========== EXTREME MOB SPAWNING - NETHER-LIKE HELL ==========
+                .addMobSpawn("monster", "minecraft:magma_cube", 100, 2, 4)
+                .addMobSpawn("monster", "minecraft:blaze", 50, 1, 3)
+                .addMobSpawn("monster", "minecraft:ghast", 20, 1, 1)
+                .addMobSpawn("monster", "minecraft:wither_skeleton", 30, 2, 4)
+                .addMobSpawn("monster", "minecraft:zombified_piglin", 80, 4, 4)
+                .addMobSpawn("creature", "minecraft:strider", 60, 1, 2)  // Only passive mob
                 .oreVeinsEnabled(true)          // Enable Minecraft's ore vein system
                 .abovePreliminaryRule(false)    // MAX: Disable surface smoothing
                 .waterRule(false)               // MAX: No water rules (lava only)
@@ -200,13 +345,11 @@ public class PlanetGenerationRunner {
                 .hasAtmosphere(true)            // MAX: Thick alien atmosphere
                 .ambientLight(1.0f)             // MAX: Always bright (alien sun)
 
-                // ========== DYNAMIC BIOME SYSTEM - VOLCANIC HELLSCAPE ==========
+                // ========== CUSTOM BIOME SYSTEM - VOLCANIC HELLSCAPE ==========
                 .clearBiomes()                   // Clear any default biomes
-                .addBiome("minecraft:basalt_deltas", 0.35f)     // Volcanic basalt regions
-                .addBiome("minecraft:crimson_forest", 0.25f)    // Alien crimson growth
-                .addBiome("minecraft:warped_forest", 0.20f)     // Twisted alien forest
-                .addBiome("minecraft:soul_sand_valley", 0.15f)  // Deep soul valleys
-                .addBiome("minecraft:nether_wastes", 0.05f)     // Desolate wastelands
+                .addBiome("adastramekanized:hemphy_volcanic", -0.5f, -0.7f, 0.3f, 0.1f, 0.2f, 0.0f)  // Volcanic regions
+                .addBiome("adastramekanized:hemphy_infernal", 0.2f, -0.3f, -0.1f, 0.4f, -0.2f, -0.1f) // Infernal plains
+                .addBiome("adastramekanized:hemphy_ashlands", -0.8f, -0.9f, 0.5f, 0.0f, 0.1f, 0.2f)  // Ash-covered lands
 
                 // ========== LIQUID SYSTEM - LAVA OCEANS & LAKES ==========
                 .oceanConfig("minecraft:lava", 32, 0.6f)        // Massive lava oceans at Y=32
@@ -243,9 +386,9 @@ public class PlanetGenerationRunner {
         // Adjusted for realistic Overworld-style terrain with proper ore generation
         PlanetMaker.planet("oretest")
                 // ========== REALISTIC TERRAIN SHAPING ==========
-                .continentalScale(8.0f)         // Smaller scale for varied landmasses
-                .erosionScale(12.0f)            // Moderate erosion for natural valleys
-                .ridgeScale(5.0f)               // Gentler ridge formations
+                .continentalScale(2.0f)         // Lower for connected landmasses
+                .erosionScale(3.0f)             // Minimal erosion for stable terrain
+                .ridgeScale(1.0f)               // Low ridges for connected surface
                 .heightVariation(0.8f, 0.5f, 0.3f, 0.2f) // Much lower values for realistic hills
 
                 // ========== STANDARD NOISE ROUTING ==========
@@ -285,14 +428,26 @@ public class PlanetGenerationRunner {
                 .disableDefaultSurfaceGeneration(false) // AVERAGE: Use natural surface
 
                 // ========== STANDARD WORLD ==========
-                .worldDimensions(-64, 384)      // AVERAGE: Standard world height
+                .worldDimensions(-32, 256)      // Reduced underground for better gameplay
                 .noiseSize(2, 1)                // AVERAGE: Standard noise resolution
                 .seaLevel(64)                   // AVERAGE: Normal sea level
+
+                // ========== CAVE GENERATION FOR TEST PLANET ==========
+                .caveConfig(0.2f, 0.7f)         // TESTING: Lower for stable terrain
+                .cheeseCaves(true)              // TESTING: Some large caverns
+                .spaghettiCaves(false)          // TESTING: Disabled to prevent spaghetti
+                .noodleCaves(false)             // TESTING: Simplified cave system
 
                 // ========== BALANCED GENERATION ==========
                 .disableMobGeneration(false)    // AVERAGE: Allow mobs
                 .aquifersEnabled(true)          // AVERAGE: Normal aquifers
                 .oreVeinsEnabled(true)          // AVERAGE: Standard ore veins
+                // ========== OVERWORLD-LIKE MOB SPAWNING FOR TESTING ==========
+                .addHostileMobPreset("overworld")  // Standard hostile mobs
+                .addPassiveMobPreset("overworld")  // Standard passive mobs
+                // Add some custom test spawns with percentages
+                .addMobSpawnPercentage("monster", "minecraft:cave_spider", 25.0, 1, 3)
+                .addMobSpawnPercentage("creature", "minecraft:rabbit", 10.0, 2, 3)
                 .abovePreliminaryRule(true)     // AVERAGE: Use surface rules
                 .waterRule(true)                // AVERAGE: Normal water
                 .surfaceDepthMultiplier(1)      // AVERAGE: Standard surface depth
@@ -372,6 +527,7 @@ public class PlanetGenerationRunner {
                 .addCaveDecoration("minecraft:iron_ore", 0.15f, -64, 72, false)           // Iron ore deposits
                 .addCaveDecoration("minecraft:copper_ore", 0.12f, -16, 112, false)        // Copper ore deposits
                 .generate();
+        */
 
     }
 }

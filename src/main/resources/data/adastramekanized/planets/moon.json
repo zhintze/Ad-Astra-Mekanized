@@ -23,6 +23,6 @@
     "is_orbital": false,
     "sky_color": 657930,
     "fog_color": 657930,
-    "ambient_light": 0.1
+    "ambient_light": 0.0
   }
 }

@@ -66,8 +66,19 @@ public class PlanetMaker {
         if (!planet.customBiomes.isEmpty()) {
             // Use the dynamic biome system
             for (PlanetBuilder.BiomeEntry biomeEntry : planet.customBiomes) {
+                // Handle biome naming properly
+                String customBiomeName;
+                if (biomeEntry.biomeName.startsWith("adastramekanized:")) {
+                    // Already has our namespace, just use it directly
+                    customBiomeName = biomeEntry.biomeName;
+                } else {
+                    // Add our namespace and planet prefix
+                    String biomeName = biomeEntry.biomeName.replace("minecraft:", "");
+                    customBiomeName = "adastramekanized:" + planet.name + "_" + biomeName;
+                }
+
                 biomes.add(createBiomeEntry(
-                    biomeEntry.biomeName,
+                    customBiomeName,
                     biomeEntry.temperature,
                     biomeEntry.humidity,
                     biomeEntry.continentalness,
@@ -208,6 +219,11 @@ public class PlanetMaker {
         private boolean oreVeinsEnabled = true;
         private String defaultFluid = "minecraft:air";
 
+        // Sun and spawning settings
+        private boolean hasSkylight = true;  // Controls sun damage (false = no sun damage)
+        private int monsterSpawnLightLevel = 7;  // Max light level for spawning (15 = spawn in daylight)
+        private int monsterSpawnBlockLightLimit = 15;  // Block light limit
+
         // World height and structure
         private int minY = -64;
         private int worldHeight = 384;
@@ -233,6 +249,12 @@ public class PlanetMaker {
         private int maxOreVeinCount = 20;
         private boolean enableRareOres = true;
         private boolean enableCommonOres = true;
+
+        // Mob spawning configuration
+        private java.util.Map<String, java.util.List<MobSpawnEntry>> mobSpawns = new java.util.HashMap<>();
+        private java.util.Map<String, SpawnCost> spawnCosts = new java.util.HashMap<>();
+        private boolean allowHostileMobs = true;
+        private boolean allowPeacefulMobs = true;
         private boolean enableDeepslateOres = true;
 
         // Biome distribution controls
@@ -281,6 +303,8 @@ public class PlanetMaker {
         private float ravineFrequency = 0.1f; // 0.0-1.0, ravine generation chance
         private float ravineDepth = 3.0f; // 1.0-5.0, ravine depth multiplier
         private boolean enableCheeseCaves = true; // Large open cave systems
+        private int caveMinY = -64;  // Minimum Y level for cave generation
+        private int caveMaxY = 256;  // Maximum Y level for cave generation
         private boolean enableSpaghettiCaves = true; // Winding tunnel systems
         private boolean enableNoodleCaves = true; // Thin winding tunnels
         private String caveFluid = "minecraft:air"; // Fluid that fills caves
@@ -563,6 +587,174 @@ public class PlanetMaker {
 
         public PlanetBuilder disableMobGeneration(boolean disable) {
             this.disableMobGeneration = disable;
+            return this;
+        }
+
+        /**
+         * Control skylight and sun damage
+         * @param hasSkylight false = no sun damage, monsters ignore daylight
+         */
+        public PlanetBuilder hasSkylight(boolean hasSkylight) {
+            this.hasSkylight = hasSkylight;
+            return this;
+        }
+
+        /**
+         * Set monster spawn light level
+         * @param maxLightLevel 0-15, where 15 allows spawning in full daylight
+         */
+        public PlanetBuilder monsterSpawnLightLevel(int maxLightLevel) {
+            this.monsterSpawnLightLevel = Math.max(0, Math.min(15, maxLightLevel));
+            return this;
+        }
+
+        // Mob spawning configuration methods
+
+        /**
+         * Add a mob spawn with weight (chance) and group size
+         * @param category Spawn category: "monster", "creature", "ambient", "water_creature", "water_ambient", "misc"
+         * @param mobId Mob resource location (e.g., "minecraft:zombie")
+         * @param weight Spawn weight (higher = more common, typically 1-100)
+         * @param minGroup Minimum group size
+         * @param maxGroup Maximum group size
+         */
+        public PlanetBuilder addMobSpawn(String category, String mobId, int weight, int minGroup, int maxGroup) {
+            mobSpawns.computeIfAbsent(category, k -> new java.util.ArrayList<>())
+                    .add(new MobSpawnEntry(mobId, weight, minGroup, maxGroup));
+            return this;
+        }
+
+        /**
+         * Add a mob spawn with percentage chance (converted to weight)
+         * @param category Spawn category
+         * @param mobId Mob resource location
+         * @param spawnChance Spawn chance as percentage (0.0 - 100.0)
+         * @param minGroup Minimum group size
+         * @param maxGroup Maximum group size
+         */
+        public PlanetBuilder addMobSpawnPercentage(String category, String mobId, double spawnChance, int minGroup, int maxGroup) {
+            // Convert percentage to weight (100% = weight of 100)
+            int weight = (int)(spawnChance);
+            return addMobSpawn(category, mobId, weight, minGroup, maxGroup);
+        }
+
+        /**
+         * Add multiple mob spawns at once
+         * @param category Spawn category
+         * @param spawns Array of [mobId, weight, minGroup, maxGroup] arrays
+         */
+        public PlanetBuilder addMobSpawns(String category, Object[][] spawns) {
+            for (Object[] spawn : spawns) {
+                String mobId = (String) spawn[0];
+                int weight = (int) spawn[1];
+                int minGroup = (int) spawn[2];
+                int maxGroup = (int) spawn[3];
+                addMobSpawn(category, mobId, weight, minGroup, maxGroup);
+            }
+            return this;
+        }
+
+        /**
+         * Add standard hostile mobs for a planet type
+         */
+        public PlanetBuilder addHostileMobPreset(String preset) {
+            switch (preset) {
+                case "overworld":
+                    addMobSpawn("monster", "minecraft:zombie", 95, 4, 4);
+                    addMobSpawn("monster", "minecraft:skeleton", 100, 4, 4);
+                    addMobSpawn("monster", "minecraft:spider", 100, 4, 4);
+                    addMobSpawn("monster", "minecraft:creeper", 100, 4, 4);
+                    addMobSpawn("monster", "minecraft:enderman", 10, 1, 4);
+                    addMobSpawn("monster", "minecraft:witch", 5, 1, 1);
+                    break;
+                case "nether":
+                    addMobSpawn("monster", "minecraft:zombified_piglin", 100, 4, 4);
+                    addMobSpawn("monster", "minecraft:magma_cube", 100, 4, 4);
+                    addMobSpawn("monster", "minecraft:piglin", 15, 4, 4);
+                    break;
+                case "alien":
+                    // Custom alien mobs (when we add them)
+                    addMobSpawn("monster", "minecraft:enderman", 50, 1, 3);
+                    addMobSpawn("monster", "minecraft:phantom", 20, 1, 2);
+                    addMobSpawn("monster", "minecraft:vex", 10, 2, 4);
+                    break;
+                case "barren":
+                    // Very few mobs on barren worlds
+                    addMobSpawn("monster", "minecraft:husk", 20, 1, 2);
+                    addMobSpawn("monster", "minecraft:stray", 20, 1, 2);
+                    break;
+            }
+            return this;
+        }
+
+        /**
+         * Add passive mobs for a planet type
+         */
+        public PlanetBuilder addPassiveMobPreset(String preset) {
+            switch (preset) {
+                case "overworld":
+                    addMobSpawn("creature", "minecraft:sheep", 12, 4, 4);
+                    addMobSpawn("creature", "minecraft:pig", 10, 4, 4);
+                    addMobSpawn("creature", "minecraft:chicken", 10, 4, 4);
+                    addMobSpawn("creature", "minecraft:cow", 8, 4, 4);
+                    addMobSpawn("ambient", "minecraft:bat", 10, 8, 8);
+                    break;
+                case "alien":
+                    addMobSpawn("creature", "minecraft:strider", 60, 1, 2);
+                    addMobSpawn("ambient", "minecraft:bat", 20, 4, 6);
+                    break;
+                case "aquatic":
+                    addMobSpawn("water_creature", "minecraft:squid", 10, 4, 4);
+                    addMobSpawn("water_ambient", "minecraft:cod", 15, 3, 6);
+                    break;
+            }
+            return this;
+        }
+
+        /**
+         * Set spawn cost for a mob (affects spawn cap)
+         */
+        public PlanetBuilder setSpawnCost(String mobId, double energyBudget, double charge) {
+            spawnCosts.put(mobId, new SpawnCost(energyBudget, charge));
+            return this;
+        }
+
+        /**
+         * Clear all mob spawns for a category
+         */
+        public PlanetBuilder clearMobSpawns(String category) {
+            mobSpawns.remove(category);
+            return this;
+        }
+
+        /**
+         * Clear all mob spawns
+         */
+        public PlanetBuilder clearAllMobSpawns() {
+            mobSpawns.clear();
+            return this;
+        }
+
+        /**
+         * Set whether hostile mobs can spawn
+         */
+        public PlanetBuilder allowHostileMobs(boolean allow) {
+            this.allowHostileMobs = allow;
+            if (!allow) {
+                clearMobSpawns("monster");
+            }
+            return this;
+        }
+
+        /**
+         * Set whether peaceful mobs can spawn
+         */
+        public PlanetBuilder allowPeacefulMobs(boolean allow) {
+            this.allowPeacefulMobs = allow;
+            if (!allow) {
+                clearMobSpawns("creature");
+                clearMobSpawns("ambient");
+            }
             return this;
         }
 
@@ -1110,6 +1302,15 @@ public class PlanetMaker {
         }
 
         /**
+         * Set cave generation height limits
+         */
+        public PlanetBuilder caveHeightRange(int minY, int maxY) {
+            this.caveMinY = minY;
+            this.caveMaxY = maxY;
+            return this;
+        }
+
+        /**
          * Configure cave vertical scale
          * @param yScale Vertical stretch of caves (0.1-2.0)
          */
@@ -1381,6 +1582,36 @@ public class PlanetMaker {
                 this.ceiling = ceiling;
             }
         }
+
+        /**
+         * Inner class for mob spawn entries
+         */
+        private static class MobSpawnEntry {
+            final String mobId;
+            final int weight;
+            final int minCount;
+            final int maxCount;
+
+            MobSpawnEntry(String mobId, int weight, int minCount, int maxCount) {
+                this.mobId = mobId;
+                this.weight = weight;
+                this.minCount = minCount;
+                this.maxCount = maxCount;
+            }
+        }
+
+        /**
+         * Inner class for spawn costs
+         */
+        private static class SpawnCost {
+            final double energyBudget;
+            final double charge;
+
+            SpawnCost(double energyBudget, double charge) {
+                this.energyBudget = energyBudget;
+                this.charge = charge;
+            }
+        }
     }
 
     private static void createDirectories() {
@@ -1483,7 +1714,7 @@ public class PlanetMaker {
         dimensionType.addProperty("ambient_light", planet.ambientLight);
         dimensionType.addProperty("effects", "adastramekanized:" + planet.name);
         dimensionType.addProperty("has_ceiling", false);
-        dimensionType.addProperty("has_skylight", true);
+        dimensionType.addProperty("has_skylight", planet.hasSkylight);
         dimensionType.addProperty("height", 384);
         dimensionType.addProperty("min_y", -64);
         dimensionType.addProperty("natural", true);
@@ -1495,8 +1726,21 @@ public class PlanetMaker {
         dimensionType.addProperty("infiniburn", "#minecraft:infiniburn_overworld");
         dimensionType.addProperty("ultrawarm", false);
         dimensionType.addProperty("piglin_safe", false);
-        dimensionType.addProperty("monster_spawn_light_level", 0);
-        dimensionType.addProperty("monster_spawn_block_light_limit", 0);
+
+        // Monster spawn light settings - controls when monsters can spawn
+        if (planet.monsterSpawnLightLevel > 7) {
+            // Use uniform distribution for higher light levels (allows day spawning)
+            JsonObject spawnLightLevel = new JsonObject();
+            spawnLightLevel.addProperty("type", "minecraft:uniform");
+            spawnLightLevel.addProperty("min_inclusive", 0);
+            spawnLightLevel.addProperty("max_inclusive", planet.monsterSpawnLightLevel);
+            dimensionType.add("monster_spawn_light_level", spawnLightLevel);
+        } else {
+            // Use simple integer for standard spawning
+            dimensionType.addProperty("monster_spawn_light_level", planet.monsterSpawnLightLevel);
+        }
+
+        dimensionType.addProperty("monster_spawn_block_light_limit", planet.monsterSpawnBlockLightLimit);
 
         writeJsonFile(RESOURCES_PATH + "dimension_type/" + planet.name + ".json", dimensionType);
     }
@@ -1558,10 +1802,9 @@ public class PlanetMaker {
      * Get seed-based variation for a parameter
      */
     private static float getSeedVariation(PlanetBuilder planet, String parameterName, float baseValue, float variationRange) {
-        // Create deterministic variation based on seed and parameter name
-        long paramSeed = planet.seed ^ parameterName.hashCode();
-        float variation = (float) Math.sin(paramSeed * 0.00001) * variationRange;
-        return baseValue + variation;
+        // DISABLED: Seed variation causes terrain instability
+        // Return base value directly for stable, predictable terrain
+        return baseValue;
     }
 
     /**
@@ -1749,7 +1992,7 @@ public class PlanetMaker {
             cheeseNoise.addProperty("y_scale", 1.0 / (planet.caveSize * planet.caveYScale));
             cheese.add("argument1", cheeseNoise);
 
-            cheese.addProperty("argument2", -planet.caveFrequency * 0.3);
+            cheese.addProperty("argument2", -planet.caveFrequency * 0.15);  // Reduced from 0.3 to prevent cheese terrain
             caveTypes.add(cheese);
         }
 
@@ -1913,6 +2156,34 @@ public class PlanetMaker {
         surfaceRule.addProperty("type", "minecraft:sequence");
 
         JsonArray sequence = new JsonArray();
+
+        // Bedrock floor generation - place bedrock at the bottom of the world
+        JsonObject bedrockFloor = new JsonObject();
+        bedrockFloor.addProperty("type", "minecraft:condition");
+
+        JsonObject bedrockCondition = new JsonObject();
+        bedrockCondition.addProperty("type", "minecraft:vertical_gradient");
+        bedrockCondition.addProperty("random_name", "minecraft:bedrock_floor");
+
+        // Wrap Y values in absolute objects
+        JsonObject trueAtAndBelow = new JsonObject();
+        trueAtAndBelow.addProperty("absolute", planet.minY);
+        bedrockCondition.add("true_at_and_below", trueAtAndBelow);
+
+        JsonObject falseAtAndAbove = new JsonObject();
+        falseAtAndAbove.addProperty("absolute", planet.minY + 5);
+        bedrockCondition.add("false_at_and_above", falseAtAndAbove);
+
+        bedrockFloor.add("if_true", bedrockCondition);
+
+        JsonObject bedrockResult = new JsonObject();
+        bedrockResult.addProperty("type", "minecraft:block");
+        JsonObject bedrockState = new JsonObject();
+        bedrockState.addProperty("Name", planet.bedrockBlock);
+        bedrockResult.add("result_state", bedrockState);
+        bedrockFloor.add("then_run", bedrockResult);
+
+        sequence.add(bedrockFloor);
 
         // Block prevention rules - prevent unwanted default blocks
         if (planet.preventGrassGeneration) {
@@ -2098,27 +2369,123 @@ public class PlanetMaker {
     private static void generateOreFeatures(PlanetBuilder planet) throws IOException {
         AdAstraMekanized.LOGGER.info("Generating ore features for planet: {}", planet.name);
 
-        // Standard ore types with their configurations
-        String[] oreTypes = {"coal", "iron", "gold", "diamond", "redstone", "lapis", "copper", "emerald"};
+        // Create simplified ore features following Dimension Expansion's pattern
+        // Only generate iron and diamond for now as test
+        String[] oreTypes = {"iron", "diamond"};
 
         for (String ore : oreTypes) {
-            // Generate configured feature
-            JsonObject configuredFeature = createOreConfiguredFeature(ore, planet);
-            String configuredPath = RESOURCES_PATH + "worldgen/configured_feature/" + planet.name + "_ore_" + ore + ".json";
+            // Generate simplified configured feature
+            JsonObject configuredFeature = createSimplifiedOreConfiguredFeature(ore, planet);
+            String configuredPath = RESOURCES_PATH + "worldgen/configured_feature/" + planet.name + "_ore_" + ore + "_simple.json";
             AdAstraMekanized.LOGGER.debug("Writing configured feature to: {}", configuredPath);
             writeJsonFile(configuredPath, configuredFeature);
 
-            // Generate multiple placed features for different Y levels
-            generateOrePlacedFeatures(ore, planet);
+            // Generate simplified placed feature with high spawn rates for testing
+            JsonObject placedFeature = createSimplifiedOrePlacedFeature(ore, planet);
+            String placedPath = RESOURCES_PATH + "worldgen/placed_feature/" + planet.name + "_ore_" + ore + "_simple.json";
+            AdAstraMekanized.LOGGER.debug("Writing placed feature to: {}", placedPath);
+            writeJsonFile(placedPath, placedFeature);
         }
 
         AdAstraMekanized.LOGGER.info("Completed generating ore features for planet: {}", planet.name);
     }
 
     /**
-     * Create configured feature for an ore type
+     * Create simplified configured feature following Dimension Expansion's pattern
      */
-    private static JsonObject createOreConfiguredFeature(String oreType, PlanetBuilder planet) {
+    private static JsonObject createSimplifiedOreConfiguredFeature(String oreType, PlanetBuilder planet) {
+        JsonObject feature = new JsonObject();
+        feature.addProperty("type", "minecraft:ore");
+
+        JsonObject config = new JsonObject();
+        JsonArray targets = new JsonArray();
+
+        // Target the subsurface block (moon_stone, etc.)
+        if (!planet.subsurfaceBlock.isEmpty()) {
+            JsonObject target = new JsonObject();
+            JsonObject targetPredicate = new JsonObject();
+            targetPredicate.addProperty("predicate_type", "minecraft:block_match");
+            targetPredicate.addProperty("block", planet.subsurfaceBlock);
+            target.add("target", targetPredicate);
+
+            JsonObject state = new JsonObject();
+            state.addProperty("Name", "minecraft:" + oreType + "_ore");
+            target.add("state", state);
+            targets.add(target);
+        }
+
+        // Target deepslate if using vanilla deepslate
+        if (planet.deepBlock.equals("minecraft:deepslate")) {
+            JsonObject deepTarget = new JsonObject();
+            JsonObject deepPredicate = new JsonObject();
+            deepPredicate.addProperty("predicate_type", "minecraft:block_match");
+            deepPredicate.addProperty("block", "minecraft:deepslate");
+            deepTarget.add("target", deepPredicate);
+
+            JsonObject deepState = new JsonObject();
+            deepState.addProperty("Name", "minecraft:deepslate_" + oreType + "_ore");
+            deepTarget.add("state", deepState);
+            targets.add(deepTarget);
+        }
+
+        config.add("targets", targets);
+        config.addProperty("size", oreType.equals("diamond") ? 8 : 12);
+        config.addProperty("discard_chance_on_air_exposure", 0.0f);
+
+        feature.add("config", config);
+        return feature;
+    }
+
+    /**
+     * Create simplified placed feature with high spawn rates for testing
+     */
+    private static JsonObject createSimplifiedOrePlacedFeature(String oreType, PlanetBuilder planet) {
+        JsonObject feature = new JsonObject();
+        feature.addProperty("feature", "adastramekanized:" + planet.name + "_ore_" + oreType + "_simple");
+
+        JsonArray placement = new JsonArray();
+
+        // Count placement - high for testing
+        JsonObject count = new JsonObject();
+        count.addProperty("type", "minecraft:count");
+        count.addProperty("count", oreType.equals("diamond") ? 20 : 50);
+        placement.add(count);
+
+        // In square placement
+        JsonObject inSquare = new JsonObject();
+        inSquare.addProperty("type", "minecraft:in_square");
+        placement.add(inSquare);
+
+        // Height range
+        JsonObject heightRange = new JsonObject();
+        heightRange.addProperty("type", "minecraft:height_range");
+        JsonObject height = new JsonObject();
+        height.addProperty("type", "minecraft:trapezoid");
+
+        JsonObject minHeight = new JsonObject();
+        minHeight.addProperty("absolute", planet.minY);
+        height.add("min_inclusive", minHeight);
+
+        JsonObject maxHeight = new JsonObject();
+        maxHeight.addProperty("absolute", oreType.equals("diamond") ? 16 : 256);
+        height.add("max_inclusive", maxHeight);
+
+        heightRange.add("height", height);
+        placement.add(heightRange);
+
+        // Biome filter
+        JsonObject biome = new JsonObject();
+        biome.addProperty("type", "minecraft:biome");
+        placement.add(biome);
+
+        feature.add("placement", placement);
+        return feature;
+    }
+
+    /**
+     * OLD: Create configured feature for an ore type (keeping for reference)
+     */
+    private static JsonObject createOreConfiguredFeature_OLD(String oreType, PlanetBuilder planet) {
         JsonObject feature = new JsonObject();
         feature.addProperty("type", "minecraft:ore");
 
@@ -2127,29 +2494,90 @@ public class PlanetMaker {
         // Ore targets with size
         JsonArray targets = new JsonArray();
 
-        JsonObject target = new JsonObject();
-        JsonObject targetPredicate = new JsonObject();
-        targetPredicate.addProperty("predicate_type", "minecraft:tag_match");
-        targetPredicate.addProperty("tag", "minecraft:stone_ore_replaceables");
-        target.add("target", targetPredicate);
+        // Check if planet uses custom stone blocks (not vanilla stone/dirt/etc)
+        boolean useCustomBlocks = (!planet.subsurfaceBlock.equals("minecraft:stone") &&
+                                   !planet.subsurfaceBlock.equals("minecraft:dirt") &&
+                                   !planet.subsurfaceBlock.equals("minecraft:grass_block")) ||
+                                  (!planet.deepBlock.equals("minecraft:stone") &&
+                                   !planet.deepBlock.equals("minecraft:deepslate"));
 
-        JsonObject state = new JsonObject();
-        state.addProperty("Name", "minecraft:" + oreType + "_ore");
-        target.add("state", state);
-        targets.add(target);
+        if (useCustomBlocks) {
+            // For custom planet blocks, directly target the specific block types
+            // Target the subsurface block (like moon_stone, mars_stone, etc.)
+            // Skip dirt/grass blocks for ore replacement
+            if (!planet.subsurfaceBlock.isEmpty() &&
+                !planet.subsurfaceBlock.equals("minecraft:dirt") &&
+                !planet.subsurfaceBlock.equals("minecraft:grass_block")) {
+                JsonObject target = new JsonObject();
+                JsonObject targetPredicate = new JsonObject();
+                targetPredicate.addProperty("predicate_type", "minecraft:block_match");
+                targetPredicate.addProperty("block", planet.subsurfaceBlock);
+                target.add("target", targetPredicate);
 
-        // Add deepslate variant for deeper ores
-        if (!oreType.equals("coal") && !oreType.equals("emerald")) {
-            JsonObject deepslateTarget = new JsonObject();
-            JsonObject deepslatePredicate = new JsonObject();
-            deepslatePredicate.addProperty("predicate_type", "minecraft:tag_match");
-            deepslatePredicate.addProperty("tag", "minecraft:deepslate_ore_replaceables");
-            deepslateTarget.add("target", deepslatePredicate);
+                JsonObject state = new JsonObject();
+                state.addProperty("Name", "minecraft:" + oreType + "_ore");
+                target.add("state", state);
+                targets.add(target);
+            }
 
-            JsonObject deepslateState = new JsonObject();
-            deepslateState.addProperty("Name", "minecraft:deepslate_" + oreType + "_ore");
-            deepslateTarget.add("state", deepslateState);
-            targets.add(deepslateTarget);
+            // Target the deep block (like moon_deepslate, etc.)
+            if (!planet.deepBlock.isEmpty() && !oreType.equals("coal") && !oreType.equals("emerald")) {
+                JsonObject deepTarget = new JsonObject();
+                JsonObject deepPredicate = new JsonObject();
+                deepPredicate.addProperty("predicate_type", "minecraft:block_match");
+                deepPredicate.addProperty("block", planet.deepBlock);
+                deepTarget.add("target", deepPredicate);
+
+                JsonObject deepState = new JsonObject();
+                deepState.addProperty("Name", "minecraft:deepslate_" + oreType + "_ore");
+                deepTarget.add("state", deepState);
+                targets.add(deepTarget);
+            }
+
+            // Also target the default block if different
+            if (!planet.defaultBlock.isEmpty() && !planet.defaultBlock.equals(planet.subsurfaceBlock)) {
+                JsonObject defaultTarget = new JsonObject();
+                JsonObject defaultPredicate = new JsonObject();
+                defaultPredicate.addProperty("predicate_type", "minecraft:block_match");
+                defaultPredicate.addProperty("block", planet.defaultBlock);
+                defaultTarget.add("target", defaultPredicate);
+
+                JsonObject defaultState = new JsonObject();
+                // Use deepslate ore variant if the default block is a deepslate-like block
+                if (planet.defaultBlock.contains("deepslate") && !oreType.equals("coal") && !oreType.equals("emerald")) {
+                    defaultState.addProperty("Name", "minecraft:deepslate_" + oreType + "_ore");
+                } else {
+                    defaultState.addProperty("Name", "minecraft:" + oreType + "_ore");
+                }
+                defaultTarget.add("state", defaultState);
+                targets.add(defaultTarget);
+            }
+        } else {
+            // For vanilla blocks, use the standard ore replaceable tags
+            JsonObject target = new JsonObject();
+            JsonObject targetPredicate = new JsonObject();
+            targetPredicate.addProperty("predicate_type", "minecraft:tag_match");
+            targetPredicate.addProperty("tag", "minecraft:stone_ore_replaceables");
+            target.add("target", targetPredicate);
+
+            JsonObject state = new JsonObject();
+            state.addProperty("Name", "minecraft:" + oreType + "_ore");
+            target.add("state", state);
+            targets.add(target);
+
+            // Add deepslate variant for deeper ores
+            if (!oreType.equals("coal") && !oreType.equals("emerald")) {
+                JsonObject deepslateTarget = new JsonObject();
+                JsonObject deepslatePredicate = new JsonObject();
+                deepslatePredicate.addProperty("predicate_type", "minecraft:tag_match");
+                deepslatePredicate.addProperty("tag", "minecraft:deepslate_ore_replaceables");
+                deepslateTarget.add("target", deepslatePredicate);
+
+                JsonObject deepslateState = new JsonObject();
+                deepslateState.addProperty("Name", "minecraft:deepslate_" + oreType + "_ore");
+                deepslateTarget.add("state", deepslateState);
+                targets.add(deepslateTarget);
+            }
         }
 
         config.add("targets", targets);
@@ -2278,8 +2706,17 @@ public class PlanetMaker {
         // For each biome in the planet, create a custom version with features
         for (PlanetBuilder.BiomeEntry biomeEntry : planet.customBiomes) {
             JsonObject biome = createCustomBiome(biomeEntry, planet);
-            String biomeName = biomeEntry.biomeName.replace("minecraft:", "");
-            String filename = planet.name + "_" + biomeName + ".json";
+            // Extract just the biome name for the filename
+            String biomeName;
+            if (biomeEntry.biomeName.contains(":")) {
+                // Remove namespace for filename
+                biomeName = biomeEntry.biomeName.substring(biomeEntry.biomeName.lastIndexOf(":") + 1);
+            } else {
+                biomeName = biomeEntry.biomeName;
+            }
+
+            // Create filename without colons (filesystem safe)
+            String filename = biomeName + ".json";
             writeJsonFile(RESOURCES_PATH + "worldgen/biome/" + filename, biome);
         }
     }
@@ -2303,7 +2740,7 @@ public class PlanetMaker {
         effects.addProperty("water_fog_color", 329011);
         biome.add("effects", effects);
 
-        // Spawners (empty for now)
+        // Empty spawners - we'll use biome modifiers for mob spawning
         JsonObject spawners = new JsonObject();
         for (String category : new String[]{"monster", "creature", "ambient", "water_creature", "water_ambient", "misc"}) {
             spawners.add(category, new JsonArray());
@@ -2311,7 +2748,14 @@ public class PlanetMaker {
         biome.add("spawners", spawners);
 
         // Spawn costs
-        biome.add("spawn_costs", new JsonObject());
+        JsonObject spawnCostsObj = new JsonObject();
+        for (java.util.Map.Entry<String, PlanetBuilder.SpawnCost> entry : planet.spawnCosts.entrySet()) {
+            JsonObject costEntry = new JsonObject();
+            costEntry.addProperty("energy_budget", entry.getValue().energyBudget);
+            costEntry.addProperty("charge", entry.getValue().charge);
+            spawnCostsObj.add(entry.getKey(), costEntry);
+        }
+        biome.add("spawn_costs", spawnCostsObj);
 
         // Features by generation step
         JsonArray features = new JsonArray();
@@ -2327,45 +2771,11 @@ public class PlanetMaker {
             JsonArray stepFeatures = new JsonArray();
 
             if (step.equals("underground_ores") && planet.oreVeinsEnabled) {
-                // Add ore features matching the actual placed feature names
-                String[] oreTypes = {"coal", "iron", "gold", "diamond", "redstone", "lapis", "copper", "emerald"};
-                for (String ore : oreTypes) {
-                    // Add different variants based on ore type
-                    switch (ore) {
-                        case "coal":
-                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_upper");
-                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_lower");
-                            break;
-                        case "iron":
-                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_upper");
-                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_middle");
-                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_lower");
-                            break;
-                        case "gold":
-                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_extra");
-                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_lower");
-                            break;
-                        case "diamond":
-                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_large");
-                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_small");
-                            break;
-                        case "redstone":
-                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_lower");
-                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_deep");
-                            break;
-                        case "lapis":
-                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_normal");
-                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_deep");
-                            break;
-                        case "copper":
-                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_normal");
-                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_large");
-                            break;
-                        case "emerald":
-                            stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + ore + "_normal");
-                            break;
-                    }
-                }
+                // Add simplified ore features using standard minecraft:ore type
+                // These will be placed features that target planet-specific blocks
+                stepFeatures.add("adastramekanized:" + planet.name + "_ore_iron_simple");
+                stepFeatures.add("adastramekanized:" + planet.name + "_ore_diamond_simple");
+                // Add more ore types as needed
             }
 
             features.add(stepFeatures);

@@ -1,8 +1,8 @@
 {
-  "ambient_light": 0.1,
+  "ambient_light": 0.0,
   "effects": "adastramekanized:moon",
   "has_ceiling": false,
-  "has_skylight": true,
+  "has_skylight": false,
   "height": 384,
   "min_y": -64,
   "natural": true,
@@ -14,6 +14,10 @@
   "infiniburn": "#minecraft:infiniburn_overworld",
   "ultrawarm": false,
   "piglin_safe": false,
-  "monster_spawn_light_level": 0,
-  "monster_spawn_block_light_limit": 0
+  "monster_spawn_light_level": {
+    "type": "minecraft:uniform",
+    "min_inclusive": 0,
+    "max_inclusive": 15
+  },
+  "monster_spawn_block_light_limit": 15
 }

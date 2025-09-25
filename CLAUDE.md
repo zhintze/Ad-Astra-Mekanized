@@ -356,3 +356,4 @@ Ore distribution is controlled by `minecraft:ore_gap` noise with proper depth co
 - Additional working directories with reference implementations:
   - `/home/keroppi/Development/Minecraft/Ad-Astra/` (original Ad Astra reference)
   - `/home/keroppi/Development/Minecraft/Mekanism/` (Mekanism reference)
+- always update planetGenerationRunner when adding/editing planet generation
