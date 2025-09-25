@@ -46,16 +46,191 @@ public class PlanetGenerationRunner {
     }
 
     /**
+     * AVAILABLE MOBS FOR PLANET SPAWNING
+     *
+     * === VANILLA MINECRAFT HOSTILE MOBS ===
+     * minecraft:zombie - Standard zombie
+     * minecraft:zombie_villager - Zombified villager
+     * minecraft:husk - Desert zombie variant
+     * minecraft:drowned - Underwater zombie
+     * minecraft:skeleton - Standard skeleton
+     * minecraft:stray - Ice skeleton variant
+     * minecraft:wither_skeleton - Nether skeleton
+     * minecraft:spider - Standard spider
+     * minecraft:cave_spider - Smaller poisonous spider
+     * minecraft:creeper - Explosive mob
+     * minecraft:enderman - Teleporting mob
+     * minecraft:endermite - Small end parasite
+     * minecraft:silverfish - Stone parasite
+     * minecraft:phantom - Flying hostile mob
+     * minecraft:blaze - Nether flying mob
+     * minecraft:ghast - Large flying nether mob
+     * minecraft:magma_cube - Nether slime variant
+     * minecraft:slime - Bouncing cube mob
+     * minecraft:witch - Potion-throwing mob
+     * minecraft:vindicator - Axe-wielding illager
+     * minecraft:evoker - Magic-using illager
+     * minecraft:vex - Small flying illager summon
+     * minecraft:pillager - Crossbow illager
+     * minecraft:ravager - Large illager beast
+     * minecraft:guardian - Ocean monument mob
+     * minecraft:elder_guardian - Boss guardian
+     * minecraft:shulker - End city mob
+     * minecraft:warden - Deep dark boss
+     * minecraft:zoglin - Zombified hoglin
+     * minecraft:piglin - Nether pig mob
+     * minecraft:piglin_brute - Stronger piglin
+     * minecraft:hoglin - Nether beast
+     * minecraft:zombified_piglin - Zombie pigman
+     * minecraft:wither - Boss mob
+     * minecraft:ender_dragon - Boss mob
+     *
+     * === VANILLA MINECRAFT PASSIVE MOBS ===
+     * minecraft:cow - Basic farm animal
+     * minecraft:pig - Basic farm animal
+     * minecraft:sheep - Wool provider
+     * minecraft:chicken - Egg layer
+     * minecraft:rabbit - Small hopping animal
+     * minecraft:horse - Rideable animal
+     * minecraft:donkey - Pack animal
+     * minecraft:mule - Pack animal
+     * minecraft:llama - Pack animal
+     * minecraft:trader_llama - Wandering trader's llama
+     * minecraft:cat - Tameable pet
+     * minecraft:wolf - Tameable pet
+     * minecraft:parrot - Tameable bird
+     * minecraft:fox - Forest animal
+     * minecraft:bee - Pollinator
+     * minecraft:panda - Bamboo eater
+     * minecraft:polar_bear - Arctic animal
+     * minecraft:turtle - Beach animal
+     * minecraft:dolphin - Ocean animal
+     * minecraft:cod - Fish
+     * minecraft:salmon - Fish
+     * minecraft:pufferfish - Poisonous fish
+     * minecraft:tropical_fish - Decorative fish
+     * minecraft:squid - Ink producer
+     * minecraft:glow_squid - Glowing squid
+     * minecraft:bat - Cave ambient
+     * minecraft:ocelot - Jungle cat
+     * minecraft:goat - Mountain animal
+     * minecraft:axolotl - Cave aquatic
+     * minecraft:frog - Swamp animal
+     * minecraft:tadpole - Baby frog
+     * minecraft:allay - Helper mob
+     * minecraft:strider - Nether walker
+     * minecraft:mooshroom - Mushroom cow
+     * minecraft:snow_golem - Buildable ally
+     * minecraft:iron_golem - Buildable defender
+     *
+     * === MODDED MOBS ===
+     * When Dungeons Arise: Does NOT add custom mobs (structure generation only)
+     * DungeonCrawl: Uses vanilla spawners in generated dungeons
+     *
+     * === WHEN DUNGEONS ARISE SPAWNER MECHANICS ===
+     * WDA enhances vanilla spawners with these features:
+     * - Randomized spawner types throughout structures (difficulty scaling)
+     * - Trial Spawners (1.21+): Wave-based spawning with player scaling
+     *   - Spawns increase based on nearby players
+     *   - Drops rewards when all mobs defeated
+     *   - 30-minute cooldown after completion
+     * - No custom mobs - uses vanilla mob types exclusively
+     * - Spawners placed strategically to guard loot and passages
+     * - Compatible with modded entities when other mods present
+     *
+     * === WDA STRUCTURES & SPAWNER CONFIGURATIONS (43 total) ===
+     * Based on source code analysis:
+     *
+     * SPECIFIC SPAWNER POOLS FOUND:
+     * - Keep Kayra: 9 different spawner variants (keep_kayra_spawner_0 through _8)
+     * - Infested Temple: Cave spiders, skeletons, wither skeletons
+     * - Bathhouse: Dedicated spawner pool
+     * - Bandit Village & Towers: Custom spawner configurations
+     * - Illager Fort: Fort-specific spawners
+     * - Scorched Mines: Underground hostile spawners
+     * - Mining System: Cave-themed spawners
+     * - Foundry: Industrial-themed spawners
+     * - Shiraz Palace: Desert-themed spawners
+     * - Small Blimp: Aerial structure spawners
+     *
+     * NOTABLE STRUCTURES (without specific spawner pools):
+     * - Abandoned Temple, Aviary, Coliseum, Fishing Hut
+     * - Giant Mushroom, Greenwood Pub/Towers
+     * - Heavenly Challenger/Conqueror/Rider
+     * - Illager Campsite/Castle/Corsair/Galley
+     * - Jungle Tree House, Library, Lighthouse
+     * - Mechanical Nest, Mushroom House/Mines/Village
+     * - Monastery, Plague Asylum, Prairie House
+     * - Scarlet Monastery, Shiraz Palace, Small Prairie House
+     * - Thornborn Towers, Typhon, Undead Pirate Ship
+     *
+     * LOOT TABLES:
+     * - Gladiator loot (coliseum): Diamonds, emeralds, iron, gold, special potions
+     * - Each structure has dedicated chest loot tables
+     * - No custom entity drops - uses vanilla loot mechanics
+     *
+     * === HOW WDA CREATES CHALLENGING MOBS ===
+     * WDA doesn't modify mob equipment directly through code. Instead:
+     *
+     * 1. **Pre-equipped Mob Structures (NBT files)**:
+     *    - skeleton_armored_0.nbt, skeleton_armored_1.nbt (Abandoned Temple)
+     *    - skeleton_juggernaut_0.nbt, skeleton_juggernaut_1.nbt (Undead Pirate Ship)
+     *    - wither_skeleton variants (Foundry)
+     *    - These NBT structures contain mobs with pre-set equipment saved in the structure
+     *
+     * 2. **Structure-Specific Mob Variants**:
+     *    - Different structures have themed mob setups
+     *    - "Juggernaut" variants likely have full armor sets
+     *    - "Armored" variants have partial or full equipment
+     *    - "Ranged" variants configured with bows/crossbows
+     *
+     * 3. **Chest Loot with Enchanted Gear**:
+     *    - Treasure chests contain enchanted equipment (level 15-25)
+     *    - Players can find and use this gear
+     *    - Creates progression through structure exploration
+     *
+     * 4. **No Runtime Modification**:
+     *    - No Java code for dynamically equipping mobs
+     *    - All mob equipment is pre-configured in structure NBT files
+     *    - This approach ensures consistent difficulty per structure type
+     *
+     * === SUGGESTED PLANET SPAWNING THEMES ===
+     * Moon/Barren: silverfish, endermite (parasites)
+     * Mars/Desert: husk, spider, stray (dry environment)
+     * Ice Planet: stray, polar_bear, snow_golem
+     * Toxic/Radioactive: spider, cave_spider, slime, witch
+     * Ocean Planet: drowned, guardian, squid, dolphin
+     * Jungle Planet: ocelot, parrot, spider, witch
+     * Nether-like: blaze, magma_cube, ghast, strider
+     * End-like: enderman, endermite, shulker
+     * Habitable: Standard overworld mobs
+     *
+     * Note: Always check if modded mobs exist before using them.
+     * Use vanilla alternatives when mods aren't present.
+     */
+
+    /**
      * Apply Moon mob preset
      */
     private static void applyMoonMobPreset(PlanetMaker.PlanetBuilder planet) {
-        // Increased spawn rates for testing - hostile mobs
-        planet.addMobSpawn("monster", "minecraft:enderman", 100, 2, 4)    // More common for testing
-              .addMobSpawn("monster", "minecraft:phantom", 50, 1, 3)       // More phantoms
-              .addMobSpawn("monster", "minecraft:husk", 200, 3, 5)         // Very common husks
-              .addMobSpawn("monster", "minecraft:zombie", 150, 2, 4)       // Add regular zombies for testing
-              .addMobSpawn("monster", "minecraft:spider", 120, 2, 3)       // Add spiders for testing
-              .addMobSpawn("monster", "minecraft:skeleton", 100, 2, 3);    // Add skeletons for testing
+        // Moon-specific mob spawning - matches the biome_modifier configuration
+        planet.clearAllMobSpawns()  // Clear any default spawns
+              //.addMobSpawn("monster", "minecraft:silverfish", 1000, 32, 64)  // Silverfish swarms (from biome_modifier)
+
+              // Example: Equipped zombie variant (requires PlanetMobSpawnHandler)
+              // This would spawn zombies with leather armor on the moon
+              // NOTE: Equipment is handled by PlanetMobSpawnHandler event system
+              .addEquippedMobSpawn("monster", "minecraft:zombie", 50, 1, 3,
+                      "minecraft:leather_helmet", "minecraft:leather_chestplate", null, null,
+                      "minecraft:stone_sword", null)
+
+              // Example: Armored skeleton (like WDA's skeleton_armored variants)
+              .addEquippedMobSpawn("monster", "minecraft:skeleton", 30, 1, 2,
+                      "minecraft:chainmail_helmet", "minecraft:chainmail_chestplate",
+                      "minecraft:chainmail_leggings", "minecraft:chainmail_boots",
+                      "minecraft:bow", null)
+
+              .allowPeacefulMobs(false);  // No peaceful mobs on moon
     }
 
     /**
@@ -135,8 +310,8 @@ public class PlanetGenerationRunner {
             .veinRidged(0.5f)  // Some ridged veins
             .veinGap(0.4f)     // Moderate vein gaps
             // CAVES DISABLED for stable terrain
-            .caveConfig(0.0f, 0.0f)  // No caves
-            .cheeseCaves(false)      // Disabled
+            .caveConfig(0.1f, 0.1f)  // No caves
+            .cheeseCaves(true)      // Disabled
             .spaghettiCaves(false)   // Disabled
             .noodleCaves(false)      // Disabled
             // Custom Moon biomes (will be properly created)
@@ -197,9 +372,9 @@ public class PlanetGenerationRunner {
             //.configureOre("coal", 25)      // 25 coal veins per chunk
             //.configureOre("redstone", 10)  // 10 redstone veins per chunk
             .configureOre("lapis", 50)      // 50 lapis veins per chunk
-            .configureOre("osmium", 30)     // 30 osmium veins per chunk (Mekanism)
-            .configureOre("tin", 25)        // 25 tin veins per chunk (Mekanism)
-            .configureOre("uranium", 5)      // 5 uranium veins per chunk (Mekanism - rare)
+            //.configureOre("osmium", 30)     // 30 osmium veins per chunk (Mekanism)
+            //.configureOre("tin", 25)        // 25 tin veins per chunk (Mekanism)
+            //.configureOre("uranium", 5)      // 5 uranium veins per chunk (Mekanism - rare)
             //.configureOre("emerald", 2)    // 2 emerald veins per chunk
             .veinToggle(0.8f)
             .veinRidged(0.6f)
@@ -358,12 +533,29 @@ public class PlanetGenerationRunner {
                 // ========== EXTREME GENERATION CONTROLS ==========
                 .disableMobGeneration(false)    // Enable mobs for hellish world
                 .aquifersEnabled(true)          // Enable aquifers for cave generation
-                // ========== EXTREME MOB SPAWNING - NETHER-LIKE HELL ==========
+                // ========== EXTREME MOB SPAWNING - NETHER-LIKE HELL WITH WDA-STYLE JUGGERNAUTS ==========
                 .addMobSpawn("monster", "minecraft:magma_cube", 100, 2, 4)
                 .addMobSpawn("monster", "minecraft:blaze", 50, 1, 3)
                 .addMobSpawn("monster", "minecraft:ghast", 20, 1, 1)
-                .addMobSpawn("monster", "minecraft:wither_skeleton", 30, 2, 4)
-                .addMobSpawn("monster", "minecraft:zombified_piglin", 80, 4, 4)
+
+                // "Juggernaut" wither skeletons - full netherite equipment!
+                .addEquippedMobSpawn("monster", "minecraft:wither_skeleton", 30, 2, 4,
+                        "minecraft:netherite_helmet", "minecraft:netherite_chestplate",
+                        "minecraft:netherite_leggings", "minecraft:netherite_boots",
+                        "minecraft:netherite_sword", null)
+
+                // "Elite Guard" zombified piglins - gold armor with enchanted weapons
+                .addEquippedMobSpawn("monster", "minecraft:zombified_piglin", 80, 4, 4,
+                        "minecraft:golden_helmet", "minecraft:golden_chestplate",
+                        "minecraft:golden_leggings", "minecraft:golden_boots",
+                        "minecraft:golden_sword", "minecraft:shield")
+
+                // "Piglin Brute Variant" - heavy mixed armor
+                .addEquippedMobSpawn("monster", "minecraft:piglin_brute", 15, 1, 2,
+                        "minecraft:diamond_helmet", "minecraft:iron_chestplate",
+                        "minecraft:diamond_leggings", "minecraft:iron_boots",
+                        "minecraft:diamond_axe", null)
+
                 .addMobSpawn("creature", "minecraft:strider", 60, 1, 2)  // Only passive mob
                 .oreVeinsEnabled(true)          // Enable Minecraft's ore vein system
                 .abovePreliminaryRule(false)    // MAX: Disable surface smoothing

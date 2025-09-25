@@ -636,6 +636,36 @@ public class PlanetMaker {
         }
 
         /**
+         * Add an equipped mob spawn with armor and weapons
+         * NOTE: This requires custom spawn handling through events or biome modifiers
+         * @param category Spawn category: "monster", "creature", etc.
+         * @param mobId Mob resource location (e.g., "minecraft:zombie")
+         * @param weight Spawn weight (higher = more common)
+         * @param minGroup Minimum group size
+         * @param maxGroup Maximum group size
+         * @param equipment Equipment configuration (helmet, chestplate, leggings, boots, mainhand, offhand)
+         */
+        public PlanetBuilder addEquippedMobSpawn(String category, String mobId, int weight, int minGroup, int maxGroup,
+                                                   String helmet, String chestplate, String leggings, String boots,
+                                                   String mainHand, String offHand) {
+            // Add the base spawn entry
+            MobSpawnEntry entry = new MobSpawnEntry(mobId, weight, minGroup, maxGroup);
+
+            // Store equipment data for later processing
+            // This will need to be handled by a custom biome modifier or spawn event
+            entry.equipment = new java.util.HashMap<>();
+            if (helmet != null) entry.equipment.put("helmet", helmet);
+            if (chestplate != null) entry.equipment.put("chestplate", chestplate);
+            if (leggings != null) entry.equipment.put("leggings", leggings);
+            if (boots != null) entry.equipment.put("boots", boots);
+            if (mainHand != null) entry.equipment.put("mainhand", mainHand);
+            if (offHand != null) entry.equipment.put("offhand", offHand);
+
+            mobSpawns.computeIfAbsent(category, k -> new java.util.ArrayList<>()).add(entry);
+            return this;
+        }
+
+        /**
          * Add a mob spawn with percentage chance (converted to weight)
          * @param category Spawn category
          * @param mobId Mob resource location
@@ -1516,7 +1546,52 @@ public class PlanetMaker {
          */
         public PlanetBuilder generate() {
             PLANETS.add(this);
+            // Generate equipment configuration if any mobs have equipment
+            generateMobEquipmentConfig();
             return this;
+        }
+
+        /**
+         * Generate equipment configuration file for equipped mobs
+         */
+        private void generateMobEquipmentConfig() {
+            JsonObject equipmentConfig = new JsonObject();
+            equipmentConfig.addProperty("dimension", "adastramekanized:" + this.name);
+            JsonArray mobs = new JsonArray();
+
+            // Process mob spawns that have equipment
+            for (java.util.Map.Entry<String, List<MobSpawnEntry>> categoryEntry : mobSpawns.entrySet()) {
+                for (MobSpawnEntry spawn : categoryEntry.getValue()) {
+                    if (spawn.equipment != null && !spawn.equipment.isEmpty()) {
+                        JsonObject mobConfig = new JsonObject();
+                        mobConfig.addProperty("mob_id", spawn.mobId);
+
+                        // Add equipment slots
+                        JsonObject equipment = new JsonObject();
+                        for (java.util.Map.Entry<String, String> equipEntry : spawn.equipment.entrySet()) {
+                            equipment.addProperty(equipEntry.getKey(), equipEntry.getValue());
+                        }
+                        mobConfig.add("equipment", equipment);
+
+                        // Add drop chance (always 0 to prevent farming)
+                        mobConfig.addProperty("drop_chance", 0.0f);
+                        mobConfig.addProperty("equip_chance", 1.0f); // Always equip
+
+                        mobs.add(mobConfig);
+                    }
+                }
+            }
+
+            if (mobs.size() > 0) {
+                equipmentConfig.add("mobs", mobs);
+                // Write to a data file that can be loaded at runtime
+                try {
+                    writeJsonFile(RESOURCES_PATH + "planet_equipment/" + name + "_equipment.json", equipmentConfig);
+                    System.out.println("Generated equipment config for " + name + " with " + mobs.size() + " equipped mob types");
+                } catch (IOException e) {
+                    System.err.println("Failed to write equipment config for " + name + ": " + e.getMessage());
+                }
+            }
         }
 
         /**
@@ -1602,12 +1677,14 @@ public class PlanetMaker {
             final int weight;
             final int minCount;
             final int maxCount;
+            java.util.Map<String, String> equipment; // Optional equipment data
 
             MobSpawnEntry(String mobId, int weight, int minCount, int maxCount) {
                 this.mobId = mobId;
                 this.weight = weight;
                 this.minCount = minCount;
                 this.maxCount = maxCount;
+                this.equipment = null; // Default to no equipment
             }
         }
 
@@ -2575,7 +2652,7 @@ public class PlanetMaker {
 
         config.add("targets", targets);
         config.addProperty("size", oreType.equals("diamond") ? 8 : 12);
-        config.addProperty("discard_chance_on_air_exposure", 0.98f);  // 98% chance to skip when exposed to air
+        config.addProperty("discard_chance_on_air_exposure", 0.99f);  // 99% chance to skip when exposed to air
 
         feature.add("config", config);
         return feature;
@@ -2949,10 +3026,24 @@ public class PlanetMaker {
         effects.addProperty("water_fog_color", 329011);
         biome.add("effects", effects);
 
-        // Empty spawners - we'll use biome modifiers for mob spawning
+        // Mob spawners - populate with configured mob spawns
         JsonObject spawners = new JsonObject();
         for (String category : new String[]{"monster", "creature", "ambient", "water_creature", "water_ambient", "misc"}) {
-            spawners.add(category, new JsonArray());
+            JsonArray categorySpawns = new JsonArray();
+
+            // Add configured spawns for this category
+            if (planet.mobSpawns.containsKey(category)) {
+                for (PlanetBuilder.MobSpawnEntry mob : planet.mobSpawns.get(category)) {
+                    JsonObject spawn = new JsonObject();
+                    spawn.addProperty("type", mob.mobId);
+                    spawn.addProperty("minCount", mob.minCount);
+                    spawn.addProperty("maxCount", mob.maxCount);
+                    spawn.addProperty("weight", mob.weight);
+                    categorySpawns.add(spawn);
+                }
+            }
+
+            spawners.add(category, categorySpawns);
         }
         biome.add("spawners", spawners);
 

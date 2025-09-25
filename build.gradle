@@ -163,6 +163,18 @@ dependencies {
     implementation "curse.maven:badOptimizations-949555:5961419"
     //---- END PERFORMANCE ----//
 
+
+
+    // DUNGEONS
+    implementation "curse.maven:DungeonCrawl-324973:6047162"
+    implementation "curse.maven:WhenDungeonsArise-442508:6078710"
+    implementation "curse.maven:WhenDungeonsAriseSevenSeas-953637:5661269"
+
+
+
+    // EPIC FIGHT
+    implementation "curse.maven:EpicFight-405076:6968128"
+
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"
@@ -249,6 +261,9 @@ tasks.register('makePlanets', JavaExec) {
             include "dimension/*.json"
             include "dimension_type/*.json"
             include "worldgen/noise_settings/*.json"
+            include "worldgen/configured_feature/*.json"
+            include "worldgen/placed_feature/*.json"
+            include "worldgen/biome/*.json"
         }
 
         println "Cleanup completed, generating new planets..."

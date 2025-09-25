@@ -9,7 +9,20 @@
     "water_fog_color": 329011
   },
   "spawners": {
-    "monster": [],
+    "monster": [
+      {
+        "type": "minecraft:zombie",
+        "minCount": 1,
+        "maxCount": 3,
+        "weight": 50
+      },
+      {
+        "type": "minecraft:zombie",
+        "minCount": 1,
+        "maxCount": 2,
+        "weight": 30
+      }
+    ],
     "creature": [],
     "ambient": [],
     "water_creature": [],

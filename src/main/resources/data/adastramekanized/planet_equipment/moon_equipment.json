@@ -1,0 +1,27 @@
+{
+  "dimension": "adastramekanized:moon",
+  "mobs": [
+    {
+      "mob_id": "minecraft:zombie",
+      "equipment": {
+        "mainhand": "minecraft:stone_sword",
+        "chestplate": "minecraft:leather_chestplate",
+        "helmet": "minecraft:leather_helmet"
+      },
+      "drop_chance": 0.0,
+      "equip_chance": 1.0
+    },
+    {
+      "mob_id": "minecraft:zombie",
+      "equipment": {
+        "mainhand": "minecraft:bow",
+        "chestplate": "minecraft:chainmail_chestplate",
+        "helmet": "minecraft:chainmail_helmet",
+        "boots": "minecraft:chainmail_boots",
+        "leggings": "minecraft:chainmail_leggings"
+      },
+      "drop_chance": 0.0,
+      "equip_chance": 1.0
+    }
+  ]
+}

@@ -4,7 +4,6 @@ import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.api.planets.Planet;
 import com.hecookin.adastramekanized.api.planets.PlanetRegistry;
 import com.hecookin.adastramekanized.common.planets.PlanetManager;
-import com.hecookin.adastramekanized.common.worldgen.PlanetChunkGenerator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -12,7 +11,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
@@ -168,26 +166,7 @@ public class PlanetTeleportationSystem {
 
         // Try multiple methods to find the surface
 
-        // Method 1: Use PlanetChunkGenerator surface calculation if available
-        ChunkGenerator chunkGenerator = level.getChunkSource().getGenerator();
-        if (chunkGenerator instanceof PlanetChunkGenerator planetGenerator) {
-            try {
-                // Use the planet chunk generator's base height calculation
-                int surfaceHeight = planetGenerator.getBaseHeight(x, z,
-                    net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE,
-                    level, level.getChunkSource().randomState());
-                BlockPos planetSurface = new BlockPos(x, surfaceHeight + 1, z); // +1 for air above surface
-
-                if (isValidSurfacePosition(level, planetSurface)) {
-                    AdAstraMekanized.LOGGER.debug("Found surface using PlanetChunkGenerator at Y={}", planetSurface.getY());
-                    return planetSurface;
-                }
-            } catch (Exception e) {
-                AdAstraMekanized.LOGGER.debug("PlanetChunkGenerator surface calculation failed: {}", e.getMessage());
-            }
-        }
-
-        // Method 2: Try standard heightmap
+        // Method 1: Try standard heightmap
         try {
             BlockPos heightmapSurface = level.getHeightmapPos(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE, startPos);
             if (isValidSurfacePosition(level, heightmapSurface)) {

@@ -138,18 +138,11 @@ public class PlanetMobSpawnRules {
 
     /**
      * Check if a dimension is a registered planetary dimension.
+     * Delegates to PlanetManager for centralized planet tracking.
      */
     private static boolean isPlanetaryDimension(ResourceKey<Level> dimension) {
-        // Check against our planetary dimensions
-        String dimPath = dimension.location().getPath();
-
-        // List of our planetary dimensions
-        return dimPath.equals("moon") ||
-               dimPath.equals("mars") ||
-               dimPath.equals("hemphy") ||
-               dimPath.equals("oretest") ||
-               dimPath.equals("cavetest") ||
-               // Add any other planetary dimensions here
-               dimension.location().getNamespace().equals(AdAstraMekanized.MOD_ID);
+        // Any dimension in our namespace is considered planetary
+        // This allows PlanetMaker-generated planets to work automatically
+        return dimension.location().getNamespace().equals(AdAstraMekanized.MOD_ID);
     }
 }
