@@ -7,7 +7,7 @@
       "type": "minecraft:multi_noise",
       "biomes": [
         {
-          "biome": "minecraft:plains",
+          "biome": "adastramekanized:cavetest_caverns",
           "parameters": {
             "temperature": 0.0,
             "humidity": 0.0,

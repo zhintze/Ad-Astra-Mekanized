@@ -22,7 +22,7 @@
     "chunk_generator": "cavetest_generator",
     "is_orbital": false,
     "sky_color": 7907327,
-    "fog_color": 12638463,
+    "fog_color": 65280,
     "ambient_light": 0.1
   }
 }

@@ -6,6 +6,26 @@ import com.hecookin.adastramekanized.AdAstraMekanized;
  * Runner to generate planet files using PlanetMaker system
  */
 public class PlanetGenerationRunner {
+
+    /**
+     * Regenerate all planet files - call this to update planet configurations
+     */
+    public static void regeneratePlanets() {
+        try {
+            AdAstraMekanized.LOGGER.info("Regenerating planet files with PlanetMaker...");
+
+            // Configure planets using builder pattern
+            configurePlanets();
+
+            // Generate all configured planets
+            PlanetMaker.generateAllPlanets();
+
+            AdAstraMekanized.LOGGER.info("Planet regeneration completed successfully!");
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.error("Failed to regenerate planets: ", e);
+        }
+    }
+
     public static void main(String[] args) {
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "INFO");
 
@@ -104,7 +124,13 @@ public class PlanetGenerationRunner {
             .disableMobGeneration(false)  // Enable mob generation
             .aquifersEnabled(false)
             .oreVeinsEnabled(true)  // Enable ore generation
-            // Ore vein configuration for Moon minerals
+            // Ore vein configuration for Moon minerals - balanced for survival
+            .configureOre("iron", 8)        // Less iron on Moon
+            .configureOre("copper", 6)      // Some copper
+            .configureOre("gold", 3)        // Rare gold
+            .configureOre("diamond", 1)     // Very rare diamonds
+            .configureOre("coal", 0)        // No coal on Moon (no organic matter)
+            .configureOre("redstone", 4)    // Some redstone
             .veinToggle(0.7f)  // Enable ore veins
             .veinRidged(0.5f)  // Some ridged veins
             .veinGap(0.4f)     // Moderate vein gaps
@@ -122,7 +148,7 @@ public class PlanetGenerationRunner {
             .skyColor(0x0A0A0A)
             .fogColor(0x0A0A0A)
             .hasAtmosphere(false)
-            .ambientLight(0.0f)  // No ambient light for proper mob spawning
+            .ambientLight(0.04f)  // No ambient light for proper mob spawning
             // Sun and spawn settings
             .hasSkylight(false)  // No sun damage on the Moon
             .monsterSpawnLightLevel(15);  // Monsters spawn in any light level
@@ -143,32 +169,47 @@ public class PlanetGenerationRunner {
             .subsurfaceBlock("minecraft:blue_terracotta")
             .deepBlock("minecraft:black_terracotta")
             .defaultBlock("minecraft:blue_terracotta")
+            .underwaterBlock("minecraft:blue_terracotta")  // Set underwater block to match defaultBlock
             .bedrockBlock("minecraft:bedrock")
             // World structure
             .worldDimensions(-64, 320)
             .noiseSize(2, 2)
-            .seaLevel(-32)  // Much lower sea level to expose caves
+            .seaLevel(64)  // Much lower sea level to expose caves
             .disableMobGeneration(false)
             .aquifersEnabled(true)  // Enable water in caves
             .oreVeinsEnabled(true)
             // EXTREME CAVE SETTINGS
-            .caveConfig(2.0f, 3.0f)  // Maximum frequency and size
-            .caveYScale(2.0f)  // Tall caves
-            .caveHeightRange(-64, 256)  // Caves throughout world
-            .cheeseCaves(true)  // Enable all cave types
+            .caveConfig(1.0f, 3.0f)  // Maximum frequency and size
+            .caveYScale(0.2f)  // Tall caves
+            .caveHeightRange(-64, 50)  // Caves throughout world
+            .cheeseCaves(false)  // Enable all cave types
             .spaghettiCaves(true)
             .noodleCaves(true)
-            .ravineConfig(1.0f, 5.0f)  // Maximum ravines
+            .ravineConfig(0.2f, 2.0f)  // Maximum ravines
             // Add cave decorations
             .addCaveDecoration("minecraft:glowstone", 0.1f, -64, 256, true)  // Light sources
             .addCaveDecoration("minecraft:amethyst_block", 0.05f, -64, 128, false)
-            // Ore configuration
+            // Ore configuration - specify exact vein counts per chunk
+            //.configureOre("iron", 20)      // 20 iron veins per chunk
+            //.configureOre("copper", 15)    // 15 copper veins per chunk
+            //.configureOre("gold", 8)       // 8 gold veins per chunk
+            //.configureOre("diamond", 4)    // 4 diamond veins per chunk
+            //.configureOre("coal", 25)      // 25 coal veins per chunk
+            //.configureOre("redstone", 10)  // 10 redstone veins per chunk
+            .configureOre("lapis", 50)      // 50 lapis veins per chunk
+            .configureOre("osmium", 30)     // 30 osmium veins per chunk (Mekanism)
+            .configureOre("tin", 25)        // 25 tin veins per chunk (Mekanism)
+            .configureOre("uranium", 5)      // 5 uranium veins per chunk (Mekanism - rare)
+            //.configureOre("emerald", 2)    // 2 emerald veins per chunk
             .veinToggle(0.8f)
             .veinRidged(0.6f)
             .veinGap(0.5f)
+            // Add custom biome for ore generation to work
+            .clearBiomes()
+            .addBiome("adastramekanized:cavetest_caverns", 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f)
             // Visual properties
             .skyColor(0x78A7FF)
-            .fogColor(0xC0D8FF)
+            .fogColor(0x00FF00)
             .hasAtmosphere(true)
             .ambientLight(0.1f)
             // Sun and spawn settings for testing

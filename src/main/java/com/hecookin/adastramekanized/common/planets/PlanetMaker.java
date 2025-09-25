@@ -244,6 +244,7 @@ public class PlanetMaker {
 
         // Enhanced ore vein configuration
         private java.util.List<String> customOreVeins = new java.util.ArrayList<>();
+        private java.util.Map<String, Integer> oreVeinCounts = new java.util.HashMap<>();  // Ore type -> veins per chunk
         private float oreVeinDensity = 1.0f;
         private float oreVeinSize = 1.0f;
         private int maxOreVeinCount = 20;
@@ -546,6 +547,16 @@ public class PlanetMaker {
         // Enhanced ore vein configuration methods
         public PlanetBuilder addCustomOreVein(String oreBlock) {
             this.customOreVeins.add(oreBlock);
+            return this;
+        }
+
+        /**
+         * Configure specific ore type with veins per chunk
+         * @param oreType The ore type (e.g., "iron", "diamond", "copper")
+         * @param veinsPerChunk Number of veins to generate per chunk
+         */
+        public PlanetBuilder configureOre(String oreType, int veinsPerChunk) {
+            this.oreVeinCounts.put(oreType, veinsPerChunk);
             return this;
         }
 
@@ -2240,14 +2251,37 @@ public class PlanetMaker {
 
         sequence.add(subsurfaceLayer);
 
-        // Deep layer (default fallback)
-        JsonObject deepLayer = new JsonObject();
-        deepLayer.addProperty("type", "minecraft:block");
-        JsonObject deepState = new JsonObject();
-        deepState.addProperty("Name", planet.deepBlock);
-        deepLayer.add("result_state", deepState);
+        // Only add deep layer as a surface rule if it's different from defaultBlock
+        // This allows the defaultBlock to be used for the main stone layer
+        if (!planet.deepBlock.equals(planet.defaultBlock)) {
+            // Deep layer - only for actual deep regions (below Y=0 or similar)
+            JsonObject deepLayer = new JsonObject();
+            deepLayer.addProperty("type", "minecraft:condition");
 
-        sequence.add(deepLayer);
+            JsonObject deepCondition = new JsonObject();
+            deepCondition.addProperty("type", "minecraft:vertical_gradient");
+            deepCondition.addProperty("random_name", "minecraft:deep_layer");
+
+            // Deep layer starts below Y=0
+            JsonObject deepBelow = new JsonObject();
+            deepBelow.addProperty("absolute", 0);
+            deepCondition.add("true_at_and_below", deepBelow);
+
+            JsonObject deepAbove = new JsonObject();
+            deepAbove.addProperty("absolute", 8);
+            deepCondition.add("false_at_and_above", deepAbove);
+
+            deepLayer.add("if_true", deepCondition);
+
+            JsonObject deepResult = new JsonObject();
+            deepResult.addProperty("type", "minecraft:block");
+            JsonObject deepState = new JsonObject();
+            deepState.addProperty("Name", planet.deepBlock);
+            deepResult.add("result_state", deepState);
+            deepLayer.add("then_run", deepResult);
+
+            sequence.add(deepLayer);
+        }
 
         surfaceRule.add("sequence", sequence);
         return surfaceRule;
@@ -2357,6 +2391,38 @@ public class PlanetMaker {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
+    /**
+     * Get the proper ore block name for a given ore type
+     * Handles both vanilla and modded ores
+     */
+    private static String getOreBlockName(String oreType) {
+        return switch (oreType.toLowerCase()) {
+            // Vanilla ores - these are always available
+            case "iron", "gold", "copper", "coal", "diamond", "emerald", "lapis", "redstone" ->
+                "minecraft:" + oreType + "_ore";
+
+            // Mekanism ores - these ARE available since Mekanism is installed
+            case "osmium" -> "mekanism:osmium_ore";
+            case "tin" -> "mekanism:tin_ore";
+            case "uranium" -> "mekanism:uranium_ore";
+            case "fluorite" -> "mekanism:fluorite_ore";
+            case "lead" -> "mekanism:lead_ore";
+
+            // Immersive Engineering ores - NOT installed, use vanilla substitutes
+            case "aluminum", "bauxite" -> "minecraft:iron_ore";  // Common like iron
+            case "silver" -> "minecraft:gold_ore";   // Precious like gold
+            case "nickel" -> "minecraft:copper_ore"; // Similar to copper
+
+            // Other modded ores - use vanilla substitutes
+            case "zinc" -> "minecraft:iron_ore";
+            case "platinum" -> "minecraft:diamond_ore";
+            case "tungsten" -> "minecraft:iron_ore";
+
+            // Default fallback
+            default -> "minecraft:" + oreType + "_ore";
+        };
+    }
+
     private static void writeJsonFile(String path, JsonObject json) throws IOException {
         try (FileWriter writer = new FileWriter(path)) {
             GSON.toJson(json, writer);
@@ -2369,9 +2435,27 @@ public class PlanetMaker {
     private static void generateOreFeatures(PlanetBuilder planet) throws IOException {
         AdAstraMekanized.LOGGER.info("Generating ore features for planet: {}", planet.name);
 
-        // Create simplified ore features following Dimension Expansion's pattern
-        // Only generate iron and diamond for now as test
-        String[] oreTypes = {"iron", "diamond"};
+        // Generate ore features for all configured ore types
+        // If specific ores are configured, use those; otherwise use defaults
+        java.util.Set<String> oreTypes;
+        if (!planet.oreVeinCounts.isEmpty()) {
+            oreTypes = planet.oreVeinCounts.keySet();
+            AdAstraMekanized.LOGGER.info("Generating configured ores: {}", oreTypes);
+        } else {
+            // Comprehensive list of vanilla and modded ores
+            // This includes vanilla ores plus common modded ores from Mekanism, IE, etc.
+            oreTypes = java.util.Set.of(
+                // Vanilla ores
+                "iron", "copper", "gold", "diamond", "coal", "redstone", "lapis", "emerald",
+                // Mekanism ores
+                "osmium", "tin", "uranium", "fluorite", "lead",
+                // Immersive Engineering ores
+                "aluminum", "silver", "nickel", "bauxite",
+                // Other common modded ores
+                "zinc", "platinum", "tungsten"
+            );
+            AdAstraMekanized.LOGGER.info("No ores configured, using comprehensive ore list: {}", oreTypes);
+        }
 
         for (String ore : oreTypes) {
             // Generate simplified configured feature
@@ -2400,44 +2484,105 @@ public class PlanetMaker {
         JsonObject config = new JsonObject();
         JsonArray targets = new JsonArray();
 
-        // Target the subsurface block (moon_stone, etc.)
-        if (!planet.subsurfaceBlock.isEmpty()) {
-            JsonObject target = new JsonObject();
-            JsonObject targetPredicate = new JsonObject();
-            targetPredicate.addProperty("predicate_type", "minecraft:block_match");
-            targetPredicate.addProperty("block", planet.subsurfaceBlock);
-            target.add("target", targetPredicate);
+        String oreBlockName = getOreBlockName(oreType);
 
+        // Target solid blocks using tag - this excludes air, water, lava etc.
+        JsonObject solidTarget = new JsonObject();
+        JsonObject solidPredicate = new JsonObject();
+        solidPredicate.addProperty("predicate_type", "minecraft:tag_match");
+        solidPredicate.addProperty("tag", "minecraft:stone_ore_replaceables");
+        solidTarget.add("target", solidPredicate);
+        JsonObject solidState = new JsonObject();
+        solidState.addProperty("Name", oreBlockName);
+        solidTarget.add("state", solidState);
+        targets.add(solidTarget);
+
+        // Add deepslate ore replaceables
+        JsonObject deepslateTarget = new JsonObject();
+        JsonObject deepslatePredicate = new JsonObject();
+        deepslatePredicate.addProperty("predicate_type", "minecraft:tag_match");
+        deepslatePredicate.addProperty("tag", "minecraft:deepslate_ore_replaceables");
+        deepslateTarget.add("target", deepslatePredicate);
+        JsonObject deepslateState = new JsonObject();
+        deepslateState.addProperty("Name", oreBlockName);
+        deepslateTarget.add("state", deepslateState);
+        targets.add(deepslateTarget);
+
+        // Now add specific blocks that aren't in the standard tags
+        // This gives us the flexibility we want - ores can spawn in any terrain type
+        String[] additionalBlocks = {
+            "minecraft:dirt", "minecraft:gravel", "minecraft:sand", "minecraft:sandstone",
+            "minecraft:terracotta", "minecraft:white_terracotta", "minecraft:orange_terracotta",
+            "minecraft:magenta_terracotta", "minecraft:light_blue_terracotta", "minecraft:yellow_terracotta",
+            "minecraft:lime_terracotta", "minecraft:pink_terracotta", "minecraft:gray_terracotta",
+            "minecraft:light_gray_terracotta", "minecraft:cyan_terracotta", "minecraft:purple_terracotta",
+            "minecraft:blue_terracotta", "minecraft:brown_terracotta", "minecraft:green_terracotta",
+            "minecraft:red_terracotta", "minecraft:black_terracotta",
+            "minecraft:netherrack", "minecraft:basalt", "minecraft:blackstone", "minecraft:end_stone",
+            "minecraft:grass_block", "minecraft:podzol", "minecraft:mycelium", "minecraft:coarse_dirt",
+            "minecraft:red_sand", "minecraft:red_sandstone", "minecraft:clay", "minecraft:packed_ice",
+            "minecraft:blue_ice", "minecraft:snow_block", "minecraft:powder_snow"
+        };
+
+        for (String block : additionalBlocks) {
+            JsonObject target = new JsonObject();
+            JsonObject predicate = new JsonObject();
+            predicate.addProperty("predicate_type", "minecraft:block_match");
+            predicate.addProperty("block", block);
+            target.add("target", predicate);
             JsonObject state = new JsonObject();
-            state.addProperty("Name", "minecraft:" + oreType + "_ore");
+            state.addProperty("Name", oreBlockName);
             target.add("state", state);
             targets.add(target);
         }
 
-        // Target deepslate if using vanilla deepslate
-        if (planet.deepBlock.equals("minecraft:deepslate")) {
+        // Add planet-specific blocks if they exist and aren't already covered
+        if (!planet.subsurfaceBlock.isEmpty() && !planet.subsurfaceBlock.contains("air")) {
+            JsonObject subsurfaceTarget = new JsonObject();
+            JsonObject subsurfacePredicate = new JsonObject();
+            subsurfacePredicate.addProperty("predicate_type", "minecraft:block_match");
+            subsurfacePredicate.addProperty("block", planet.subsurfaceBlock);
+            subsurfaceTarget.add("target", subsurfacePredicate);
+            JsonObject subsurfaceState = new JsonObject();
+            subsurfaceState.addProperty("Name", oreBlockName);
+            subsurfaceTarget.add("state", subsurfaceState);
+            targets.add(subsurfaceTarget);
+        }
+
+        if (!planet.deepBlock.isEmpty() && !planet.deepBlock.contains("air")) {
             JsonObject deepTarget = new JsonObject();
             JsonObject deepPredicate = new JsonObject();
             deepPredicate.addProperty("predicate_type", "minecraft:block_match");
-            deepPredicate.addProperty("block", "minecraft:deepslate");
+            deepPredicate.addProperty("block", planet.deepBlock);
             deepTarget.add("target", deepPredicate);
-
             JsonObject deepState = new JsonObject();
-            deepState.addProperty("Name", "minecraft:deepslate_" + oreType + "_ore");
+            deepState.addProperty("Name", oreBlockName);
             deepTarget.add("state", deepState);
             targets.add(deepTarget);
         }
 
+        if (!planet.defaultBlock.isEmpty() && !planet.defaultBlock.contains("air")) {
+            JsonObject defaultTarget = new JsonObject();
+            JsonObject defaultPredicate = new JsonObject();
+            defaultPredicate.addProperty("predicate_type", "minecraft:block_match");
+            defaultPredicate.addProperty("block", planet.defaultBlock);
+            defaultTarget.add("target", defaultPredicate);
+            JsonObject defaultState = new JsonObject();
+            defaultState.addProperty("Name", oreBlockName);
+            defaultTarget.add("state", defaultState);
+            targets.add(defaultTarget);
+        }
+
         config.add("targets", targets);
         config.addProperty("size", oreType.equals("diamond") ? 8 : 12);
-        config.addProperty("discard_chance_on_air_exposure", 0.0f);
+        config.addProperty("discard_chance_on_air_exposure", 0.98f);  // 98% chance to skip when exposed to air
 
         feature.add("config", config);
         return feature;
     }
 
     /**
-     * Create simplified placed feature with high spawn rates for testing
+     * Create simplified placed feature with configurable spawn rates
      */
     private static JsonObject createSimplifiedOrePlacedFeature(String oreType, PlanetBuilder planet) {
         JsonObject feature = new JsonObject();
@@ -2445,10 +2590,74 @@ public class PlanetMaker {
 
         JsonArray placement = new JsonArray();
 
-        // Count placement - high for testing
+        // Count placement - use configured count or default
         JsonObject count = new JsonObject();
         count.addProperty("type", "minecraft:count");
-        count.addProperty("count", oreType.equals("diamond") ? 20 : 50);
+
+        // Use custom vein count if configured, otherwise use defaults
+        int veinCount;
+        if (planet.oreVeinCounts.containsKey(oreType)) {
+            veinCount = planet.oreVeinCounts.get(oreType);
+        } else {
+            // Default vein counts per ore type
+            switch (oreType) {
+                case "diamond":
+                    veinCount = 1;  // Rare
+                    break;
+                case "gold":
+                    veinCount = 2;  // Uncommon
+                    break;
+                case "iron":
+                    veinCount = 10; // Common
+                    break;
+                case "copper":
+                    veinCount = 8;  // Common
+                    break;
+                case "coal":
+                    veinCount = 12; // Very common
+                    break;
+                case "redstone":
+                    veinCount = 4;  // Uncommon
+                    break;
+                case "lapis":
+                    veinCount = 2;  // Rare
+                    break;
+                case "emerald":
+                    veinCount = 1;  // Very rare
+                    break;
+                // Mekanism ores
+                case "osmium":
+                    veinCount = 8;  // Common like iron
+                    break;
+                case "tin":
+                    veinCount = 6;  // Fairly common
+                    break;
+                case "uranium":
+                    veinCount = 2;  // Rare
+                    break;
+                case "fluorite":
+                    veinCount = 4;  // Uncommon
+                    break;
+                case "lead":
+                    veinCount = 5;  // Medium
+                    break;
+                // Immersive Engineering ores
+                case "aluminum":
+                case "bauxite":
+                    veinCount = 7;  // Common
+                    break;
+                case "silver":
+                    veinCount = 3;  // Uncommon
+                    break;
+                case "nickel":
+                    veinCount = 5;  // Medium
+                    break;
+                default:
+                    veinCount = 5;  // Default for unknown ores
+            }
+        }
+
+        count.addProperty("count", veinCount);
         placement.add(count);
 
         // In square placement
@@ -2771,11 +2980,23 @@ public class PlanetMaker {
             JsonArray stepFeatures = new JsonArray();
 
             if (step.equals("underground_ores") && planet.oreVeinsEnabled) {
-                // Add simplified ore features using standard minecraft:ore type
-                // These will be placed features that target planet-specific blocks
-                stepFeatures.add("adastramekanized:" + planet.name + "_ore_iron_simple");
-                stepFeatures.add("adastramekanized:" + planet.name + "_ore_diamond_simple");
-                // Add more ore types as needed
+                // Add ore features for all configured ore types
+                if (!planet.oreVeinCounts.isEmpty()) {
+                    // Add only configured ore types
+                    for (String oreType : planet.oreVeinCounts.keySet()) {
+                        stepFeatures.add("adastramekanized:" + planet.name + "_ore_" + oreType + "_simple");
+                    }
+                } else {
+                    // Default ore features if none configured
+                    stepFeatures.add("adastramekanized:" + planet.name + "_ore_iron_simple");
+                    stepFeatures.add("adastramekanized:" + planet.name + "_ore_copper_simple");
+                    stepFeatures.add("adastramekanized:" + planet.name + "_ore_gold_simple");
+                    stepFeatures.add("adastramekanized:" + planet.name + "_ore_diamond_simple");
+                    stepFeatures.add("adastramekanized:" + planet.name + "_ore_coal_simple");
+                    stepFeatures.add("adastramekanized:" + planet.name + "_ore_redstone_simple");
+                    stepFeatures.add("adastramekanized:" + planet.name + "_ore_lapis_simple");
+                    stepFeatures.add("adastramekanized:" + planet.name + "_ore_emerald_simple");
+                }
             }
 
             features.add(stepFeatures);

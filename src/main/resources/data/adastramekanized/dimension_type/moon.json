@@ -1,5 +1,5 @@
 {
-  "ambient_light": 0.0,
+  "ambient_light": 0.04,
   "effects": "adastramekanized:moon",
   "has_ceiling": false,
   "has_skylight": false,

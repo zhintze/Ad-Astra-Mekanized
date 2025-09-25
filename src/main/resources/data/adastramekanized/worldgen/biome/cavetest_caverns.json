@@ -1,10 +1,10 @@
 {
-  "temperature": -0.6,
-  "downfall": -0.8,
+  "temperature": 0.0,
+  "downfall": 0.0,
   "has_precipitation": false,
   "effects": {
-    "fog_color": 657930,
-    "sky_color": 657930,
+    "fog_color": 65280,
+    "sky_color": 7907327,
     "water_color": 4159204,
     "water_fog_color": 329011
   },
@@ -25,12 +25,10 @@
     [],
     [],
     [
-      "adastramekanized:moon_ore_gold_simple",
-      "adastramekanized:moon_ore_diamond_simple",
-      "adastramekanized:moon_ore_iron_simple",
-      "adastramekanized:moon_ore_copper_simple",
-      "adastramekanized:moon_ore_coal_simple",
-      "adastramekanized:moon_ore_redstone_simple"
+      "adastramekanized:cavetest_ore_tin_simple",
+      "adastramekanized:cavetest_ore_osmium_simple",
+      "adastramekanized:cavetest_ore_lapis_simple",
+      "adastramekanized:cavetest_ore_uranium_simple"
     ],
     [],
     [],
