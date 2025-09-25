@@ -1,19 +1,19 @@
-[24Sep2025 16:36:44.201] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Starting planet generation with PlanetMaker...
-[24Sep2025 16:36:44.229] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating planets using PlanetMaker system...
-[24Sep2025 16:36:44.252] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: moon
-[24Sep2025 16:36:44.253] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Writing configured feature to: src/main/resources/data/adastramekanized/worldgen/configured_feature/moon_ore_iron_simple.json
-[24Sep2025 16:36:44.254] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Writing placed feature to: src/main/resources/data/adastramekanized/worldgen/placed_feature/moon_ore_iron_simple.json
-[24Sep2025 16:36:44.254] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Writing configured feature to: src/main/resources/data/adastramekanized/worldgen/configured_feature/moon_ore_diamond_simple.json
-[24Sep2025 16:36:44.255] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Writing placed feature to: src/main/resources/data/adastramekanized/worldgen/placed_feature/moon_ore_diamond_simple.json
-[24Sep2025 16:36:44.255] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: moon
-[24Sep2025 16:36:44.256] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: moon
-[24Sep2025 16:36:44.260] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: cavetest
-[24Sep2025 16:36:44.260] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Writing configured feature to: src/main/resources/data/adastramekanized/worldgen/configured_feature/cavetest_ore_iron_simple.json
-[24Sep2025 16:36:44.260] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Writing placed feature to: src/main/resources/data/adastramekanized/worldgen/placed_feature/cavetest_ore_iron_simple.json
-[24Sep2025 16:36:44.261] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Writing configured feature to: src/main/resources/data/adastramekanized/worldgen/configured_feature/cavetest_ore_diamond_simple.json
-[24Sep2025 16:36:44.261] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Writing placed feature to: src/main/resources/data/adastramekanized/worldgen/placed_feature/cavetest_ore_diamond_simple.json
-[24Sep2025 16:36:44.261] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: cavetest
-[24Sep2025 16:36:44.262] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: cavetest
-[24Sep2025 16:36:44.262] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating 2 planets
-[24Sep2025 16:36:44.262] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Planet generation uses multi-noise biome sources for variety
-[24Sep2025 16:36:44.262] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Planet generation completed successfully!
+[24Sep2025 18:08:41.146] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Starting planet generation with PlanetMaker...
+[24Sep2025 18:08:41.164] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating planets using PlanetMaker system...
+[24Sep2025 18:08:41.179] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: moon
+[24Sep2025 18:08:41.179] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Writing configured feature to: src/main/resources/data/adastramekanized/worldgen/configured_feature/moon_ore_iron_simple.json
+[24Sep2025 18:08:41.180] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Writing placed feature to: src/main/resources/data/adastramekanized/worldgen/placed_feature/moon_ore_iron_simple.json
+[24Sep2025 18:08:41.180] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Writing configured feature to: src/main/resources/data/adastramekanized/worldgen/configured_feature/moon_ore_diamond_simple.json
+[24Sep2025 18:08:41.181] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Writing placed feature to: src/main/resources/data/adastramekanized/worldgen/placed_feature/moon_ore_diamond_simple.json
+[24Sep2025 18:08:41.181] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: moon
+[24Sep2025 18:08:41.182] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: moon
+[24Sep2025 18:08:41.185] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: cavetest
+[24Sep2025 18:08:41.186] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Writing configured feature to: src/main/resources/data/adastramekanized/worldgen/configured_feature/cavetest_ore_iron_simple.json
+[24Sep2025 18:08:41.186] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Writing placed feature to: src/main/resources/data/adastramekanized/worldgen/placed_feature/cavetest_ore_iron_simple.json
+[24Sep2025 18:08:41.186] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Writing configured feature to: src/main/resources/data/adastramekanized/worldgen/configured_feature/cavetest_ore_diamond_simple.json
+[24Sep2025 18:08:41.187] [main/DEBUG] [com.hecookin.adastramekanized.AdAstraMekanized/]: Writing placed feature to: src/main/resources/data/adastramekanized/worldgen/placed_feature/cavetest_ore_diamond_simple.json
+[24Sep2025 18:08:41.187] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: cavetest
+[24Sep2025 18:08:41.187] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: cavetest
+[24Sep2025 18:08:41.187] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating 2 planets
+[24Sep2025 18:08:41.187] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Planet generation uses multi-noise biome sources for variety
+[24Sep2025 18:08:41.188] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Planet generation completed successfully!

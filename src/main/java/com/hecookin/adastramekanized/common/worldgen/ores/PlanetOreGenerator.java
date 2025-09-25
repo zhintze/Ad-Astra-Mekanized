@@ -2,6 +2,7 @@ package com.hecookin.adastramekanized.common.worldgen.ores;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.api.planets.generation.PlanetGenerationSettings;
+import com.hecookin.adastramekanized.common.registry.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -22,6 +23,7 @@ import java.util.List;
  * - Depth-based ore generation
  * - Cluster and vein generation patterns
  * - Resource scarcity/abundance based on planet type
+ * - Support for planet stone blocks (approach 2: force stone ore variants)
  */
 public class PlanetOreGenerator {
 
@@ -297,12 +299,49 @@ public class PlanetOreGenerator {
             return currentBlock.getBlock() == targetReplaceBlock.getBlock();
         }
 
-        // Otherwise, replace stone-like blocks
+        // TODO: Consider creating planet-specific ore variants with colored textures matching moon blocks
+        //       (e.g., gray moon_iron_ore, red mars_iron_ore) for better visual consistency
+
+        // Otherwise, replace stone-like blocks including vanilla and planet stones
         return currentBlock.getBlock() == Blocks.STONE ||
                currentBlock.getBlock() == Blocks.DEEPSLATE ||
                currentBlock.getBlock() == Blocks.GRANITE ||
                currentBlock.getBlock() == Blocks.DIORITE ||
-               currentBlock.getBlock() == Blocks.ANDESITE;
+               currentBlock.getBlock() == Blocks.ANDESITE ||
+                currentBlock.getBlock() == Blocks.BLACKSTONE ||
+                currentBlock.getBlock() == Blocks.DIRT ||
+                currentBlock.getBlock() == Blocks.TERRACOTTA ||
+                currentBlock.getBlock() == Blocks.BLACK_TERRACOTTA ||
+                currentBlock.getBlock() == Blocks.BLUE_TERRACOTTA ||
+                currentBlock.getBlock() == Blocks.RED_TERRACOTTA ||
+                currentBlock.getBlock() == Blocks.CYAN_TERRACOTTA ||
+                currentBlock.getBlock() == Blocks.ORANGE_TERRACOTTA ||
+                currentBlock.getBlock() == Blocks.GREEN_TERRACOTTA ||
+                currentBlock.getBlock() == Blocks.PURPLE_TERRACOTTA ||
+                currentBlock.getBlock() == Blocks.LIGHT_BLUE_TERRACOTTA ||
+                currentBlock.getBlock() == Blocks.WHITE_TERRACOTTA ||
+                currentBlock.getBlock() == Blocks.BROWN_TERRACOTTA ||
+                currentBlock.getBlock() == Blocks.PINK_TERRACOTTA ||
+                currentBlock.getBlock() == Blocks.MAGENTA_TERRACOTTA ||
+                currentBlock.getBlock() == Blocks.LIME_TERRACOTTA ||
+                currentBlock.getBlock() == Blocks.GRAY_TERRACOTTA ||
+                currentBlock.getBlock() == Blocks.LIGHT_GRAY_TERRACOTTA ||
+                // Planet stone blocks - approach 2: force stone ore variants
+               currentBlock.getBlock() == ModBlocks.MOON_STONE.get() ||
+               currentBlock.getBlock() == ModBlocks.MOON_COBBLESTONE.get() ||
+               currentBlock.getBlock() == ModBlocks.MOON_DEEPSLATE.get() ||
+               currentBlock.getBlock() == ModBlocks.MARS_STONE.get() ||
+               currentBlock.getBlock() == ModBlocks.MARS_COBBLESTONE.get() ||
+               currentBlock.getBlock() == ModBlocks.CONGLOMERATE.get() ||
+               currentBlock.getBlock() == ModBlocks.POLISHED_CONGLOMERATE.get() ||
+               currentBlock.getBlock() == ModBlocks.VENUS_STONE.get() ||
+               currentBlock.getBlock() == ModBlocks.VENUS_COBBLESTONE.get() ||
+               currentBlock.getBlock() == ModBlocks.VENUS_SANDSTONE.get() ||
+               currentBlock.getBlock() == ModBlocks.MERCURY_STONE.get() ||
+               currentBlock.getBlock() == ModBlocks.MERCURY_COBBLESTONE.get() ||
+               currentBlock.getBlock() == ModBlocks.GLACIO_STONE.get() ||
+               currentBlock.getBlock() == ModBlocks.GLACIO_COBBLESTONE.get() ||
+               currentBlock.getBlock() == ModBlocks.SKY_STONE.get();
     }
 
     /**

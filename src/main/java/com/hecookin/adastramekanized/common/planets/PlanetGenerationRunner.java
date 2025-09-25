@@ -93,9 +93,9 @@ public class PlanetGenerationRunner {
             .terrainFactor(1.1f)            // Slightly enhanced terrain
             // Surface configuration - use vanilla blocks for ore compatibility
             .surfaceBlock("adastramekanized:moon_sand")
-            .subsurfaceBlock("minecraft:stone")  // Use vanilla stone for ore compatibility
+            .subsurfaceBlock("adastramekanized:moon_stone")  // Use vanilla stone for ore compatibility
             .deepBlock("minecraft:deepslate")
-            .defaultBlock("minecraft:stone")  // Use vanilla stone for ore compatibility
+            .defaultBlock("adastramekanized:moon_stone")  // Use vanilla stone for ore compatibility
             .bedrockBlock("minecraft:bedrock")  // Add bedrock floor for moon
             // World structure
             .worldDimensions(-32, 256)  // Reduced underground space
@@ -139,10 +139,10 @@ public class PlanetGenerationRunner {
             .ridgeScale(0.3f)
             .heightVariation(2f, 1f, 0.5f, 0.3f)
             // Surface configuration
-            .surfaceBlock("minecraft:grass_block")
-            .subsurfaceBlock("minecraft:stone")
-            .deepBlock("minecraft:deepslate")
-            .defaultBlock("minecraft:stone")
+            .surfaceBlock("minecraft:light_blue_terracotta")
+            .subsurfaceBlock("minecraft:blue_terracotta")
+            .deepBlock("minecraft:black_terracotta")
+            .defaultBlock("minecraft:blue_terracotta")
             .bedrockBlock("minecraft:bedrock")
             // World structure
             .worldDimensions(-64, 320)

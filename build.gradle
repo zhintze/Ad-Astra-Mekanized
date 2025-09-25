@@ -140,7 +140,7 @@ dependencies {
 
 
     // FTB
-    //implementation "curse.maven:FTBLibrary-404465:6016745"
+    implementation "curse.maven:FTBLibrary-404465:6016745"
    // implementation "curse.maven:FTBChunks-314906:5968500"
     //implementation "curse.maven:FTBTeams-404468:5882217"
     //implementation "curse.maven:FTBXMod-889915:6048646"
