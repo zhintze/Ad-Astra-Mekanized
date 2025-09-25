@@ -152,5 +152,10 @@
 
   "block.adastramekanized.oxygen_distributor": "Oxygen Distributor",
   "block.adastramekanized.oxygen_loader": "Oxygen Loader",
-  "block.adastramekanized.rocket_assembly_station": "Rocket Assembly Station"
+  "block.adastramekanized.rocket_assembly_station": "Rocket Assembly Station",
+
+  "warning.adastramekanized.no_oxygen": "WARNING: NO OXYGEN!",
+
+  "death.attack.oxygen_deprivation": "%s suffocated in the vacuum of space",
+  "death.attack.oxygen_deprivation.player": "%s ran out of oxygen while fighting %s"
 }

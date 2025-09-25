@@ -1,0 +1,10 @@
+{
+  "values": [
+    "minecraft:iron_golem",
+    "minecraft:snow_golem",
+    "minecraft:allay",
+    "minecraft:armor_stand",
+    "minecraft:ender_dragon",
+    "minecraft:wither"
+  ]
+}

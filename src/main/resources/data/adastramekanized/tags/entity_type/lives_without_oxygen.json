@@ -1,0 +1,27 @@
+{
+  "values": [
+    "minecraft:zombie",
+    "minecraft:husk",
+    "minecraft:drowned",
+    "minecraft:zombie_villager",
+    "minecraft:zombified_piglin",
+    "minecraft:skeleton",
+    "minecraft:stray",
+    "minecraft:wither_skeleton",
+    "minecraft:wither",
+    "minecraft:phantom",
+    "minecraft:blaze",
+    "minecraft:magma_cube",
+    "minecraft:ghast",
+    "minecraft:enderman",
+    "minecraft:endermite",
+    "minecraft:shulker",
+    "minecraft:vex",
+    "minecraft:guardian",
+    "minecraft:elder_guardian",
+    "minecraft:iron_golem",
+    "minecraft:snow_golem",
+    "#minecraft:skeletons",
+    "#minecraft:zombies"
+  ]
+}

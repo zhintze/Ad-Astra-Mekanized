@@ -4,10 +4,12 @@ import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.api.IChemicalIntegration;
 import com.hecookin.adastramekanized.api.IEnergyIntegration;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.fml.ModList;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 /**
@@ -29,6 +31,8 @@ public class MekanismIntegration implements IChemicalIntegration, IEnergyIntegra
     private Class<?> energyContainerClass;
     private Class<?> chemicalHandlerClass;
     private Class<?> oxygenChemicalClass;
+    private Class<?> basicChemicalTankClass;
+    private Object oxygenInstance;
 
     // Reflected methods (cached for performance)
     private Method getEnergyStoredMethod;
@@ -57,6 +61,7 @@ public class MekanismIntegration implements IChemicalIntegration, IEnergyIntegra
             chemicalStackClass = Class.forName("mekanism.api.chemical.ChemicalStack");
             energyContainerClass = Class.forName("mekanism.api.energy.IEnergyContainer");
             chemicalHandlerClass = Class.forName("mekanism.api.chemical.IChemicalHandler");
+            basicChemicalTankClass = Class.forName("mekanism.api.chemical.BasicChemicalTank");
 
             // Load energy methods
             getEnergyStoredMethod = energyContainerClass.getMethod("getEnergyStored");
@@ -85,10 +90,18 @@ public class MekanismIntegration implements IChemicalIntegration, IEnergyIntegra
         try {
             // Try to access Mekanism's built-in chemicals
             Class<?> mekanismChemicalsClass = Class.forName("mekanism.common.registries.MekanismChemicals");
-            // We'll implement this when we know the exact structure
-            AdAstraMekanized.LOGGER.debug("Found MekanismChemicals class, oxygen integration possible");
-        } catch (ClassNotFoundException e) {
-            AdAstraMekanized.LOGGER.debug("MekanismChemicals not accessible, will use custom registration");
+
+            // Get the OXYGEN field
+            java.lang.reflect.Field oxygenField = mekanismChemicalsClass.getField("OXYGEN");
+            Object deferredChemical = oxygenField.get(null);
+
+            // Get the actual chemical from the deferred holder
+            Method getMethod = deferredChemical.getClass().getMethod("get");
+            oxygenInstance = getMethod.invoke(deferredChemical);
+
+            AdAstraMekanized.LOGGER.debug("Successfully loaded Mekanism oxygen chemical");
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.debug("Could not load Mekanism oxygen: {}", e.getMessage());
         }
     }
 
@@ -367,6 +380,102 @@ public class MekanismIntegration implements IChemicalIntegration, IEnergyIntegra
         } catch (Exception e) {
             AdAstraMekanized.LOGGER.error("Error extracting energy: {}", e.getMessage());
             return 0;
+        }
+    }
+
+    // === Custom Methods for Oxygen Distributor ===
+
+    /**
+     * Create a new oxygen tank for the distributor
+     */
+    public Object createOxygenTank(long capacity) {
+        if (!isChemicalSystemAvailable() || basicChemicalTankClass == null) {
+            return null;
+        }
+
+        try {
+            // Create a BasicChemicalTank with the specified capacity
+            Constructor<?> constructor = basicChemicalTankClass.getConstructor(long.class, chemicalClass);
+            return constructor.newInstance(capacity, oxygenInstance);
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.error("Failed to create oxygen tank: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Get the amount of oxygen stored in a tank
+     */
+    public long getOxygenAmount(Object tank) {
+        if (tank == null || chemicalStackClass == null) {
+            return 0;
+        }
+
+        try {
+            Method getStackMethod = tank.getClass().getMethod("getStack");
+            Object chemicalStack = getStackMethod.invoke(tank);
+
+            Method getAmountMethod = chemicalStackClass.getMethod("getAmount");
+            return (Long) getAmountMethod.invoke(chemicalStack);
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.error("Failed to get oxygen amount: {}", e.getMessage());
+            return 0;
+        }
+    }
+
+    /**
+     * Extract oxygen from a tank
+     */
+    public long extractOxygen(Object tank, long amount) {
+        if (tank == null || amount <= 0) {
+            return 0;
+        }
+
+        try {
+            Method extractMethod = tank.getClass().getMethod("extract", long.class, boolean.class);
+            Object extractedStack = extractMethod.invoke(tank, amount, false);
+
+            if (extractedStack != null && chemicalStackClass.isInstance(extractedStack)) {
+                Method getAmountMethod = chemicalStackClass.getMethod("getAmount");
+                return (Long) getAmountMethod.invoke(extractedStack);
+            }
+            return 0;
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.error("Failed to extract oxygen: {}", e.getMessage());
+            return 0;
+        }
+    }
+
+    /**
+     * Serialize a chemical tank to NBT
+     */
+    public CompoundTag serializeChemicalTank(Object tank) {
+        if (tank == null) {
+            return null;
+        }
+
+        try {
+            Method serializeMethod = tank.getClass().getMethod("serializeNBT");
+            return (CompoundTag) serializeMethod.invoke(tank);
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.error("Failed to serialize chemical tank: {}", e.getMessage());
+            return new CompoundTag();
+        }
+    }
+
+    /**
+     * Deserialize a chemical tank from NBT
+     */
+    public void deserializeChemicalTank(Object tank, CompoundTag tag) {
+        if (tank == null || tag == null) {
+            return;
+        }
+
+        try {
+            Method deserializeMethod = tank.getClass().getMethod("deserializeNBT", CompoundTag.class);
+            deserializeMethod.invoke(tank, tag);
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.error("Failed to deserialize chemical tank: {}", e.getMessage());
         }
     }
 }
