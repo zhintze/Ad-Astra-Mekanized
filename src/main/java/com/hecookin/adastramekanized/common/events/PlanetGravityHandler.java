@@ -9,11 +9,16 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ThrowableProjectile;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
@@ -90,10 +95,23 @@ public class PlanetGravityHandler {
 
         if (level.isClientSide()) return;
 
-        // Apply to all living entities
-        if (!(entity instanceof LivingEntity living)) return;
-
         float gravity = getGravity(level);
+
+        // Handle living entities with attributes
+        if (entity instanceof LivingEntity living) {
+            applyLivingEntityGravity(living, gravity);
+        }
+        // Handle projectiles differently - they don't have attributes
+        else if (entity instanceof Projectile || entity instanceof ItemEntity) {
+            // Store gravity value in entity's persistent data for use in tick event
+            entity.getPersistentData().putFloat("adastramekanized:planet_gravity", gravity);
+        }
+    }
+
+    /**
+     * Apply gravity to living entities using attributes
+     */
+    private static void applyLivingEntityGravity(LivingEntity living, float gravity) {
 
         // Apply gravity attribute modifier
         AttributeInstance gravityAttribute = living.getAttribute(Attributes.GRAVITY);
@@ -113,8 +131,8 @@ public class PlanetGravityHandler {
                 );
 
                 gravityAttribute.addPermanentModifier(modifier);
-                AdAstraMekanized.LOGGER.debug("Applied gravity modifier {} to {} in {}",
-                    gravity, entity.getType(), level.dimension().location());
+                AdAstraMekanized.LOGGER.debug("Applied gravity modifier {} to {} ",
+                    gravity, living.getType());
             }
         }
 
@@ -165,5 +183,38 @@ public class PlanetGravityHandler {
                 fallDamageAttribute.addPermanentModifier(modifier);
             }
         }
+    }
+
+    /**
+     * Apply gravity effects to projectiles and items during their tick
+     * Since they don't have gravity attributes, we modify their motion directly
+     */
+    @SubscribeEvent
+    public static void onEntityTick(EntityTickEvent.Post event) {
+        Entity entity = event.getEntity();
+
+        // Only process on server side
+        if (entity.level().isClientSide()) return;
+
+        // Only process projectiles and dropped items
+        if (!(entity instanceof Projectile) && !(entity instanceof ItemEntity)) return;
+
+        // Get stored gravity value
+        float gravity = entity.getPersistentData().getFloat("adastramekanized:planet_gravity");
+        if (gravity == 0.0f || gravity == 1.0f) return; // No modification needed
+
+        // Don't modify if in water/lava or no gravity
+        if (entity.isInWater() || entity.isInLava() || entity.isNoGravity()) return;
+
+        Vec3 motion = entity.getDeltaMovement();
+
+        // Calculate gravity adjustment
+        // Standard gravity for projectiles/items is about 0.04-0.08 per tick
+        double standardGravity = entity instanceof ThrowableProjectile ? 0.03 : 0.04;
+        double targetGravity = standardGravity * gravity;
+        double gravityAdjustment = targetGravity - standardGravity;
+
+        // Apply the gravity adjustment to Y velocity
+        entity.setDeltaMovement(motion.x, motion.y + gravityAdjustment, motion.z);
     }
 }
