@@ -1,0 +1,70 @@
+{
+  "temperature": -0.2,
+  "downfall": -0.7,
+  "has_precipitation": false,
+  "effects": {
+    "fog_color": 13468991,
+    "sky_color": 13789470,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "spawners": {
+    "monster": [
+      {
+        "type": "minecraft:husk",
+        "minCount": 2,
+        "maxCount": 4,
+        "weight": 50
+      },
+      {
+        "type": "minecraft:spider",
+        "minCount": 1,
+        "maxCount": 2,
+        "weight": 30
+      },
+      {
+        "type": "minecraft:phantom",
+        "minCount": 1,
+        "maxCount": 2,
+        "weight": 10
+      },
+      {
+        "type": "minecraft:enderman",
+        "minCount": 1,
+        "maxCount": 1,
+        "weight": 15
+      }
+    ],
+    "creature": [],
+    "ambient": [],
+    "water_creature": [],
+    "water_ambient": [],
+    "misc": []
+  },
+  "spawn_costs": {},
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "adastramekanized:mars_ore_iron_simple",
+      "adastramekanized:mars_ore_copper_simple",
+      "adastramekanized:mars_ore_gold_simple",
+      "adastramekanized:mars_ore_diamond_simple",
+      "adastramekanized:mars_ore_coal_simple",
+      "adastramekanized:mars_ore_redstone_simple",
+      "adastramekanized:mars_ore_lapis_simple",
+      "adastramekanized:mars_ore_emerald_simple"
+    ],
+    [],
+    [],
+    [],
+    []
+  ],
+  "carvers": {
+    "air": []
+  }
+}

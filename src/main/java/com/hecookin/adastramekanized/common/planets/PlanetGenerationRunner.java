@@ -326,7 +326,9 @@ public class PlanetGenerationRunner {
             .ambientLight(0.04f)  // No ambient light for proper mob spawning
             // Sun and spawn settings
             .hasSkylight(false)  // No sun damage on the Moon
-            .monsterSpawnLightLevel(15);  // Monsters spawn in any light level
+            .monsterSpawnLightLevel(15)  // Monsters spawn in any light level
+            // Physical properties
+            .gravity(0.166f);  // Moon has 1/6 Earth gravity
 
         // Apply Moon mob preset
         applyMoonMobPreset(moon);
@@ -334,6 +336,7 @@ public class PlanetGenerationRunner {
 
         // CAVETEST PLANET - Extreme cave generation test
         PlanetMaker.PlanetBuilder cavetest = PlanetMaker.planet("cavetest")
+            .gravity(0.5f)  // Half gravity for fun cave exploration
             // Moderate terrain for cave visibility
             .continentalScale(0.5f)
             .erosionScale(1.0f)
@@ -401,10 +404,9 @@ public class PlanetGenerationRunner {
 
         cavetest.generate();
 
-        // Other planets temporarily disabled to focus on Moon stability
-        /*
         // Mars planet with advanced atmospheric controls and varied terrain
         PlanetMaker.planet("mars")
+            .gravity(0.38f)  // Mars has 3/8 Earth gravity
             .continentalScale(0.4f)  // Very low for fully connected Mars terrain
             .erosionScale(0.8f)      // Minimal erosion to prevent separation
             .ridgeScale(0.2f)        // Almost no ridges for stability
@@ -465,6 +467,7 @@ public class PlanetGenerationRunner {
         // WARNING: This planet pushes EVERY parameter to extreme values!
         // Use this as a reference for the maximum safe bounds of each setting.
         PlanetMaker.planet("hemphy")
+                .gravity(2.0f)  // Double gravity for stress testing
                 // ========== STABILIZED TERRAIN SHAPING ==========
                 .continentalScale(0.5f)         // Very low for connected hellscape
                 .erosionScale(1.0f)             // Minimal erosion for stable terrain
@@ -618,6 +621,7 @@ public class PlanetGenerationRunner {
         // ========== ORE TEST PLANET - OVERWORLD-LIKE SETTINGS ==========
         // Adjusted for realistic Overworld-style terrain with proper ore generation
         PlanetMaker.planet("oretest")
+                .gravity(1.0f)  // Earth-like gravity
                 // ========== REALISTIC TERRAIN SHAPING ==========
                 .continentalScale(2.0f)         // Lower for connected landmasses
                 .erosionScale(3.0f)             // Minimal erosion for stable terrain
@@ -760,7 +764,6 @@ public class PlanetGenerationRunner {
                 .addCaveDecoration("minecraft:iron_ore", 0.15f, -64, 72, false)           // Iron ore deposits
                 .addCaveDecoration("minecraft:copper_ore", 0.12f, -16, 112, false)        // Copper ore deposits
                 .generate();
-        */
 
     }
 }

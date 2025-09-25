@@ -71,10 +71,12 @@ public class PlanetMaker {
                 if (biomeEntry.biomeName.startsWith("adastramekanized:")) {
                     // Already has our namespace, just use it directly
                     customBiomeName = biomeEntry.biomeName;
+                } else if (biomeEntry.biomeName.startsWith("minecraft:")) {
+                    // Use vanilla biomes directly without modification
+                    customBiomeName = biomeEntry.biomeName;
                 } else {
-                    // Add our namespace and planet prefix
-                    String biomeName = biomeEntry.biomeName.replace("minecraft:", "");
-                    customBiomeName = "adastramekanized:" + planet.name + "_" + biomeName;
+                    // Add our namespace and planet prefix for custom biomes
+                    customBiomeName = "adastramekanized:" + planet.name + "_" + biomeEntry.biomeName;
                 }
 
                 biomes.add(createBiomeEntry(
@@ -321,6 +323,9 @@ public class PlanetMaker {
         private boolean hasAtmosphere = true;
         private float ambientLight = 0.1f;
 
+        // Planet physical properties
+        private float gravity = 1.0f; // Gravity multiplier (1.0 = Earth gravity)
+
         private PlanetBuilder(String name) {
             this.name = name;
             // Generate unique seed from planet name hash + constant offset for deterministic results
@@ -330,6 +335,15 @@ public class PlanetMaker {
         // Noise parameter configuration methods
         public PlanetBuilder seed(long seed) {
             this.seed = seed;
+            return this;
+        }
+
+        /**
+         * Set the gravity multiplier for this planet
+         * @param gravity Gravity multiplier (1.0 = Earth gravity, 0.166 = Moon, 0.38 = Mars)
+         */
+        public PlanetBuilder gravity(float gravity) {
+            this.gravity = Math.max(0.01f, Math.min(10.0f, gravity)); // Clamp between 0.01 and 10.0
             return this;
         }
 
@@ -1741,7 +1755,7 @@ public class PlanetMaker {
 
         // Basic properties
         JsonObject properties = new JsonObject();
-        properties.addProperty("gravity", 1.0f);
+        properties.addProperty("gravity", planet.gravity);
         properties.addProperty("temperature", 20.0f);
         properties.addProperty("day_length", 24.0f);
         properties.addProperty("orbit_distance", 1000);

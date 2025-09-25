@@ -1,0 +1,48 @@
+{
+  "type": "adastramekanized:mars",
+  "generator": {
+    "type": "minecraft:noise",
+    "settings": "adastramekanized:mars",
+    "biome_source": {
+      "type": "minecraft:multi_noise",
+      "biomes": [
+        {
+          "biome": "adastramekanized:mars_highlands",
+          "parameters": {
+            "temperature": -0.2,
+            "humidity": -0.7,
+            "continentalness": 0.6,
+            "erosion": -0.1,
+            "depth": 0.5,
+            "weirdness": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "adastramekanized:mars_canyons",
+          "parameters": {
+            "temperature": 0.1,
+            "humidity": -0.6,
+            "continentalness": 0.2,
+            "erosion": 0.4,
+            "depth": -0.3,
+            "weirdness": -0.1,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "adastramekanized:mars_polar",
+          "parameters": {
+            "temperature": -0.9,
+            "humidity": -0.8,
+            "continentalness": 0.8,
+            "erosion": 0.0,
+            "depth": 0.2,
+            "weirdness": 0.3,
+            "offset": 0.0
+          }
+        }
+      ]
+    }
+  }
+}

@@ -12,7 +12,7 @@
       "equip_chance": 1.0
     },
     {
-      "mob_id": "minecraft:zombie",
+      "mob_id": "minecraft:skeleton",
       "equipment": {
         "mainhand": "minecraft:bow",
         "chestplate": "minecraft:chainmail_chestplate",
