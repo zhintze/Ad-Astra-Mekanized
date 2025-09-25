@@ -190,7 +190,7 @@ public class PlanetGravityHandler {
      * Since they don't have gravity attributes, we modify their motion directly
      */
     @SubscribeEvent
-    public static void onEntityTick(EntityTickEvent.Post event) {
+    public static void onEntityTick(EntityTickEvent.Pre event) {
         Entity entity = event.getEntity();
 
         // Only process on server side
@@ -199,9 +199,20 @@ public class PlanetGravityHandler {
         // Only process projectiles and dropped items
         if (!(entity instanceof Projectile) && !(entity instanceof ItemEntity)) return;
 
+        // Skip if already processed this tick (prevent double processing)
+        if (entity.getPersistentData().getBoolean("adastramekanized:gravity_processed_this_tick")) {
+            return;
+        }
+
         // Get stored gravity value
         float gravity = entity.getPersistentData().getFloat("adastramekanized:planet_gravity");
-        if (gravity == 0.0f || gravity == 1.0f) return; // No modification needed
+        if (gravity == 0.0f) {
+            // If not set yet, get it from the level
+            gravity = getGravity(entity.level());
+            entity.getPersistentData().putFloat("adastramekanized:planet_gravity", gravity);
+        }
+
+        if (gravity == 1.0f) return; // No modification needed for Earth gravity
 
         // Don't modify if in water/lava or no gravity
         if (entity.isInWater() || entity.isInLava() || entity.isNoGravity()) return;
@@ -209,12 +220,45 @@ public class PlanetGravityHandler {
         Vec3 motion = entity.getDeltaMovement();
 
         // Calculate gravity adjustment
-        // Standard gravity for projectiles/items is about 0.04-0.08 per tick
-        double standardGravity = entity instanceof ThrowableProjectile ? 0.03 : 0.04;
-        double targetGravity = standardGravity * gravity;
-        double gravityAdjustment = targetGravity - standardGravity;
+        // Different entity types have different base gravity values
+        double gravityAdjustment = 0.0;
+
+        if (entity instanceof ThrowableProjectile) {
+            // For throwable projectiles (snowballs, eggs, ender pearls)
+            // They typically have 0.03 gravity
+            gravityAdjustment = 0.03 * (gravity - 1.0);
+        } else if (entity instanceof ItemEntity) {
+            // Items have 0.04 gravity
+            gravityAdjustment = 0.04 * (gravity - 1.0);
+        } else if (entity instanceof Projectile) {
+            // Other projectiles (arrows, etc) have varying gravity
+            // Arrows have about 0.05 gravity
+            gravityAdjustment = 0.05 * (gravity - 1.0);
+        }
 
         // Apply the gravity adjustment to Y velocity
-        entity.setDeltaMovement(motion.x, motion.y + gravityAdjustment, motion.z);
+        if (gravityAdjustment != 0.0) {
+            entity.setDeltaMovement(motion.x, motion.y - gravityAdjustment, motion.z);
+
+            // Mark as processed to avoid double-processing
+            entity.getPersistentData().putBoolean("adastramekanized:gravity_processed_this_tick", true);
+
+            // Debug logging for testing
+            if (entity.tickCount % 20 == 0) { // Log once per second
+                AdAstraMekanized.LOGGER.debug("Applying gravity {} to {} at Y velocity {}",
+                    gravity, entity.getType(), motion.y - gravityAdjustment);
+            }
+        }
+    }
+
+    /**
+     * Reset the gravity processed flag at the end of each tick
+     */
+    @SubscribeEvent
+    public static void onEntityTickPost(EntityTickEvent.Post event) {
+        Entity entity = event.getEntity();
+        if ((entity instanceof Projectile || entity instanceof ItemEntity) && !entity.level().isClientSide()) {
+            entity.getPersistentData().remove("adastramekanized:gravity_processed_this_tick");
+        }
     }
 }
