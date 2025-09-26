@@ -2194,8 +2194,8 @@ public class PlanetMaker {
             JsonObject noodle = new JsonObject();
             noodle.addProperty("type", "minecraft:noise");
             noodle.addProperty("noise", "minecraft:noodle");
-            noodle.addProperty("xz_scale", 1.0 / (planet.caveSize * 0.5));
-            noodle.addProperty("y_scale", 1.0 / (planet.caveSize * planet.caveYScale * 0.5));
+            noodle.addProperty("xz_scale", 0.1 / (planet.caveSize * 0.5));
+            noodle.addProperty("y_scale", 0.1 / (planet.caveSize * planet.caveYScale * 0.5));
             caveTypes.add(noodle);
         }
 

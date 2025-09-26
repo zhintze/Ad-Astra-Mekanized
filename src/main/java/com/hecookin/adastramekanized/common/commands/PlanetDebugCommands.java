@@ -3,7 +3,7 @@ package com.hecookin.adastramekanized.common.commands;
 import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.api.planets.Planet;
 import com.hecookin.adastramekanized.api.planets.PlanetRegistry;
-import com.hecookin.adastramekanized.common.blockentities.machines.TileEntityOxygenDistributor;
+import com.hecookin.adastramekanized.common.blockentities.machines.MekanismBasedOxygenDistributor;
 import com.hecookin.adastramekanized.common.blockentities.machines.OxygenDistributorBlockEntity;
 import com.hecookin.adastramekanized.common.planets.PlanetManager;
 import com.hecookin.adastramekanized.common.teleportation.PlanetTeleportationSystem;
@@ -333,7 +333,7 @@ public class PlanetDebugCommands {
                 for (int z = -10; z <= 10; z++) {
                     BlockPos checkPos = pos.offset(x, y, z);
                     BlockEntity check = level.getBlockEntity(checkPos);
-                    if (check instanceof TileEntityOxygenDistributor || check instanceof OxygenDistributorBlockEntity) {
+                    if (check instanceof MekanismBasedOxygenDistributor || check instanceof OxygenDistributorBlockEntity) {
                         be = check;
                         distributorPos = checkPos;
                         break;
@@ -346,12 +346,12 @@ public class PlanetDebugCommands {
 
         CommandSourceStack source = context.getSource();
 
-        if (be instanceof TileEntityOxygenDistributor distributor) {
+        if (be instanceof MekanismBasedOxygenDistributor distributor) {
             final BlockPos finalPos = distributorPos;
             source.sendSuccess(() -> Component.literal("§6=== Oxygen Distributor Debug ==="), false);
             source.sendSuccess(() -> Component.literal("§7Position: §f" + finalPos), false);
             source.sendSuccess(() -> Component.literal("§7Active: " + (distributor.isActive() ? "§aYes" : "§cNo")), false);
-            source.sendSuccess(() -> Component.literal("§7Energy: §f" + distributor.getEnergy(0) + "/" + distributor.getMaxEnergy(0) + " FE"), false);
+            source.sendSuccess(() -> Component.literal("§7Energy: §f" + distributor.getEnergyForDebug(0) + "/" + distributor.getMaxEnergyForDebug(0) + " FE"), false);
             source.sendSuccess(() -> Component.literal("§7Oxygenated Blocks: §f" + distributor.getOxygenatedBlockCount()), false);
 
             // Check Mekanism integration

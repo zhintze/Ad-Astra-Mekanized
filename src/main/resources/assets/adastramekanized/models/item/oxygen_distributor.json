@@ -1,5 +1,5 @@
 {
-  "parent": "adastramekanized:block/oxygen_distributor",
+  "parent": "adastramekanized:block/oxygen_distributor_full",
   "display": {
     "gui": {
       "rotation": [ 30, 225, 0 ],

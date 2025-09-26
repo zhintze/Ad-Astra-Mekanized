@@ -10,6 +10,7 @@ import com.hecookin.adastramekanized.common.registry.ModBlocks;
 import com.hecookin.adastramekanized.common.registry.ModChunkGenerators;
 import com.hecookin.adastramekanized.common.registry.ModCreativeTabs;
 import com.hecookin.adastramekanized.common.registry.ModItems;
+import com.hecookin.adastramekanized.common.registry.ModMenuTypes;
 import com.hecookin.adastramekanized.config.AdAstraMekanizedConfig;
 import com.hecookin.adastramekanized.integration.ModIntegrationManager;
 import com.hecookin.adastramekanized.integration.mowziesmobs.MowziesMobsIntegration;
@@ -57,6 +58,7 @@ public class AdAstraMekanized {
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
         ModBlockEntityTypes.BLOCK_ENTITY_TYPES.register(modEventBus);
+        ModMenuTypes.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
 
         // Register chunk generators

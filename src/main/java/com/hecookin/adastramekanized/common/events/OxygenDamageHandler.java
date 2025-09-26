@@ -24,6 +24,12 @@ public class OxygenDamageHandler {
         if (living.getType().is(ModEntityTypeTags.LIVES_WITHOUT_OXYGEN)) return;
         if (living.getType().is(ModEntityTypeTags.CAN_SURVIVE_IN_SPACE)) return;
 
+        // Additional check for Mowzie's Mobs entities by namespace
+        String entityId = living.getType().getDescriptionId();
+        if (entityId != null && entityId.contains("mowziesmobs")) {
+            return; // All Mowzie's Mobs are exempt from oxygen damage
+        }
+
         // Skip spectators and creative players
         if (living instanceof Player player) {
             if (player.isSpectator() || player.isCreative()) {

@@ -1,92 +1,99 @@
 package com.hecookin.adastramekanized.common.capabilities;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
-import com.hecookin.adastramekanized.common.blockentities.machines.OxygenDistributorBlockEntity;
-import com.hecookin.adastramekanized.common.registry.ModBlockEntityTypes;
-import com.hecookin.adastramekanized.integration.ModIntegrationManager;
+import com.hecookin.adastramekanized.common.blockentities.machines.MekanismBasedOxygenDistributor;
+import com.hecookin.adastramekanized.common.blocks.machines.OxygenDistributorBlock;
+import com.hecookin.adastramekanized.common.registry.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * Registers capabilities for the oxygen distributor to work with Mekanism.
- * Allows connection to universal cables and pressurized tubes on all sides.
+ * Registers block capabilities for the oxygen distributor
  */
 @EventBusSubscriber(modid = AdAstraMekanized.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class OxygenDistributorCapabilityProvider {
 
     @SubscribeEvent
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        // Register energy capability for all sides (universal cables)
-        event.registerBlockEntity(
+        AdAstraMekanized.LOGGER.info("Registering oxygen distributor block capabilities");
+
+        // Register energy capability for the oxygen distributor block
+        event.registerBlock(
             Capabilities.EnergyStorage.BLOCK,
-            ModBlockEntityTypes.OXYGEN_DISTRIBUTOR.get(),
-            (blockEntity, direction) -> {
-                if (blockEntity instanceof OxygenDistributorBlockEntity distributor) {
-                    return distributor.getEnergyCapability(direction);
+            (level, pos, state, be, side) -> {
+                if (be instanceof MekanismBasedOxygenDistributor distributor) {
+                    return distributor.getEnergyStorage();
                 }
                 return null;
-            }
+            },
+            ModBlocks.OXYGEN_DISTRIBUTOR.get()
         );
 
-        // Register Mekanism chemical capability if available
-        ModIntegrationManager manager = AdAstraMekanized.getIntegrationManager();
-        if (manager != null && manager.hasChemicalIntegration()) {
-            registerMekanismCapabilities(event, manager);
-        }
-    }
-
-    /**
-     * Register Mekanism-specific capabilities using reflection
-     */
-    private static void registerMekanismCapabilities(RegisterCapabilitiesEvent event, ModIntegrationManager manager) {
+        // Register Mekanism capabilities if available
         try {
-            // Use reflection to get Mekanism's chemical capability
-            Class<?> capabilitiesClass = Class.forName("mekanism.common.capabilities.Capabilities");
+            Class<?> mekCapabilities = Class.forName("mekanism.common.capabilities.Capabilities");
 
-            // Get the CHEMICAL field which is the BlockCapability for chemicals
-            java.lang.reflect.Field chemicalField = capabilitiesClass.getField("CHEMICAL");
-            Object chemicalCapability = chemicalField.get(null);
+            // Register CHEMICAL capability
+            java.lang.reflect.Field chemicalField = mekCapabilities.getField("CHEMICAL");
+            Object chemicalCapObject = chemicalField.get(null);
+            java.lang.reflect.Method blockMethod = chemicalCapObject.getClass().getMethod("block");
+            Object chemicalBlockCap = blockMethod.invoke(chemicalCapObject);
 
-            if (chemicalCapability instanceof BlockCapability) {
+            if (chemicalBlockCap instanceof net.neoforged.neoforge.capabilities.BlockCapability) {
                 @SuppressWarnings("unchecked")
-                BlockCapability<Object, Direction> chemicalBlockCap = (BlockCapability<Object, Direction>) chemicalCapability;
+                var blockCap = (net.neoforged.neoforge.capabilities.BlockCapability<Object, Direction>) chemicalBlockCap;
 
-                // Register our block entity to provide chemical capability
-                event.registerBlockEntity(
-                    chemicalBlockCap,
-                    ModBlockEntityTypes.OXYGEN_DISTRIBUTOR.get(),
-                    (blockEntity, direction) -> {
-                        if (blockEntity instanceof OxygenDistributorBlockEntity distributor) {
-                            return distributor.getChemicalCapability(direction);
+                event.registerBlock(
+                    blockCap,
+                    (level, pos, state, be, side) -> {
+                        if (be instanceof MekanismBasedOxygenDistributor distributor) {
+                            return distributor.getChemicalHandler();
                         }
                         return null;
-                    }
+                    },
+                    ModBlocks.OXYGEN_DISTRIBUTOR.get()
                 );
 
-                AdAstraMekanized.LOGGER.info("Successfully registered Mekanism chemical capability for oxygen distributor");
+                AdAstraMekanized.LOGGER.info("Registered Mekanism chemical capability for oxygen distributor");
+            }
+
+            // Register ENERGY capability for Mekanism/JADE compatibility
+            java.lang.reflect.Field energyField = mekCapabilities.getField("ENERGY");
+            Object energyCapObject = energyField.get(null);
+            java.lang.reflect.Method energyBlockMethod = energyCapObject.getClass().getMethod("block");
+            Object energyBlockCap = energyBlockMethod.invoke(energyCapObject);
+
+            if (energyBlockCap instanceof net.neoforged.neoforge.capabilities.BlockCapability) {
+                @SuppressWarnings("unchecked")
+                var blockCap = (net.neoforged.neoforge.capabilities.BlockCapability<Object, Direction>) energyBlockCap;
+
+                event.registerBlock(
+                    blockCap,
+                    (level, pos, state, be, side) -> {
+                        if (be instanceof MekanismBasedOxygenDistributor distributor) {
+                            // Return the strict energy handler for JADE compatibility
+                            var handler = distributor.getStrictEnergyHandler();
+                            AdAstraMekanized.LOGGER.debug("Returning IStrictEnergyHandler for JADE: {}, energy: {}",
+                                handler, handler != null ? handler.getEnergy(0) : 0);
+                            return handler;
+                        }
+                        return null;
+                    },
+                    ModBlocks.OXYGEN_DISTRIBUTOR.get()
+                );
+
+                AdAstraMekanized.LOGGER.info("Registered Mekanism energy capability for oxygen distributor");
             }
         } catch (Exception e) {
-            AdAstraMekanized.LOGGER.warn("Could not register Mekanism chemical capability: {}", e.getMessage());
+            AdAstraMekanized.LOGGER.warn("Could not register Mekanism capabilities: {}", e.getMessage());
         }
-    }
-
-    /**
-     * Helper method to check if a block entity can connect to pipes/cables
-     */
-    public static boolean canConnect(Level level, BlockPos pos, Direction side) {
-        BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof OxygenDistributorBlockEntity) {
-            // Allow connection from all sides
-            return true;
-        }
-        return false;
     }
 }

@@ -217,18 +217,21 @@ public class PlanetGenerationRunner {
         planet.clearAllMobSpawns()  // Clear any default spawns
               //.addMobSpawn("monster", "minecraft:silverfish", 1000, 32, 64)  // Silverfish swarms (from biome_modifier)
 
+                //.addMowziesMob("naga", 5, 1, 2)     // Nagas near water
+
               // Example: Equipped zombie variant (requires PlanetMobSpawnHandler)
               // This would spawn zombies with leather armor on the moon
               // NOTE: Equipment is handled by PlanetMobSpawnHandler event system
-              .addEquippedMobSpawn("monster", "minecraft:zombie", 50, 1, 3,
+              /*.addEquippedMobSpawn("monster", "minecraft:zombie", 30, 1, 3,
                       "minecraft:leather_helmet", "minecraft:leather_chestplate", null, null,
-                      "minecraft:stone_sword", null)
+                      "minecraft:stone_sword", null)*/
+
 
               // Example: Armored skeleton (like WDA's skeleton_armored variants)
-              .addEquippedMobSpawn("monster", "minecraft:skeleton", 30, 1, 2,
+              /*.addEquippedMobSpawn("monster", "minecraft:skeleton", 30, 1, 2,
                       "minecraft:chainmail_helmet", "minecraft:chainmail_chestplate",
                       "minecraft:chainmail_leggings", "minecraft:chainmail_boots",
-                      "minecraft:bow", null)
+                      "minecraft:bow", null)*/
 
               .allowPeacefulMobs(false);  // No peaceful mobs on moon
     }
@@ -300,7 +303,7 @@ public class PlanetGenerationRunner {
             .aquifersEnabled(false)
             .oreVeinsEnabled(true)  // Enable ore generation
             // Ore vein configuration for Moon minerals - balanced for survival
-            .configureOre("iron", 8)        // Less iron on Moon
+            .configureOre("iron", 50)        // Less iron on Moon
             .configureOre("copper", 6)      // Some copper
             .configureOre("gold", 3)        // Rare gold
             .configureOre("diamond", 1)     // Very rare diamonds
@@ -310,7 +313,7 @@ public class PlanetGenerationRunner {
             .veinRidged(0.5f)  // Some ridged veins
             .veinGap(0.4f)     // Moderate vein gaps
             // CAVES DISABLED for stable terrain
-            .caveConfig(0.1f, 0.1f)  // No caves
+            .caveConfig(.1f, .5f)  // No caves
             .cheeseCaves(true)      // Disabled
             .spaghettiCaves(false)   // Disabled
             .noodleCaves(false)      // Disabled
@@ -327,8 +330,15 @@ public class PlanetGenerationRunner {
             // Sun and spawn settings
             .hasSkylight(false)  // No sun damage on the Moon
             .monsterSpawnLightLevel(15)  // Monsters spawn in any light level
+
+             // ========== LIQUID SYSTEM - LAVA OCEANS & LAKES ==========
+            .oceanConfig("minecraft:lava", -64, 0.0f)        // Massive lava oceans at Y=32
+            .lakeConfig("minecraft:lava", 0.0f)             // Frequent lava lakes
+            .lavaLakes(-20, 0.0f)                           // Deep lava pools
+            .undergroundLiquids("minecraft:lava", false)     // Lava aquifers
             // Physical properties
             .gravity(0.166f);  // Moon has 1/6 Earth gravity
+
 
         // Apply Moon mob preset
         applyMoonMobPreset(moon);

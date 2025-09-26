@@ -181,8 +181,8 @@
               "argument2": {
                 "type": "minecraft:noise",
                 "noise": "minecraft:noodle",
-                "xz_scale": 0.6666666666666666,
-                "y_scale": 3.3333332008785725
+                "xz_scale": 0.06666666666666667,
+                "y_scale": 0.33333332008785727
               }
             },
             "argument2": -1.0

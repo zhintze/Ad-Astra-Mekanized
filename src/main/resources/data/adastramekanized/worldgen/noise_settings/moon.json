@@ -8,7 +8,7 @@
     "Name": "adastramekanized:moon_stone"
   },
   "default_fluid": {
-    "Name": "minecraft:water"
+    "Name": "minecraft:air"
   },
   "noise": {
     "min_y": -32,
@@ -19,7 +19,7 @@
   "noise_router": {
     "barrier": 0.0,
     "fluid_level_floodedness": 0.0,
-    "fluid_level_spread": 0.020000001,
+    "fluid_level_spread": 0.0,
     "lava": 0.0,
     "temperature": 0.0,
     "vegetation": 0.0,

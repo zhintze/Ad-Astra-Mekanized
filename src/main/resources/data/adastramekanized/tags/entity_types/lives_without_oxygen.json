@@ -1,0 +1,42 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:iron_golem",
+    "minecraft:snow_golem",
+    "minecraft:wither",
+    "minecraft:wither_skeleton",
+    "minecraft:skeleton",
+    "minecraft:stray",
+    "minecraft:husk",
+    "minecraft:zombie",
+    "minecraft:zombie_villager",
+    "minecraft:zombified_piglin",
+    "minecraft:drowned",
+    "minecraft:phantom",
+    "minecraft:blaze",
+    "minecraft:ghast",
+    "minecraft:magma_cube",
+    "minecraft:enderman",
+    "minecraft:endermite",
+    "minecraft:shulker",
+    "minecraft:vex",
+    "minecraft:guardian",
+    "minecraft:elder_guardian",
+    "minecraft:warden",
+    "minecraft:allay",
+    "minecraft:breeze"
+  ],
+  "optional": [
+    {"id": "mowziesmobs:foliaath", "required": false},
+    {"id": "mowziesmobs:ferrous_wroughtnaut", "required": false},
+    {"id": "mowziesmobs:barakoa", "required": false},
+    {"id": "mowziesmobs:barakoana", "required": false},
+    {"id": "mowziesmobs:barako", "required": false},
+    {"id": "mowziesmobs:frostmaw", "required": false},
+    {"id": "mowziesmobs:grottol", "required": false},
+    {"id": "mowziesmobs:lantern", "required": false},
+    {"id": "mowziesmobs:naga", "required": false},
+    {"id": "mowziesmobs:sculptor", "required": false},
+    {"id": "mowziesmobs:umvuthi", "required": false}
+  ]
+}
