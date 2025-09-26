@@ -765,5 +765,154 @@ public class PlanetGenerationRunner {
                 .addCaveDecoration("minecraft:copper_ore", 0.12f, -16, 112, false)        // Copper ore deposits
                 .generate();
 
+        // PRIMAL PLANET - Jungle world showcasing Mowzie's Mobs integration
+        // REQUIRES: Mowzie's Mobs installed with spawn_rate set to 0 in config
+        PlanetMaker.planet("primal")
+                .gravity(1.1f)  // Slightly higher gravity for denser jungle atmosphere
+
+                // ========== JUNGLE TERRAIN CONFIGURATION ==========
+                .continentalScale(8.0f)          // Varied terrain with islands and continents
+                .erosionScale(15.0f)             // Moderate erosion for river valleys
+                .ridgeScale(5.0f)                // Some mountain ridges
+                .heightVariation(12.0f, 8.0f, 4.0f, 2.0f)  // Moderate height variation
+
+                // ========== TROPICAL NOISE PARAMETERS ==========
+                .temperatureScale(2.0f)          // Warm tropical temperatures
+                .humidityScale(3.0f)             // High humidity for jungle
+                .weirdnessScale(2.5f)            // Varied terrain features
+                .densityFactor(1.2f)             // Dense terrain
+                .densityOffset(0.1f)             // Slight elevation
+
+                // ========== JUNGLE MOUNTAINS & VALLEYS ==========
+                .jaggednessScale(0.4f)           // Moderate jaggedness
+                .jaggednessNoiseScale(600.0f)    // Medium-scale terrain features
+                .depthFactor(1.5f)               // Deeper valleys
+                .depthOffset(0.0f)               // Normal baseline
+                .terrainFactor(1.3f)             // Enhanced terrain features
+
+                // ========== LUSH SURFACE CONFIGURATION ==========
+                .surfaceBlock("minecraft:grass_block")
+                .subsurfaceBlock("minecraft:dirt")
+                .deepBlock("minecraft:stone")
+                .defaultBlock("minecraft:stone")
+                .bedrockBlock("minecraft:bedrock")
+
+                // ========== WORLD STRUCTURE ==========
+                .worldDimensions(-64, 320)       // Standard height with deeper caves
+                .seaLevel(63)                    // Normal sea level
+                .disableMobGeneration(false)     // Enable mob spawning
+
+                // ========== MOWZIE'S MOBS JUNGLE SPAWNING ==========
+                // Clear vanilla mobs first
+                .clearAllMobSpawns()
+
+                // Add Mowzie's Mobs jungle preset
+                .addMowziesMobsPreset("jungle")  // Foliaaths and baby foliaaths
+
+                // Add additional Mowzie's creatures for variety
+                .addMowziesMob("lantern", 30, 2, 4)  // Mystical lanterns in the canopy
+                .addMowziesMob("naga", 15, 1, 2)     // Nagas near water
+
+                // Mix in some vanilla jungle mobs
+                .addMobSpawn("creature", "minecraft:parrot", 20, 2, 4)
+                .addMobSpawn("creature", "minecraft:ocelot", 10, 1, 2)
+                .addMobSpawn("creature", "minecraft:panda", 5, 1, 2)
+                .addMobSpawn("monster", "minecraft:spider", 30, 1, 2)
+                .addMobSpawn("monster", "minecraft:witch", 10, 1, 1)
+
+                // ========== CAVES WITH GROTTOL ==========
+                .caveConfig(0.125f, 0.3f)        // Standard cave generation
+                .cheeseCaves(true)               // Large open caves
+                .spaghettiCaves(true)            // Winding cave systems
+
+                // Underground Mowzie's Mobs
+                .addMowziesMob("grottol", 40, 1, 1)  // Cave dwellers
+
+                // ========== ATMOSPHERIC EFFECTS ==========
+                .skyColor(0x7BA05B)              // Greenish jungle sky
+                .fogColor(0x8FBC8F)              // Misty jungle fog
+                .hasAtmosphere(true)
+                .ambientLight(0.7f)              // Dimmer under canopy
+
+                // ========== CUSTOM JUNGLE BIOMES ==========
+                .clearBiomes()
+                .addBiome("minecraft:jungle", 0.40f)
+                .addBiome("minecraft:sparse_jungle", 0.25f)
+                .addBiome("minecraft:bamboo_jungle", 0.20f)
+                .addBiome("minecraft:swamp", 0.15f)
+
+                .generate();
+
+        // TRIBAL PLANET - Savanna world with Umvuthana civilization
+        // REQUIRES: Mowzie's Mobs installed with spawn_rate set to 0 in config
+        PlanetMaker.planet("tribal")
+                .gravity(0.95f)  // Slightly lower gravity for vast savannas
+
+                // ========== SAVANNA TERRAIN CONFIGURATION ==========
+                .continentalScale(12.0f)         // Large continental masses
+                .erosionScale(8.0f)              // Gentle erosion
+                .ridgeScale(3.0f)                // Few mountain ridges
+                .heightVariation(8.0f, 5.0f, 3.0f, 1.0f)  // Gentle rolling hills
+
+                // ========== ARID NOISE PARAMETERS ==========
+                .temperatureScale(3.0f)          // Hot temperatures
+                .humidityScale(1.0f)             // Low humidity
+                .weirdnessScale(1.5f)            // Simple terrain
+                .densityFactor(1.0f)             // Normal density
+                .densityOffset(0.0f)             // Normal baseline
+
+                // ========== GENTLE HILLS ==========
+                .jaggednessScale(0.2f)           // Minimal jaggedness
+                .jaggednessNoiseScale(400.0f)    // Gentle features
+                .depthFactor(1.0f)               // Normal depth
+                .depthOffset(0.0f)               // Normal baseline
+                .terrainFactor(1.0f)             // Normal terrain
+
+                // ========== DRY SURFACE CONFIGURATION ==========
+                .surfaceBlock("minecraft:grass_block")
+                .subsurfaceBlock("minecraft:coarse_dirt")
+                .deepBlock("minecraft:sandstone")
+                .defaultBlock("minecraft:sandstone")
+                .bedrockBlock("minecraft:bedrock")
+
+                // ========== WORLD STRUCTURE ==========
+                .worldDimensions(-64, 256)       // Standard height
+                .seaLevel(63)                    // Normal sea level
+                .disableMobGeneration(false)     // Enable mob spawning
+
+                // ========== MOWZIE'S MOBS TRIBAL SPAWNING ==========
+                .clearAllMobSpawns()
+
+                // Add Mowzie's Mobs savanna preset - Umvuthana tribes
+                .addMowziesMobsPreset("savanna")
+
+                // Rare boss spawn - Umvuthi leader
+                .addMowziesMob("umvuthi", 1, 1, 1)  // Very rare chieftain spawn
+
+                // Mix with vanilla savanna mobs
+                .addMobSpawn("creature", "minecraft:llama", 15, 2, 4)
+                .addMobSpawn("creature", "minecraft:horse", 10, 2, 4)
+                .addMobSpawn("creature", "minecraft:donkey", 8, 1, 2)
+                .addMobSpawn("monster", "minecraft:husk", 30, 2, 4)
+
+                // ========== MINIMAL CAVES ==========
+                .caveConfig(0.05f, 0.1f)         // Few caves
+                .cheeseCaves(false)              // No large caves
+                .spaghettiCaves(true)            // Some winding caves
+
+                // ========== ATMOSPHERIC EFFECTS ==========
+                .skyColor(0xFFD700)              // Golden savanna sky
+                .fogColor(0xF0E68C)              // Dusty fog
+                .hasAtmosphere(true)
+                .ambientLight(0.9f)              // Bright savanna sun
+
+                // ========== SAVANNA BIOMES ==========
+                .clearBiomes()
+                .addBiome("minecraft:savanna", 0.50f)
+                .addBiome("minecraft:savanna_plateau", 0.30f)
+                .addBiome("minecraft:desert", 0.20f)
+
+                .generate();
+
     }
 }

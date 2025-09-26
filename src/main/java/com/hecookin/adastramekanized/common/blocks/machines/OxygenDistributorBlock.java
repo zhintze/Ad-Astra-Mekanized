@@ -1,7 +1,9 @@
 package com.hecookin.adastramekanized.common.blocks.machines;
 
+import com.hecookin.adastramekanized.common.blockentities.machines.SimpleMekanismOxygenDistributor;
 import com.hecookin.adastramekanized.common.blockentities.machines.OxygenDistributorBlockEntity;
 import com.hecookin.adastramekanized.common.blocks.base.SidedMachineBlock;
+import com.hecookin.adastramekanized.common.registry.ModBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -71,7 +73,10 @@ public class OxygenDistributorBlock extends SidedMachineBlock {
 
     @Override
     public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
-        if (level.getBlockEntity(pos) instanceof OxygenDistributorBlockEntity entity) {
+        BlockEntity be = level.getBlockEntity(pos);
+        if (be instanceof SimpleMekanismOxygenDistributor entity) {
+            return entity.isActive() ? 15 : 0;
+        } else if (be instanceof OxygenDistributorBlockEntity entity) {
             return entity.isActive() ? 15 : 0;
         }
         return 0;
@@ -80,16 +85,20 @@ public class OxygenDistributorBlock extends SidedMachineBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new OxygenDistributorBlockEntity(pos, state);
+        // Use new Mekanism-style tile entity
+        return new SimpleMekanismOxygenDistributor(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return (level1, pos, state1, blockEntity) -> {
-            if (blockEntity instanceof OxygenDistributorBlockEntity entity) {
-                OxygenDistributorBlockEntity.tick(level1, pos, state1, entity);
-            }
-        };
+        if (!level.isClientSide) {
+            return (level1, pos, state1, blockEntity) -> {
+                if (blockEntity instanceof SimpleMekanismOxygenDistributor entity) {
+                    entity.tick();
+                }
+            };
+        }
+        return null;
     }
 }

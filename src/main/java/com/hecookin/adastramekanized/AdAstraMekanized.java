@@ -1,5 +1,6 @@
 package com.hecookin.adastramekanized;
 
+import com.hecookin.adastramekanized.common.capabilities.MekanismCapabilityProvider;
 import com.hecookin.adastramekanized.common.commands.ModCommands;
 import com.hecookin.adastramekanized.common.teleportation.PlanetTeleportationSystem;
 import com.hecookin.adastramekanized.common.planets.PlanetManager;
@@ -11,6 +12,7 @@ import com.hecookin.adastramekanized.common.registry.ModCreativeTabs;
 import com.hecookin.adastramekanized.common.registry.ModItems;
 import com.hecookin.adastramekanized.config.AdAstraMekanizedConfig;
 import com.hecookin.adastramekanized.integration.ModIntegrationManager;
+import com.hecookin.adastramekanized.integration.mowziesmobs.MowziesMobsIntegration;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -66,6 +68,9 @@ public class AdAstraMekanized {
         // Register networking
         modEventBus.addListener(this::registerNetworking);
 
+        // Register capabilities for Mekanism integration
+        modEventBus.addListener(MekanismCapabilityProvider::registerCapabilities);
+
         // Register planet manager events
         NeoForge.EVENT_BUS.register(PlanetManager.class);
 
@@ -89,6 +94,9 @@ public class AdAstraMekanized {
             // Initialize mod integrations
             integrationManager = ModIntegrationManager.getInstance();
             LOGGER.info("Integration manager initialized: {}", integrationManager.getIntegrationStatus());
+
+            // Initialize Mowzie's Mobs integration
+            MowziesMobsIntegration.init();
 
             // Planets are now generated using PlanetMaker system
             LOGGER.info("Using PlanetMaker for planet generation - run './gradlew makePlanets' to regenerate");

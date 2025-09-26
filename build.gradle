@@ -175,6 +175,12 @@ dependencies {
     // EPIC FIGHT
     implementation "curse.maven:EpicFight-405076:6968128"
 
+
+    // MOWIES MOBS
+    implementation "curse.maven:MowiesMobs-250498:6700443"
+    implementation "curse.maven:geckolib-388172:6659026"
+
+
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"

@@ -767,6 +767,75 @@ public class PlanetMaker {
         }
 
         /**
+         * Add Mowzie's Mobs preset spawns for different planet themes
+         * REQUIRES: Mowzie's Mobs installed and spawn_rate set to 0 in config
+         */
+        public PlanetBuilder addMowziesMobsPreset(String preset) {
+            switch (preset) {
+                case "jungle":
+                    // Jungle world with Foliaaths
+                    addMobSpawn("monster", "mowziesmobs:foliaath", 70, 1, 4);
+                    addMobSpawn("monster", "mowziesmobs:baby_foliaath", 40, 2, 3);
+                    break;
+                case "savanna":
+                    // Savanna world with Umvuthana tribes
+                    addMobSpawn("monster", "mowziesmobs:umvuthana_raptor", 50, 1, 1);
+                    addMobSpawn("monster", "mowziesmobs:umvuthana_crane", 30, 1, 1);
+                    addMobSpawn("monster", "mowziesmobs:umvuthana", 40, 1, 2);
+                    break;
+                case "cave":
+                    // Underground world with Grottols
+                    addMobSpawn("monster", "mowziesmobs:grottol", 60, 1, 1);
+                    addMobSpawn("monster", "mowziesmobs:bluff", 40, 2, 3);
+                    break;
+                case "mystical":
+                    // Mystical forest with Lanterns
+                    addMobSpawn("ambient", "mowziesmobs:lantern", 50, 2, 4);
+                    break;
+                case "coastal":
+                    // Coastal/beach world with Nagas
+                    addMobSpawn("monster", "mowziesmobs:naga", 60, 1, 2);
+                    break;
+                case "frozen":
+                    // Ice world with Frostmaw (rare boss spawn)
+                    addMobSpawn("monster", "mowziesmobs:frostmaw", 1, 1, 1); // Very rare
+                    break;
+                case "industrial":
+                    // Industrial/mechanical world with Wroughtnaut (rare boss spawn)
+                    addMobSpawn("monster", "mowziesmobs:ferrous_wroughtnaut", 1, 1, 1); // Very rare
+                    break;
+                case "mixed":
+                    // Mixed biome world with variety of Mowzie's mobs
+                    addMobSpawn("monster", "mowziesmobs:foliaath", 30, 1, 2);
+                    addMobSpawn("monster", "mowziesmobs:grottol", 20, 1, 1);
+                    addMobSpawn("monster", "mowziesmobs:naga", 25, 1, 2);
+                    addMobSpawn("ambient", "mowziesmobs:lantern", 30, 2, 4);
+                    addMobSpawn("monster", "mowziesmobs:bluff", 15, 2, 3);
+                    break;
+                case "boss_realm":
+                    // Boss-focused dimension (use sparingly!)
+                    addMobSpawn("monster", "mowziesmobs:frostmaw", 5, 1, 1);
+                    addMobSpawn("monster", "mowziesmobs:ferrous_wroughtnaut", 5, 1, 1);
+                    addMobSpawn("monster", "mowziesmobs:umvuthi", 3, 1, 1);
+                    addMobSpawn("monster", "mowziesmobs:sculptor", 3, 1, 1);
+                    break;
+            }
+            return this;
+        }
+
+        /**
+         * Add individual Mowzie's Mobs spawns with full control
+         * @param mobName Name from MowziesMobsIntegration (e.g., "foliaath", "naga")
+         * @param weight Spawn weight (1-100, higher = more common)
+         * @param minGroup Minimum group size
+         * @param maxGroup Maximum group size
+         */
+        public PlanetBuilder addMowziesMob(String mobName, int weight, int minGroup, int maxGroup) {
+            String mobId = "mowziesmobs:" + mobName.toLowerCase();
+            return addMobSpawn("monster", mobId, weight, minGroup, maxGroup);
+        }
+
+        /**
          * Set spawn cost for a mob (affects spawn cap)
          */
         public PlanetBuilder setSpawnCost(String mobId, double energyBudget, double charge) {

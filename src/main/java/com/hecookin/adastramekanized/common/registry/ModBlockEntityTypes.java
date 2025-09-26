@@ -1,6 +1,7 @@
 package com.hecookin.adastramekanized.common.registry;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
+import com.hecookin.adastramekanized.common.blockentities.machines.SimpleMekanismOxygenDistributor;
 import com.hecookin.adastramekanized.common.blockentities.machines.OxygenDistributorBlockEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
@@ -14,12 +15,19 @@ public class ModBlockEntityTypes {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES =
         DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, AdAstraMekanized.MOD_ID);
 
+    // Keeping old one temporarily for compatibility
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<OxygenDistributorBlockEntity>> OXYGEN_DISTRIBUTOR =
         BLOCK_ENTITY_TYPES.register("oxygen_distributor",
             () -> createBlockEntityType(
                 OxygenDistributorBlockEntity::new,
                 ModBlocks.OXYGEN_DISTRIBUTOR.get()));
 
+    // New Mekanism-style oxygen distributor
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SimpleMekanismOxygenDistributor>> MEKANISM_OXYGEN_DISTRIBUTOR =
+        BLOCK_ENTITY_TYPES.register("mekanism_oxygen_distributor",
+            () -> createBlockEntityType(
+                SimpleMekanismOxygenDistributor::new,
+                ModBlocks.OXYGEN_DISTRIBUTOR.get()));
 
     /**
      * Helper method to create a BlockEntityType

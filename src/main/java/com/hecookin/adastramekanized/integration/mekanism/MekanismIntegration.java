@@ -394,12 +394,35 @@ public class MekanismIntegration implements IChemicalIntegration, IEnergyIntegra
         }
 
         try {
-            // Create a BasicChemicalTank with the specified capacity
-            Constructor<?> constructor = basicChemicalTankClass.getConstructor(long.class, chemicalClass);
-            return constructor.newInstance(capacity, oxygenInstance);
+            // Create a BasicChemicalTank that only accepts oxygen
+            Constructor<?> constructor = basicChemicalTankClass.getConstructor(long.class, java.util.function.BiPredicate.class, java.util.function.BiPredicate.class, java.util.function.Predicate.class, chemicalClass, java.util.function.Consumer.class);
+
+            // Create predicates for tank behavior
+            java.util.function.BiPredicate<Object, Object> canExtract = (tank, stack) -> true;
+            java.util.function.BiPredicate<Object, Object> canInsert = (tank, stack) -> {
+                // Only accept oxygen
+                return stack != null && stack.equals(oxygenInstance);
+            };
+            java.util.function.Predicate<Object> validator = chemical -> {
+                // Validate that it's oxygen
+                return chemical != null && chemical.equals(oxygenInstance);
+            };
+            java.util.function.Consumer<Object> listener = tank -> {}; // No special listener needed
+
+            // Create tank with oxygen validation
+            Object tank = constructor.newInstance(capacity, canExtract, canInsert, validator, oxygenInstance, listener);
+
+            AdAstraMekanized.LOGGER.debug("Created oxygen tank with capacity {}", capacity);
+            return tank;
         } catch (Exception e) {
-            AdAstraMekanized.LOGGER.error("Failed to create oxygen tank: {}", e.getMessage());
-            return null;
+            // Fallback to simpler constructor if the complex one fails
+            try {
+                Constructor<?> simpleConstructor = basicChemicalTankClass.getConstructor(long.class, chemicalClass);
+                return simpleConstructor.newInstance(capacity, oxygenInstance);
+            } catch (Exception e2) {
+                AdAstraMekanized.LOGGER.error("Failed to create oxygen tank: {}", e2.getMessage());
+                return null;
+            }
         }
     }
 
