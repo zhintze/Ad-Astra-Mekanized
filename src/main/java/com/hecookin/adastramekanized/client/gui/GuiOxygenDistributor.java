@@ -26,7 +26,10 @@ public class GuiOxygenDistributor extends AbstractContainerScreen<OxygenDistribu
 
     private Button powerButton;
     private Button visibilityButton;
-    private boolean oxygenBlockVisibility = false;
+    private Button colorButton;
+    private boolean oxygenBlockVisibility;
+    private int currentColorIndex;
+    private static final String[] COLOR_NAMES = {"Cyan", "Red", "Green", "Yellow", "Magenta", "Blue"};
 
     //flips coordinates that come directly from aseprite's inverted y axis
     /*int asepriteYcoordFlipFormula (int height, int yAxis) {
@@ -54,6 +57,10 @@ public class GuiOxygenDistributor extends AbstractContainerScreen<OxygenDistribu
     protected void init() {
         super.init();
 
+        // Initialize state from block entity
+        this.oxygenBlockVisibility = menu.getBlockEntity().getOxygenBlockVisibility();
+        this.currentColorIndex = menu.getBlockEntity().getOxygenBlockColor();
+
         // Add power on/off button at position (17, 95)
         this.powerButton = this.addRenderableWidget(
             Button.builder(
@@ -72,7 +79,7 @@ public class GuiOxygenDistributor extends AbstractContainerScreen<OxygenDistribu
                     ModNetworking.sendToServer(new OxygenDistributorButtonPacket(
                         menu.getBlockEntity().getBlockPos(),
                         OxygenDistributorButtonPacket.ButtonType.POWER,
-                        newState
+                        newState ? 1 : 0
                     ));
                     button.setMessage(Component.literal(newState ? "O" : "X"));
                 })
@@ -81,24 +88,43 @@ public class GuiOxygenDistributor extends AbstractContainerScreen<OxygenDistribu
                 .build()
         );
 
-        // Add visibility toggle button at position (17, 130)
+        // Add visibility toggle button at position (17, 120)
         this.visibilityButton = this.addRenderableWidget(
             Button.builder(
-                Component.literal("Show"),
+                Component.literal(oxygenBlockVisibility ? "Hide" : "Show"),
                 button -> {
                     // Toggle oxygen block visibility
                     oxygenBlockVisibility = !oxygenBlockVisibility;
                     ModNetworking.sendToServer(new OxygenDistributorButtonPacket(
                         menu.getBlockEntity().getBlockPos(),
                         OxygenDistributorButtonPacket.ButtonType.VISIBILITY,
-                        oxygenBlockVisibility
+                        oxygenBlockVisibility ? 1 : 0
                     ));
-                    button.setMessage(Component.literal(oxygenBlockVisibility ? "H" : "S"));
-
-                    //TODO: Add phantom see-through blocks to indicate oxygenated blocks
+                    button.setMessage(Component.literal(oxygenBlockVisibility ? "Hide" : "Show"));
                 })
                 .pos(this.leftPos + 17, this.topPos + 120)
-                .size(20, 20)
+                .size(35, 20)  // Slightly smaller to fit color button
+                .build()
+        );
+
+        // Add color change button next to visibility button
+        this.colorButton = this.addRenderableWidget(
+            Button.builder(
+                Component.literal(COLOR_NAMES[currentColorIndex]),
+                button -> {
+                    // Cycle through colors
+                    currentColorIndex = (currentColorIndex + 1) % COLOR_NAMES.length;
+                    button.setMessage(Component.literal(COLOR_NAMES[currentColorIndex]));
+
+                    // Send color change packet to server
+                    ModNetworking.sendToServer(new OxygenDistributorButtonPacket(
+                        menu.getBlockEntity().getBlockPos(),
+                        OxygenDistributorButtonPacket.ButtonType.COLOR,
+                        currentColorIndex
+                    ));
+                })
+                .pos(this.leftPos + 54, this.topPos + 120)  // Next to visibility button
+                .size(45, 20)  // Width for color names
                 .build()
         );
     }

@@ -3,6 +3,7 @@ package com.hecookin.adastramekanized.common.blockentities.machines;
 import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.common.registry.ModBlockEntityTypes;
 import com.hecookin.adastramekanized.common.atmosphere.OxygenManager;
+import com.hecookin.adastramekanized.common.atmosphere.GlobalOxygenManager;
 import com.hecookin.adastramekanized.common.menus.OxygenDistributorMenu;
 import mekanism.api.Action;
 import mekanism.api.AutomationType;
@@ -52,6 +53,7 @@ public class MekanismBasedOxygenDistributor extends BlockEntity implements MenuP
     private int tickCounter = 0;
     private boolean isActive = false;
     private boolean oxygenBlockVisibility = false;
+    private int oxygenBlockColor = 0;  // Color index for this distributor
     private final Set<BlockPos> oxygenatedBlocks = new HashSet<>();
 
     public MekanismBasedOxygenDistributor(BlockPos pos, BlockState state) {
@@ -119,22 +121,41 @@ public class MekanismBasedOxygenDistributor extends BlockEntity implements MenuP
                 oxygenTank.getStored(), oxygenTank.getCapacity(), isActive, oxygenatedBlocks.size());
         }
 
-        // Check if we can function - only if manually activated and has resources
-        boolean canFunction = isActive && energyStorage.getEnergyStored() >= ENERGY_PER_DISTRIBUTION && !oxygenTank.isEmpty();
+        // Check if we have resources
+        boolean hasResources = energyStorage.getEnergyStored() >= ENERGY_PER_DISTRIBUTION && !oxygenTank.isEmpty();
         boolean wasActive = isActive;
 
-        if (canFunction) {
+        // Auto-activate when resources become available
+        if (!isActive && hasResources) {
+            isActive = true;
+            AdAstraMekanized.LOGGER.debug("Auto-activating oxygen distributor at {} - resources available", worldPosition);
+            setChanged();
+        }
+
+        if (isActive && hasResources) {
             // Distribute oxygen and consume resources at intervals (every 100 ticks)
             if (tickCounter >= DISTRIBUTION_INTERVAL) {
                 tickCounter = 0;
                 // Consume energy only when distributing
                 energyStorage.extractEnergy(ENERGY_PER_DISTRIBUTION, false);
                 distributeOxygen();
+
+                // Send visualization update if enabled
+                if (oxygenBlockVisibility && !oxygenatedBlocks.isEmpty()) {
+                    sendVisualizationUpdate(true);
+                }
             }
-        } else if (isActive && !canFunction) {
+        } else if (isActive && !hasResources) {
             // Machine is on but lacks resources - turn it off automatically
             isActive = false;
             clearOxygenatedBlocks();
+
+            // Clear visualization
+            if (oxygenBlockVisibility) {
+                sendVisualizationUpdate(false);
+            }
+
+            AdAstraMekanized.LOGGER.debug("Deactivating oxygen distributor at {} - insufficient resources", worldPosition);
             setChanged();
             if (level != null) {
                 level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
@@ -150,10 +171,18 @@ public class MekanismBasedOxygenDistributor extends BlockEntity implements MenuP
     }
 
     protected void distributeOxygen() {
-        clearOxygenatedBlocks();
+        var dimension = level.dimension();
+
+        // Release any previously claimed blocks first
+        if (!oxygenatedBlocks.isEmpty()) {
+            GlobalOxygenManager.getInstance().releaseOxygenBlocks(dimension, worldPosition, oxygenatedBlocks);
+            OxygenManager.getInstance().setOxygen(level, oxygenatedBlocks, false);
+            oxygenatedBlocks.clear();
+        }
 
         // Simple flood fill to find air blocks
         Set<BlockPos> toCheck = new HashSet<>();
+        Set<BlockPos> visited = new HashSet<>();
         toCheck.add(worldPosition.above());
 
         int maxBlocks = 50; // Reduced from 500 - more reasonable oxygen consumption
@@ -161,20 +190,35 @@ public class MekanismBasedOxygenDistributor extends BlockEntity implements MenuP
             BlockPos current = toCheck.iterator().next();
             toCheck.remove(current);
 
-            if (oxygenatedBlocks.contains(current)) continue;
+            if (visited.contains(current)) continue;
+            visited.add(current);
+
             if (!isWithinRange(current)) continue;
 
             BlockState state = level.getBlockState(current);
             if (state.isAir()) {
-                oxygenatedBlocks.add(current);
+                // Try to claim this single block immediately
+                Set<BlockPos> singleBlock = new HashSet<>();
+                singleBlock.add(current);
+                Set<BlockPos> claimed = GlobalOxygenManager.getInstance().claimOxygenBlocks(dimension, worldPosition, singleBlock);
 
-                for (Direction dir : Direction.values()) {
-                    toCheck.add(current.relative(dir));
+                if (!claimed.isEmpty()) {
+                    // Successfully claimed this block
+                    oxygenatedBlocks.add(current);
+
+                    // Add adjacent blocks to check
+                    for (Direction dir : Direction.values()) {
+                        BlockPos adjacent = current.relative(dir);
+                        if (!visited.contains(adjacent)) {
+                            toCheck.add(adjacent);
+                        }
+                    }
                 }
+                // If we couldn't claim it, it's owned by another distributor - skip it
             }
         }
 
-        // Register oxygenated blocks with OxygenManager
+        // Register all successfully claimed blocks with OxygenManager
         if (!oxygenatedBlocks.isEmpty()) {
             OxygenManager.getInstance().setOxygen(level, oxygenatedBlocks, true);
 
@@ -185,14 +229,18 @@ public class MekanismBasedOxygenDistributor extends BlockEntity implements MenuP
                 AdAstraMekanized.LOGGER.debug("Distributed oxygen to {} blocks, consumed {} mB",
                     oxygenatedBlocks.size(), oxygenToConsume);
             } else {
-                // Not enough oxygen, clear distribution
-                clearOxygenatedBlocks();
+                // Not enough oxygen, release and clear distribution
+                GlobalOxygenManager.getInstance().releaseOxygenBlocks(dimension, worldPosition, oxygenatedBlocks);
+                OxygenManager.getInstance().setOxygen(level, oxygenatedBlocks, false);
+                oxygenatedBlocks.clear();
             }
         }
     }
     
     protected void clearOxygenatedBlocks() {
         if (!oxygenatedBlocks.isEmpty() && level != null) {
+            // Release blocks from GlobalOxygenManager
+            GlobalOxygenManager.getInstance().releaseOxygenBlocks(level.dimension(), worldPosition, oxygenatedBlocks);
             // Clear oxygen from OxygenManager
             OxygenManager.getInstance().setOxygen(level, oxygenatedBlocks, false);
             oxygenatedBlocks.clear();
@@ -425,6 +473,7 @@ public class MekanismBasedOxygenDistributor extends BlockEntity implements MenuP
         tag.put("oxygenTank", oxygenTank.serializeNBT(provider));
         tag.putBoolean("isActive", isActive);
         tag.putBoolean("oxygenBlockVisibility", oxygenBlockVisibility);
+        tag.putInt("oxygenBlockColor", oxygenBlockColor);
     }
 
     @Override
@@ -434,6 +483,7 @@ public class MekanismBasedOxygenDistributor extends BlockEntity implements MenuP
         oxygenTank.deserializeNBT(provider, tag.getCompound("oxygenTank"));
         isActive = tag.getBoolean("isActive");
         oxygenBlockVisibility = tag.getBoolean("oxygenBlockVisibility");
+        oxygenBlockColor = tag.getInt("oxygenBlockColor");
     }
 
     // Client-server synchronization
@@ -444,6 +494,7 @@ public class MekanismBasedOxygenDistributor extends BlockEntity implements MenuP
         tag.putLong("oxygen", oxygenTank.getStored());
         tag.putBoolean("isActive", isActive);
         tag.putBoolean("oxygenBlockVisibility", oxygenBlockVisibility);
+        tag.putInt("oxygenBlockColor", oxygenBlockColor);
         return tag;
     }
 
@@ -465,6 +516,7 @@ public class MekanismBasedOxygenDistributor extends BlockEntity implements MenuP
         }
         isActive = tag.getBoolean("isActive");
         oxygenBlockVisibility = tag.getBoolean("oxygenBlockVisibility");
+        oxygenBlockColor = tag.getInt("oxygenBlockColor");
     }
 
     @Override
@@ -509,12 +561,31 @@ public class MekanismBasedOxygenDistributor extends BlockEntity implements MenuP
         }
     }
 
+    public boolean getOxygenBlockVisibility() {
+        return this.oxygenBlockVisibility;
+    }
+
+    public void setOxygenBlockColor(int colorIndex) {
+        this.oxygenBlockColor = colorIndex;
+        setChanged();
+
+        // Send update to client immediately if visible
+        if (level != null && !level.isClientSide && oxygenBlockVisibility) {
+            sendVisualizationUpdate(true);
+        }
+    }
+
+    public int getOxygenBlockColor() {
+        return this.oxygenBlockColor;
+    }
+
     protected void sendVisualizationUpdate(boolean visible) {
         if (level == null || level.isClientSide) return;
 
-        // Send packet to all players tracking this chunk
-        List<BlockPos> zones = visible ? new ArrayList<>(oxygenatedBlocks) : List.of();
-        var packet = new com.hecookin.adastramekanized.common.network.OxygenVisualizationPacket(visible, zones);
+        // Send packet to all players tracking this chunk with color info
+        Set<BlockPos> zones = visible ? new HashSet<>(oxygenatedBlocks) : new HashSet<>();
+        var packet = new com.hecookin.adastramekanized.common.network.OxygenVisualizationPacket(
+            worldPosition, zones, visible, oxygenBlockColor);
 
         // Get all players in range (64 blocks)
         level.players().stream()
@@ -565,6 +636,9 @@ public class MekanismBasedOxygenDistributor extends BlockEntity implements MenuP
     @Override
     public void setRemoved() {
         // Clean up oxygen when removed
+        if (level != null && !oxygenatedBlocks.isEmpty()) {
+            GlobalOxygenManager.getInstance().releaseOxygenBlocks(level.dimension(), worldPosition, oxygenatedBlocks);
+        }
         clearOxygenatedBlocks();
         super.setRemoved();
     }

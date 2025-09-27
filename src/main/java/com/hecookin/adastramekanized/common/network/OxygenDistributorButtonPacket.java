@@ -15,11 +15,12 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 /**
  * Packet to handle oxygen distributor GUI button clicks
  */
-public record OxygenDistributorButtonPacket(BlockPos pos, ButtonType buttonType, boolean value) implements CustomPacketPayload {
+public record OxygenDistributorButtonPacket(BlockPos pos, ButtonType buttonType, int value) implements CustomPacketPayload {
 
     public enum ButtonType {
         POWER,
-        VISIBILITY
+        VISIBILITY,
+        COLOR
     }
 
     public static final Type<OxygenDistributorButtonPacket> TYPE = new Type<>(
@@ -30,7 +31,7 @@ public record OxygenDistributorButtonPacket(BlockPos pos, ButtonType buttonType,
     public static final StreamCodec<ByteBuf, OxygenDistributorButtonPacket> CODEC = StreamCodec.composite(
         BlockPos.STREAM_CODEC, OxygenDistributorButtonPacket::pos,
         ByteBufCodecs.idMapper(i -> ButtonType.values()[i], ButtonType::ordinal), OxygenDistributorButtonPacket::buttonType,
-        ByteBufCodecs.BOOL, OxygenDistributorButtonPacket::value,
+        ByteBufCodecs.INT, OxygenDistributorButtonPacket::value,
         OxygenDistributorButtonPacket::new
     );
 
@@ -55,12 +56,16 @@ public record OxygenDistributorButtonPacket(BlockPos pos, ButtonType buttonType,
                 if (be instanceof MekanismBasedOxygenDistributor distributor) {
                     switch (packet.buttonType) {
                         case POWER -> {
-                            distributor.setActive(packet.value);
-                            AdAstraMekanized.LOGGER.debug("Player {} toggled oxygen distributor power to {}", player.getName().getString(), packet.value);
+                            distributor.setActive(packet.value != 0);
+                            AdAstraMekanized.LOGGER.debug("Player {} toggled oxygen distributor power to {}", player.getName().getString(), packet.value != 0);
                         }
                         case VISIBILITY -> {
-                            distributor.setOxygenBlockVisibility(packet.value);
-                            AdAstraMekanized.LOGGER.debug("Player {} toggled oxygen visibility to {}", player.getName().getString(), packet.value);
+                            distributor.setOxygenBlockVisibility(packet.value != 0);
+                            AdAstraMekanized.LOGGER.debug("Player {} toggled oxygen visibility to {}", player.getName().getString(), packet.value != 0);
+                        }
+                        case COLOR -> {
+                            distributor.setOxygenBlockColor(packet.value);
+                            AdAstraMekanized.LOGGER.debug("Player {} changed oxygen color to index {}", player.getName().getString(), packet.value);
                         }
                     }
                 }
