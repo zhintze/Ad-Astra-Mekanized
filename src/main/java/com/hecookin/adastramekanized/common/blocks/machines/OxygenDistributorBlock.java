@@ -95,20 +95,28 @@ public class OxygenDistributorBlock extends SidedMachineBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        // Use the registered Mekanism-style block entity type
-        return ModBlockEntityTypes.MEKANISM_OXYGEN_DISTRIBUTOR.get().create(pos, state);
+        // Use the improved oxygen distributor with smart flood fill
+        return ModBlockEntityTypes.OXYGEN_DISTRIBUTOR.get().create(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        // We need tickers on both client and server
-        // Server handles logic, client needs updates for animation
-        return (level1, pos, state1, blockEntity) -> {
-            if (blockEntity instanceof MekanismBasedOxygenDistributor entity) {
-                entity.tick();
-            }
-        };
+        if (blockEntityType == ModBlockEntityTypes.OXYGEN_DISTRIBUTOR.get()) {
+            return (level1, pos, state1, blockEntity) -> {
+                if (blockEntity instanceof OxygenDistributorBlockEntity entity) {
+                    // Use the parent class tick method which handles everything
+                    entity.tick();
+                }
+            };
+        } else if (blockEntityType == ModBlockEntityTypes.MEKANISM_OXYGEN_DISTRIBUTOR.get()) {
+            return (level1, pos, state1, blockEntity) -> {
+                if (blockEntity instanceof MekanismBasedOxygenDistributor entity) {
+                    entity.tick();
+                }
+            };
+        }
+        return null;
     }
 
     @Override
@@ -127,7 +135,10 @@ public class OxygenDistributorBlock extends SidedMachineBlock {
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.is(newState.getBlock())) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof MekanismBasedOxygenDistributor distributor) {
+            if (blockEntity instanceof OxygenDistributorBlockEntity distributor) {
+                // Clear oxygenated blocks when removed
+                distributor.setRemoved();
+            } else if (blockEntity instanceof MekanismBasedOxygenDistributor distributor) {
                 // Clear oxygenated blocks when removed
                 distributor.setRemoved();
             }

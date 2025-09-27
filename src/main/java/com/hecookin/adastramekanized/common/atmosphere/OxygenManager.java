@@ -86,7 +86,17 @@ public class OxygenManager implements OxygenApi {
         if (entity == null) return true;
 
         BlockPos pos = BlockPos.containing(entity.getX(), entity.getEyeY(), entity.getZ());
-        return hasOxygen(entity.level(), pos);
+        boolean hasOxy = hasOxygen(entity.level(), pos);
+
+        // Debug log every 2 seconds for players
+        if (entity.tickCount % 40 == 0 && entity instanceof net.minecraft.world.entity.player.Player) {
+            ResourceLocation dimId = entity.level().dimension().location();
+            Set<BlockPos> zones = oxygenatedZones.get(dimId);
+            AdAstraMekanized.LOGGER.debug("OxygenManager.hasOxygen for {} at {}: {}, zones in dim: {}",
+                entity.getName().getString(), pos, hasOxy, zones != null ? zones.size() : 0);
+        }
+
+        return hasOxy;
     }
 
     @Override
@@ -107,15 +117,25 @@ public class OxygenManager implements OxygenApi {
      * Set oxygen for multiple positions at once (more efficient for distributors)
      */
     public void setOxygen(Level level, Set<BlockPos> positions, boolean hasOxygen) {
-        if (level.isClientSide() || positions == null || positions.isEmpty()) return;
+        if (level.isClientSide() || positions == null || positions.isEmpty()) {
+            AdAstraMekanized.LOGGER.debug("OxygenManager.setOxygen skipped: clientSide={}, positions={}",
+                level != null && level.isClientSide(), positions);
+            return;
+        }
 
         ResourceLocation dimId = level.dimension().location();
         Set<BlockPos> zones = oxygenatedZones.computeIfAbsent(dimId, k -> ConcurrentHashMap.newKeySet());
 
         if (hasOxygen) {
+            int sizeBefore = zones.size();
             positions.forEach(pos -> zones.add(pos.immutable()));
+            AdAstraMekanized.LOGGER.info("OxygenManager: Added {} positions to dimension {}, total zones: {} -> {}",
+                positions.size(), dimId, sizeBefore, zones.size());
         } else {
+            int sizeBefore = zones.size();
             zones.removeAll(positions);
+            AdAstraMekanized.LOGGER.info("OxygenManager: Removed {} positions from dimension {}, total zones: {} -> {}",
+                positions.size(), dimId, sizeBefore, zones.size());
         }
     }
 

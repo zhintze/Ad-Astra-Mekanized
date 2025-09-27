@@ -29,7 +29,9 @@ import mekanism.api.energy.IStrictEnergyHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -53,7 +55,12 @@ public class MekanismBasedOxygenDistributor extends BlockEntity implements MenuP
     private final Set<BlockPos> oxygenatedBlocks = new HashSet<>();
 
     public MekanismBasedOxygenDistributor(BlockPos pos, BlockState state) {
-        super(ModBlockEntityTypes.MEKANISM_OXYGEN_DISTRIBUTOR.get(), pos, state);
+        this(ModBlockEntityTypes.MEKANISM_OXYGEN_DISTRIBUTOR.get(), pos, state);
+    }
+
+    // Protected constructor for subclasses to use their own BlockEntityType
+    protected MekanismBasedOxygenDistributor(net.minecraft.world.level.block.entity.BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
 
         // Create oxygen tank - use inputModern for proper pressurized tube connections
         // This tank only accepts oxygen and allows external insertion but not extraction
@@ -142,7 +149,7 @@ public class MekanismBasedOxygenDistributor extends BlockEntity implements MenuP
         }
     }
 
-    private void distributeOxygen() {
+    protected void distributeOxygen() {
         clearOxygenatedBlocks();
 
         // Simple flood fill to find air blocks
@@ -184,7 +191,7 @@ public class MekanismBasedOxygenDistributor extends BlockEntity implements MenuP
         }
     }
     
-    private void clearOxygenatedBlocks() {
+    protected void clearOxygenatedBlocks() {
         if (!oxygenatedBlocks.isEmpty() && level != null) {
             // Clear oxygen from OxygenManager
             OxygenManager.getInstance().setOxygen(level, oxygenatedBlocks, false);
@@ -495,7 +502,28 @@ public class MekanismBasedOxygenDistributor extends BlockEntity implements MenuP
     public void setOxygenBlockVisibility(boolean visible) {
         this.oxygenBlockVisibility = visible;
         setChanged();
-        // TODO: Implement phantom block rendering when visible
+
+        // Send visualization packet to nearby players
+        if (level != null && !level.isClientSide) {
+            sendVisualizationUpdate(visible);
+        }
+    }
+
+    protected void sendVisualizationUpdate(boolean visible) {
+        if (level == null || level.isClientSide) return;
+
+        // Send packet to all players tracking this chunk
+        List<BlockPos> zones = visible ? new ArrayList<>(oxygenatedBlocks) : List.of();
+        var packet = new com.hecookin.adastramekanized.common.network.OxygenVisualizationPacket(visible, zones);
+
+        // Get all players in range (64 blocks)
+        level.players().stream()
+            .filter(player -> player instanceof net.minecraft.server.level.ServerPlayer)
+            .map(player -> (net.minecraft.server.level.ServerPlayer) player)
+            .filter(player -> player.distanceToSqr(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ()) < 64 * 64)
+            .forEach(player -> {
+                net.neoforged.neoforge.network.PacketDistributor.sendToPlayer(player, packet);
+            });
     }
 
     // Methods for debug command - renamed to avoid conflict with IStrictEnergyHandler
@@ -509,6 +537,11 @@ public class MekanismBasedOxygenDistributor extends BlockEntity implements MenuP
 
     public int getOxygenatedBlockCount() {
         return oxygenatedBlocks.size();
+    }
+
+    // Protected getters for subclasses
+    protected Set<BlockPos> getOxygenatedBlocks() {
+        return oxygenatedBlocks;
     }
 
     // Debug methods

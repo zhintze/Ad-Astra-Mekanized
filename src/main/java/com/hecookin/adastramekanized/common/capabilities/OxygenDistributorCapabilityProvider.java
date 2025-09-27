@@ -2,6 +2,7 @@ package com.hecookin.adastramekanized.common.capabilities;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.common.blockentities.machines.MekanismBasedOxygenDistributor;
+import com.hecookin.adastramekanized.common.blockentities.machines.OxygenDistributorBlockEntity;
 import com.hecookin.adastramekanized.common.blocks.machines.OxygenDistributorBlock;
 import com.hecookin.adastramekanized.common.registry.ModBlocks;
 import net.minecraft.core.BlockPos;

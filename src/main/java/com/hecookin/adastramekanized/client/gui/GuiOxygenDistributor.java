@@ -2,8 +2,8 @@ package com.hecookin.adastramekanized.client.gui;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.common.menus.OxygenDistributorMenu;
-import com.hecookin.adastramekanized.common.networking.ModNetworking;
-import com.hecookin.adastramekanized.common.networking.packets.OxygenDistributorButtonPacket;
+import com.hecookin.adastramekanized.common.network.ModNetworking;
+import com.hecookin.adastramekanized.common.network.OxygenDistributorButtonPacket;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
