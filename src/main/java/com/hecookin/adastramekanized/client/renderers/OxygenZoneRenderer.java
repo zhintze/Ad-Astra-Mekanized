@@ -101,16 +101,14 @@ public class OxygenZoneRenderer {
             }
         }
 
-        // Update with new positions, checking for conflicts
+        // Clear and rebuild with new positions
         zone.oxygenBlocks.clear();
         if (zones != null && !zones.isEmpty()) {
+            // Add all zones from server - server already handles conflict resolution
+            // Don't do client-side filtering as it can cause desync
+            zone.oxygenBlocks.addAll(zones);
             for (BlockPos pos : zones) {
-                // Only claim this block if it's not already owned
-                BlockPos currentOwner = blockOwnership.get(pos);
-                if (currentOwner == null || currentOwner.equals(distributorPos)) {
-                    zone.oxygenBlocks.add(pos);
-                    blockOwnership.put(pos, distributorPos);
-                }
+                blockOwnership.put(pos, distributorPos);
             }
         }
 

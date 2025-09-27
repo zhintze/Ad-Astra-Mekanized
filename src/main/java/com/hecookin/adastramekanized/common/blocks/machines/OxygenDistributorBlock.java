@@ -133,16 +133,8 @@ public class OxygenDistributorBlock extends SidedMachineBlock {
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
-        if (!state.is(newState.getBlock())) {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof OxygenDistributorBlockEntity distributor) {
-                // Clear oxygenated blocks when removed
-                distributor.setRemoved();
-            } else if (blockEntity instanceof MekanismBasedOxygenDistributor distributor) {
-                // Clear oxygenated blocks when removed
-                distributor.setRemoved();
-            }
-        }
+        // super.onRemove will call setRemoved() on the block entity automatically
+        // We don't need to call it manually
         super.onRemove(state, level, pos, newState, moved);
     }
 }

@@ -16,9 +16,12 @@ public class OxygenDistributorMenu extends AbstractContainerMenu {
     private final MekanismBasedOxygenDistributor blockEntity;
     private final ContainerLevelAccess access;
 
-    // Data slots for synchronization (we'll use 4 slots for 2 longs)
+    // Data slots for synchronization (we'll use 4 slots for 2 longs + 3 for state)
     private int energyLow, energyHigh;
     private int oxygenLow, oxygenHigh;
+    private int visibility = -1;  // -1 indicates not yet synced
+    private int colorIndex = -1;  // -1 indicates not yet synced
+    private int machineState = 1;  // 0=INACTIVE, 1=STANDBY, 2=ACTIVE
 
     // Client constructor
     public OxygenDistributorMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buf) {
@@ -123,6 +126,45 @@ public class OxygenDistributorMenu extends AbstractContainerMenu {
                 oxygenHigh = value;
             }
         });
+
+        // Visibility state
+        this.addDataSlot(new DataSlot() {
+            @Override
+            public int get() {
+                return blockEntity.getOxygenBlockVisibility() ? 1 : 0;
+            }
+
+            @Override
+            public void set(int value) {
+                visibility = value;
+            }
+        });
+
+        // Color index
+        this.addDataSlot(new DataSlot() {
+            @Override
+            public int get() {
+                return blockEntity.getOxygenBlockColor();
+            }
+
+            @Override
+            public void set(int value) {
+                colorIndex = value;
+            }
+        });
+
+        // Machine state
+        this.addDataSlot(new DataSlot() {
+            @Override
+            public int get() {
+                return blockEntity.getMachineState();
+            }
+
+            @Override
+            public void set(int value) {
+                machineState = value;
+            }
+        });
     }
 
     public MekanismBasedOxygenDistributor getBlockEntity() {
@@ -151,5 +193,37 @@ public class OxygenDistributorMenu extends AbstractContainerMenu {
 
     public long getChemicalCapacity() {
         return blockEntity.getOxygenTank().getCapacity();
+    }
+
+    // Get visibility state (synced on client)
+    public boolean getVisibility() {
+        if (blockEntity.getLevel().isClientSide()) {
+            // If not yet synced, return the block entity's value directly
+            if (visibility == -1) {
+                return blockEntity.getOxygenBlockVisibility();
+            }
+            return visibility != 0;
+        }
+        return blockEntity.getOxygenBlockVisibility();
+    }
+
+    // Get color index (synced on client)
+    public int getColorIndex() {
+        if (blockEntity.getLevel().isClientSide()) {
+            // If not yet synced, return the block entity's value directly
+            if (colorIndex == -1) {
+                return blockEntity.getOxygenBlockColor();
+            }
+            return colorIndex;
+        }
+        return blockEntity.getOxygenBlockColor();
+    }
+
+    // Get machine state (synced on client)
+    public int getMachineState() {
+        if (blockEntity.getLevel().isClientSide()) {
+            return machineState;
+        }
+        return blockEntity.getMachineState();
     }
 }

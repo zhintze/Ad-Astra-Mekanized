@@ -5,9 +5,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * Global manager for oxygen blocks to prevent overlap between distributors
@@ -39,33 +43,54 @@ public class GlobalOxygenManager {
     /**
      * Try to claim oxygen blocks for a distributor in a specific dimension
      * Returns the set of blocks that were successfully claimed
+     * Uses atomic batch claiming to prevent race conditions
      */
     public synchronized Set<BlockPos> claimOxygenBlocks(ResourceKey<Level> dimension, BlockPos distributorPos, Set<BlockPos> requestedBlocks) {
+        AdAstraMekanized.LOGGER.debug("CLAIM REQUEST: Distributor at {} requesting {} blocks",
+            distributorPos, requestedBlocks.size());
+
         Set<BlockPos> claimedBlocks = ConcurrentHashMap.newKeySet();
 
         // Get or create dimension-specific maps
         Map<BlockPos, BlockPos> blockOwnership = dimensionBlockOwnership.computeIfAbsent(dimension, k -> new ConcurrentHashMap<>());
         Set<BlockPos> occupiedBlocks = dimensionOccupiedBlocks.computeIfAbsent(dimension, k -> ConcurrentHashMap.newKeySet());
 
+        // First pass: check which blocks we can claim
+        Set<BlockPos> availableBlocks = new HashSet<>();
+        int alreadyOwned = 0;
+        int ownedByOthers = 0;
+
         for (BlockPos pos : requestedBlocks) {
-            // Try to claim this block if it's not already occupied
-            if (occupiedBlocks.add(pos)) {
-                blockOwnership.put(pos, distributorPos);
+            BlockPos currentOwner = blockOwnership.get(pos);
+            if (currentOwner == null) {
+                // Block is unclaimed
+                availableBlocks.add(pos);
+            } else if (currentOwner.equals(distributorPos)) {
+                // We already own this block
                 claimedBlocks.add(pos);
+                alreadyOwned++;
             } else {
-                // Check if we already own it
-                BlockPos currentOwner = blockOwnership.get(pos);
-                if (distributorPos.equals(currentOwner)) {
-                    claimedBlocks.add(pos); // We already own it
-                }
-                // Otherwise skip it - another distributor owns it
+                // Another distributor owns it - skip
+                ownedByOthers++;
+                AdAstraMekanized.LOGGER.debug("  Block {} already owned by {}", pos, currentOwner);
             }
         }
 
-        if (!claimedBlocks.isEmpty()) {
-            AdAstraMekanized.LOGGER.debug("Distributor at {} in {} claimed {} of {} requested blocks",
-                distributorPos, dimension.location(), claimedBlocks.size(), requestedBlocks.size());
+        // Second pass: claim all available blocks atomically
+        // This prevents partial claims and race conditions
+        int newlyClaimed = 0;
+        for (BlockPos pos : availableBlocks) {
+            // Double-check in case of concurrent modification
+            if (!occupiedBlocks.contains(pos)) {
+                occupiedBlocks.add(pos);
+                blockOwnership.put(pos, distributorPos);
+                claimedBlocks.add(pos);
+                newlyClaimed++;
+            }
         }
+
+        AdAstraMekanized.LOGGER.debug("CLAIM COMPLETE: Distributor {} claimed {}/{} blocks (new={}, alreadyOwned={}, blocked={})",
+            distributorPos, claimedBlocks.size(), requestedBlocks.size(), newlyClaimed, alreadyOwned, ownedByOthers);
 
         return claimedBlocks;
     }
@@ -74,29 +99,47 @@ public class GlobalOxygenManager {
      * Release oxygen blocks owned by a distributor in a specific dimension
      */
     public synchronized void releaseOxygenBlocks(ResourceKey<Level> dimension, BlockPos distributorPos, Set<BlockPos> blocks) {
-        if (blocks.isEmpty()) return;
+        if (blocks.isEmpty()) {
+            AdAstraMekanized.LOGGER.debug("releaseOxygenBlocks called with EMPTY blocks for distributor at {}", distributorPos);
+            return;
+        }
+
+        AdAstraMekanized.LOGGER.debug("RELEASE REQUEST: Distributor at {} requesting release of {} blocks",
+            distributorPos, blocks.size());
 
         Map<BlockPos, BlockPos> blockOwnership = dimensionBlockOwnership.get(dimension);
         Set<BlockPos> occupiedBlocks = dimensionOccupiedBlocks.get(dimension);
 
         if (blockOwnership == null || occupiedBlocks == null) {
+            AdAstraMekanized.LOGGER.warn("RELEASE FAILED: No ownership maps for dimension {}", dimension.location());
             return;
         }
 
         int released = 0;
+        int notOwned = 0;
+        int ownedByOthers = 0;
+
         for (BlockPos pos : blocks) {
             BlockPos owner = blockOwnership.get(pos);
-            if (distributorPos.equals(owner)) {
+            if (owner == null) {
+                notOwned++;
+                AdAstraMekanized.LOGGER.debug("  Block {} was not owned by anyone", pos);
+            } else if (distributorPos.equals(owner)) {
                 blockOwnership.remove(pos);
                 occupiedBlocks.remove(pos);
                 released++;
+                AdAstraMekanized.LOGGER.debug("  Released block {} from distributor {}", pos, distributorPos);
+            } else {
+                ownedByOthers++;
+                AdAstraMekanized.LOGGER.debug("  Block {} owned by different distributor: {}", pos, owner);
             }
         }
 
-        if (released > 0) {
-            AdAstraMekanized.LOGGER.debug("Distributor at {} in {} released {} blocks",
-                distributorPos, dimension.location(), released);
-        }
+        AdAstraMekanized.LOGGER.debug("RELEASE COMPLETE: Distributor {} released {}/{} blocks (notOwned={}, ownedByOthers={})",
+            distributorPos, released, blocks.size(), notOwned, ownedByOthers);
+
+        // Log current state
+        AdAstraMekanized.LOGGER.debug("Remaining occupied blocks in dimension: {}", occupiedBlocks.size());
     }
 
     /**
@@ -128,5 +171,14 @@ public class GlobalOxygenManager {
     public boolean isBlockOccupied(ResourceKey<Level> dimension, BlockPos pos) {
         Set<BlockPos> occupied = dimensionOccupiedBlocks.get(dimension);
         return occupied != null && occupied.contains(pos);
+    }
+
+    /**
+     * Get the owner of a specific block in a dimension
+     * @return The distributor position that owns this block, or null if unclaimed
+     */
+    public BlockPos getBlockOwner(ResourceKey<Level> dimension, BlockPos pos) {
+        Map<BlockPos, BlockPos> blockOwnership = dimensionBlockOwnership.get(dimension);
+        return blockOwnership != null ? blockOwnership.get(pos) : null;
     }
 }

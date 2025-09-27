@@ -91,22 +91,22 @@ public record OxygenVisualizationPacket(BlockPos distributorPos, Set<BlockPos> o
             // Enable global rendering if any distributor is visible
             renderer.setRenderingEnabled(true);
 
-            if (packet.visible && packet.oxygenZones != null && !packet.oxygenZones.isEmpty()) {
-                // Update zones for this specific distributor with color
+            if (packet.oxygenZones != null && !packet.oxygenZones.isEmpty()) {
+                // We have zones - either update or hide them based on visibility
                 renderer.updateDistributorZones(packet.distributorPos, packet.oxygenZones, packet.colorIndex);
-                renderer.setDistributorVisibility(packet.distributorPos, true);
-                AdAstraMekanized.LOGGER.debug("Client received oxygen visualization for distributor at {}: {} zones, color {}",
-                    packet.distributorPos, packet.oxygenZones.size(), packet.colorIndex);
+                renderer.setDistributorVisibility(packet.distributorPos, packet.visible);
+                AdAstraMekanized.LOGGER.debug("Client {} oxygen visualization for distributor at {}: {} zones, color {}",
+                    packet.visible ? "showing" : "hiding", packet.distributorPos, packet.oxygenZones.size(), packet.colorIndex);
             } else {
-                // Clear or hide zones for this distributor
+                // Empty zones means complete removal
                 if (packet.distributorPos.equals(BlockPos.ZERO)) {
                     // Legacy clear all
                     renderer.clearAllZones();
                     AdAstraMekanized.LOGGER.debug("Client cleared all oxygen visualization");
                 } else {
-                    // Just hide this distributor's zones
-                    renderer.setDistributorVisibility(packet.distributorPos, false);
-                    AdAstraMekanized.LOGGER.debug("Client hiding oxygen visualization for distributor at {}",
+                    // Remove the distributor completely - it's inactive or removed
+                    renderer.removeDistributor(packet.distributorPos);
+                    AdAstraMekanized.LOGGER.debug("Client REMOVED oxygen visualization for distributor at {}",
                         packet.distributorPos);
                 }
             }

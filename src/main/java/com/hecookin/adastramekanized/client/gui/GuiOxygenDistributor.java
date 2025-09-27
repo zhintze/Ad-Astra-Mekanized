@@ -57,34 +57,28 @@ public class GuiOxygenDistributor extends AbstractContainerScreen<OxygenDistribu
     protected void init() {
         super.init();
 
-        // Initialize state from block entity
-        this.oxygenBlockVisibility = menu.getBlockEntity().getOxygenBlockVisibility();
-        this.currentColorIndex = menu.getBlockEntity().getOxygenBlockColor();
+        // Initialize state from menu (properly synced)
+        this.oxygenBlockVisibility = menu.getVisibility();
+        this.currentColorIndex = menu.getColorIndex();
 
-        // Add power on/off button at position (17, 95)
+        // Add power on/off button at position (17, 75) - simple toggle
         this.powerButton = this.addRenderableWidget(
             Button.builder(
-                Component.literal(menu.getBlockEntity().isActive() ? "O" : "X"),
+                Component.literal(menu.getBlockEntity().isManuallyDisabled() ? "OFF" : "ON"),
                 button -> {
-                    // Toggle machine power state
-                    boolean currentState = menu.getBlockEntity().isActive();
-                    boolean newState = !currentState;
-
-                    // Check if we have resources before trying to activate
-                    if (newState && (menu.getEnergy() < 400 || menu.getChemicalAmount() == 0)) {
-                        // Cannot activate without resources - button stays in OFF state
-                        return;
-                    }
+                    // Simple toggle of power state
+                    boolean currentlyDisabled = menu.getBlockEntity().isManuallyDisabled();
+                    boolean newDisabled = !currentlyDisabled;
 
                     ModNetworking.sendToServer(new OxygenDistributorButtonPacket(
                         menu.getBlockEntity().getBlockPos(),
                         OxygenDistributorButtonPacket.ButtonType.POWER,
-                        newState ? 1 : 0
+                        newDisabled ? 0 : 1  // 0=OFF (disabled), 1=ON (enabled)
                     ));
-                    button.setMessage(Component.literal(newState ? "O" : "X"));
+                    button.setMessage(Component.literal(newDisabled ? "OFF" : "ON"));
                 })
                 .pos(this.leftPos + 17, this.topPos + 75)
-                .size(20, 20)
+                .size(30, 20)
                 .build()
         );
 
@@ -202,9 +196,28 @@ public class GuiOxygenDistributor extends AbstractContainerScreen<OxygenDistribu
         Component blocksText = Component.literal(String.format("Blocks: %d/50", oxygenatedBlocks));
         guiGraphics.drawString(this.font, blocksText, leftPos + 11, topPos + 31, textColor);
 
-        // Active/Inactive status at position (11, 42) - green when active, red when inactive
-        String statusText = isActive ? "Active" : "Inactive";
-        int statusColor = isActive ? 0x68d975 : 0xd95763; // Green when active, red when inactive
+        // Machine state status at position (11, 42) - three states with colors
+        int machineState = menu.getMachineState();
+        String statusText;
+        int statusColor;
+        switch (machineState) {
+            case 0 -> {  // INACTIVE (OFF)
+                statusText = "Inactive";
+                statusColor = 0xd95763;  // Red
+            }
+            case 1 -> {  // STANDBY
+                statusText = "Standby";
+                statusColor = 0xFF8C00;  // Dark Orange
+            }
+            case 2 -> {  // ACTIVE
+                statusText = "Active";
+                statusColor = 0x68d975;  // Green
+            }
+            default -> {
+                statusText = "Unknown";
+                statusColor = 0x808080;  // Gray
+            }
+        }
         Component statusComponent = Component.literal(statusText);
         guiGraphics.drawString(this.font, statusComponent, leftPos + 11, topPos + 42, statusColor);
     }
@@ -270,6 +283,34 @@ public class GuiOxygenDistributor extends AbstractContainerScreen<OxygenDistribu
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        // Update button states if they've changed
+        if (this.powerButton != null && menu.getBlockEntity() != null) {
+            boolean isDisabled = menu.getBlockEntity().isManuallyDisabled();
+            Component expectedPowerText = Component.literal(isDisabled ? "OFF" : "ON");
+            if (!this.powerButton.getMessage().equals(expectedPowerText)) {
+                this.powerButton.setMessage(expectedPowerText);
+            }
+        }
+
+        // Update visibility button if changed
+        if (this.visibilityButton != null) {
+            boolean currentVisibility = menu.getVisibility();
+            Component expectedVisText = Component.literal(currentVisibility ? "Hide" : "Show");
+            if (!this.visibilityButton.getMessage().equals(expectedVisText)) {
+                this.visibilityButton.setMessage(expectedVisText);
+                this.oxygenBlockVisibility = currentVisibility;
+            }
+        }
+
+        // Update color button if changed
+        if (this.colorButton != null) {
+            int currentColor = menu.getColorIndex();
+            if (currentColor != this.currentColorIndex && currentColor >= 0 && currentColor < COLOR_NAMES.length) {
+                this.currentColorIndex = currentColor;
+                this.colorButton.setMessage(Component.literal(COLOR_NAMES[currentColorIndex]));
+            }
+        }
+
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
 
         // Render tooltips - need to calculate proper positions

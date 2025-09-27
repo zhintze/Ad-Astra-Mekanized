@@ -56,8 +56,9 @@ public record OxygenDistributorButtonPacket(BlockPos pos, ButtonType buttonType,
                 if (be instanceof MekanismBasedOxygenDistributor distributor) {
                     switch (packet.buttonType) {
                         case POWER -> {
-                            distributor.setActive(packet.value != 0);
-                            AdAstraMekanized.LOGGER.debug("Player {} toggled oxygen distributor power to {}", player.getName().getString(), packet.value != 0);
+                            distributor.setManuallyDisabled(packet.value == 0);  // value=0 means OFF (disabled)
+                            AdAstraMekanized.LOGGER.debug("Player {} toggled oxygen distributor power to {}",
+                                player.getName().getString(), packet.value != 0 ? "ON" : "OFF");
                         }
                         case VISIBILITY -> {
                             distributor.setOxygenBlockVisibility(packet.value != 0);
