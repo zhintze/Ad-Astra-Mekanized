@@ -71,7 +71,7 @@ public class ImprovedOxygenDistributor extends BlockEntity implements MenuProvid
     private boolean isActive = false;
     private boolean manuallyDisabled = false;
     private boolean oxygenBlockVisibility = false;
-    private int oxygenBlockColor = 0;
+    private int oxygenBlockColor = 8;  // Default to white (index 8 in color array)
     private long activationTime = 0;
     private final Set<BlockPos> oxygenatedBlocks = new HashSet<>();
     private final int tickOffset;

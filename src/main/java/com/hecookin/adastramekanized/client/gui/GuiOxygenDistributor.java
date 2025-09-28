@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.client.Minecraft;
 
 /**
  * Ad Astra-style GUI for the oxygen distributor
@@ -105,11 +106,14 @@ public class GuiOxygenDistributor extends AbstractContainerScreen<OxygenDistribu
         );
 
         // Add color change button next to visibility button
+        // Custom button that responds to both left and right clicks
         this.colorButton = this.addRenderableWidget(
-            Button.builder(
+            new Button(
+                this.leftPos + 54, this.topPos + 120,  // Position next to visibility button
+                45, 20,  // Width and height
                 Component.literal(COLOR_NAMES[currentColorIndex]),
                 button -> {
-                    // Cycle through colors
+                    // Left click - cycle forward (handled by default onPress)
                     currentColorIndex = (currentColorIndex + 1) % COLOR_NAMES.length;
                     button.setMessage(Component.literal(COLOR_NAMES[currentColorIndex]));
 
@@ -119,10 +123,36 @@ public class GuiOxygenDistributor extends AbstractContainerScreen<OxygenDistribu
                         OxygenDistributorButtonPacket.ButtonType.COLOR,
                         currentColorIndex
                     ));
-                })
-                .pos(this.leftPos + 54, this.topPos + 120)  // Next to visibility button
-                .size(45, 20)  // Width for color names
-                .build()
+                },
+                (button) -> Component.literal(COLOR_NAMES[currentColorIndex])  // Narration supplier
+            ) {
+                @Override
+                public boolean mouseClicked(double mouseX, double mouseY, int button) {
+                    if (this.active && this.visible && this.isHovered()) {
+                        if (button == 1) {  // Right click (button 1)
+                            // Cycle backwards through colors
+                            GuiOxygenDistributor.this.currentColorIndex = GuiOxygenDistributor.this.currentColorIndex - 1;
+                            if (GuiOxygenDistributor.this.currentColorIndex < 0) {
+                                GuiOxygenDistributor.this.currentColorIndex = COLOR_NAMES.length - 1;
+                            }
+                            this.setMessage(Component.literal(COLOR_NAMES[GuiOxygenDistributor.this.currentColorIndex]));
+
+                            // Send color change packet to server
+                            ModNetworking.sendToServer(new OxygenDistributorButtonPacket(
+                                GuiOxygenDistributor.this.menu.getBlockEntity().getBlockPos(),
+                                OxygenDistributorButtonPacket.ButtonType.COLOR,
+                                GuiOxygenDistributor.this.currentColorIndex
+                            ));
+                            this.playDownSound(Minecraft.getInstance().getSoundManager());
+                            return true;
+                        } else if (button == 0) {  // Left click (button 0)
+                            // Use the normal onPress handler for forward cycling
+                            return super.mouseClicked(mouseX, mouseY, button);
+                        }
+                    }
+                    return false;
+                }
+            }
         );
     }
 
