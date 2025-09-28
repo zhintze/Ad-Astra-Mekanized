@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "adastramekanized:block/wireless_power_relay"
+    },
+    "facing=south": {
+      "model": "adastramekanized:block/wireless_power_relay",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "adastramekanized:block/wireless_power_relay",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "adastramekanized:block/wireless_power_relay",
+      "y": 90
+    }
+  }
+}

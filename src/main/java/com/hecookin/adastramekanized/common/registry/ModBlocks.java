@@ -4,6 +4,8 @@ import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.common.blocks.BlockProperties;
 import com.hecookin.adastramekanized.common.blocks.machines.OxygenDistributorBlock;
 import com.hecookin.adastramekanized.common.blocks.machines.OxygenLoaderBlock;
+import com.hecookin.adastramekanized.common.blocks.machines.WirelessPowerRelayBlock;
+import com.hecookin.adastramekanized.common.blocks.WirelessControlButton;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -370,6 +372,19 @@ public class ModBlocks {
 
     public static final Supplier<Block> OXYGEN_LOADER = registerBlock("oxygen_loader",
             () -> new OxygenLoaderBlock(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> WIRELESS_POWER_RELAY = registerBlock("wireless_power_relay",
+            () -> new WirelessPowerRelayBlock(BlockProperties.INDUSTRIAL_BLOCK));
+
+    // Wireless Control Buttons
+    public static final Supplier<Block> IRON_WIRELESS_BUTTON = registerBlock("iron_wireless_button",
+            () -> new WirelessControlButton(BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));
+
+    public static final Supplier<Block> STEEL_WIRELESS_BUTTON = registerBlock("steel_wireless_button",
+            () -> new WirelessControlButton(BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));
+
+    public static final Supplier<Block> DESH_WIRELESS_BUTTON = registerBlock("desh_wireless_button",
+            () -> new WirelessControlButton(BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));
 
     public static final Supplier<Block> ROCKET_ASSEMBLY_STATION = registerBlock("rocket_assembly_station",
             () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));

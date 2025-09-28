@@ -3,6 +3,7 @@ package com.hecookin.adastramekanized.common.registry;
 import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.common.blockentities.machines.OxygenDistributorBlockEntity;
 import com.hecookin.adastramekanized.common.blockentities.machines.ImprovedOxygenDistributor;
+import com.hecookin.adastramekanized.common.blockentities.machines.WirelessPowerRelayBlockEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -28,6 +29,13 @@ public class ModBlockEntityTypes {
             () -> createBlockEntityType(
                 ImprovedOxygenDistributor::new,
                 ModBlocks.OXYGEN_DISTRIBUTOR.get()));
+
+    // Wireless Power Relay block entity
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WirelessPowerRelayBlockEntity>> WIRELESS_POWER_RELAY =
+        BLOCK_ENTITY_TYPES.register("wireless_power_relay",
+            () -> createBlockEntityType(
+                WirelessPowerRelayBlockEntity::new,
+                ModBlocks.WIRELESS_POWER_RELAY.get()));
 
     /**
      * Helper method to create a BlockEntityType

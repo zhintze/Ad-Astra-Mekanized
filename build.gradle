@@ -28,6 +28,9 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 base {
@@ -170,6 +173,7 @@ dependencies {
     implementation "curse.maven:WhenDungeonsArise-442508:6078710"
     implementation "curse.maven:WhenDungeonsAriseSevenSeas-953637:5661269"
 
+    implementation "blank:constructionwand-1.21.1-2.12"
 
 
     // EPIC FIGHT

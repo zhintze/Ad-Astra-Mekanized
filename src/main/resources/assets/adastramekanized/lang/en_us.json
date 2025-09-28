@@ -152,6 +152,18 @@
 
   "block.adastramekanized.oxygen_distributor": "Oxygen Distributor",
   "block.adastramekanized.oxygen_loader": "Oxygen Loader",
+  "block.adastramekanized.wireless_power_relay": "Wireless Power Relay",
+  "block.adastramekanized.wireless_power_relay.tooltip": "Distributes power wirelessly to linked oxygen distributors",
+  "block.adastramekanized.wireless_power_relay.tooltip2": "Insert an Oxygen Network Controller to link distributors",
+
+  "item.adastramekanized.oxygen_network_controller": "Oxygen Network Controller",
+
+  "block.adastramekanized.iron_wireless_button": "Iron Wireless Control Button",
+  "block.adastramekanized.steel_wireless_button": "Steel Wireless Control Button",
+  "block.adastramekanized.desh_wireless_button": "Desh Wireless Control Button",
+  "block.adastramekanized.wireless_control_button.tooltip": "Links with Oxygen Network Controller",
+  "block.adastramekanized.wireless_control_button.tooltip2": "Sneak + Right-click with controller to bind",
+
   "block.adastramekanized.rocket_assembly_station": "Rocket Assembly Station",
 
   "warning.adastramekanized.no_oxygen": "WARNING: NO OXYGEN!",

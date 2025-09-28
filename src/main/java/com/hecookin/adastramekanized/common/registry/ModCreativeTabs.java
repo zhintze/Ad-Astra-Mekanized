@@ -212,6 +212,14 @@ public class ModCreativeTabs {
                         // Mekanism-Compatible Workstations
                         output.accept(ModBlocks.OXYGEN_DISTRIBUTOR.get());
                         output.accept(ModBlocks.OXYGEN_LOADER.get());
+                        output.accept(ModBlocks.WIRELESS_POWER_RELAY.get());
+                        output.accept(ModItems.OXYGEN_NETWORK_CONTROLLER.get());
+
+                        // Wireless Control Buttons
+                        output.accept(ModBlocks.IRON_WIRELESS_BUTTON.get());
+                        output.accept(ModBlocks.STEEL_WIRELESS_BUTTON.get());
+                        output.accept(ModBlocks.DESH_WIRELESS_BUTTON.get());
+
                         output.accept(ModBlocks.ROCKET_ASSEMBLY_STATION.get());
                     })
                     .build());

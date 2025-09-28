@@ -1,6 +1,7 @@
 package com.hecookin.adastramekanized.common.registry;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
+import com.hecookin.adastramekanized.common.items.OxygenNetworkController;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
@@ -103,6 +104,11 @@ public class ModItems {
 
     public static final Supplier<Item> CHEESE = ITEMS.register("cheese",
             () -> new Item(new Item.Properties().food(FoodProperties.CHEESE)));
+
+    // ========== TECHNICAL ITEMS ==========
+
+    public static final Supplier<Item> OXYGEN_NETWORK_CONTROLLER = ITEMS.register("oxygen_network_controller",
+            () -> new OxygenNetworkController());
 
     /**
      * Food properties for items

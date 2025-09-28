@@ -4,6 +4,8 @@ import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.client.renderers.blocks.MekanismBasedOxygenDistributorRenderer;
 import com.hecookin.adastramekanized.client.renderers.blocks.OxygenDistributorBlockEntityRenderer;
 import com.hecookin.adastramekanized.client.gui.GuiOxygenDistributor;
+import com.hecookin.adastramekanized.client.screens.OxygenControllerScreen;
+import com.hecookin.adastramekanized.client.screens.WirelessPowerRelayScreen;
 import com.hecookin.adastramekanized.common.registry.ModBlockEntityTypes;
 import com.hecookin.adastramekanized.common.registry.ModMenuTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -32,6 +34,8 @@ public class ClientModEvents {
     public static void onRegisterMenuScreens(RegisterMenuScreensEvent event) {
         // Register menu screens
         event.register(ModMenuTypes.OXYGEN_DISTRIBUTOR.get(), GuiOxygenDistributor::new);
+        event.register(ModMenuTypes.OXYGEN_CONTROLLER.get(), OxygenControllerScreen::new);
+        event.register(ModMenuTypes.WIRELESS_POWER_RELAY.get(), WirelessPowerRelayScreen::new);
     }
 
     @SubscribeEvent
