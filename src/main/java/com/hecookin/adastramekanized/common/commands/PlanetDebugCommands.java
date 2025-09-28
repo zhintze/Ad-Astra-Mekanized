@@ -5,6 +5,8 @@ import com.hecookin.adastramekanized.api.planets.Planet;
 import com.hecookin.adastramekanized.api.planets.PlanetRegistry;
 import com.hecookin.adastramekanized.common.blockentities.machines.MekanismBasedOxygenDistributor;
 import com.hecookin.adastramekanized.common.blockentities.machines.OxygenDistributorBlockEntity;
+import com.hecookin.adastramekanized.common.blockentities.machines.ImprovedOxygenDistributor;
+import com.hecookin.adastramekanized.common.atmosphere.GlobalOxygenManager;
 import com.hecookin.adastramekanized.common.planets.PlanetManager;
 import com.hecookin.adastramekanized.common.teleportation.PlanetTeleportationSystem;
 import com.hecookin.adastramekanized.integration.ModIntegrationManager;
@@ -346,7 +348,29 @@ public class PlanetDebugCommands {
 
         CommandSourceStack source = context.getSource();
 
-        if (be instanceof MekanismBasedOxygenDistributor distributor) {
+        if (be instanceof ImprovedOxygenDistributor distributor) {
+            final BlockPos finalPos = distributorPos;
+            source.sendSuccess(() -> Component.literal("§6=== Improved Oxygen Distributor Debug ==="), false);
+            source.sendSuccess(() -> Component.literal("§7Position: §f" + finalPos), false);
+            source.sendSuccess(() -> Component.literal("§7Active: " + (distributor.isActive() ? "§aYes" : "§cNo")), false);
+            source.sendSuccess(() -> Component.literal("§7Energy: §f" + distributor.getEnergyStorage().getEnergyStored() + "/" + distributor.getEnergyStorage().getMaxEnergyStored() + " FE"), false);
+            source.sendSuccess(() -> Component.literal("§7Oxygen: §f" + distributor.getOxygenTank().getStored() + "/" + distributor.getOxygenTank().getCapacity() + " mB"), false);
+            source.sendSuccess(() -> Component.literal("§7Current Radius: §a" + distributor.getCurrentRadius() + " blocks (dynamic expansion)"), false);
+            source.sendSuccess(() -> Component.literal("§7Oxygenated Blocks: §f" + distributor.getOxygenatedBlockCount() + "/" + distributor.getMaxOxygenBlocks()), false);
+            source.sendSuccess(() -> Component.literal("§7Efficiency: §f" + String.format("%.1f%%", distributor.getEfficiency())), false);
+
+            // Check global oxygen manager
+            GlobalOxygenManager globalManager = GlobalOxygenManager.getInstance();
+            int totalBlocksInDim = globalManager.getTotalOxygenBlocks(player.level().dimension());
+            source.sendSuccess(() -> Component.literal("§7Total Oxygen Blocks in Dimension: §f" + totalBlocksInDim), false);
+
+            source.sendSuccess(() -> Component.literal("§6Features:"), false);
+            source.sendSuccess(() -> Component.literal("§a✓ Dynamic radius expansion (starts at 3, +1 every 10 ticks)"), false);
+            source.sendSuccess(() -> Component.literal("§a✓ Ring-based priority claiming (closer blocks first)"), false);
+            source.sendSuccess(() -> Component.literal("§a✓ Respects other distributors' boundaries"), false);
+            source.sendSuccess(() -> Component.literal("§a✓ 100-tick pathfinding cache"), false);
+            source.sendSuccess(() -> Component.literal("§a✓ Treats claimed blocks as walls"), false);
+        } else if (be instanceof MekanismBasedOxygenDistributor distributor) {
             final BlockPos finalPos = distributorPos;
             source.sendSuccess(() -> Component.literal("§6=== Oxygen Distributor Debug ==="), false);
             source.sendSuccess(() -> Component.literal("§7Position: §f" + finalPos), false);
@@ -364,15 +388,6 @@ public class PlanetDebugCommands {
             source.sendSuccess(() -> Component.literal("§7Universal Cables: §aShould connect on all sides for energy"), false);
             source.sendSuccess(() -> Component.literal("§7Pressurized Tubes: §aShould connect on all sides for oxygen"), false);
             source.sendSuccess(() -> Component.literal("§7Note: Place cables/tubes adjacent to the distributor"), false);
-        } else if (be instanceof OxygenDistributorBlockEntity distributor) {
-            // Legacy distributor
-            final BlockPos finalPos2 = distributorPos;
-            source.sendSuccess(() -> Component.literal("§6=== Oxygen Distributor Debug (Legacy) ==="), false);
-            source.sendSuccess(() -> Component.literal("§7Position: §f" + finalPos2), false);
-            source.sendSuccess(() -> Component.literal("§7Active: " + (distributor.isActive() ? "§aYes" : "§cNo")), false);
-            source.sendSuccess(() -> Component.literal("§7Energy: §f" + distributor.getEnergyStorage().getEnergyStored() + "/" + distributor.getEnergyStorage().getMaxEnergyStored() + " FE"), false);
-            source.sendSuccess(() -> Component.literal("§7Oxygenated Blocks: §f" + distributor.getOxygenatedBlockCount()), false);
-            source.sendSuccess(() -> Component.literal("§cThis is the old distributor - cables won't connect!"), false);
         } else {
             source.sendFailure(Component.literal("§cNo oxygen distributor found within 10 blocks"));
             source.sendSuccess(() -> Component.literal("§7Place an oxygen distributor nearby and try again"), false);

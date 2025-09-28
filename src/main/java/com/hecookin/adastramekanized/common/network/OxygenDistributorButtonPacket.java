@@ -1,7 +1,7 @@
 package com.hecookin.adastramekanized.common.network;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
-import com.hecookin.adastramekanized.common.blockentities.machines.MekanismBasedOxygenDistributor;
+import com.hecookin.adastramekanized.common.blockentities.machines.ImprovedOxygenDistributor;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -53,7 +53,7 @@ public record OxygenDistributorButtonPacket(BlockPos pos, ButtonType buttonType,
                 }
 
                 BlockEntity be = player.level().getBlockEntity(packet.pos);
-                if (be instanceof MekanismBasedOxygenDistributor distributor) {
+                if (be instanceof ImprovedOxygenDistributor distributor) {
                     switch (packet.buttonType) {
                         case POWER -> {
                             distributor.setManuallyDisabled(packet.value == 0);  // value=0 means OFF (disabled)

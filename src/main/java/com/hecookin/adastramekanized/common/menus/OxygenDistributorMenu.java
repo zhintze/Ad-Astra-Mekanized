@@ -1,6 +1,6 @@
 package com.hecookin.adastramekanized.common.menus;
 
-import com.hecookin.adastramekanized.common.blockentities.machines.MekanismBasedOxygenDistributor;
+import com.hecookin.adastramekanized.common.blockentities.machines.ImprovedOxygenDistributor;
 import com.hecookin.adastramekanized.common.registry.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class OxygenDistributorMenu extends AbstractContainerMenu {
 
-    private final MekanismBasedOxygenDistributor blockEntity;
+    private final ImprovedOxygenDistributor blockEntity;
     private final ContainerLevelAccess access;
 
     // Data slots for synchronization (we'll use 4 slots for 2 longs + 3 for state)
@@ -32,7 +32,7 @@ public class OxygenDistributorMenu extends AbstractContainerMenu {
     public OxygenDistributorMenu(int containerId, Inventory playerInventory, BlockEntity blockEntity) {
         super(ModMenuTypes.OXYGEN_DISTRIBUTOR.get(), containerId);
 
-        if (blockEntity instanceof MekanismBasedOxygenDistributor distributor) {
+        if (blockEntity instanceof ImprovedOxygenDistributor distributor) {
             this.blockEntity = distributor;
             this.access = ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos());
         } else {
@@ -79,7 +79,7 @@ public class OxygenDistributorMenu extends AbstractContainerMenu {
         this.addDataSlot(new DataSlot() {
             @Override
             public int get() {
-                return (int) (blockEntity.getEnergyForDebug(0) & 0xFFFF);
+                return (int) (blockEntity.getEnergyStorage().getEnergyStored() & 0xFFFF);
             }
 
             @Override
@@ -92,7 +92,7 @@ public class OxygenDistributorMenu extends AbstractContainerMenu {
         this.addDataSlot(new DataSlot() {
             @Override
             public int get() {
-                return (int) ((blockEntity.getEnergyForDebug(0) >> 16) & 0xFFFF);
+                return (int) ((blockEntity.getEnergyStorage().getEnergyStored() >> 16) & 0xFFFF);
             }
 
             @Override
@@ -167,7 +167,7 @@ public class OxygenDistributorMenu extends AbstractContainerMenu {
         });
     }
 
-    public MekanismBasedOxygenDistributor getBlockEntity() {
+    public ImprovedOxygenDistributor getBlockEntity() {
         return blockEntity;
     }
 
@@ -176,11 +176,11 @@ public class OxygenDistributorMenu extends AbstractContainerMenu {
         if (blockEntity.getLevel().isClientSide()) {
             return ((long) energyHigh << 16) | (energyLow & 0xFFFF);
         }
-        return blockEntity.getEnergyForDebug(0);
+        return blockEntity.getEnergyStorage().getEnergyStored();
     }
 
     public long getMaxEnergy() {
-        return blockEntity.getMaxEnergyForDebug(0);
+        return blockEntity.getEnergyStorage().getMaxEnergyStored();
     }
 
     // Data synchronization for chemicals - use synced values on client

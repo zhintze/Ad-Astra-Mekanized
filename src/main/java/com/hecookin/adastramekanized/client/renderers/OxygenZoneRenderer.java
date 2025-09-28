@@ -47,7 +47,7 @@ public class OxygenZoneRenderer {
 
     // Use vanilla ice texture for oxygen visualization
     private static final ResourceLocation ICE_TEXTURE = ResourceLocation.withDefaultNamespace("block/ice");
-    private static final float ALPHA = 0.5f; // Semi-transparent - increased for better color visibility
+    private static final float ALPHA = 0.15f; // Very transparent for subtle visualization
 
     // Helper class to track zones per distributor
     private static class DistributorZone {

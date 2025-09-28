@@ -1,8 +1,8 @@
 package com.hecookin.adastramekanized.common.registry;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
-import com.hecookin.adastramekanized.common.blockentities.machines.MekanismBasedOxygenDistributor;
 import com.hecookin.adastramekanized.common.blockentities.machines.OxygenDistributorBlockEntity;
+import com.hecookin.adastramekanized.common.blockentities.machines.ImprovedOxygenDistributor;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -22,11 +22,11 @@ public class ModBlockEntityTypes {
                 OxygenDistributorBlockEntity::new,
                 ModBlocks.OXYGEN_DISTRIBUTOR.get()));
 
-    // New Mekanism-style oxygen distributor
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MekanismBasedOxygenDistributor>> MEKANISM_OXYGEN_DISTRIBUTOR =
+    // Improved oxygen distributor with Mekanism integration
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ImprovedOxygenDistributor>> MEKANISM_OXYGEN_DISTRIBUTOR =
         BLOCK_ENTITY_TYPES.register("mekanism_oxygen_distributor",
             () -> createBlockEntityType(
-                MekanismBasedOxygenDistributor::new,
+                ImprovedOxygenDistributor::new,
                 ModBlocks.OXYGEN_DISTRIBUTOR.get()));
 
     /**

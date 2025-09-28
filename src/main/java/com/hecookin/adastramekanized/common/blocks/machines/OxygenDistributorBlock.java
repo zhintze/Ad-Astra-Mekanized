@@ -1,7 +1,7 @@
 package com.hecookin.adastramekanized.common.blocks.machines;
 
-import com.hecookin.adastramekanized.common.blockentities.machines.MekanismBasedOxygenDistributor;
 import com.hecookin.adastramekanized.common.blockentities.machines.OxygenDistributorBlockEntity;
+import com.hecookin.adastramekanized.common.blockentities.machines.ImprovedOxygenDistributor;
 import com.hecookin.adastramekanized.common.blocks.base.SidedMachineBlock;
 import com.hecookin.adastramekanized.common.registry.ModBlockEntityTypes;
 import net.minecraft.core.BlockPos;
@@ -84,7 +84,7 @@ public class OxygenDistributorBlock extends SidedMachineBlock {
     @Override
     public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
         BlockEntity be = level.getBlockEntity(pos);
-        if (be instanceof MekanismBasedOxygenDistributor entity) {
+        if (be instanceof ImprovedOxygenDistributor entity) {
             return entity.isActive() ? 15 : 0;
         } else if (be instanceof OxygenDistributorBlockEntity entity) {
             return entity.isActive() ? 15 : 0;
@@ -111,7 +111,7 @@ public class OxygenDistributorBlock extends SidedMachineBlock {
             };
         } else if (blockEntityType == ModBlockEntityTypes.MEKANISM_OXYGEN_DISTRIBUTOR.get()) {
             return (level1, pos, state1, blockEntity) -> {
-                if (blockEntity instanceof MekanismBasedOxygenDistributor entity) {
+                if (blockEntity instanceof ImprovedOxygenDistributor entity) {
                     entity.tick();
                 }
             };

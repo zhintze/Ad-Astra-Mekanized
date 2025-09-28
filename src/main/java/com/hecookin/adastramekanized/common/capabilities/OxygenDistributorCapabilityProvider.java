@@ -1,7 +1,7 @@
 package com.hecookin.adastramekanized.common.capabilities;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
-import com.hecookin.adastramekanized.common.blockentities.machines.MekanismBasedOxygenDistributor;
+import com.hecookin.adastramekanized.common.blockentities.machines.ImprovedOxygenDistributor;
 import com.hecookin.adastramekanized.common.blockentities.machines.OxygenDistributorBlockEntity;
 import com.hecookin.adastramekanized.common.blocks.machines.OxygenDistributorBlock;
 import com.hecookin.adastramekanized.common.registry.ModBlocks;
@@ -30,7 +30,7 @@ public class OxygenDistributorCapabilityProvider {
         event.registerBlock(
             Capabilities.EnergyStorage.BLOCK,
             (level, pos, state, be, side) -> {
-                if (be instanceof MekanismBasedOxygenDistributor distributor) {
+                if (be instanceof ImprovedOxygenDistributor distributor) {
                     return distributor.getEnergyStorage();
                 }
                 return null;
@@ -55,7 +55,7 @@ public class OxygenDistributorCapabilityProvider {
                 event.registerBlock(
                     blockCap,
                     (level, pos, state, be, side) -> {
-                        if (be instanceof MekanismBasedOxygenDistributor distributor) {
+                        if (be instanceof ImprovedOxygenDistributor distributor) {
                             return distributor.getChemicalHandler();
                         }
                         return null;
@@ -79,7 +79,7 @@ public class OxygenDistributorCapabilityProvider {
                 event.registerBlock(
                     blockCap,
                     (level, pos, state, be, side) -> {
-                        if (be instanceof MekanismBasedOxygenDistributor distributor) {
+                        if (be instanceof ImprovedOxygenDistributor distributor) {
                             // Return the strict energy handler for JADE compatibility
                             var handler = distributor.getStrictEnergyHandler();
                             AdAstraMekanized.LOGGER.debug("Returning IStrictEnergyHandler for JADE: {}, energy: {}",

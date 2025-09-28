@@ -1,7 +1,7 @@
 package com.hecookin.adastramekanized.client.renderers.blocks;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
-import com.hecookin.adastramekanized.common.blockentities.machines.MekanismBasedOxygenDistributor;
+import com.hecookin.adastramekanized.common.blockentities.machines.ImprovedOxygenDistributor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
  * Renderer for the Mekanism-based oxygen distributor
  * Uses block model approach for the animated rotating center part
  */
-public class MekanismBasedOxygenDistributorRenderer implements BlockEntityRenderer<MekanismBasedOxygenDistributor> {
+public class MekanismBasedOxygenDistributorRenderer implements BlockEntityRenderer<ImprovedOxygenDistributor> {
 
     public static final ModelResourceLocation TOP_MODEL = ModelResourceLocation.standalone(
         ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "block/oxygen_distributor_top"));
@@ -31,7 +31,7 @@ public class MekanismBasedOxygenDistributorRenderer implements BlockEntityRender
     }
 
     @Override
-    public void render(MekanismBasedOxygenDistributor blockEntity, float partialTicks, PoseStack poseStack,
+    public void render(ImprovedOxygenDistributor blockEntity, float partialTicks, PoseStack poseStack,
                        MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
 
         var state = blockEntity.getBlockState();
@@ -71,7 +71,7 @@ public class MekanismBasedOxygenDistributorRenderer implements BlockEntityRender
             // Debug logging every 2 seconds
             if (time % 2000 < 50) {
                 AdAstraMekanized.LOGGER.info("Renderer: isActive={}, rotation={}, energy={}, oxygen={}",
-                    isActive, rotation, blockEntity.getEnergyForDebug(0), blockEntity.getOxygenTank().getStored());
+                    isActive, rotation, blockEntity.getEnergyStorage().getEnergyStored(), blockEntity.getOxygenTank().getStored());
             }
         }
 

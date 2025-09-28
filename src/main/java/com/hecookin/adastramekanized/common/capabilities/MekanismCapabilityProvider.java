@@ -1,7 +1,7 @@
 package com.hecookin.adastramekanized.common.capabilities;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
-import com.hecookin.adastramekanized.common.blockentities.machines.MekanismBasedOxygenDistributor;
+import com.hecookin.adastramekanized.common.blockentities.machines.ImprovedOxygenDistributor;
 import com.hecookin.adastramekanized.common.blocks.machines.OxygenDistributorBlock;
 import com.hecookin.adastramekanized.common.registry.ModBlocks;
 import mekanism.api.chemical.IChemicalHandler;
@@ -25,7 +25,7 @@ public class MekanismCapabilityProvider {
      * Register capabilities during mod setup - simplified version
      */
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        // The MekanismBasedOxygenDistributor handles its own capabilities internally
+        // The ImprovedOxygenDistributor handles its own capabilities internally
         // using getCapability method, so no explicit registration needed here
         AdAstraMekanized.LOGGER.info("Mekanism capabilities handled by block entities directly");
     }
