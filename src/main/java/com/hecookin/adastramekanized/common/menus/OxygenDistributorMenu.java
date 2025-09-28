@@ -16,12 +16,18 @@ public class OxygenDistributorMenu extends AbstractContainerMenu {
     private final ImprovedOxygenDistributor blockEntity;
     private final ContainerLevelAccess access;
 
-    // Data slots for synchronization (we'll use 4 slots for 2 longs + 3 for state)
+    // Data slots for synchronization (we'll use 4 slots for 2 longs + 3 for state + 4 for usage)
     private int energyLow, energyHigh;
     private int oxygenLow, oxygenHigh;
     private int visibility = -1;  // -1 indicates not yet synced
     private int colorIndex = -1;  // -1 indicates not yet synced
     private int machineState = 1;  // 0=INACTIVE, 1=STANDBY, 2=ACTIVE
+
+    // Usage tracking slots
+    private int oxygenUsage = 0;  // mB/tick * 100 (for 2 decimal places)
+    private int energyUsage = 0;  // FE/tick * 100 (for 2 decimal places)
+    private int blockCount = 0;   // Number of oxygenated blocks
+    private int currentRadius = 0; // Current distribution radius
 
     // Client constructor
     public OxygenDistributorMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buf) {
@@ -165,6 +171,58 @@ public class OxygenDistributorMenu extends AbstractContainerMenu {
                 machineState = value;
             }
         });
+
+        // Oxygen usage (mB/tick * 100 for 2 decimal places)
+        this.addDataSlot(new DataSlot() {
+            @Override
+            public int get() {
+                return (int) (blockEntity.getOxygenUsage() * 100);
+            }
+
+            @Override
+            public void set(int value) {
+                oxygenUsage = value;
+            }
+        });
+
+        // Energy usage (FE/tick * 100 for 2 decimal places)
+        this.addDataSlot(new DataSlot() {
+            @Override
+            public int get() {
+                return (int) (blockEntity.getEnergyUsage() * 100);
+            }
+
+            @Override
+            public void set(int value) {
+                energyUsage = value;
+            }
+        });
+
+        // Block count
+        this.addDataSlot(new DataSlot() {
+            @Override
+            public int get() {
+                return blockEntity.getOxygenatedBlockCount();
+            }
+
+            @Override
+            public void set(int value) {
+                blockCount = value;
+            }
+        });
+
+        // Current radius
+        this.addDataSlot(new DataSlot() {
+            @Override
+            public int get() {
+                return blockEntity.getCurrentRadius();
+            }
+
+            @Override
+            public void set(int value) {
+                currentRadius = value;
+            }
+        });
     }
 
     public ImprovedOxygenDistributor getBlockEntity() {
@@ -225,5 +283,22 @@ public class OxygenDistributorMenu extends AbstractContainerMenu {
             return machineState;
         }
         return blockEntity.getMachineState();
+    }
+
+    // Get usage data (synced on client)
+    public float getOxygenUsage() {
+        return blockEntity.getLevel().isClientSide() ? oxygenUsage / 100.0f : blockEntity.getOxygenUsage();
+    }
+
+    public float getEnergyUsage() {
+        return blockEntity.getLevel().isClientSide() ? energyUsage / 100.0f : blockEntity.getEnergyUsage();
+    }
+
+    public int getBlockCount() {
+        return blockEntity.getLevel().isClientSide() ? blockCount : blockEntity.getOxygenatedBlockCount();
+    }
+
+    public int getCurrentRadius() {
+        return blockEntity.getLevel().isClientSide() ? currentRadius : blockEntity.getCurrentRadius();
     }
 }

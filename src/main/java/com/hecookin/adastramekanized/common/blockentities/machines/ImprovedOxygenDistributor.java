@@ -35,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Improved oxygen distributor with dynamic expansion, ring-based claiming,
@@ -46,11 +47,11 @@ public class ImprovedOxygenDistributor extends BlockEntity implements MenuProvid
     private static final int INITIAL_RADIUS = 3; // Start small
     private static final int EXPANSION_RATE = 10; // Expand radius by 1 every 10 ticks
     private static final int MAX_OXYGEN_BLOCKS = 4100; // Maximum blocks to oxygenate
-    private static final float OXYGEN_PER_BLOCK = 0.05f; // Oxygen consumption per block
+    private static final float OXYGEN_PER_BLOCK = 0.01f; // Oxygen consumption per block (mB)
+    private static final float ENERGY_PER_BLOCK = 0.10f; // Energy consumption per block (FE)
 
     private static final long OXYGEN_CAPACITY = 2000; // mB
     private static final int ENERGY_CAPACITY = 30000; // FE
-    private static final int ENERGY_PER_DISTRIBUTION = 400; // FE per cycle
     private static final int DISTRIBUTION_INTERVAL = 20; // Faster updates for better responsiveness
 
     // Components
@@ -70,6 +71,11 @@ public class ImprovedOxygenDistributor extends BlockEntity implements MenuProvid
     private final Set<BlockPos> oxygenatedBlocks = new HashSet<>();
     private final int tickOffset;
 
+    // Usage tracking for GUI display
+    private float lastOxygenUsage = 0.0f; // mB per tick
+    private float lastEnergyUsage = 0.0f; // FE per tick
+    private int lastBlockCount = 0;
+
     // Animation
     public float yRot = 0.0f;
     private float lastYRot = 0.0f;
@@ -87,8 +93,8 @@ public class ImprovedOxygenDistributor extends BlockEntity implements MenuProvid
             this::setChanged
         );
 
-        // Initialize energy storage
-        this.energyStorage = new EnergyStorage(ENERGY_CAPACITY, 1000, ENERGY_PER_DISTRIBUTION);
+        // Initialize energy storage (max extract = capacity for internal use)
+        this.energyStorage = new EnergyStorage(ENERGY_CAPACITY, 1000, ENERGY_CAPACITY);
 
         // Initialize chemical handler
         this.chemicalHandler = new ChemicalHandler();
@@ -116,7 +122,9 @@ public class ImprovedOxygenDistributor extends BlockEntity implements MenuProvid
                 oxygenTank.getStored(), oxygenTank.getCapacity(), isActive, currentRadius, oxygenatedBlocks.size());
         }
 
-        boolean hasResources = energyStorage.getEnergyStored() >= ENERGY_PER_DISTRIBUTION && !oxygenTank.isEmpty();
+        // Calculate minimum energy needed (at least 1 block worth)
+        int minEnergyNeeded = (int) Math.ceil(ENERGY_PER_BLOCK);
+        boolean hasResources = energyStorage.getEnergyStored() >= minEnergyNeeded && !oxygenTank.isEmpty();
         boolean wasActive = isActive;
 
         // Handle manual disable
@@ -146,7 +154,6 @@ public class ImprovedOxygenDistributor extends BlockEntity implements MenuProvid
             int adjustedInterval = DISTRIBUTION_INTERVAL + (tickOffset % DISTRIBUTION_INTERVAL);
             if (tickCounter >= adjustedInterval) {
                 tickCounter = 0;
-                energyStorage.extractEnergy(ENERGY_PER_DISTRIBUTION, false);
                 distributeOxygen();
             }
 
@@ -180,6 +187,9 @@ public class ImprovedOxygenDistributor extends BlockEntity implements MenuProvid
         activationTime = 0;
         expansionTicks = 0;
         currentRadius = INITIAL_RADIUS; // Reset radius for next activation
+        lastBlockCount = 0;
+        lastOxygenUsage = 0;
+        lastEnergyUsage = 0;
         clearOxygenatedBlocks();
         sendVisualizationRemoval();
         notifyNearbyDistributorsForUpdate();
@@ -212,23 +222,66 @@ public class ImprovedOxygenDistributor extends BlockEntity implements MenuProvid
             );
 
             if (!claimedBlocks.isEmpty()) {
-                // Update oxygen zones
-                updateOxygenZones(claimedBlocks);
+                // Calculate resource consumption
+                int blockCount = claimedBlocks.size();
+                // Ensure minimum consumption of 1 mB to prevent staying active with small amounts
+                long oxygenToConsume = Math.max(1, Math.round(blockCount * OXYGEN_PER_BLOCK));
+                int energyToConsume = Math.max(1, (int) Math.ceil(blockCount * ENERGY_PER_BLOCK));
 
-                // Consume oxygen
-                long oxygenToConsume = Math.round(claimedBlocks.size() * OXYGEN_PER_BLOCK);
-                if (oxygenTank.getStored() >= oxygenToConsume && oxygenToConsume > 0) {
+                // Check oxygen level and reduce blocks if below 10% capacity
+                if (oxygenTank.getStored() < (oxygenTank.getCapacity() * 0.1)) {
+                    // Below 10% capacity - start reducing oxygen blocks
+                    int reducedBlockCount = Math.max(1, (int)(blockCount * oxygenTank.getStored() / (oxygenTank.getCapacity() / 10)));
+                    if (reducedBlockCount < blockCount) {
+                        // Release some blocks
+                        Set<BlockPos> reducedSet = claimedBlocks.stream()
+                            .limit(reducedBlockCount)
+                            .collect(java.util.stream.Collectors.toSet());
+                        Set<BlockPos> toRelease = new HashSet<>(claimedBlocks);
+                        toRelease.removeAll(reducedSet);
+                        GlobalOxygenManager.getInstance().releaseOxygenBlocks(dimension, worldPosition, toRelease);
+                        claimedBlocks = reducedSet;
+                        blockCount = reducedBlockCount;
+                        // Recalculate consumption for reduced blocks
+                        oxygenToConsume = Math.max(1, Math.round(blockCount * OXYGEN_PER_BLOCK));
+                        energyToConsume = Math.max(1, (int) Math.ceil(blockCount * ENERGY_PER_BLOCK));
+                    }
+                }
+
+                // Check if we have enough resources
+                if (oxygenTank.getStored() >= oxygenToConsume &&
+                    energyStorage.getEnergyStored() >= energyToConsume) {
+
+                    // Update oxygen zones
+                    updateOxygenZones(claimedBlocks);
+
+                    // Consume resources
                     oxygenTank.shrinkStack(oxygenToConsume, Action.EXECUTE);
-                    AdAstraMekanized.LOGGER.debug("Distributed oxygen to {} blocks, consumed {} mB",
-                        claimedBlocks.size(), oxygenToConsume);
+                    energyStorage.extractEnergy(energyToConsume, false);
+
+                    // Update usage tracking (per tick, so divide by distribution interval)
+                    lastBlockCount = blockCount;
+                    lastOxygenUsage = (float) oxygenToConsume / DISTRIBUTION_INTERVAL;
+                    lastEnergyUsage = (float) energyToConsume / DISTRIBUTION_INTERVAL;
+
+                    AdAstraMekanized.LOGGER.debug("Distributed oxygen to {} blocks, consumed {} mB oxygen and {} FE",
+                        blockCount, oxygenToConsume, energyToConsume);
 
                     if (oxygenBlockVisibility) {
                         sendVisualizationUpdate(true);
                     }
                 } else {
-                    // Not enough oxygen, release blocks
+                    // Not enough resources, release blocks
                     GlobalOxygenManager.getInstance().releaseOxygenBlocks(dimension, worldPosition, claimedBlocks);
+                    lastBlockCount = 0;
+                    lastOxygenUsage = 0;
+                    lastEnergyUsage = 0;
                 }
+            } else {
+                // No blocks claimed
+                lastBlockCount = 0;
+                lastOxygenUsage = 0;
+                lastEnergyUsage = 0;
             }
         }
     }
@@ -384,7 +437,8 @@ public class ImprovedOxygenDistributor extends BlockEntity implements MenuProvid
     }
 
     public int getEnergyPerTick() {
-        return isActive ? ENERGY_PER_DISTRIBUTION : 0;
+        // Return the tracked energy usage rate
+        return (int) Math.ceil(lastEnergyUsage);
     }
 
     public float getOxygenPerTick() {
@@ -397,7 +451,8 @@ public class ImprovedOxygenDistributor extends BlockEntity implements MenuProvid
     }
 
     public int getOxygenatedBlockCount() {
-        return oxygenatedBlocks.size();
+        // Use tracked value for consistent display
+        return lastBlockCount > 0 ? lastBlockCount : oxygenatedBlocks.size();
     }
 
     public float yRot() {
@@ -443,6 +498,17 @@ public class ImprovedOxygenDistributor extends BlockEntity implements MenuProvid
     public IStrictEnergyHandler getStrictEnergyHandler() {
         return energyStorage;
     }
+
+    // Getters for usage tracking
+    public float getOxygenUsage() {
+        return lastOxygenUsage;
+    }
+
+    public float getEnergyUsage() {
+        return lastEnergyUsage;
+    }
+
+    // Note: getOxygenatedBlockCount() and getCurrentRadius() already exist above
 
     public IChemicalTank getOxygenTank() {
         return oxygenTank;

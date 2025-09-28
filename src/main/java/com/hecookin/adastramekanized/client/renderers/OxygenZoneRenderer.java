@@ -35,19 +35,26 @@ public class OxygenZoneRenderer {
     private final Map<BlockPos, BlockPos> blockOwnership = new ConcurrentHashMap<>(); // Which distributor owns which block
     private boolean renderingEnabled = false;
 
-    // Color palette for different distributors - VIBRANT colors to stand out against blue ice
+    // Color palette for different distributors - Extended with more neutral colors
     private static final float[][] DISTRIBUTOR_COLORS = {
         {0.0f, 1.0f, 1.0f}, // Cyan - bright cyan (no red)
         {1.0f, 0.0f, 0.0f}, // Red - pure red (no green/blue)
         {0.0f, 1.0f, 0.0f}, // Green - pure green (no red/blue)
         {1.0f, 1.0f, 0.0f}, // Yellow - bright yellow (no blue)
         {1.0f, 0.0f, 1.0f}, // Magenta - bright magenta (no green)
-        {0.4f, 0.4f, 1.0f}  // Blue - slightly darker blue to contrast with ice
+        {0.4f, 0.4f, 1.0f}, // Blue - slightly darker blue to contrast with ice
+        {1.0f, 0.5f, 0.0f}, // Orange - bright orange
+        {0.5f, 0.0f, 1.0f}, // Purple - deep purple
+        {1.0f, 1.0f, 1.0f}, // White - pure white
+        {0.5f, 0.5f, 0.5f}, // Grey - medium grey
+        {0.2f, 0.2f, 0.2f}, // Black/Dark Grey - near black
+        {0.55f, 0.27f, 0.07f}, // Brown - saddle brown
+        {0.82f, 0.71f, 0.55f}  // Tan - burlywood tan
     };
 
     // Use vanilla ice texture for oxygen visualization
     private static final ResourceLocation ICE_TEXTURE = ResourceLocation.withDefaultNamespace("block/ice");
-    private static final float ALPHA = 0.15f; // Very transparent for subtle visualization
+    private static final float ALPHA = 0.08f; // Even more transparent for subtle visualization
 
     // Helper class to track zones per distributor
     private static class DistributorZone {

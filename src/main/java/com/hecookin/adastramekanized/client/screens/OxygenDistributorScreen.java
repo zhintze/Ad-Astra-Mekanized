@@ -136,5 +136,27 @@ public class OxygenDistributorScreen extends AbstractContainerScreen<OxygenDistr
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
         guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 4210752, false);
+
+        // Get the values
+        int blockCount = menu.getBlockCount();
+        int radius = menu.getCurrentRadius();
+        float oxygenUsage = menu.getOxygenUsage();
+        float energyUsage = menu.getEnergyUsage();
+
+        // Green text color for display screens (matching the green display areas in texture)
+        int greenText = 0x00FF00;
+
+        // Position text in the green display areas visible in the GUI texture
+        // Top display area (around y=15-25)
+        String statusText = String.format("Blocks: %d  R: %d", blockCount, radius);
+        guiGraphics.drawString(this.font, statusText, 20, 17, greenText, false);
+
+        // Middle display area (around y=30-40)
+        String oxygenText = String.format("O2/t: %.2f mB", oxygenUsage);
+        guiGraphics.drawString(this.font, oxygenText, 20, 30, greenText, false);
+
+        // Bottom display area (around y=45-55)
+        String energyText = String.format("FE/t: %.2f", energyUsage);
+        guiGraphics.drawString(this.font, energyText, 20, 43, greenText, false);
     }
 }
