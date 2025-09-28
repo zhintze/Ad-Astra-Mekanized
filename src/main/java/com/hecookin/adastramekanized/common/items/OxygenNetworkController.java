@@ -2,8 +2,9 @@ package com.hecookin.adastramekanized.common.items;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.common.blockentities.machines.ImprovedOxygenDistributor;
+import com.hecookin.adastramekanized.common.blockentities.machines.WirelessPowerRelayBlockEntity;
+import com.hecookin.adastramekanized.common.blocks.machines.WirelessPowerRelayBlock;
 import com.hecookin.adastramekanized.common.data.DistributorLinkData;
-import com.hecookin.adastramekanized.common.menus.OxygenControllerMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
@@ -13,10 +14,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -25,7 +23,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import com.hecookin.adastramekanized.common.blocks.WirelessControlButton;
+import com.hecookin.adastramekanized.common.blocks.RedstoneToggleRelay;
+import com.hecookin.adastramekanized.common.blocks.OxygenNetworkMonitorBlock;
 import com.hecookin.adastramekanized.common.data.ButtonControllerManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +34,7 @@ import java.util.List;
 /**
  * Handheld controller for managing multiple oxygen distributors wirelessly
  */
-public class OxygenNetworkController extends Item implements MenuProvider {
+public class OxygenNetworkController extends Item {
 
     public OxygenNetworkController() {
         super(new Item.Properties()
@@ -49,6 +48,7 @@ public class OxygenNetworkController extends Item implements MenuProvider {
         BlockPos pos = context.getClickedPos();
         Player player = context.getPlayer();
         ItemStack stack = context.getItemInHand();
+        InteractionHand hand = context.getHand();
 
         if (player == null) {
             return InteractionResult.PASS;
@@ -56,22 +56,76 @@ public class OxygenNetworkController extends Item implements MenuProvider {
 
         BlockState state = level.getBlockState(pos);
 
-        // Check if this is a wireless control button and player is sneaking
-        if (player.isShiftKeyDown() && state.getBlock() instanceof WirelessControlButton) {
-            if (!level.isClientSide) {
-                // Bind controller to button
-                bindToButton(level, pos, stack, player);
-                return InteractionResult.SUCCESS;
+        // Check if this is a monitor block - let the block handle it for now
+        if (state.getBlock() instanceof OxygenNetworkMonitorBlock) {
+            // Monitor still requires sneak+right-click for pairing
+            if (player.isShiftKeyDown()) {
+                return InteractionResult.PASS;
             }
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.FAIL;
         }
 
-        // Check if this is a distributor
+        // Check if this is a redstone toggle relay - sneak+right-click to pair
+        if (state.getBlock() instanceof RedstoneToggleRelay) {
+            if (player.isShiftKeyDown()) {
+                if (!level.isClientSide) {
+                    // Bind controller to relay
+                    bindToRelay(level, pos, stack, player);
+                    return InteractionResult.SUCCESS;
+                }
+                return InteractionResult.sidedSuccess(level.isClientSide);
+            }
+            return InteractionResult.PASS;
+        }
+
+        // Check if this is a wireless power relay - sneak+right-click to insert/swap
+        if (state.getBlock() instanceof WirelessPowerRelayBlock) {
+            if (player.isShiftKeyDown()) {
+                if (!level.isClientSide) {
+                    BlockEntity be = level.getBlockEntity(pos);
+                    if (be instanceof WirelessPowerRelayBlockEntity relay) {
+                        ItemStack controllerSlotItem = relay.getControllerSlot().getItem(0);
+
+                        if (controllerSlotItem.isEmpty()) {
+                            // Place controller in slot
+                            relay.getControllerSlot().setItem(0, stack.copy());
+                            stack.shrink(1);
+
+                            player.displayClientMessage(
+                                Component.literal("Controller inserted into power relay")
+                                    .withStyle(ChatFormatting.GREEN),
+                                true
+                            );
+                            AdAstraMekanized.LOGGER.info("Inserted controller into power relay at {}", pos);
+                        } else {
+                            // Swap controllers
+                            ItemStack oldController = controllerSlotItem.copy();
+                            relay.getControllerSlot().setItem(0, stack.copy());
+
+                            // Give the old controller to the player
+                            player.setItemInHand(hand, oldController);
+
+                            player.displayClientMessage(
+                                Component.literal("Swapped controllers in power relay")
+                                    .withStyle(ChatFormatting.YELLOW),
+                                true
+                            );
+                            AdAstraMekanized.LOGGER.info("Swapped controller in power relay at {}", pos);
+                        }
+                        return InteractionResult.SUCCESS;
+                    }
+                }
+                return InteractionResult.sidedSuccess(level.isClientSide);
+            }
+            return InteractionResult.PASS;
+        }
+
+        // Check if this is a distributor - simple right-click to toggle link
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof ImprovedOxygenDistributor distributor) {
             if (!level.isClientSide) {
-                // Toggle link on sneak + right-click
-                if (player.isShiftKeyDown()) {
+                // Toggle link on simple right-click
+                {
                     DistributorLinkData linkData = getOrCreateLinkData(stack);
 
                     if (linkData.isLinked(pos)) {
@@ -121,21 +175,19 @@ public class OxygenNetworkController extends Item implements MenuProvider {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
-        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
-            // Store the controller stack in the player's main hand for menu creation
-            serverPlayer.openMenu(new MenuProvider() {
-                @Override
-                public Component getDisplayName() {
-                    return Component.translatable("item.adastramekanized.oxygen_network_controller");
-                }
+        // Controller no longer has a GUI - only used for pairing
+        // Show current link status to player
+        if (!level.isClientSide) {
+            DistributorLinkData linkData = getLinkData(stack);
+            int count = linkData != null ? linkData.getLinkCount() : 0;
 
-                @Nullable
-                @Override
-                public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player p) {
-                    return new OxygenControllerMenu(containerId, playerInventory, stack);
-                }
-            });
-            return InteractionResultHolder.success(stack);
+            player.displayClientMessage(
+                Component.literal("Controller has ")
+                    .withStyle(ChatFormatting.GRAY)
+                    .append(Component.literal(count + " linked distributors")
+                        .withStyle(count > 0 ? ChatFormatting.GREEN : ChatFormatting.RED)),
+                true
+            );
         }
 
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
@@ -153,10 +205,10 @@ public class OxygenNetworkController extends Item implements MenuProvider {
                 .append(Component.literal(count + "/64")
                     .withStyle(count > 0 ? ChatFormatting.GREEN : ChatFormatting.DARK_GRAY)));
 
-            if (count > 0 && flag.isAdvanced()) {
-                tooltip.add(Component.literal("Right-click to manage")
+            if (flag.isAdvanced()) {
+                tooltip.add(Component.literal("Right-click distributor to link/unlink")
                     .withStyle(ChatFormatting.DARK_GRAY));
-                tooltip.add(Component.literal("Sneak+Right-click distributor to link/unlink")
+                tooltip.add(Component.literal("Sneak+right-click relay/power relay to pair")
                     .withStyle(ChatFormatting.DARK_GRAY));
             }
         }
@@ -222,50 +274,10 @@ public class OxygenNetworkController extends Item implements MenuProvider {
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
     }
 
-    // MenuProvider implementation
-
-    @Override
-    public Component getDisplayName() {
-        return Component.translatable("item.adastramekanized.oxygen_network_controller");
-    }
-
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
-        ItemStack controller = findControllerInInventory(player);
-        if (!controller.isEmpty()) {
-            return new OxygenControllerMenu(containerId, playerInventory, controller);
-        }
-        return null;
-    }
-
-    private ItemStack findControllerInInventory(Player player) {
-        // Check main hand
-        ItemStack mainHand = player.getMainHandItem();
-        if (mainHand.getItem() instanceof OxygenNetworkController) {
-            return mainHand;
-        }
-
-        // Check off hand
-        ItemStack offHand = player.getOffhandItem();
-        if (offHand.getItem() instanceof OxygenNetworkController) {
-            return offHand;
-        }
-
-        // Check inventory
-        for (ItemStack stack : player.getInventory().items) {
-            if (stack.getItem() instanceof OxygenNetworkController) {
-                return stack;
-            }
-        }
-
-        return ItemStack.EMPTY;
-    }
-
     /**
-     * Bind this controller to a button block
+     * Bind this controller to a redstone toggle relay block
      */
-    private void bindToButton(Level level, BlockPos pos, ItemStack stack, Player player) {
+    private void bindToRelay(Level level, BlockPos pos, ItemStack stack, Player player) {
         // Check if another controller is already bound
         ButtonControllerManager.ControllerBinding existing = ButtonControllerManager.getBinding(level, pos);
         if (existing != null) {
@@ -281,14 +293,14 @@ public class OxygenNetworkController extends Item implements MenuProvider {
 
         DistributorLinkData linkData = getOrCreateLinkData(stack);
         player.displayClientMessage(
-            Component.literal("Bound controller to button with ")
+            Component.literal("Bound controller to relay with ")
                 .withStyle(ChatFormatting.GREEN)
                 .append(Component.literal(linkData.getLinkCount() + " distributors")
                     .withStyle(ChatFormatting.WHITE)),
             true
         );
 
-        AdAstraMekanized.LOGGER.info("Bound oxygen controller to button at {}", pos);
+        AdAstraMekanized.LOGGER.info("Bound oxygen controller to relay at {}", pos);
     }
 
     /**

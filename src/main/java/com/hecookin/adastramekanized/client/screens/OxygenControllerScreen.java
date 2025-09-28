@@ -253,19 +253,24 @@ public class OxygenControllerScreen extends AbstractContainerScreen<OxygenContro
         public void render(GuiGraphics graphics, int mouseX, int mouseY) {
             // Draw distributor info
             BlockPos pos = link.getPos();
-            String name = link.getCustomName() != null ? link.getCustomName() : 
-                String.format("Distributor %d,%d,%d", pos.getX(), pos.getY(), pos.getZ());
 
             // Status indicator
             ChatFormatting statusColor = link.isOnline() ? ChatFormatting.GREEN : ChatFormatting.RED;
             graphics.drawString(font, "●", x, y + 4, statusColor.getColor(), false);
 
-            // Name and coordinates
-            graphics.drawString(font, name, x + 10, y + 4, 0x404040, false);
+            // Show custom name or coordinates
+            if (link.getCustomName() != null && !link.getCustomName().isEmpty()) {
+                // Custom name
+                graphics.drawString(font, link.getCustomName(), x + 10, y + 4, 0x404040, false);
+            } else {
+                // Clean coordinate format: X:123 Y:64 Z:-456
+                String coords = String.format("X:%d Y:%d Z:%d", pos.getX(), pos.getY(), pos.getZ());
+                graphics.drawString(font, coords, x + 10, y + 4, 0x404040, false);
+            }
 
             // Status info
             String status = String.format("E:%d O:%d", link.getLastEnergy(), link.getLastOxygen());
-            graphics.drawString(font, status, x + 80, y + 4, 0x606060, false);
+            graphics.drawString(font, status, x + 100, y + 4, 0x606060, false);
 
             // Render buttons
             toggleButton.render(graphics, mouseX, mouseY, 0);

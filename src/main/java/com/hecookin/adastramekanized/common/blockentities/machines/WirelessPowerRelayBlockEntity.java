@@ -24,6 +24,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.minecraft.core.Direction;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,6 +40,7 @@ public class WirelessPowerRelayBlockEntity extends BlockEntity implements MenuPr
 
     private static final int ENERGY_CAPACITY = 1000000; // 1M FE
     private static final int MAX_RECEIVE = 10000; // 10k FE/t input
+    private static final int MAX_EXTRACT = 100000; // 100k FE/t output (internal use only for distribution)
     private static final int MAX_DISTRIBUTE_PER_DISTRIBUTOR = 1000; // 1k FE/t per distributor
     private static final int DISTRIBUTION_INTERVAL = 20; // Distribute every second
 
@@ -48,7 +52,7 @@ public class WirelessPowerRelayBlockEntity extends BlockEntity implements MenuPr
 
     public WirelessPowerRelayBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntityTypes.WIRELESS_POWER_RELAY.get(), pos, blockState);
-        this.energyStorage = new EnergyStorage(ENERGY_CAPACITY, MAX_RECEIVE, 0);
+        this.energyStorage = new EnergyStorage(ENERGY_CAPACITY, MAX_RECEIVE, MAX_EXTRACT);
         this.controllerSlot = new SimpleContainer(1) {
             @Override
             public boolean canPlaceItem(int slot, ItemStack stack) {
@@ -120,8 +124,13 @@ public class WirelessPowerRelayBlockEntity extends BlockEntity implements MenuPr
         }
 
         // Calculate equal distribution
-        int totalAvailable = Math.min(energyStorage.getEnergyStored(), MAX_DISTRIBUTE_PER_DISTRIBUTOR * needsPower.size());
+        int energyStored = energyStorage.getEnergyStored();
+        int maxDistribution = MAX_DISTRIBUTE_PER_DISTRIBUTOR * needsPower.size();
+        int totalAvailable = Math.min(energyStored, maxDistribution);
         int perDistributor = totalAvailable / needsPower.size();
+
+        AdAstraMekanized.LOGGER.debug("Power relay has {} FE, distributing up to {} FE to {} distributors",
+            energyStored, totalAvailable, needsPower.size());
         int totalDistributed = 0;
 
         // Distribute power equally
@@ -139,18 +148,20 @@ public class WirelessPowerRelayBlockEntity extends BlockEntity implements MenuPr
 
         // Extract the distributed power from storage
         if (totalDistributed > 0) {
-            energyStorage.extractEnergy(totalDistributed, false);
+            int extracted = energyStorage.extractEnergy(totalDistributed, false);
             lastPowerDistributed = totalDistributed;
+            AdAstraMekanized.LOGGER.debug("Distributed {} FE total, extracted {} FE from storage, remaining: {} FE",
+                totalDistributed, extracted, energyStorage.getEnergyStored());
             setChanged();
         }
     }
 
     public void dropContents() {
-        if (level != null && !level.isClientSide) {
+        if (level != null && !level.isClientSide && controllerSlot != null) {
             ItemStack controller = controllerSlot.getItem(0);
             if (!controller.isEmpty()) {
                 Block.popResource(level, worldPosition, controller);
-                controllerSlot.clearContent();
+                controllerSlot.setItem(0, ItemStack.EMPTY);
             }
         }
     }
@@ -171,9 +182,10 @@ public class WirelessPowerRelayBlockEntity extends BlockEntity implements MenuPr
         @Override
         public int receiveEnergy(int toReceive, boolean simulate) {
             int received = Math.min(toReceive, Math.min(maxReceive, capacity - energy));
-            if (!simulate) {
+            if (!simulate && received > 0) {
                 energy += received;
                 setChanged();
+                AdAstraMekanized.LOGGER.debug("Power relay received {} FE, total now: {}", received, energy);
             }
             return received;
         }
@@ -200,7 +212,7 @@ public class WirelessPowerRelayBlockEntity extends BlockEntity implements MenuPr
 
         @Override
         public boolean canExtract() {
-            return false; // Don't allow extraction
+            return false; // Don't allow external extraction (cables can't pull from relay)
         }
 
         @Override
@@ -241,9 +253,10 @@ public class WirelessPowerRelayBlockEntity extends BlockEntity implements MenuPr
         public long insertEnergy(int container, long amount, @NotNull Action action) {
             if (container != 0) return 0;
             int toReceive = (int) Math.min(amount, Math.min(maxReceive, capacity - energy));
-            if (action.execute()) {
+            if (action.execute() && toReceive > 0) {
                 energy += toReceive;
                 setChanged();
+                AdAstraMekanized.LOGGER.debug("Power relay received {} FE via Mekanism, total now: {}", toReceive, energy);
             }
             return toReceive;
         }
@@ -329,14 +342,21 @@ public class WirelessPowerRelayBlockEntity extends BlockEntity implements MenuPr
     protected void saveAdditional(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider provider) {
         super.saveAdditional(tag, provider);
         tag.putInt("energy", energyStorage.energy);
-        tag.put("controller", controllerSlot.getItem(0).save(provider));
+        ItemStack controller = controllerSlot.getItem(0);
+        if (!controller.isEmpty()) {
+            tag.put("controller", controller.save(provider));
+        }
     }
 
     @Override
     protected void loadAdditional(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider provider) {
         super.loadAdditional(tag, provider);
         energyStorage.energy = tag.getInt("energy");
-        controllerSlot.setItem(0, ItemStack.parseOptional(provider, tag.getCompound("controller")));
+        if (tag.contains("controller")) {
+            controllerSlot.setItem(0, ItemStack.parseOptional(provider, tag.getCompound("controller")));
+        } else {
+            controllerSlot.setItem(0, ItemStack.EMPTY);
+        }
     }
 
     @Override
@@ -355,5 +375,31 @@ public class WirelessPowerRelayBlockEntity extends BlockEntity implements MenuPr
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    // Capability support for both Forge Energy and Mekanism Energy
+    @Nullable
+    public <T> T getCapability(BlockCapability<T, Direction> capability, @Nullable Direction side) {
+        // Forge Energy capability
+        if (capability == Capabilities.EnergyStorage.BLOCK) {
+            return (T) energyStorage;
+        }
+
+        // Mekanism STRICT_ENERGY capability via reflection
+        try {
+            Class<?> mekCapabilities = Class.forName("mekanism.common.capabilities.Capabilities");
+            java.lang.reflect.Field strictEnergyField = mekCapabilities.getField("STRICT_ENERGY");
+            Object strictEnergyCapObject = strictEnergyField.get(null);
+            java.lang.reflect.Method blockMethod = strictEnergyCapObject.getClass().getMethod("block");
+            Object blockCap = blockMethod.invoke(strictEnergyCapObject);
+
+            if (capability.equals(blockCap)) {
+                return (T) energyStorage;  // Our EnergyStorage already implements IStrictEnergyHandler
+            }
+        } catch (Exception e) {
+            // Mekanism not available or reflection failed
+        }
+
+        return null;
     }
 }

@@ -5,6 +5,7 @@ import com.hecookin.adastramekanized.client.renderers.blocks.MekanismBasedOxygen
 import com.hecookin.adastramekanized.client.renderers.blocks.OxygenDistributorBlockEntityRenderer;
 import com.hecookin.adastramekanized.client.gui.GuiOxygenDistributor;
 import com.hecookin.adastramekanized.client.screens.OxygenControllerScreen;
+import com.hecookin.adastramekanized.client.screens.OxygenMonitorScreen;
 import com.hecookin.adastramekanized.client.screens.WirelessPowerRelayScreen;
 import com.hecookin.adastramekanized.common.registry.ModBlockEntityTypes;
 import com.hecookin.adastramekanized.common.registry.ModMenuTypes;
@@ -36,6 +37,7 @@ public class ClientModEvents {
         event.register(ModMenuTypes.OXYGEN_DISTRIBUTOR.get(), GuiOxygenDistributor::new);
         event.register(ModMenuTypes.OXYGEN_CONTROLLER.get(), OxygenControllerScreen::new);
         event.register(ModMenuTypes.WIRELESS_POWER_RELAY.get(), WirelessPowerRelayScreen::new);
+        event.register(ModMenuTypes.OXYGEN_MONITOR.get(), OxygenMonitorScreen::new);
     }
 
     @SubscribeEvent

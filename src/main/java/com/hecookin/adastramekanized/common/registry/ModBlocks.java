@@ -5,7 +5,8 @@ import com.hecookin.adastramekanized.common.blocks.BlockProperties;
 import com.hecookin.adastramekanized.common.blocks.machines.OxygenDistributorBlock;
 import com.hecookin.adastramekanized.common.blocks.machines.OxygenLoaderBlock;
 import com.hecookin.adastramekanized.common.blocks.machines.WirelessPowerRelayBlock;
-import com.hecookin.adastramekanized.common.blocks.WirelessControlButton;
+import com.hecookin.adastramekanized.common.blocks.RedstoneToggleRelay;
+import com.hecookin.adastramekanized.common.blocks.OxygenNetworkMonitorBlock;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -376,15 +377,12 @@ public class ModBlocks {
     public static final Supplier<Block> WIRELESS_POWER_RELAY = registerBlock("wireless_power_relay",
             () -> new WirelessPowerRelayBlock(BlockProperties.INDUSTRIAL_BLOCK));
 
-    // Wireless Control Buttons
-    public static final Supplier<Block> IRON_WIRELESS_BUTTON = registerBlock("iron_wireless_button",
-            () -> new WirelessControlButton(BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));
+    public static final Supplier<Block> OXYGEN_NETWORK_MONITOR = registerBlock("oxygen_network_monitor",
+            () -> new OxygenNetworkMonitorBlock(BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));
 
-    public static final Supplier<Block> STEEL_WIRELESS_BUTTON = registerBlock("steel_wireless_button",
-            () -> new WirelessControlButton(BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));
-
-    public static final Supplier<Block> DESH_WIRELESS_BUTTON = registerBlock("desh_wireless_button",
-            () -> new WirelessControlButton(BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));
+    // Redstone Toggle Relay - pairs with controller and toggles distributors via redstone
+    public static final Supplier<Block> REDSTONE_TOGGLE_RELAY = registerBlock("redstone_toggle_relay",
+            () -> new RedstoneToggleRelay(BlockProperties.INDUSTRIAL_BLOCK));
 
     public static final Supplier<Block> ROCKET_ASSEMBLY_STATION = registerBlock("rocket_assembly_station",
             () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));

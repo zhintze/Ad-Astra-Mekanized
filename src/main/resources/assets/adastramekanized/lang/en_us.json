@@ -156,7 +156,12 @@
   "block.adastramekanized.wireless_power_relay.tooltip": "Distributes power wirelessly to linked oxygen distributors",
   "block.adastramekanized.wireless_power_relay.tooltip2": "Insert an Oxygen Network Controller to link distributors",
 
+  "block.adastramekanized.redstone_toggle_relay": "Redstone Toggle Relay",
+  "block.adastramekanized.redstone_toggle_relay.tooltip": "Toggles linked oxygen distributors when powered by redstone",
+
   "item.adastramekanized.oxygen_network_controller": "Oxygen Network Controller",
+
+  "block.adastramekanized.oxygen_network_monitor": "Oxygen Network Monitor",
 
   "block.adastramekanized.iron_wireless_button": "Iron Wireless Control Button",
   "block.adastramekanized.steel_wireless_button": "Steel Wireless Control Button",

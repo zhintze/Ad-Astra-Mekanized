@@ -4,6 +4,7 @@ import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.common.blockentities.machines.OxygenDistributorBlockEntity;
 import com.hecookin.adastramekanized.common.blockentities.machines.ImprovedOxygenDistributor;
 import com.hecookin.adastramekanized.common.blockentities.machines.WirelessPowerRelayBlockEntity;
+import com.hecookin.adastramekanized.common.blockentities.OxygenNetworkMonitorBlockEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -36,6 +37,13 @@ public class ModBlockEntityTypes {
             () -> createBlockEntityType(
                 WirelessPowerRelayBlockEntity::new,
                 ModBlocks.WIRELESS_POWER_RELAY.get()));
+
+    // Oxygen Network Monitor block entity
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<OxygenNetworkMonitorBlockEntity>> OXYGEN_NETWORK_MONITOR =
+        BLOCK_ENTITY_TYPES.register("oxygen_network_monitor",
+            () -> createBlockEntityType(
+                OxygenNetworkMonitorBlockEntity::new,
+                ModBlocks.OXYGEN_NETWORK_MONITOR.get()));
 
     /**
      * Helper method to create a BlockEntityType

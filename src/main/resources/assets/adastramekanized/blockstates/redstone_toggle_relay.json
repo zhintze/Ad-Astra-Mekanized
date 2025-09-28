@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,powered=false": {
+      "model": "adastramekanized:block/redstone_toggle_relay"
+    },
+    "facing=north,powered=true": {
+      "model": "adastramekanized:block/redstone_toggle_relay_powered"
+    },
+    "facing=south,powered=false": {
+      "model": "adastramekanized:block/redstone_toggle_relay",
+      "y": 180
+    },
+    "facing=south,powered=true": {
+      "model": "adastramekanized:block/redstone_toggle_relay_powered",
+      "y": 180
+    },
+    "facing=west,powered=false": {
+      "model": "adastramekanized:block/redstone_toggle_relay",
+      "y": 270
+    },
+    "facing=west,powered=true": {
+      "model": "adastramekanized:block/redstone_toggle_relay_powered",
+      "y": 270
+    },
+    "facing=east,powered=false": {
+      "model": "adastramekanized:block/redstone_toggle_relay",
+      "y": 90
+    },
+    "facing=east,powered=true": {
+      "model": "adastramekanized:block/redstone_toggle_relay_powered",
+      "y": 90
+    },
+    "facing=up,powered=false": {
+      "model": "adastramekanized:block/redstone_toggle_relay",
+      "x": -90
+    },
+    "facing=up,powered=true": {
+      "model": "adastramekanized:block/redstone_toggle_relay_powered",
+      "x": -90
+    },
+    "facing=down,powered=false": {
+      "model": "adastramekanized:block/redstone_toggle_relay",
+      "x": 90
+    },
+    "facing=down,powered=true": {
+      "model": "adastramekanized:block/redstone_toggle_relay_powered",
+      "x": 90
+    }
+  }
+}

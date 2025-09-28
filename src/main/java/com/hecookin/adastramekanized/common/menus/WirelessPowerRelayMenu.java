@@ -8,6 +8,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -18,6 +19,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 public class WirelessPowerRelayMenu extends AbstractContainerMenu {
 
     private final WirelessPowerRelayBlockEntity blockEntity;
+
+    // Synced data values
+    private int energyLow;
+    private int energyHigh;
+    private int maxEnergyLow;
+    private int maxEnergyHigh;
+    private int lastDistributorCount;
+    private int lastPowerDistributed;
 
     // Client constructor
     public WirelessPowerRelayMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buf) {
@@ -53,6 +62,89 @@ public class WirelessPowerRelayMenu extends AbstractContainerMenu {
         // Add player inventory
         addPlayerInventory(playerInventory);
         addPlayerHotbar(playerInventory);
+
+        // Add data slots for syncing
+        addDataSlots();
+    }
+
+    private void addDataSlots() {
+        // Energy low bits
+        this.addDataSlot(new DataSlot() {
+            @Override
+            public int get() {
+                return (int) (blockEntity.getEnergyStorage().getEnergyStored() & 0xFFFF);
+            }
+
+            @Override
+            public void set(int value) {
+                energyLow = value;
+            }
+        });
+
+        // Energy high bits
+        this.addDataSlot(new DataSlot() {
+            @Override
+            public int get() {
+                return (int) ((blockEntity.getEnergyStorage().getEnergyStored() >> 16) & 0xFFFF);
+            }
+
+            @Override
+            public void set(int value) {
+                energyHigh = value;
+            }
+        });
+
+        // Max energy low bits
+        this.addDataSlot(new DataSlot() {
+            @Override
+            public int get() {
+                return (int) (blockEntity.getEnergyStorage().getMaxEnergyStored() & 0xFFFF);
+            }
+
+            @Override
+            public void set(int value) {
+                maxEnergyLow = value;
+            }
+        });
+
+        // Max energy high bits
+        this.addDataSlot(new DataSlot() {
+            @Override
+            public int get() {
+                return (int) ((blockEntity.getEnergyStorage().getMaxEnergyStored() >> 16) & 0xFFFF);
+            }
+
+            @Override
+            public void set(int value) {
+                maxEnergyHigh = value;
+            }
+        });
+
+        // Last distributor count
+        this.addDataSlot(new DataSlot() {
+            @Override
+            public int get() {
+                return blockEntity.getLastDistributorCount();
+            }
+
+            @Override
+            public void set(int value) {
+                lastDistributorCount = value;
+            }
+        });
+
+        // Last power distributed
+        this.addDataSlot(new DataSlot() {
+            @Override
+            public int get() {
+                return blockEntity.getLastPowerDistributed();
+            }
+
+            @Override
+            public void set(int value) {
+                lastPowerDistributed = value;
+            }
+        });
     }
 
     private void addPlayerInventory(Inventory playerInventory) {
@@ -117,5 +209,22 @@ public class WirelessPowerRelayMenu extends AbstractContainerMenu {
 
     public WirelessPowerRelayBlockEntity getBlockEntity() {
         return blockEntity;
+    }
+
+    // Client-side getters for synced data
+    public int getEnergy() {
+        return (energyHigh << 16) | (energyLow & 0xFFFF);
+    }
+
+    public int getMaxEnergy() {
+        return (maxEnergyHigh << 16) | (maxEnergyLow & 0xFFFF);
+    }
+
+    public int getLastDistributorCount() {
+        return lastDistributorCount;
+    }
+
+    public int getLastPowerDistributed() {
+        return lastPowerDistributed;
     }
 }

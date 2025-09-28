@@ -213,12 +213,11 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.OXYGEN_DISTRIBUTOR.get());
                         output.accept(ModBlocks.OXYGEN_LOADER.get());
                         output.accept(ModBlocks.WIRELESS_POWER_RELAY.get());
+                        // Oxygen Network Monitor removed - incomplete feature
                         output.accept(ModItems.OXYGEN_NETWORK_CONTROLLER.get());
 
-                        // Wireless Control Buttons
-                        output.accept(ModBlocks.IRON_WIRELESS_BUTTON.get());
-                        output.accept(ModBlocks.STEEL_WIRELESS_BUTTON.get());
-                        output.accept(ModBlocks.DESH_WIRELESS_BUTTON.get());
+                        // Redstone Toggle Relay
+                        output.accept(ModBlocks.REDSTONE_TOGGLE_RELAY.get());
 
                         output.accept(ModBlocks.ROCKET_ASSEMBLY_STATION.get());
                     })
