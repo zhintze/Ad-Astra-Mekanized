@@ -29,7 +29,10 @@ public class GuiOxygenDistributor extends AbstractContainerScreen<OxygenDistribu
     private Button colorButton;
     private boolean oxygenBlockVisibility;
     private int currentColorIndex;
-    private static final String[] COLOR_NAMES = {"Cyan", "Red", "Green", "Yellow", "Magenta", "Blue"};
+    private static final String[] COLOR_NAMES = {
+        "Cyan", "Red", "Green", "Yellow", "Magenta", "Blue",
+        "Orange", "Purple", "White", "Grey", "Black", "Brown", "Tan"
+    };
 
     //flips coordinates that come directly from aseprite's inverted y axis
     /*int asepriteYcoordFlipFormula (int height, int yAxis) {

@@ -36,6 +36,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+import net.minecraft.core.Direction;
 
 /**
  * Improved oxygen distributor with dynamic expansion, ring-based claiming,
@@ -230,18 +235,18 @@ public class ImprovedOxygenDistributor extends BlockEntity implements MenuProvid
 
                 // Check oxygen level and reduce blocks if below 10% capacity
                 if (oxygenTank.getStored() < (oxygenTank.getCapacity() * 0.1)) {
-                    // Below 10% capacity - start reducing oxygen blocks
-                    int reducedBlockCount = Math.max(1, (int)(blockCount * oxygenTank.getStored() / (oxygenTank.getCapacity() / 10)));
-                    if (reducedBlockCount < blockCount) {
-                        // Release some blocks
-                        Set<BlockPos> reducedSet = claimedBlocks.stream()
-                            .limit(reducedBlockCount)
-                            .collect(java.util.stream.Collectors.toSet());
+                    // Below 10% capacity - start reducing oxygen blocks from outer edges
+                    int targetBlockCount = Math.max(1, (int)(blockCount * oxygenTank.getStored() / (oxygenTank.getCapacity() / 10)));
+                    if (targetBlockCount < blockCount) {
+                        // Remove blocks starting from edges (blocks with fewer neighbors)
+                        Set<BlockPos> toKeep = removeEdgeBlocks(claimedBlocks, targetBlockCount);
                         Set<BlockPos> toRelease = new HashSet<>(claimedBlocks);
-                        toRelease.removeAll(reducedSet);
+                        toRelease.removeAll(toKeep);
+
                         GlobalOxygenManager.getInstance().releaseOxygenBlocks(dimension, worldPosition, toRelease);
-                        claimedBlocks = reducedSet;
-                        blockCount = reducedBlockCount;
+                        claimedBlocks = toKeep;
+                        blockCount = toKeep.size();
+
                         // Recalculate consumption for reduced blocks
                         oxygenToConsume = Math.max(1, Math.round(blockCount * OXYGEN_PER_BLOCK));
                         energyToConsume = Math.max(1, (int) Math.ceil(blockCount * ENERGY_PER_BLOCK));
@@ -448,6 +453,53 @@ public class ImprovedOxygenDistributor extends BlockEntity implements MenuProvid
     public float getEfficiency() {
         if (MAX_OXYGEN_BLOCKS == 0) return 0;
         return (float) getOxygenatedBlockCount() / MAX_OXYGEN_BLOCKS * 100f;
+    }
+
+    /**
+     * Remove blocks from the outer edges first, keeping blocks closer to the center.
+     * Prioritizes removing blocks with fewer neighbors.
+     * @param blocks The set of blocks to reduce
+     * @param targetCount The target number of blocks to keep
+     * @return Set of blocks to keep (most connected/central blocks)
+     */
+    private Set<BlockPos> removeEdgeBlocks(Set<BlockPos> blocks, int targetCount) {
+        if (blocks.size() <= targetCount) {
+            return new HashSet<>(blocks);
+        }
+
+        // Calculate neighbor count for each block
+        Map<BlockPos, Integer> neighborCounts = new HashMap<>();
+        for (BlockPos pos : blocks) {
+            int neighbors = 0;
+            // Check all 6 adjacent blocks
+            for (Direction dir : Direction.values()) {
+                if (blocks.contains(pos.relative(dir))) {
+                    neighbors++;
+                }
+            }
+            neighborCounts.put(pos, neighbors);
+        }
+
+        // Sort blocks by distance from distributor (keep closer ones) and neighbor count (keep more connected ones)
+        List<BlockPos> sortedBlocks = new ArrayList<>(blocks);
+        sortedBlocks.sort((a, b) -> {
+            // First priority: number of neighbors (more neighbors = more central/connected)
+            int neighborDiff = neighborCounts.get(b) - neighborCounts.get(a);
+            if (neighborDiff != 0) return neighborDiff;
+
+            // Second priority: distance from distributor (closer is better)
+            double distA = a.distSqr(worldPosition);
+            double distB = b.distSqr(worldPosition);
+            return Double.compare(distA, distB);
+        });
+
+        // Keep the most connected/central blocks
+        Set<BlockPos> toKeep = new HashSet<>();
+        for (int i = 0; i < targetCount && i < sortedBlocks.size(); i++) {
+            toKeep.add(sortedBlocks.get(i));
+        }
+
+        return toKeep;
     }
 
     public int getOxygenatedBlockCount() {
