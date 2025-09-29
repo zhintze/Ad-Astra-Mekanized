@@ -11,7 +11,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 /**
@@ -62,20 +65,20 @@ public class SlidingDoorBlockEntityRenderer implements BlockEntityRenderer<Slidi
             }
         }
 
-        // Render first door panel
-        minecraft.getBlockRenderer().getModelRenderer().renderModel(
-            poseStack.last(),
-            buffer.getBuffer(Sheets.cutoutBlockSheet()),
-            state,
-            model,
-            1f, 1f, 1f,
-            packedLight, packedOverlay);
-
-        // Move to second door position
-        poseStack.translate(-slide - slide, 0, 0);
-
         if (!isReinforcedDoor) {
-            // For regular doors, flip 180 degrees
+            // For regular doors, render first panel
+            minecraft.getBlockRenderer().getModelRenderer().renderModel(
+                poseStack.last(),
+                buffer.getBuffer(Sheets.cutoutBlockSheet()),
+                state,
+                model,
+                1f, 1f, 1f,
+                packedLight, packedOverlay);
+
+            // Move to second door position
+            poseStack.translate(-slide - slide, 0, 0);
+
+            // Flip 180 degrees
             poseStack.translate(0.5f, 0, 0.5f);
             poseStack.mulPose(Axis.YP.rotationDegrees(180));
             poseStack.translate(-0.5f, 0, -0.5f);
@@ -90,16 +93,11 @@ public class SlidingDoorBlockEntityRenderer implements BlockEntityRenderer<Slidi
                 1f, 1f, 1f,
                 packedLight, packedOverlay);
         } else {
-            // For reinforced door, render the same model but mirrored
-            // This avoids needing to load a separate flipped model
-            poseStack.translate(0.5f, 0, 0.5f);
-            poseStack.mulPose(Axis.YP.rotationDegrees(180));
-            poseStack.translate(-0.5f, 0, -0.5f);
+            // For reinforced door, the model contains both panels
+            // The right panel is at positive X (11 to 32)
+            // The left panel is at negative X (-28 to -7)
+            // We render the whole model and let the sliding translation move them apart
 
-            // Adjust position for the mirrored panel
-            poseStack.translate(-1.25f, 0, 0.8125f);
-
-            // Render the second panel using the same model
             minecraft.getBlockRenderer().getModelRenderer().renderModel(
                 poseStack.last(),
                 buffer.getBuffer(Sheets.cutoutBlockSheet()),
