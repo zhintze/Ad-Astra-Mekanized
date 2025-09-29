@@ -78,7 +78,10 @@ public class SlidingDoorBlockEntity extends BlockEntity implements TickableBlock
 
     public AABB getRenderBoundingBox() {
         // Expand bounding box to cover entire 3x3 area plus sliding animation space
-        // This prevents the model from disappearing when player gets close
-        return new AABB(this.getBlockPos()).inflate(5);
+        // Use expandTowards for precise control - extends further vertically to prevent culling
+        // when looking up from below
+        BlockPos pos = this.getBlockPos();
+        return new AABB(pos.getX() - 2, pos.getY() - 2, pos.getZ() - 2,
+                       pos.getX() + 3, pos.getY() + 5, pos.getZ() + 3);
     }
 }
