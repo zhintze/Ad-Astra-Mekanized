@@ -174,5 +174,34 @@
   "warning.adastramekanized.no_oxygen": "WARNING: NO OXYGEN!",
 
   "death.attack.oxygen_deprivation": "%s suffocated in the vacuum of space",
-  "death.attack.oxygen_deprivation.player": "%s ran out of oxygen while fighting %s"
+  "death.attack.oxygen_deprivation.player": "%s ran out of oxygen while fighting %s",
+
+  "block.adastramekanized.moon_desh_ore": "Moon Desh Ore",
+  "block.adastramekanized.moon_iron_ore": "Moon Iron Ore",
+  "block.adastramekanized.moon_ice_shard_ore": "Moon Ice Shard Ore",
+  "block.adastramekanized.moon_cheese_ore": "Moon Cheese Ore",
+  "block.adastramekanized.mars_iron_ore": "Mars Iron Ore",
+  "block.adastramekanized.mars_diamond_ore": "Mars Diamond Ore",
+  "block.adastramekanized.mars_ostrum_ore": "Mars Ostrum Ore",
+  "block.adastramekanized.mars_ice_shard_ore": "Mars Ice Shard Ore",
+  "block.adastramekanized.venus_coal_ore": "Venus Coal Ore",
+  "block.adastramekanized.venus_gold_ore": "Venus Gold Ore",
+  "block.adastramekanized.venus_diamond_ore": "Venus Diamond Ore",
+  "block.adastramekanized.venus_calorite_ore": "Venus Calorite Ore",
+  "block.adastramekanized.mercury_iron_ore": "Mercury Iron Ore",
+  "block.adastramekanized.glacio_coal_ore": "Glacio Coal Ore",
+  "block.adastramekanized.glacio_copper_ore": "Glacio Copper Ore",
+  "block.adastramekanized.glacio_iron_ore": "Glacio Iron Ore",
+  "block.adastramekanized.glacio_lapis_ore": "Glacio Lapis Ore",
+  "block.adastramekanized.glacio_ice_shard_ore": "Glacio Ice Shard Ore",
+
+  "block.adastramekanized.steel_door": "Steel Door",
+  "block.adastramekanized.steel_trapdoor": "Steel Trapdoor",
+  "block.adastramekanized.airlock": "Airlock",
+  "block.adastramekanized.reinforced_door": "Reinforced Door",
+  "block.adastramekanized.iron_sliding_door": "Iron Sliding Door",
+  "block.adastramekanized.steel_sliding_door": "Steel Sliding Door",
+  "block.adastramekanized.desh_sliding_door": "Desh Sliding Door",
+  "block.adastramekanized.ostrum_sliding_door": "Ostrum Sliding Door",
+  "block.adastramekanized.calorite_sliding_door": "Calorite Sliding Door"
 }

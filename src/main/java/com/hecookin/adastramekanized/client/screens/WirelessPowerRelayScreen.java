@@ -8,27 +8,24 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+
+import static com.hecookin.adastramekanized.client.screens.PowerRelayGuiConstants.*;
 
 /**
  * GUI screen for the Wireless Power Relay
  */
 public class WirelessPowerRelayScreen extends AbstractContainerScreen<WirelessPowerRelayMenu> {
 
-    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(
-        AdAstraMekanized.MOD_ID, "textures/gui/oxygen_distributor.png"
-    );
-
-    // Use oxygen distributor's energy bar position
-    private static final int ENERGY_BAR_X = 165;
-    private static final int ENERGY_BAR_Y = 17;
-    private static final int ENERGY_BAR_WIDTH = 4;
-    private static final int ENERGY_BAR_HEIGHT = 52;
+    private int hoveredSlotIndex = -1;
 
     public WirelessPowerRelayScreen(WirelessPowerRelayMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
-        this.imageWidth = 176;
-        this.imageHeight = 166;
+        this.imageWidth = GUI_WIDTH;
+        this.imageHeight = GUI_HEIGHT;
+        this.inventoryLabelX = INVENTORY_LABEL_X;
+        this.inventoryLabelY = INVENTORY_LABEL_Y;
     }
 
     @Override
@@ -38,6 +35,16 @@ public class WirelessPowerRelayScreen extends AbstractContainerScreen<WirelessPo
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        // Track hovered slot for overlay rendering
+        hoveredSlotIndex = -1;
+        for (int i = 0; i < menu.slots.size(); i++) {
+            Slot slot = menu.slots.get(i);
+            if (isHovering(slot.x, slot.y, 16, 16, mouseX, mouseY)) {
+                hoveredSlotIndex = i;
+                break;
+            }
+        }
+
         renderBackground(graphics, mouseX, mouseY, partialTick);
         super.render(graphics, mouseX, mouseY, partialTick);
         renderTooltip(graphics, mouseX, mouseY);
@@ -50,15 +57,26 @@ public class WirelessPowerRelayScreen extends AbstractContainerScreen<WirelessPo
                 Component.literal(String.format("%,d / %,d FE", energy, maxEnergy)),
                 mouseX, mouseY);
         }
+
+        // Render slot overlays after everything else
+        renderSlotOverlays(graphics, mouseX, mouseY);
     }
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
         // Draw main GUI background
-        graphics.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        graphics.blit(TEXTURE, leftPos, topPos, BACKGROUND_U, BACKGROUND_V, imageWidth, imageHeight);
 
-        // Draw energy bar (same style as oxygen distributor)
+        // Draw display panel area (if it has a special background in the texture)
+        renderDisplayPanel(graphics);
+
+        // Draw energy bar
         renderEnergyBar(graphics);
+    }
+
+    private void renderDisplayPanel(GuiGraphics graphics) {
+        // The display panel is already part of the main background texture
+        // This method is here for future enhancements like animated backgrounds
     }
 
     private void renderEnergyBar(GuiGraphics graphics) {
@@ -68,49 +86,88 @@ public class WirelessPowerRelayScreen extends AbstractContainerScreen<WirelessPo
         // Draw background (empty bar)
         graphics.blit(TEXTURE,
             leftPos + ENERGY_BAR_X, topPos + ENERGY_BAR_Y,
-            176, 0,  // Texture coordinates for empty bar
+            ENERGY_EMPTY_U, ENERGY_EMPTY_V,
             ENERGY_BAR_WIDTH, ENERGY_BAR_HEIGHT);
 
         if (maxEnergy > 0 && energy > 0) {
-            int barHeight = (int) (ENERGY_BAR_HEIGHT * ((float) energy / maxEnergy));
+            int barHeight = calculateEnergyBarHeight(energy, maxEnergy);
 
             // Draw filled portion from bottom up (Mekanism style)
             if (barHeight > 0) {
                 int yOffset = ENERGY_BAR_HEIGHT - barHeight;
                 graphics.blit(TEXTURE,
                     leftPos + ENERGY_BAR_X, topPos + ENERGY_BAR_Y + yOffset,
-                    180, yOffset,  // Texture coordinates for filled bar
+                    ENERGY_FILLED_U, ENERGY_FILLED_V + yOffset,
                     ENERGY_BAR_WIDTH, barHeight);
+            }
+        }
+    }
+
+    private void renderSlotOverlays(GuiGraphics graphics, int mouseX, int mouseY) {
+        // Render hover overlay on the currently hovered slot
+        if (hoveredSlotIndex >= 0 && hoveredSlotIndex < menu.slots.size()) {
+            Slot slot = menu.slots.get(hoveredSlotIndex);
+            if (!slot.hasItem()) {  // Only show overlay if slot is empty
+                graphics.blit(TEXTURE,
+                    leftPos + slot.x - 1, topPos + slot.y - 1,
+                    SLOT_HOVER_U, SLOT_HOVER_V,
+                    SLOT_HOVER_SIZE, SLOT_HOVER_SIZE);
+            }
+        }
+
+        // Render disabled overlay for slots that should appear disabled
+        // For now, we'll only disable empty controller slot when no controller is present
+        WirelessPowerRelayBlockEntity relay = menu.getBlockEntity();
+        if (relay != null && relay.getControllerSlot().getItem(0).isEmpty()) {
+            // Find the controller slot (slot 0 in the menu)
+            if (!menu.slots.isEmpty()) {
+                Slot controllerSlot = menu.slots.get(0);
+                if (controllerSlot.x == CONTROLLER_SLOT_X && controllerSlot.y == CONTROLLER_SLOT_Y) {
+                    // Don't render disabled if it's being hovered
+                    if (hoveredSlotIndex != 0) {
+                        graphics.blit(TEXTURE,
+                            leftPos + controllerSlot.x - 1, topPos + controllerSlot.y - 1,
+                            SLOT_DISABLED_U, SLOT_DISABLED_V,
+                            SLOT_DISABLED_SIZE, SLOT_DISABLED_SIZE);
+                    }
+                }
             }
         }
     }
 
     @Override
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
-        graphics.drawString(font, title, (imageWidth - font.width(title)) / 2, 6, 0x404040, false);
-        graphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, 0x404040, false);
+        // Title - centered
+        int titleX = getCenteredTextX(imageWidth, font.width(title));
+        graphics.drawString(font, title, titleX, TITLE_Y, TEXT_COLOR_TITLE, false);
+
+        // Player inventory label
+        graphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, TEXT_COLOR_DEFAULT, false);
 
         // Render power info using synced data
         int energy = menu.getEnergy();
         int maxEnergy = menu.getMaxEnergy();
 
-        String energyText = String.format("%d / %d FE",
-            energy, maxEnergy);
-        graphics.drawString(font, energyText, 30, 20, 0x404040, false);
+        String energyText = String.format("Energy: %,d / %,d FE", energy, maxEnergy);
+        graphics.drawString(font, energyText, ENERGY_TEXT_X, ENERGY_TEXT_Y, TEXT_COLOR_DEFAULT, false);
 
         // Render distribution info using synced data
         int distributorCount = menu.getLastDistributorCount();
         int powerDistributed = menu.getLastPowerDistributed();
 
-        graphics.drawString(font, "Distributors: " + distributorCount, 30, 40, 0x404040, false);
-        graphics.drawString(font, "Power/tick: " + powerDistributed + " FE", 30, 50, 0x404040, false);
+        String distributorText = String.format("Distributors: %d", distributorCount);
+        graphics.drawString(font, distributorText, DISTRIBUTOR_TEXT_X, DISTRIBUTOR_TEXT_Y, TEXT_COLOR_DEFAULT, false);
 
-        // Controller status - still need to access block entity for slot
+        String powerText = String.format("Power/tick: %,d FE", powerDistributed);
+        graphics.drawString(font, powerText, POWER_TEXT_X, POWER_TEXT_Y,
+            powerDistributed > 0 ? TEXT_COLOR_ENERGY : TEXT_COLOR_DEFAULT, false);
+
+        // Controller status
         WirelessPowerRelayBlockEntity relay = menu.getBlockEntity();
-        boolean hasController = !relay.getControllerSlot().getItem(0).isEmpty();
-        String controllerStatus = hasController ? "Controller: Inserted" : "Controller: Empty";
-        int statusColor = hasController ? 0x00AA00 : 0xAA0000;
-        graphics.drawString(font, controllerStatus, 30, 60, statusColor, false);
+        boolean hasController = relay != null && !relay.getControllerSlot().getItem(0).isEmpty();
+        String controllerStatus = hasController ? "Controller: Active" : "Controller: Empty";
+        int statusColor = hasController ? TEXT_COLOR_SUCCESS : TEXT_COLOR_ERROR;
+        graphics.drawString(font, controllerStatus, CONTROLLER_STATUS_X, CONTROLLER_STATUS_Y, statusColor, false);
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.hecookin.adastramekanized.common.blockentities.machines.OxygenDistrib
 import com.hecookin.adastramekanized.common.blockentities.machines.ImprovedOxygenDistributor;
 import com.hecookin.adastramekanized.common.blockentities.machines.WirelessPowerRelayBlockEntity;
 import com.hecookin.adastramekanized.common.blockentities.OxygenNetworkMonitorBlockEntity;
+import com.hecookin.adastramekanized.common.blockentities.SlidingDoorBlockEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -44,6 +45,18 @@ public class ModBlockEntityTypes {
             () -> createBlockEntityType(
                 OxygenNetworkMonitorBlockEntity::new,
                 ModBlocks.OXYGEN_NETWORK_MONITOR.get()));
+
+    // Sliding Door block entity
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SlidingDoorBlockEntity>> SLIDING_DOOR =
+        BLOCK_ENTITY_TYPES.register("sliding_door",
+            () -> createBlockEntityType(
+                SlidingDoorBlockEntity::new,
+                ModBlocks.IRON_SLIDING_DOOR.get(),
+                ModBlocks.REINFORCED_DOOR.get(),
+                ModBlocks.STEEL_SLIDING_DOOR.get(),
+                ModBlocks.DESH_SLIDING_DOOR.get(),
+                ModBlocks.OSTRUM_SLIDING_DOOR.get(),
+                ModBlocks.CALORITE_SLIDING_DOOR.get()));
 
     /**
      * Helper method to create a BlockEntityType

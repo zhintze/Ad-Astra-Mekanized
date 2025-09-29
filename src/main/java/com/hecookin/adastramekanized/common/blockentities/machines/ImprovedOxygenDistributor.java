@@ -261,16 +261,25 @@ public class ImprovedOxygenDistributor extends BlockEntity implements MenuProvid
                     updateOxygenZones(claimedBlocks);
 
                     // Consume resources
+                    long oxygenBefore = oxygenTank.getStored();
+                    int energyBefore = energyStorage.getEnergyStored();
+
                     oxygenTank.shrinkStack(oxygenToConsume, Action.EXECUTE);
                     energyStorage.extractEnergy(energyToConsume, false);
 
+                    long oxygenAfter = oxygenTank.getStored();
+                    int energyAfter = energyStorage.getEnergyStored();
+                    long actualOxygenConsumed = oxygenBefore - oxygenAfter;
+                    int actualEnergyConsumed = energyBefore - energyAfter;
+
                     // Update usage tracking (per tick, so divide by distribution interval)
                     lastBlockCount = blockCount;
-                    lastOxygenUsage = (float) oxygenToConsume / DISTRIBUTION_INTERVAL;
-                    lastEnergyUsage = (float) energyToConsume / DISTRIBUTION_INTERVAL;
+                    lastOxygenUsage = (float) actualOxygenConsumed / DISTRIBUTION_INTERVAL;
+                    lastEnergyUsage = (float) actualEnergyConsumed / DISTRIBUTION_INTERVAL;
 
-                    AdAstraMekanized.LOGGER.debug("Distributed oxygen to {} blocks, consumed {} mB oxygen and {} FE",
-                        blockCount, oxygenToConsume, energyToConsume);
+                    AdAstraMekanized.LOGGER.info("Distribution: {} blocks | Oxygen: requested={} mB, actual={} mB ({}mB/t) | Energy: requested={} FE, actual={} FE ({}FE/t)",
+                        blockCount, oxygenToConsume, actualOxygenConsumed, lastOxygenUsage,
+                        energyToConsume, actualEnergyConsumed, lastEnergyUsage);
 
                     if (oxygenBlockVisibility) {
                         sendVisualizationUpdate(true);
@@ -439,6 +448,23 @@ public class ImprovedOxygenDistributor extends BlockEntity implements MenuProvid
 
     public int getCurrentRadius() {
         return currentRadius;
+    }
+
+    // Static getters for GUI to access constants dynamically
+    public static int getMaxBlocks() {
+        return MAX_OXYGEN_BLOCKS;
+    }
+
+    public static float getOxygenPerBlockConstant() {
+        return OXYGEN_PER_BLOCK;
+    }
+
+    public static float getEnergyPerBlockConstant() {
+        return ENERGY_PER_BLOCK;
+    }
+
+    public static int getDistributionInterval() {
+        return DISTRIBUTION_INTERVAL;
     }
 
     public int getEnergyPerTick() {

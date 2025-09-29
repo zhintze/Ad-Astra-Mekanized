@@ -96,6 +96,26 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.DEEPSLATE_OSTRUM_ORE.get());
                         output.accept(ModBlocks.DEEPSLATE_CALORITE_ORE.get());
 
+                        // Planet-Specific Ores
+                        output.accept(ModBlocks.MOON_DESH_ORE.get());
+                        output.accept(ModBlocks.MOON_IRON_ORE.get());
+                        output.accept(ModBlocks.MOON_ICE_SHARD_ORE.get());
+                        output.accept(ModBlocks.MOON_CHEESE_ORE.get());
+                        output.accept(ModBlocks.MARS_IRON_ORE.get());
+                        output.accept(ModBlocks.MARS_DIAMOND_ORE.get());
+                        output.accept(ModBlocks.MARS_OSTRUM_ORE.get());
+                        output.accept(ModBlocks.MARS_ICE_SHARD_ORE.get());
+                        output.accept(ModBlocks.VENUS_COAL_ORE.get());
+                        output.accept(ModBlocks.VENUS_GOLD_ORE.get());
+                        output.accept(ModBlocks.VENUS_DIAMOND_ORE.get());
+                        output.accept(ModBlocks.VENUS_CALORITE_ORE.get());
+                        output.accept(ModBlocks.MERCURY_IRON_ORE.get());
+                        output.accept(ModBlocks.GLACIO_COAL_ORE.get());
+                        output.accept(ModBlocks.GLACIO_COPPER_ORE.get());
+                        output.accept(ModBlocks.GLACIO_IRON_ORE.get());
+                        output.accept(ModBlocks.GLACIO_LAPIS_ORE.get());
+                        output.accept(ModBlocks.GLACIO_ICE_SHARD_ORE.get());
+
                         // Special Blocks
                         output.accept(ModBlocks.CHEESE_BLOCK.get());
 
@@ -220,6 +240,17 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.REDSTONE_TOGGLE_RELAY.get());
 
                         output.accept(ModBlocks.ROCKET_ASSEMBLY_STATION.get());
+
+                        // Doors & Access
+                        output.accept(ModBlocks.STEEL_DOOR.get());
+                        output.accept(ModBlocks.STEEL_TRAPDOOR.get());
+                        // output.accept(ModBlocks.AIRLOCK.get()); // TODO: Add when airlock is implemented
+                        output.accept(ModBlocks.REINFORCED_DOOR.get());
+                        output.accept(ModBlocks.IRON_SLIDING_DOOR.get());
+                        output.accept(ModBlocks.STEEL_SLIDING_DOOR.get());
+                        output.accept(ModBlocks.DESH_SLIDING_DOOR.get());
+                        output.accept(ModBlocks.OSTRUM_SLIDING_DOOR.get());
+                        output.accept(ModBlocks.CALORITE_SLIDING_DOOR.get());
                     })
                     .build());
 
@@ -227,9 +258,9 @@ public class ModCreativeTabs {
     public static final Supplier<CreativeModeTab> DECORATIVE_TAB = CREATIVE_MODE_TABS.register("decorative",
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("creativetab.adastramekanized.decorative"))
-                    .icon(() -> new ItemStack(ModBlocks.CHEESE_BLOCK.get())) // Will update when flags are added
+                    .icon(() -> new ItemStack(ModBlocks.CHEESE_BLOCK.get()))
                     .displayItems((parameters, output) -> {
-                        // Flags and other decorative items will be added here in future batches
+                        // Decorative items will be added in future updates
                     })
                     .build());
 

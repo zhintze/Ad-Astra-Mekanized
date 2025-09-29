@@ -1,0 +1,10 @@
+{
+  "multipart": [
+    {
+      "when": { "part": "bottom" },
+      "apply": {
+        "model": "adastramekanized:block/desh_sliding_door"
+      }
+    }
+  ]
+}

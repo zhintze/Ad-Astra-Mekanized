@@ -1,0 +1,19 @@
+{
+  "textures": {
+    "texture": "adastramekanized:block/sliding_door/steel_sliding_door"
+  },
+  "elements": [
+    {
+      "from": [0, 0, 7],
+      "to": [16, 16, 9],
+      "faces": {
+        "north": {"uv": [4, 4, 12, 12], "texture": "#texture"},
+        "south": {"uv": [4, 4, 12, 12], "texture": "#texture"},
+        "east": {"uv": [0, 0, 2, 16], "texture": "#texture"},
+        "west": {"uv": [14, 0, 16, 16], "texture": "#texture"},
+        "up": {"uv": [4, 0, 12, 2], "texture": "#texture"},
+        "down": {"uv": [4, 14, 12, 16], "texture": "#texture"}
+      }
+    }
+  ]
+}

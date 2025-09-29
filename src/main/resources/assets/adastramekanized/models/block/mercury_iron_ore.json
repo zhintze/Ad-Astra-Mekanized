@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "adastramekanized:block/mercury_iron_ore"
+  }
+}

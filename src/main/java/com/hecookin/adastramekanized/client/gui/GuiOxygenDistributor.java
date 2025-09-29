@@ -1,6 +1,7 @@
 package com.hecookin.adastramekanized.client.gui;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
+import com.hecookin.adastramekanized.common.blockentities.machines.ImprovedOxygenDistributor;
 import com.hecookin.adastramekanized.common.menus.OxygenDistributorMenu;
 import com.hecookin.adastramekanized.common.network.ModNetworking;
 import com.hecookin.adastramekanized.common.network.OxygenDistributorButtonPacket;
@@ -204,33 +205,37 @@ public class GuiOxygenDistributor extends AbstractContainerScreen<OxygenDistribu
         // Render status information at Ad Astra's exact positions
         int textColor = 0x68d975; // Green color like Ad Astra
 
-        // Get actual machine state
-        boolean isActive = menu.getBlockEntity().isActive();
-        boolean hasResources = menu.getEnergy() >= 400 && menu.getChemicalAmount() > 0;
+        // Get synced values from menu (these update every distribution cycle)
+        int blockCount = menu.getBlockCount();
+        float energyUsage = menu.getEnergyUsage();  // Already in per-tick values from server
+        float oxygenUsage = menu.getOxygenUsage();  // Already in per-tick values from server
+        int machineState = menu.getMachineState();
 
-        // Energy per tick at position (11, 9) - shows actual consumption when active
-        // 400 FE every 100 ticks = 4 FE/t average
-        float energyConsumption = (isActive && hasResources) ? 4.0f : 0;
-        Component energyText = Component.literal(String.format("Energy: %.1f FE/t", energyConsumption));
+        // Get the maximum blocks dynamically from the block entity constants
+        int maxBlocks = ImprovedOxygenDistributor.getMaxBlocks();
+
+        // Debug logging to verify values
+        if (blockCount > 0) {
+            float expectedOxygenPerTick = (blockCount * ImprovedOxygenDistributor.getOxygenPerBlockConstant()) / ImprovedOxygenDistributor.getDistributionInterval();
+            float expectedEnergyPerTick = (blockCount * ImprovedOxygenDistributor.getEnergyPerBlockConstant()) / ImprovedOxygenDistributor.getDistributionInterval();
+
+            AdAstraMekanized.LOGGER.debug("GUI Debug - Blocks: {}, Oxygen: {} (expected: {}), Energy: {} (expected: {})",
+                blockCount, oxygenUsage, expectedOxygenPerTick, energyUsage, expectedEnergyPerTick);
+        }
+
+        // Energy per tick at position (11, 9) - shows synced consumption value
+        Component energyText = Component.literal(String.format("Energy: %.2f FE/t", energyUsage));
         guiGraphics.drawString(this.font, energyText, leftPos + 11, topPos + 9, textColor);
 
-        // Get oxygenated block count for both displays
-        int oxygenatedBlocks = menu.getBlockEntity().getOxygenatedBlockCount();
-
-        // Oxygen per tick at position (11, 20) - shows dynamic consumption based on oxygenated blocks
-        // Shows actual consumption: oxygenated blocks × 0.25 mB per block / 100 ticks
-        float oxygenUsage = (isActive && hasResources && oxygenatedBlocks > 0)
-            ? (oxygenatedBlocks * 0.25f / 100.0f) // blocks × 0.25 mB / 100 ticks
-            : 0;
-        Component oxygenText = Component.literal(String.format("Oxygen: %.3f mB/t", oxygenUsage));
+        // Oxygen per tick at position (11, 20) - shows synced consumption value with 2 decimal places
+        Component oxygenText = Component.literal(String.format("Oxygen: %.2f mB/t", oxygenUsage));
         guiGraphics.drawString(this.font, oxygenText, leftPos + 11, topPos + 20, textColor);
 
-        // Blocks distributed at position (11, 31) - show actual oxygenated block count
-        Component blocksText = Component.literal(String.format("Blocks: %d/50", oxygenatedBlocks));
+        // Blocks distributed at position (11, 31) - show synced block count with dynamic maximum
+        Component blocksText = Component.literal(String.format("Blocks: %d/%d", blockCount, maxBlocks));
         guiGraphics.drawString(this.font, blocksText, leftPos + 11, topPos + 31, textColor);
 
         // Machine state status at position (11, 42) - three states with colors
-        int machineState = menu.getMachineState();
         String statusText;
         int statusColor;
         switch (machineState) {

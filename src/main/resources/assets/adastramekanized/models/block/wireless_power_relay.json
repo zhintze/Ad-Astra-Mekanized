@@ -3,6 +3,6 @@
   "textures": {
     "top": "adastramekanized:block/wireless_power_relay_top",
     "front": "adastramekanized:block/wireless_power_relay_front",
-    "side": "adastramekanized:block/steel_factory_block"
+    "side": "adastramekanized:block/wireless_power_relay_front"
   }
 }

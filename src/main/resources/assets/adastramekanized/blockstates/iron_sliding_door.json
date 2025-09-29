@@ -1,0 +1,10 @@
+{
+  "multipart": [
+    {
+      "when": { "part": "bottom" },
+      "apply": {
+        "model": "adastramekanized:block/iron_sliding_door"
+      }
+    }
+  ]
+}

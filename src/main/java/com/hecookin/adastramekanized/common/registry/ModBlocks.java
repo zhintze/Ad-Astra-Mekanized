@@ -7,6 +7,7 @@ import com.hecookin.adastramekanized.common.blocks.machines.OxygenLoaderBlock;
 import com.hecookin.adastramekanized.common.blocks.machines.WirelessPowerRelayBlock;
 import com.hecookin.adastramekanized.common.blocks.RedstoneToggleRelay;
 import com.hecookin.adastramekanized.common.blocks.OxygenNetworkMonitorBlock;
+import com.hecookin.adastramekanized.common.blocks.SlidingDoorBlock;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -336,6 +337,97 @@ public class ModBlocks {
 
     public static final Supplier<Block> DEEPSLATE_CALORITE_ORE = registerBlock("deepslate_calorite_ore",
             () -> new Block(BlockProperties.DEEPSLATE_ORE_BLOCK));
+
+    // ========== PLANET-SPECIFIC ORES ==========
+
+    // Moon Ores
+    public static final Supplier<Block> MOON_DESH_ORE = registerBlock("moon_desh_ore",
+            () -> new Block(BlockProperties.moonStone()));
+
+    public static final Supplier<Block> MOON_IRON_ORE = registerBlock("moon_iron_ore",
+            () -> new Block(BlockProperties.moonStone()));
+
+    public static final Supplier<Block> MOON_ICE_SHARD_ORE = registerBlock("moon_ice_shard_ore",
+            () -> new Block(BlockProperties.moonStone()));
+
+    public static final Supplier<Block> MOON_CHEESE_ORE = registerBlock("moon_cheese_ore",
+            () -> new Block(BlockProperties.moonStone()));
+
+    // Mars Ores
+    public static final Supplier<Block> MARS_IRON_ORE = registerBlock("mars_iron_ore",
+            () -> new Block(BlockProperties.marsStone()));
+
+    public static final Supplier<Block> MARS_DIAMOND_ORE = registerBlock("mars_diamond_ore",
+            () -> new Block(BlockProperties.marsStone()));
+
+    public static final Supplier<Block> MARS_OSTRUM_ORE = registerBlock("mars_ostrum_ore",
+            () -> new Block(BlockProperties.marsStone()));
+
+    public static final Supplier<Block> MARS_ICE_SHARD_ORE = registerBlock("mars_ice_shard_ore",
+            () -> new Block(BlockProperties.marsStone()));
+
+    // Venus Ores
+    public static final Supplier<Block> VENUS_COAL_ORE = registerBlock("venus_coal_ore",
+            () -> new Block(BlockProperties.venusStone()));
+
+    public static final Supplier<Block> VENUS_GOLD_ORE = registerBlock("venus_gold_ore",
+            () -> new Block(BlockProperties.venusStone()));
+
+    public static final Supplier<Block> VENUS_DIAMOND_ORE = registerBlock("venus_diamond_ore",
+            () -> new Block(BlockProperties.venusStone()));
+
+    public static final Supplier<Block> VENUS_CALORITE_ORE = registerBlock("venus_calorite_ore",
+            () -> new Block(BlockProperties.venusStone()));
+
+    // Mercury Ores
+    public static final Supplier<Block> MERCURY_IRON_ORE = registerBlock("mercury_iron_ore",
+            () -> new Block(BlockProperties.mercuryStone()));
+
+    // Glacio Ores
+    public static final Supplier<Block> GLACIO_COAL_ORE = registerBlock("glacio_coal_ore",
+            () -> new Block(BlockProperties.glacioStone()));
+
+    public static final Supplier<Block> GLACIO_COPPER_ORE = registerBlock("glacio_copper_ore",
+            () -> new Block(BlockProperties.glacioStone()));
+
+    public static final Supplier<Block> GLACIO_IRON_ORE = registerBlock("glacio_iron_ore",
+            () -> new Block(BlockProperties.glacioStone()));
+
+    public static final Supplier<Block> GLACIO_LAPIS_ORE = registerBlock("glacio_lapis_ore",
+            () -> new Block(BlockProperties.glacioStone()));
+
+    public static final Supplier<Block> GLACIO_ICE_SHARD_ORE = registerBlock("glacio_ice_shard_ore",
+            () -> new Block(BlockProperties.glacioStone()));
+
+    // ========== DOORS & ACCESS BLOCKS ==========
+
+    public static final Supplier<Block> STEEL_DOOR = registerBlock("steel_door",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));
+
+    public static final Supplier<Block> STEEL_TRAPDOOR = registerBlock("steel_trapdoor",
+            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));
+
+    public static final Supplier<Block> AIRLOCK = registerBlock("airlock",
+            () -> new SlidingDoorBlock(BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));
+
+    public static final Supplier<Block> REINFORCED_DOOR = registerBlock("reinforced_door",
+            () -> new SlidingDoorBlock(BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));
+
+    // Sliding Doors
+    public static final Supplier<Block> IRON_SLIDING_DOOR = registerBlock("iron_sliding_door",
+            () -> new SlidingDoorBlock(BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));
+
+    public static final Supplier<Block> STEEL_SLIDING_DOOR = registerBlock("steel_sliding_door",
+            () -> new SlidingDoorBlock(BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));
+
+    public static final Supplier<Block> DESH_SLIDING_DOOR = registerBlock("desh_sliding_door",
+            () -> new SlidingDoorBlock(BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));
+
+    public static final Supplier<Block> OSTRUM_SLIDING_DOOR = registerBlock("ostrum_sliding_door",
+            () -> new SlidingDoorBlock(BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));
+
+    public static final Supplier<Block> CALORITE_SLIDING_DOOR = registerBlock("calorite_sliding_door",
+            () -> new SlidingDoorBlock(BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));
 
     // ========== ALIEN WOOD BLOCKS ==========
 

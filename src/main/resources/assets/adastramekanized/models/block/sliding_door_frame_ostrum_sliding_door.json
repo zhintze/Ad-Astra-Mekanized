@@ -1,0 +1,7 @@
+{
+  "parent": "adastramekanized:block/sliding_door_frame",
+  "textures": {
+    "particle": "adastramekanized:block/sliding_door/ostrum_sliding_door",
+    "frame": "adastramekanized:block/sliding_door/ostrum_sliding_door"
+  }
+}
