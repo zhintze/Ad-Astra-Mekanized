@@ -34,17 +34,19 @@ public class SlidingDoorBlockEntityRenderer implements BlockEntityRenderer<Slidi
         poseStack.pushPose();
 
         // The block entity is at BOTTOM (center-bottom of the 3x3)
-        // The door model has coordinates from [8, -16, 0] to [32, 32, 3]
-        // This means it's offset by 8 units in X and needs centering
+        // Parts extend clockwise from facing, so for NORTH, they go EAST
+        // We need to translate to the center of the 3x3 area
 
-        // First, apply the facing rotation around block center
+        // First, apply the facing rotation
         poseStack.translate(0.5f, 1, 0.5f);
         poseStack.mulPose(Axis.YP.rotationDegrees(direction.toYRot()));
         poseStack.translate(-0.5f, 0, -0.5f);
 
-        // Center the door model by compensating for its X offset (8 units = 0.5 blocks)
-        // and position it in the middle of the block
-        poseStack.translate(-0.5f + slide, 0, 0.0625f);
+        // Now in local space, the door extends from -1 to +1 on the X axis
+        // The block entity is at X=0, so no additional offset needed
+
+        // Apply base Z offset and first door panel position
+        poseStack.translate(slide, 0, 0.0625f);
 
         // Z-axis adjustment for proper door depth
         if (direction.getAxis() == Direction.Axis.Z) {
