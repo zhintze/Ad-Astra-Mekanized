@@ -11,10 +11,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 /**
@@ -93,24 +90,21 @@ public class SlidingDoorBlockEntityRenderer implements BlockEntityRenderer<Slidi
                 1f, 1f, 1f,
                 packedLight, packedOverlay);
         } else {
-            // For reinforced door, use the flipped model
-            poseStack.translate(-1.25f, 0, 0);
+            // For reinforced door, render the same model but mirrored
+            // This avoids needing to load a separate flipped model
+            poseStack.translate(0.5f, 0, 0.5f);
+            poseStack.mulPose(Axis.YP.rotationDegrees(180));
+            poseStack.translate(-0.5f, 0, -0.5f);
 
-            // Load the flipped model
-            ModelResourceLocation flippedModelLocation = ModelResourceLocation.standalone(
-                ResourceLocation.fromNamespaceAndPath(
-                    AdAstraMekanized.MOD_ID,
-                    "block/reinforced_door_flipped"
-                )
-            );
-            BakedModel flippedModel = minecraft.getModelManager().getModel(flippedModelLocation);
+            // Adjust position for the mirrored panel
+            poseStack.translate(-1.25f, 0, 0.8125f);
 
-            // Render the flipped model
+            // Render the second panel using the same model
             minecraft.getBlockRenderer().getModelRenderer().renderModel(
                 poseStack.last(),
                 buffer.getBuffer(Sheets.cutoutBlockSheet()),
                 state,
-                flippedModel,
+                model,
                 1f, 1f, 1f,
                 packedLight, packedOverlay);
         }
