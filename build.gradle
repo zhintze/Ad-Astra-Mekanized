@@ -109,8 +109,8 @@ dependencies {
     // For all intends and purposes: You can treat this dependency as if it is a normal library you would use.
     implementation "net.neoforged:neoforge:${neo_version}"
 
-    // Mekanism API for cable and pipe integration
-    compileOnly "mekanism:Mekanism:${mekanism_version}:api"
+    // Mekanism for full integration including IChemicalItem
+    compileOnly "mekanism:Mekanism:${mekanism_version}"
     localRuntime "mekanism:Mekanism:${mekanism_version}"
 
 

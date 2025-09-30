@@ -5,9 +5,13 @@ import com.hecookin.adastramekanized.api.IChemicalIntegration;
 import com.hecookin.adastramekanized.api.IEnergyIntegration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.fml.ModList;
+
+import java.util.List;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -383,6 +387,115 @@ public class MekanismIntegration implements IChemicalIntegration, IEnergyIntegra
         }
     }
 
+    // === ItemStack Chemical Methods ===
+
+    /**
+     * Check if an ItemStack has any chemical stored
+     */
+    public boolean hasAnyChemical(ItemStack stack) {
+        if (!isChemicalSystemAvailable()) {
+            return false;
+        }
+
+        try {
+            // Get the chemical handler capability
+            Class<?> capabilitiesClass = Class.forName("mekanism.common.capabilities.Capabilities");
+            Object chemicalCapability = capabilitiesClass.getField("CHEMICAL").get(null);
+
+            // Get capability method (should be on ICapabilityProvider)
+            Method getCapabilityMethod = stack.getClass().getMethod("getCapability", Class.forName("net.neoforged.neoforge.capabilities.ItemCapability"));
+            Object chemicalHandler = getCapabilityMethod.invoke(stack, chemicalCapability);
+
+            if (chemicalHandler != null) {
+                // Check if it has any chemical
+                Method getChemicalInTankMethod = chemicalHandler.getClass().getMethod("getChemicalInTank", int.class);
+                Object chemicalStack = getChemicalInTankMethod.invoke(chemicalHandler, 0);
+
+                if (chemicalStack != null) {
+                    Method getAmountMethod = chemicalStack.getClass().getMethod("getAmount");
+                    long amount = (Long) getAmountMethod.invoke(chemicalStack);
+                    return amount > 0;
+                }
+            }
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.debug("Error checking ItemStack chemical: {}", e.getMessage());
+        }
+
+        return false;
+    }
+
+    /**
+     * Extract chemical from an ItemStack
+     */
+    public long extractChemical(ItemStack stack, String chemicalName, long amount) {
+        if (!isChemicalSystemAvailable()) {
+            return 0;
+        }
+
+        try {
+            // Get the chemical handler capability
+            Class<?> capabilitiesClass = Class.forName("mekanism.common.capabilities.Capabilities");
+            Object chemicalCapability = capabilitiesClass.getField("CHEMICAL").get(null);
+
+            // Get capability method
+            Method getCapabilityMethod = stack.getClass().getMethod("getCapability", Class.forName("net.neoforged.neoforge.capabilities.ItemCapability"));
+            Object chemicalHandler = getCapabilityMethod.invoke(stack, chemicalCapability);
+
+            if (chemicalHandler != null) {
+                // Get Action.EXECUTE enum value
+                Class<?> actionClass = Class.forName("mekanism.api.Action");
+                Object executeAction = actionClass.getField("EXECUTE").get(null);
+
+                // Extract chemical
+                Method extractMethod = chemicalHandler.getClass().getMethod("extractChemical", long.class, actionClass);
+                Object extractedStack = extractMethod.invoke(chemicalHandler, amount, executeAction);
+
+                if (extractedStack != null) {
+                    Method getAmountMethod = extractedStack.getClass().getMethod("getAmount");
+                    return (Long) getAmountMethod.invoke(extractedStack);
+                }
+            }
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.debug("Error extracting chemical from ItemStack: {}", e.getMessage());
+        }
+
+        return 0;
+    }
+
+    /**
+     * Create an item stack with Mekanism chemical capability
+     * This makes the item compatible with Mekanism's chemical tanks
+     */
+    public void attachChemicalCapability(ItemStack stack, long capacity, String... acceptedChemicals) {
+        if (!isChemicalSystemAvailable()) {
+            return;
+        }
+
+        try {
+            // Store the chemical data in NBT for now
+            // Mekanism will handle the actual capability attachment through its own system
+            net.minecraft.world.item.component.CustomData customData = stack.getOrDefault(
+                net.minecraft.core.component.DataComponents.CUSTOM_DATA,
+                net.minecraft.world.item.component.CustomData.EMPTY
+            );
+            CompoundTag tag = customData.copyTag();
+
+            CompoundTag chemicalTag = new CompoundTag();
+            chemicalTag.putLong("capacity", capacity);
+            chemicalTag.putString("acceptedChemicals", String.join(",", acceptedChemicals));
+            tag.put("ChemicalData", chemicalTag);
+
+            stack.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA,
+                net.minecraft.world.item.component.CustomData.of(tag));
+
+            AdAstraMekanized.LOGGER.debug("Attached chemical data to ItemStack: capacity={}, chemicals={}",
+                capacity, String.join(",", acceptedChemicals));
+
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.error("Error attaching chemical capability: {}", e.getMessage());
+        }
+    }
+
     // === Custom Methods for Oxygen Distributor ===
 
     /**
@@ -500,5 +613,177 @@ public class MekanismIntegration implements IChemicalIntegration, IEnergyIntegra
         } catch (Exception e) {
             AdAstraMekanized.LOGGER.error("Failed to deserialize chemical tank: {}", e.getMessage());
         }
+    }
+
+    // === ItemStack Chemical Methods for Armor ===
+
+    /**
+     * Get the amount of a specific chemical in an ItemStack
+     */
+    public Long getChemicalAmount(ItemStack stack, String chemicalName) {
+        if (!isChemicalSystemAvailable() || stack.isEmpty()) {
+            return 0L;
+        }
+
+        try {
+            // Try to get chemical handler capability from the item
+            Class<?> capabilitiesClass = Class.forName("mekanism.common.capabilities.Capabilities");
+            java.lang.reflect.Field chemicalField = capabilitiesClass.getField("CHEMICAL");
+            Object chemicalCapability = chemicalField.get(null);
+
+            Method getCapabilityMethod = chemicalCapability.getClass().getMethod("getCapability", ItemStack.class);
+            Object handler = getCapabilityMethod.invoke(chemicalCapability, stack);
+
+            if (handler != null && chemicalHandlerClass.isInstance(handler)) {
+                // Get the first tank (usually index 0 for armor)
+                Object chemicalStack = getChemicalInTankMethod.invoke(handler, 0);
+                if (chemicalStack != null) {
+                    Method getAmountMethod = chemicalStackClass.getMethod("getAmount");
+                    return (Long) getAmountMethod.invoke(chemicalStack);
+                }
+            }
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.debug("Could not get chemical amount from ItemStack: {}", e.getMessage());
+        }
+        return 0L;
+    }
+
+    /**
+     * Check if an ItemStack has a specific chemical
+     */
+    public boolean hasChemical(ItemStack stack, String chemicalName) {
+        Long amount = getChemicalAmount(stack, chemicalName);
+        return amount != null && amount > 0;
+    }
+
+    /**
+     * Use/consume a chemical from an ItemStack
+     */
+    public void useChemical(ItemStack stack, String chemicalName, long amount) {
+        if (!isChemicalSystemAvailable() || stack.isEmpty() || amount <= 0) {
+            return;
+        }
+
+        try {
+            // Get chemical handler capability
+            Class<?> capabilitiesClass = Class.forName("mekanism.common.capabilities.Capabilities");
+            java.lang.reflect.Field chemicalField = capabilitiesClass.getField("CHEMICAL");
+            Object chemicalCapability = chemicalField.get(null);
+
+            Method getCapabilityMethod = chemicalCapability.getClass().getMethod("getCapability", ItemStack.class);
+            Object handler = getCapabilityMethod.invoke(chemicalCapability, stack);
+
+            if (handler != null && chemicalHandlerClass.isInstance(handler)) {
+                extractChemicalMethod.invoke(handler, amount, false);
+            }
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.debug("Could not use chemical from ItemStack: {}", e.getMessage());
+        }
+    }
+
+    /**
+     * Add chemical tooltip information
+     */
+    public void addChemicalTooltip(ItemStack stack, List<Component> tooltip, String chemicalName, long capacity) {
+        if (!isChemicalSystemAvailable()) {
+            return;
+        }
+
+        try {
+            Long amount = getChemicalAmount(stack, chemicalName);
+            if (amount != null) {
+                // Try to use Mekanism's formatting
+                Class<?> langClass = Class.forName("mekanism.common.MekanismLang");
+                java.lang.reflect.Field storedField = langClass.getField("GENERIC_STORED");
+                Object storedLang = storedField.get(null);
+
+                // Create the tooltip using Mekanism's style
+                Method translateMethod = storedLang.getClass().getMethod("translateColored", Object.class, Object.class, Object.class, Object.class);
+                Class<?> enumColorClass = Class.forName("mekanism.api.text.EnumColor");
+                Object grayColor = enumColorClass.getField("GRAY").get(null);
+                Object orangeColor = enumColorClass.getField("ORANGE").get(null);
+
+                // Get the chemical reference for display
+                Object chemical = chemicalName.equalsIgnoreCase("oxygen") ? oxygenInstance : getHydrogenInstance();
+                if (chemical != null) {
+                    Component component = (Component) translateMethod.invoke(storedLang, grayColor, chemical, orangeColor, amount);
+                    tooltip.add(component);
+                }
+            }
+        } catch (Exception e) {
+            // Fallback to simple display
+            Long amount = getChemicalAmount(stack, chemicalName);
+            if (amount != null) {
+                tooltip.add(Component.literal(chemicalName + ": " + amount + " / " + capacity + " mB"));
+            }
+        }
+    }
+
+    /**
+     * Get the bar width for chemical display
+     */
+    public Integer getChemicalBarWidth(ItemStack stack) {
+        if (!isChemicalSystemAvailable()) {
+            return null;
+        }
+
+        try {
+            // Use Mekanism's StorageUtils
+            Class<?> storageUtilsClass = Class.forName("mekanism.common.util.StorageUtils");
+            Method getBarWidthMethod = storageUtilsClass.getMethod("getBarWidth", ItemStack.class);
+            return (Integer) getBarWidthMethod.invoke(null, stack);
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.debug("Could not get chemical bar width: {}", e.getMessage());
+        }
+        return 0;
+    }
+
+    /**
+     * Get the bar color for chemical display
+     */
+    public Integer getChemicalBarColor(ItemStack stack) {
+        if (!isChemicalSystemAvailable()) {
+            return null;
+        }
+
+        try {
+            // Use Mekanism's ChemicalUtil
+            Class<?> chemicalUtilClass = Class.forName("mekanism.common.util.ChemicalUtil");
+            Method getRGBMethod = chemicalUtilClass.getMethod("getRGBDurabilityForDisplay", ItemStack.class);
+            return (Integer) getRGBMethod.invoke(null, stack);
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.debug("Could not get chemical bar color: {}", e.getMessage());
+        }
+        return 0x3F76E4; // Default blue
+    }
+
+    /**
+     * Get or create hydrogen instance
+     */
+    private Object getHydrogenInstance() {
+        if (hydrogenInstance == null) {
+            try {
+                Class<?> mekanismChemicalsClass = Class.forName("mekanism.common.registries.MekanismChemicals");
+                java.lang.reflect.Field hydrogenField = mekanismChemicalsClass.getField("HYDROGEN");
+                Object deferredChemical = hydrogenField.get(null);
+                Method getMethod = deferredChemical.getClass().getMethod("get");
+                hydrogenInstance = getMethod.invoke(deferredChemical);
+            } catch (Exception e) {
+                AdAstraMekanized.LOGGER.debug("Could not load hydrogen chemical: {}", e.getMessage());
+            }
+        }
+        return hydrogenInstance;
+    }
+
+    private Object hydrogenInstance;
+
+    // Compatibility methods for oxygen-specific operations
+    public Long getOxygenAmount(ItemStack stack) {
+        return getChemicalAmount(stack, "oxygen");
+    }
+
+    public boolean consumeOxygen(ItemStack stack, long amount) {
+        useChemical(stack, "oxygen", amount);
+        return true;
     }
 }

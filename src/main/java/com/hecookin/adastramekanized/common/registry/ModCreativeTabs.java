@@ -241,6 +241,20 @@ public class ModCreativeTabs {
 
                         output.accept(ModBlocks.ROCKET_ASSEMBLY_STATION.get());
 
+                        // Space Suits (also in Equipment tab)
+                        output.accept(ModItems.SPACE_HELMET.get());
+                        output.accept(ModItems.SPACE_SUIT.get());
+                        output.accept(ModItems.SPACE_PANTS.get());
+                        output.accept(ModItems.SPACE_BOOTS.get());
+                        output.accept(ModItems.NETHERITE_SPACE_HELMET.get());
+                        output.accept(ModItems.NETHERITE_SPACE_SUIT.get());
+                        output.accept(ModItems.NETHERITE_SPACE_PANTS.get());
+                        output.accept(ModItems.NETHERITE_SPACE_BOOTS.get());
+                        output.accept(ModItems.JET_SUIT_HELMET.get());
+                        output.accept(ModItems.JET_SUIT.get());
+                        output.accept(ModItems.JET_SUIT_PANTS.get());
+                        output.accept(ModItems.JET_SUIT_BOOTS.get());
+
                         // Doors & Access
                         output.accept(ModBlocks.STEEL_DOOR.get());
                         output.accept(ModBlocks.STEEL_TRAPDOOR.get());
@@ -251,6 +265,32 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.DESH_SLIDING_DOOR.get());
                         output.accept(ModBlocks.OSTRUM_SLIDING_DOOR.get());
                         output.accept(ModBlocks.CALORITE_SLIDING_DOOR.get());
+                    })
+                    .build());
+
+    // ========== EQUIPMENT TAB ==========
+    public static final Supplier<CreativeModeTab> EQUIPMENT_TAB = CREATIVE_MODE_TABS.register("equipment",
+            () -> CreativeModeTab.builder()
+                    .title(Component.translatable("creativetab.adastramekanized.equipment"))
+                    .icon(() -> new ItemStack(ModItems.JET_SUIT.get()))
+                    .displayItems((parameters, output) -> {
+                        // Standard Space Suits
+                        output.accept(ModItems.SPACE_HELMET.get());
+                        output.accept(ModItems.SPACE_SUIT.get());
+                        output.accept(ModItems.SPACE_PANTS.get());
+                        output.accept(ModItems.SPACE_BOOTS.get());
+
+                        // Netherite Space Suits
+                        output.accept(ModItems.NETHERITE_SPACE_HELMET.get());
+                        output.accept(ModItems.NETHERITE_SPACE_SUIT.get());
+                        output.accept(ModItems.NETHERITE_SPACE_PANTS.get());
+                        output.accept(ModItems.NETHERITE_SPACE_BOOTS.get());
+
+                        // Jet Suits
+                        output.accept(ModItems.JET_SUIT_HELMET.get());
+                        output.accept(ModItems.JET_SUIT.get());
+                        output.accept(ModItems.JET_SUIT_PANTS.get());
+                        output.accept(ModItems.JET_SUIT_BOOTS.get());
                     })
                     .build());
 

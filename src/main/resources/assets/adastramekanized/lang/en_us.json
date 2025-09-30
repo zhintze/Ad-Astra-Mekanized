@@ -4,6 +4,7 @@
   "creativetab.adastramekanized.materials": "Ad Astra Materials",
   "creativetab.adastramekanized.building_blocks": "Ad Astra Building Blocks",
   "creativetab.adastramekanized.industrial": "Ad Astra Industrial",
+  "creativetab.adastramekanized.equipment": "Ad Astra Equipment",
   "creativetab.adastramekanized.decorative": "Ad Astra Decorative",
 
   "item.adastramekanized.steel_ingot": "Steel Ingot",
@@ -35,6 +36,24 @@
   "item.adastramekanized.etrionic_core": "Etrionic Core",
   "item.adastramekanized.ice_shard": "Ice Shard",
   "item.adastramekanized.cheese": "Cheese",
+
+  "item.adastramekanized.space_helmet": "Space Helmet",
+  "item.adastramekanized.space_suit": "Space Suit",
+  "item.adastramekanized.space_pants": "Space Pants",
+  "item.adastramekanized.space_boots": "Space Boots",
+
+  "item.adastramekanized.netherite_space_helmet": "Netherite Space Helmet",
+  "item.adastramekanized.netherite_space_suit": "Netherite Space Suit",
+  "item.adastramekanized.netherite_space_pants": "Netherite Space Pants",
+  "item.adastramekanized.netherite_space_boots": "Netherite Space Boots",
+
+  "item.adastramekanized.jet_suit_helmet": "Jet Suit Helmet",
+  "item.adastramekanized.jet_suit": "Jet Suit",
+  "item.adastramekanized.jet_suit_pants": "Jet Suit Pants",
+  "item.adastramekanized.jet_suit_boots": "Jet Suit Boots",
+
+  "tooltip.adastramekanized.space_suit_info": "Provides oxygen in space",
+  "tooltip.adastramekanized.jet_suit_info": "Provides oxygen and powered flight",
 
   "block.adastramekanized.steel_block": "Block of Steel",
   "block.adastramekanized.etrium_block": "Block of Etrium",

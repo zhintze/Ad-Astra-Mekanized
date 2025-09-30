@@ -99,6 +99,14 @@ public class CreateIntegration {
     }
 
     /**
+     * Alias for isCreateSystemAvailable() for consistency
+     * @return true if Create APIs are accessible
+     */
+    public boolean isCreateAvailable() {
+        return isCreateSystemAvailable();
+    }
+
+    /**
      * Check if a block entity is part of Create's kinetic system
      * @param level The world level
      * @param pos Position to check

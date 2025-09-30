@@ -2,7 +2,12 @@ package com.hecookin.adastramekanized.common.registry;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.common.items.OxygenNetworkController;
+import com.hecookin.adastramekanized.common.items.armor.*;
+import com.hecookin.adastramekanized.common.items.armor.base.CustomDyeableArmorItem;
+import com.hecookin.adastramekanized.common.items.armor.materials.*;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -35,7 +40,7 @@ public class ModItems {
             () -> new Item(new Item.Properties()));
 
     public static final Supplier<Item> CALORITE_INGOT = ITEMS.register("calorite_ingot",
-            () -> new Item(new Item.Properties()));
+            () -> new Item(new Item.Properties().fireResistant()));
 
     // ========== METAL NUGGETS ==========
 
@@ -109,6 +114,48 @@ public class ModItems {
 
     public static final Supplier<Item> OXYGEN_NETWORK_CONTROLLER = ITEMS.register("oxygen_network_controller",
             () -> new OxygenNetworkController());
+
+    // ========== SPACE SUITS - STANDARD ==========
+
+    public static final Supplier<Item> SPACE_HELMET = ITEMS.register("space_helmet",
+            () -> new CustomDyeableArmorItem(Holder.direct(SpaceSuitMaterial.MATERIAL), ArmorItem.Type.HELMET, new Item.Properties()));
+
+    public static final Supplier<Item> SPACE_SUIT = ITEMS.register("space_suit",
+            () -> new SpaceSuitItem(Holder.direct(SpaceSuitMaterial.MATERIAL), ArmorItem.Type.CHESTPLATE, 2000, new Item.Properties()));
+
+    public static final Supplier<Item> SPACE_PANTS = ITEMS.register("space_pants",
+            () -> new CustomDyeableArmorItem(Holder.direct(SpaceSuitMaterial.MATERIAL), ArmorItem.Type.LEGGINGS, new Item.Properties()));
+
+    public static final Supplier<Item> SPACE_BOOTS = ITEMS.register("space_boots",
+            () -> new CustomDyeableArmorItem(Holder.direct(SpaceSuitMaterial.MATERIAL), ArmorItem.Type.BOOTS, new Item.Properties()));
+
+    // ========== SPACE SUITS - NETHERITE ==========
+
+    public static final Supplier<Item> NETHERITE_SPACE_HELMET = ITEMS.register("netherite_space_helmet",
+            () -> new CustomDyeableArmorItem(Holder.direct(NetheriteSpaceSuitMaterial.MATERIAL), ArmorItem.Type.HELMET, new Item.Properties().fireResistant()));
+
+    public static final Supplier<Item> NETHERITE_SPACE_SUIT = ITEMS.register("netherite_space_suit",
+            () -> new NetheriteSpaceSuitItem(Holder.direct(NetheriteSpaceSuitMaterial.MATERIAL), ArmorItem.Type.CHESTPLATE, 4000, new Item.Properties().fireResistant()));
+
+    public static final Supplier<Item> NETHERITE_SPACE_PANTS = ITEMS.register("netherite_space_pants",
+            () -> new CustomDyeableArmorItem(Holder.direct(NetheriteSpaceSuitMaterial.MATERIAL), ArmorItem.Type.LEGGINGS, new Item.Properties().fireResistant()));
+
+    public static final Supplier<Item> NETHERITE_SPACE_BOOTS = ITEMS.register("netherite_space_boots",
+            () -> new CustomDyeableArmorItem(Holder.direct(NetheriteSpaceSuitMaterial.MATERIAL), ArmorItem.Type.BOOTS, new Item.Properties().fireResistant()));
+
+    // ========== JET SUITS ==========
+
+    public static final Supplier<Item> JET_SUIT_HELMET = ITEMS.register("jet_suit_helmet",
+            () -> new CustomDyeableArmorItem(Holder.direct(JetSuitMaterial.MATERIAL), ArmorItem.Type.HELMET, new Item.Properties().fireResistant()));
+
+    public static final Supplier<Item> JET_SUIT = ITEMS.register("jet_suit",
+            () -> new JetSuitItem(Holder.direct(JetSuitMaterial.MATERIAL), ArmorItem.Type.CHESTPLATE, 8000, 1_000_000, new Item.Properties().fireResistant()));
+
+    public static final Supplier<Item> JET_SUIT_PANTS = ITEMS.register("jet_suit_pants",
+            () -> new CustomDyeableArmorItem(Holder.direct(JetSuitMaterial.MATERIAL), ArmorItem.Type.LEGGINGS, new Item.Properties().fireResistant()));
+
+    public static final Supplier<Item> JET_SUIT_BOOTS = ITEMS.register("jet_suit_boots",
+            () -> new CustomDyeableArmorItem(Holder.direct(JetSuitMaterial.MATERIAL), ArmorItem.Type.BOOTS, new Item.Properties().fireResistant()));
 
     /**
      * Food properties for items

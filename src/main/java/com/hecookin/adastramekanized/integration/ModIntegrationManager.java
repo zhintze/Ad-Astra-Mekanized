@@ -127,6 +127,30 @@ public class ModIntegrationManager {
     }
 
     /**
+     * Check if Mekanism is available
+     * @return true if Mekanism integration is available
+     */
+    public boolean isMekanismAvailable() {
+        return mekanismIntegration.isChemicalSystemAvailable();
+    }
+
+    /**
+     * Check if Immersive Engineering is available
+     * @return true if IE integration is available
+     */
+    public boolean isImmersiveEngineeringAvailable() {
+        return ieIntegration.isFuelSystemAvailable();
+    }
+
+    /**
+     * Check if Create is available
+     * @return true if Create integration is available
+     */
+    public boolean isCreateAvailable() {
+        return createIntegration.isCreateAvailable();
+    }
+
+    /**
      * Check if any chemical system is available
      * @return true if chemical integration is available
      */
