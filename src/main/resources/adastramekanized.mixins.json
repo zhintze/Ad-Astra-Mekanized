@@ -6,7 +6,8 @@
   "refmap": "adastramekanized.refmap.json",
   "mixins": [],
   "client": [
-    "LevelRendererMixin"
+    "LevelRendererMixin",
+    "CustomDyeableArmorItemMixin"
   ],
   "server": [],
   "injectors": {
