@@ -149,7 +149,7 @@ public class ModItems {
             () -> new CustomDyeableArmorItem(Holder.direct(JetSuitMaterial.MATERIAL), ArmorItem.Type.HELMET, new Item.Properties().fireResistant()));
 
     public static final Supplier<Item> JET_SUIT = ITEMS.register("jet_suit",
-            () -> new JetSuitItem(Holder.direct(JetSuitMaterial.MATERIAL), ArmorItem.Type.CHESTPLATE, 8000, 1_000_000, new Item.Properties().fireResistant()));
+            () -> new JetSuitItem(Holder.direct(JetSuitMaterial.MATERIAL), ArmorItem.Type.CHESTPLATE, 8000, 8000, new Item.Properties().fireResistant()));
 
     public static final Supplier<Item> JET_SUIT_PANTS = ITEMS.register("jet_suit_pants",
             () -> new CustomDyeableArmorItem(Holder.direct(JetSuitMaterial.MATERIAL), ArmorItem.Type.LEGGINGS, new Item.Properties().fireResistant()));

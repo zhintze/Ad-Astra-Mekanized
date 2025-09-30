@@ -1,9 +1,6 @@
 package com.hecookin.adastramekanized.common.items.armor;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
-import com.hecookin.adastramekanized.common.capabilities.EnergyCapableItem;
-import com.hecookin.adastramekanized.common.capabilities.ItemEnergyStorage;
-import com.hecookin.adastramekanized.common.items.MekanismCompatibleItems;
 import com.hecookin.adastramekanized.common.utils.KeybindManager;
 import com.hecookin.adastramekanized.integration.ModIntegrationManager;
 import net.minecraft.ChatFormatting;
@@ -22,65 +19,163 @@ import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 /**
- * Jet suit chest piece that stores both oxygen AND hydrogen for flight.
+ * Jet suit chest piece that stores both oxygen AND nitrogen for flight.
  * Works like Mekanism's jetpack when Mekanism is available.
- * Oxygen provides breathing, hydrogen provides flight fuel.
+ * Oxygen provides breathing, nitrogen provides flight fuel.
  */
-public class JetSuitItem extends SpaceSuitItem implements EnergyCapableItem {
+public class JetSuitItem extends SpaceSuitItem {
 
-    protected static final String HYDROGEN = "hydrogen";
-    private final long energyCapacity;
+    protected static final String NITROGEN = "nitrogen";
+    private final long nitrogenCapacity;
 
-    public JetSuitItem(Holder<ArmorMaterial> material, ArmorItem.Type type, int oxygenTankSize, int energy, Item.Properties properties) {
+    public JetSuitItem(Holder<ArmorMaterial> material, ArmorItem.Type type, long oxygenTankSize, long nitrogenTankSize, Item.Properties properties) {
         super(material, type, oxygenTankSize, properties);
-        this.energyCapacity = energy;
+        this.nitrogenCapacity = nitrogenTankSize;
     }
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
-        // Add oxygen display from parent
-        super.appendHoverText(stack, context, tooltip, flag);
+        // Don't call super to avoid duplicate "Provides oxygen in space" text
+        // Instead, directly add the oxygen percentage
+        long oxygenAmount = getOxygenAmount(stack);
+        int oxygenPercentage = capacity > 0 ? (int)((oxygenAmount * 100L) / capacity) : 0;
+        tooltip.add(Component.literal("Oxygen: ").withStyle(ChatFormatting.GRAY)
+            .append(Component.literal(oxygenPercentage + "%").withStyle(ChatFormatting.AQUA)));
 
-        // Add hydrogen/fuel display
-        ModIntegrationManager manager = AdAstraMekanized.getIntegrationManager();
-        if (manager.isMekanismAvailable()) {
-            try {
-                Long hydrogenAmount = manager.getMekanismIntegration().getChemicalAmount(stack, HYDROGEN);
-                if (hydrogenAmount != null) {
-                    tooltip.add(Component.literal("Hydrogen: ").withStyle(ChatFormatting.GRAY)
-                        .append(Component.literal(hydrogenAmount + " mB").withStyle(ChatFormatting.YELLOW)));
-                }
-            } catch (Exception e) {
-                // Fall back to energy display
-                addEnergyTooltip(stack, tooltip);
-            }
-        } else {
-            addEnergyTooltip(stack, tooltip);
-        }
+        // Add nitrogen display as percentage
+        long nitrogenAmount = getNitrogenAmount(stack);
+        int nitrogenPercentage = nitrogenCapacity > 0 ? (int)((nitrogenAmount * 100L) / nitrogenCapacity) : 0;
+        tooltip.add(Component.literal("Nitrogen: ").withStyle(ChatFormatting.GRAY)
+            .append(Component.literal(nitrogenPercentage + "%").withStyle(style -> style.withColor(net.minecraft.network.chat.TextColor.fromRgb(0xE1B4B8)))));
 
         tooltip.add(Component.translatable("tooltip.adastramekanized.jet_suit_info").withStyle(ChatFormatting.GRAY));
     }
 
-    private void addEnergyTooltip(ItemStack stack, List<Component> tooltip) {
-        var energy = getEnergyStorage(stack);
-        tooltip.add(Component.literal("Energy: ").withStyle(ChatFormatting.GRAY)
-            .append(Component.literal(energy.getEnergyStored() + " / " + energyCapacity + " FE").withStyle(ChatFormatting.YELLOW)));
+    public long getOxygenAmount(ItemStack stack) {
+        // Try to read directly from NBT first (most reliable)
+        try {
+            net.minecraft.world.item.component.CustomData customData = stack.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.EMPTY);
+            net.minecraft.nbt.CompoundTag tag = customData.copyTag();
+            if (!tag.isEmpty() && tag.contains("mekanism")) {
+                net.minecraft.nbt.CompoundTag mekData = tag.getCompound("mekanism");
+                if (mekData.contains("oxygen")) {
+                    return mekData.getCompound("oxygen").getLong("amount");
+                }
+            }
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.debug("Failed to read oxygen amount from NBT: {}", e.getMessage());
+        }
+
+        // Fall back to parent method if dual tank structure not found
+        return super.getChemicalAmount(stack);
+    }
+
+    public long getNitrogenAmount(ItemStack stack) {
+        // Try to read directly from NBT first (most reliable)
+        try {
+            net.minecraft.world.item.component.CustomData customData = stack.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.EMPTY);
+            net.minecraft.nbt.CompoundTag tag = customData.copyTag();
+            if (!tag.isEmpty() && tag.contains("mekanism")) {
+                net.minecraft.nbt.CompoundTag mekData = tag.getCompound("mekanism");
+                if (mekData.contains("nitrogen")) {
+                    return mekData.getCompound("nitrogen").getLong("amount");
+                }
+            }
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.debug("Failed to read nitrogen amount from NBT: {}", e.getMessage());
+        }
+
+        // Fall back to Mekanism integration if available
+        ModIntegrationManager manager = AdAstraMekanized.getIntegrationManager();
+        if (manager.isMekanismAvailable()) {
+            try {
+                Long amount = manager.getMekanismIntegration().getChemicalAmount(stack, NITROGEN);
+                if (amount != null) {
+                    return amount;
+                }
+            } catch (Exception ignored) {}
+        }
+        return 0;
+    }
+
+    public boolean hasNitrogen(ItemStack stack) {
+        return getNitrogenAmount(stack) > 0;
     }
 
     @Override
-    public IEnergyStorage getEnergyStorage(ItemStack holder) {
-        var capability = holder.getCapability(Capabilities.EnergyStorage.ITEM);
-        if (capability != null) {
-            return capability;
+    public int getBarColor(@NotNull ItemStack stack) {
+        // For jet suits, we show both chemicals - prioritize showing nitrogen for the main bar
+        // since it's the more critical resource for flight
+        long nitrogenAmount = getNitrogenAmount(stack);
+        if (nitrogenAmount > 0) {
+            // Nitrogen orange color
+            return 0xE1B4B8;
         }
-        return new ItemEnergyStorage(holder, (int) energyCapacity, 1000, 1000, true, true);
+        // Fall back to oxygen cyan if no nitrogen
+        return super.getBarColor(stack);
+    }
+
+    @Override
+    public int getBarWidth(@NotNull ItemStack stack) {
+        // Show nitrogen level primarily, or oxygen if no nitrogen
+        long nitrogenAmount = getNitrogenAmount(stack);
+        if (nitrogenAmount > 0 || nitrogenCapacity > 0) {
+            float fillPercent = (float)nitrogenAmount / (float)nitrogenCapacity;
+            return Math.round(13.0F * fillPercent);
+        }
+        return super.getBarWidth(stack);
+    }
+
+    @Override
+    public void consumeOxygen(ItemStack stack, long amount) {
+        // Override to consume from the oxygen tank specifically
+        try {
+            net.minecraft.world.item.component.CustomData customData = stack.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.EMPTY);
+            net.minecraft.nbt.CompoundTag tag = customData.copyTag();
+
+            if (!tag.isEmpty() && tag.contains("mekanism")) {
+                net.minecraft.nbt.CompoundTag mekData = tag.getCompound("mekanism");
+                if (mekData.contains("oxygen")) {
+                    net.minecraft.nbt.CompoundTag oxygenData = mekData.getCompound("oxygen");
+                    long currentAmount = oxygenData.getLong("amount");
+                    long newAmount = Math.max(0, currentAmount - amount);
+                    oxygenData.putLong("amount", newAmount);
+                    mekData.put("oxygen", oxygenData);
+                    tag.put("mekanism", mekData);
+                    stack.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.of(tag));
+                }
+            }
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.error("Failed to use oxygen from NBT: ", e);
+        }
+    }
+
+    public void consumeNitrogen(ItemStack stack, long amount) {
+        // Update NBT directly for nitrogen usage
+        try {
+            net.minecraft.world.item.component.CustomData customData = stack.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.EMPTY);
+            net.minecraft.nbt.CompoundTag tag = customData.copyTag();
+
+            if (!tag.isEmpty() && tag.contains("mekanism")) {
+                net.minecraft.nbt.CompoundTag mekData = tag.getCompound("mekanism");
+                if (mekData.contains("nitrogen")) {
+                    net.minecraft.nbt.CompoundTag nitrogenData = mekData.getCompound("nitrogen");
+                    long currentAmount = nitrogenData.getLong("amount");
+                    long newAmount = Math.max(0, currentAmount - amount);
+                    nitrogenData.putLong("amount", newAmount);
+                    mekData.put("nitrogen", nitrogenData);
+                    tag.put("mekanism", mekData);
+                    stack.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.of(tag));
+                }
+            }
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.error("Failed to use nitrogen from NBT: ", e);
+        }
     }
 
     @Override
@@ -127,32 +222,13 @@ public class JetSuitItem extends SpaceSuitItem implements EnergyCapableItem {
 
     private boolean canFly(Player player, ItemStack stack) {
         if (player.isCreative()) return true;
-
-        // Check if we have hydrogen for Mekanism-style flight
-        ModIntegrationManager manager = AdAstraMekanized.getIntegrationManager();
-        if (manager.isMekanismAvailable()) {
-            try {
-                return manager.getMekanismIntegration().hasChemical(stack, HYDROGEN);
-            } catch (Exception ignored) {}
-        }
-
-        // Fall back to energy check
-        return getEnergyStorage(stack).getEnergyStored() > 0;
+        // Check if we have nitrogen for flight
+        return hasNitrogen(stack);
     }
 
     private void consumeFuel(ItemStack stack, long amount) {
-        // Try to use hydrogen first if Mekanism is available
-        ModIntegrationManager manager = AdAstraMekanized.getIntegrationManager();
-        if (manager.isMekanismAvailable()) {
-            try {
-                manager.getMekanismIntegration().useChemical(stack, HYDROGEN, amount);
-                return;
-            } catch (Exception ignored) {}
-        }
-
-        // Fall back to energy consumption
-        var energyStorage = getEnergyStorage(stack);
-        energyStorage.extractEnergy((int) (amount * 50), false);
+        // Use nitrogen for flight
+        consumeNitrogen(stack, amount);
     }
 
     protected boolean isFullFlightEnabled(Player player) {
@@ -214,18 +290,50 @@ public class JetSuitItem extends SpaceSuitItem implements EnergyCapableItem {
     @Override
     public ItemStack getDefaultInstance() {
         ItemStack stack = super.getDefaultInstance();
-        // JetSuit can store both oxygen for breathing AND hydrogen for flight
-        // The NBT will indicate it accepts both chemicals
-        MekanismCompatibleItems.createChemicalArmor(stack, capacity, "oxygen,hydrogen");
+        // JetSuit stores dual chemicals - oxygen for breathing AND nitrogen for flight
+        initializeDualChemicals(stack);
         return stack;
     }
 
     @Override
     public void onCraftedBy(ItemStack stack, Level level, Player player) {
         super.onCraftedBy(stack, level, player);
-        // Ensure the item has chemical data when crafted
+        // Ensure the item has dual chemical data when crafted
         if (!hasChemicalData(stack)) {
-            MekanismCompatibleItems.createChemicalArmor(stack, capacity, "oxygen,hydrogen");
+            initializeDualChemicals(stack);
+        }
+    }
+
+    public void initializeDualChemicals(ItemStack stack) {
+        var customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        var tag = customData.copyTag();
+
+        // Only initialize if not already present
+        if (!tag.contains("mekanism")) {
+            // Create Mekanism data structure for dual chemicals
+            var mekData = new CompoundTag();
+
+            // Oxygen storage (tank 0)
+            var oxygenData = new CompoundTag();
+            oxygenData.putLong("amount", 0L);
+            oxygenData.putLong("capacity", capacity);
+            mekData.put("oxygen", oxygenData);
+
+            // Nitrogen storage (tank 1)
+            var nitrogenData = new CompoundTag();
+            nitrogenData.putLong("amount", 0L);
+            nitrogenData.putLong("capacity", nitrogenCapacity);
+            mekData.put("nitrogen", nitrogenData);
+
+            // Mark as accepting both chemicals
+            mekData.putString("acceptedChemicals", "oxygen,nitrogen");
+            mekData.putInt("tanks", 2);
+
+            tag.put("mekanism", mekData);
+            stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+
+            AdAstraMekanized.LOGGER.debug("Initialized dual chemical tanks for jet suit: oxygen capacity={}, nitrogen capacity={}",
+                capacity, nitrogenCapacity);
         }
     }
 

@@ -147,12 +147,21 @@ public class MekanismCapabilityProvider {
                     ModItems.NETHERITE_SPACE_SUIT.get()
                 );
 
-                // Register for Jet Suit (handles both oxygen and hydrogen)
+                // Register for Jet Suit (handles both oxygen and nitrogen in separate tanks)
                 event.registerItem(
                     capability,
                     (stack, context) -> {
-                        ensureChemicalData(stack, "oxygen", "hydrogen");
-                        return createChemicalHandler(stack, "oxygen", "hydrogen");
+                        // Jet suit needs special handling for dual tanks
+                        if (stack.getItem() instanceof com.hecookin.adastramekanized.common.items.armor.JetSuitItem jetSuit) {
+                            // Only initialize if not already initialized
+                            CustomData customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+                            CompoundTag tag = customData.copyTag();
+                            if (!tag.contains("mekanism")) {
+                                jetSuit.initializeDualChemicals(stack);
+                            }
+                            return createDualChemicalHandler(stack);
+                        }
+                        return null;
                     },
                     ModItems.JET_SUIT.get()
                 );
@@ -199,6 +208,276 @@ public class MekanismCapabilityProvider {
         }
         // Default fallback
         return 1000L;
+    }
+
+    /**
+     * Creates a dual chemical handler for jet suit (oxygen in tank 0, nitrogen in tank 1)
+     */
+    private static IChemicalHandler createDualChemicalHandler(ItemStack stack) {
+        try {
+            // Get necessary classes
+            Class<?> chemicalClass = Class.forName("mekanism.api.chemical.Chemical");
+            Class<?> chemicalStackClass = Class.forName("mekanism.api.chemical.ChemicalStack");
+            Class<?> mekanismChemicalsClass = Class.forName("mekanism.common.registries.MekanismChemicals");
+            Class<?> holderClass = Class.forName("net.minecraft.core.Holder");
+            Class<?> actionClass = Class.forName("mekanism.api.Action");
+
+            // Get references to oxygen and nitrogen
+            Object oxygenHolder = mekanismChemicalsClass.getField("OXYGEN").get(null);
+            java.lang.reflect.Method getValue = holderClass.getMethod("value");
+            Object oxygen = getValue.invoke(oxygenHolder);
+
+            // Get nitrogen from ChemLibMekanized
+            Class<?> chemLibChemicalsClass = Class.forName("com.hecookin.chemlibmekanized.registry.ChemlibMekanizedChemicals");
+            Object nitrogenHolder = chemLibChemicalsClass.getField("NITROGEN").get(null);
+            Object nitrogen = getValue.invoke(nitrogenHolder);
+
+            // Get ChemicalStack.EMPTY and Action enum values
+            Object chemicalStackEmpty = chemicalStackClass.getField("EMPTY").get(null);
+            Object actionExecute = actionClass.getField("EXECUTE").get(null);
+            Object actionSimulate = actionClass.getField("SIMULATE").get(null);
+
+            final long oxygenCapacity = 8000L;
+            final long nitrogenCapacity = 8000L;
+
+            // Make final references for use in inner class
+            final Object finalOxygen = oxygen;
+            final Object finalNitrogen = nitrogen;
+
+            // Create handler for dual tanks
+            return new IChemicalHandler() {
+                @Override
+                public int getChemicalTanks() {
+                    return 2; // Two tanks: 0 = oxygen, 1 = nitrogen
+                }
+
+                @Override
+                public ChemicalStack getChemicalInTank(int tank) {
+                    try {
+                        CustomData customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+                        CompoundTag tag = customData.copyTag();
+                        if (!tag.isEmpty() && tag.contains("mekanism")) {
+                            CompoundTag mekData = tag.getCompound("mekanism");
+                            String chemType = tank == 0 ? "oxygen" : "nitrogen";
+                            if (mekData.contains(chemType)) {
+                                CompoundTag chemData = mekData.getCompound(chemType);
+                                long amount = chemData.getLong("amount");
+                                if (amount > 0) {
+                                    Object chemical = tank == 0 ? finalOxygen : finalNitrogen;
+                                    // Use ChemicalStack constructor instead of static create method
+                                    java.lang.reflect.Constructor<?> constructor = chemicalStackClass.getConstructor(chemicalClass, long.class);
+                                    return (ChemicalStack) constructor.newInstance(chemical, amount);
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        AdAstraMekanized.LOGGER.debug("Failed to get chemical in tank {}: {}", tank, e.getMessage());
+                    }
+                    return (ChemicalStack) chemicalStackEmpty;
+                }
+
+                @Override
+                public void setChemicalInTank(int tank, ChemicalStack chemStack) {
+                    if (tank < 0 || tank > 1) return;
+                    updateTankNBT(tank, chemStack);
+                }
+
+                @Override
+                public long getChemicalTankCapacity(int tank) {
+                    if (tank == 0) return oxygenCapacity;
+                    if (tank == 1) return nitrogenCapacity;
+                    return 0;
+                }
+
+                @Override
+                public boolean isValid(int tank, ChemicalStack stack) {
+                    if (stack == null) return false;
+                    try {
+                        java.lang.reflect.Method getChemicalMethod = stack.getClass().getMethod("getChemical");
+                        Object chemical = getChemicalMethod.invoke(stack);
+
+                        boolean isOxygen = chemical.equals(finalOxygen);
+                        boolean isNitrogen = chemical.equals(finalNitrogen);
+
+                        if (tank == 0) return isOxygen;
+                        if (tank == 1) return isNitrogen;
+                    } catch (Exception e) {
+                        AdAstraMekanized.LOGGER.debug("Failed to validate chemical: {}", e.getMessage());
+                    }
+                    return false;
+                }
+
+                @Override
+                public ChemicalStack insertChemical(int tank, ChemicalStack chemStack, mekanism.api.Action action) {
+                    if (!isValid(tank, chemStack)) {
+                        return chemStack;
+                    }
+
+                    try {
+                        // Read current amount from NBT
+                        long currentAmount = 0;
+                        CustomData customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+                        CompoundTag tag = customData.copyTag();
+                        String chemType = tank == 0 ? "oxygen" : "nitrogen";
+
+                        if (!tag.isEmpty() && tag.contains("mekanism")) {
+                            CompoundTag mekData = tag.getCompound("mekanism");
+                            if (mekData.contains(chemType)) {
+                                currentAmount = mekData.getCompound(chemType).getLong("amount");
+                            }
+                        }
+
+                        long capacity = tank == 0 ? oxygenCapacity : nitrogenCapacity;
+                        java.lang.reflect.Method getAmountMethod = chemStack.getClass().getMethod("getAmount");
+                        long toInsert = (long) getAmountMethod.invoke(chemStack);
+
+                        // Slow down the filling rate
+                        long maxInsertPerTick = 50L;
+                        long canInsert = Math.min(Math.min(toInsert, maxInsertPerTick), capacity - currentAmount);
+
+                        if (canInsert > 0 && action == actionExecute) {
+                            // Update NBT
+                            CompoundTag newTag = customData.copyTag();
+                            CompoundTag mekData = newTag.contains("mekanism") ? newTag.getCompound("mekanism") : new CompoundTag();
+
+                            // Ensure both tanks exist in the NBT structure
+                            if (!mekData.contains("oxygen")) {
+                                CompoundTag oxygenData = new CompoundTag();
+                                oxygenData.putLong("amount", 0L);
+                                oxygenData.putLong("capacity", oxygenCapacity);
+                                mekData.put("oxygen", oxygenData);
+                            }
+                            if (!mekData.contains("nitrogen")) {
+                                CompoundTag nitrogenData = new CompoundTag();
+                                nitrogenData.putLong("amount", 0L);
+                                nitrogenData.putLong("capacity", nitrogenCapacity);
+                                mekData.put("nitrogen", nitrogenData);
+                            }
+
+                            CompoundTag chemData = mekData.getCompound(chemType);
+                            chemData.putLong("amount", currentAmount + canInsert);
+                            chemData.putLong("capacity", capacity);
+                            mekData.put(chemType, chemData);
+                            newTag.put("mekanism", mekData);
+                            stack.set(DataComponents.CUSTOM_DATA, CustomData.of(newTag));
+                        }
+
+                        if (canInsert == toInsert) {
+                            return (ChemicalStack) chemicalStackEmpty;
+                        } else {
+                            java.lang.reflect.Method copyMethod = chemStack.getClass().getMethod("copyWithAmount", long.class);
+                            return (ChemicalStack) copyMethod.invoke(chemStack, toInsert - canInsert);
+                        }
+                    } catch (Exception e) {
+                        AdAstraMekanized.LOGGER.error("Failed to insert chemical into tank {}: ", tank, e);
+                    }
+                    return chemStack;
+                }
+
+                @Override
+                public ChemicalStack insertChemical(ChemicalStack chemStack, mekanism.api.Action action) {
+                    // Try to insert into the appropriate tank based on chemical type
+                    if (chemStack == null) return chemStack;
+                    try {
+                        java.lang.reflect.Method getChemicalMethod = chemStack.getClass().getMethod("getChemical");
+                        Object chemical = getChemicalMethod.invoke(chemStack);
+
+                        boolean isOxygen = chemical.equals(finalOxygen);
+                        boolean isNitrogen = chemical.equals(finalNitrogen);
+
+                        // Determine which tank based on chemical type
+                        if (isOxygen) {
+                            return insertChemical(0, chemStack, action);
+                        } else if (isNitrogen) {
+                            return insertChemical(1, chemStack, action);
+                        }
+                    } catch (Exception e) {
+                        AdAstraMekanized.LOGGER.error("JetSuit: Failed to insert chemical without tank index: ", e);
+                    }
+                    return chemStack;
+                }
+
+                @Override
+                public ChemicalStack extractChemical(long amount, mekanism.api.Action action) {
+                    // Try oxygen first, then nitrogen
+                    ChemicalStack result = extractChemical(0, amount, action);
+                    if (result != chemicalStackEmpty) return result;
+                    return extractChemical(1, amount, action);
+                }
+
+                @Override
+                public ChemicalStack extractChemical(int tank, long amount, mekanism.api.Action action) {
+                    if (tank < 0 || tank > 1) return (ChemicalStack) chemicalStackEmpty;
+                    try {
+                        // Read current state from NBT
+                        CustomData customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+                        CompoundTag tag = customData.copyTag();
+                        String chemType = tank == 0 ? "oxygen" : "nitrogen";
+
+                        if (!tag.isEmpty() && tag.contains("mekanism")) {
+                            CompoundTag mekData = tag.getCompound("mekanism");
+                            if (mekData.contains(chemType)) {
+                                CompoundTag chemData = mekData.getCompound(chemType);
+                                long currentAmount = chemData.getLong("amount");
+
+                                long toExtract = Math.min(amount, currentAmount);
+                                if (toExtract > 0) {
+                                    Object chemical = tank == 0 ? finalOxygen : finalNitrogen;
+
+                                    if (action == actionExecute) {
+                                        // Update NBT with new amount
+                                        CompoundTag newTag = customData.copyTag();
+                                        CompoundTag newMekData = newTag.getCompound("mekanism");
+                                        CompoundTag newChemData = newMekData.getCompound(chemType);
+                                        newChemData.putLong("amount", currentAmount - toExtract);
+                                        newMekData.put(chemType, newChemData);
+                                        newTag.put("mekanism", newMekData);
+                                        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(newTag));
+                                    }
+
+                                    // Use ChemicalStack constructor instead of static create method
+                                    java.lang.reflect.Constructor<?> constructor = chemicalStackClass.getConstructor(chemicalClass, long.class);
+                                    return (ChemicalStack) constructor.newInstance(chemical, toExtract);
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        AdAstraMekanized.LOGGER.debug("Failed to extract chemical from tank {}: {}", tank, e.getMessage());
+                    }
+                    return (ChemicalStack) chemicalStackEmpty;
+                }
+
+                private void updateTankNBT(int tank, ChemicalStack chemStack) {
+                    try {
+                        CustomData customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+                        CompoundTag tag = customData.copyTag();
+                        CompoundTag mekData = tag.contains("mekanism") ? tag.getCompound("mekanism") : new CompoundTag();
+                        String chemType = tank == 0 ? "oxygen" : "nitrogen";
+                        CompoundTag chemData = new CompoundTag();
+
+                        if (chemStack != null && chemStack != chemicalStackEmpty) {
+                            java.lang.reflect.Method getAmountMethod = chemStack.getClass().getMethod("getAmount");
+                            long amount = (long) getAmountMethod.invoke(chemStack);
+                            chemData.putLong("amount", amount);
+                            chemData.putLong("capacity", tank == 0 ? oxygenCapacity : nitrogenCapacity);
+                        } else {
+                            chemData.putLong("amount", 0L);
+                            chemData.putLong("capacity", tank == 0 ? oxygenCapacity : nitrogenCapacity);
+                        }
+
+                        mekData.put(chemType, chemData);
+                        tag.put("mekanism", mekData);
+                        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+                    } catch (Exception e) {
+                        AdAstraMekanized.LOGGER.debug("Failed to update tank {} NBT: {}", tank, e.getMessage());
+                    }
+                }
+            };
+
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.debug("Failed to create dual chemical handler: {}", e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -252,8 +531,9 @@ public class MekanismCapabilityProvider {
                                 String chemicalType = storedData.getString("chemical");
                                 if (amount > 0) {
                                     Object chemical = "hydrogen".equals(chemicalType) ? hydrogen : oxygen;
-                                    java.lang.reflect.Method createMethod = chemicalStackClass.getMethod("create", chemicalClass, long.class);
-                                    return (ChemicalStack) createMethod.invoke(null, chemical, amount);
+                                    // Use ChemicalStack constructor instead of static create method
+                                    java.lang.reflect.Constructor<?> constructor = chemicalStackClass.getConstructor(chemicalClass, long.class);
+                                    return (ChemicalStack) constructor.newInstance(chemical, amount);
                                 }
                             }
                         }
@@ -375,8 +655,9 @@ public class MekanismCapabilityProvider {
                                         AdAstraMekanized.LOGGER.debug("Extracted {} chemical, new amount: {}", toExtract, currentAmount - toExtract);
                                     }
 
-                                    java.lang.reflect.Method createMethod = chemicalStackClass.getMethod("create", chemicalClass, long.class);
-                                    return (ChemicalStack) createMethod.invoke(null, chemical, toExtract);
+                                    // Use ChemicalStack constructor instead of static create method
+                                    java.lang.reflect.Constructor<?> constructor = chemicalStackClass.getConstructor(chemicalClass, long.class);
+                                    return (ChemicalStack) constructor.newInstance(chemical, toExtract);
                                 }
                             }
                         }
