@@ -786,4 +786,97 @@ public class MekanismIntegration implements IChemicalIntegration, IEnergyIntegra
         useChemical(stack, "oxygen", amount);
         return true;
     }
+
+    // ===== Jetpack Mode Support =====
+
+    private Class<?> jetpackModeClass;
+    private Class<?> jetpackModeDataComponentClass;
+    private Method getJetpackModeMethod;
+    private Method setJetpackModeMethod;
+    private Object[] jetpackModeValues;
+
+    /**
+     * Initialize jetpack mode reflection
+     */
+    private void initializeJetpackModeReflection() {
+        if (jetpackModeClass != null) return; // Already initialized
+
+        try {
+            jetpackModeClass = Class.forName("mekanism.common.item.interfaces.IJetpackItem$JetpackMode");
+            jetpackModeValues = (Object[]) jetpackModeClass.getMethod("values").invoke(null);
+
+            // Get data component type
+            Class<?> mekanismDataComponentsClass = Class.forName("mekanism.common.registries.MekanismDataComponents");
+            java.lang.reflect.Field jetpackModeField = mekanismDataComponentsClass.getField("JETPACK_MODE");
+            Object deferredHolder = jetpackModeField.get(null);
+            Method getMethod = deferredHolder.getClass().getMethod("get");
+            jetpackModeDataComponentClass = (Class<?>) getMethod.invoke(deferredHolder);
+
+            AdAstraMekanized.LOGGER.debug("Jetpack mode reflection initialized successfully");
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.warn("Could not initialize jetpack mode reflection", e);
+        }
+    }
+
+    /**
+     * Get jetpack mode from stack
+     */
+    public Object getJetpackMode(ItemStack stack) {
+        initializeJetpackModeReflection();
+        if (jetpackModeClass == null || jetpackModeDataComponentClass == null) {
+            return null;
+        }
+
+        try {
+            // Get DataComponentType instance
+            Class<?> mekanismDataComponentsClass = Class.forName("mekanism.common.registries.MekanismDataComponents");
+            java.lang.reflect.Field jetpackModeField = mekanismDataComponentsClass.getField("JETPACK_MODE");
+            Object deferredHolder = jetpackModeField.get(null);
+            Method getMethod = deferredHolder.getClass().getMethod("get");
+            Object dataComponentType = getMethod.invoke(deferredHolder);
+
+            // Get mode from stack
+            Method getComponentMethod = ItemStack.class.getMethod("get", net.minecraft.core.component.DataComponentType.class);
+            Object mode = getComponentMethod.invoke(stack, dataComponentType);
+
+            if (mode != null) {
+                return mode;
+            }
+
+            // Return NORMAL as default (ordinal 0)
+            return jetpackModeValues != null && jetpackModeValues.length > 0 ? jetpackModeValues[0] : null;
+
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.debug("Failed to get jetpack mode: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Set jetpack mode on stack
+     */
+    public void setJetpackMode(ItemStack stack, Object mode) {
+        initializeJetpackModeReflection();
+        if (jetpackModeClass == null || jetpackModeDataComponentClass == null || mode == null) {
+            return;
+        }
+
+        try {
+            // Get DataComponentType instance
+            Class<?> mekanismDataComponentsClass = Class.forName("mekanism.common.registries.MekanismDataComponents");
+            java.lang.reflect.Field jetpackModeField = mekanismDataComponentsClass.getField("JETPACK_MODE");
+            Object deferredHolder = jetpackModeField.get(null);
+            Method getMethod = deferredHolder.getClass().getMethod("get");
+            Object dataComponentType = getMethod.invoke(deferredHolder);
+
+            // Set mode on stack
+            Method setComponentMethod = ItemStack.class.getMethod("set", net.minecraft.core.component.DataComponentType.class, Object.class);
+            setComponentMethod.invoke(stack, dataComponentType, mode);
+
+            AdAstraMekanized.LOGGER.debug("Set jetpack mode to {}", mode);
+
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.error("Failed to set jetpack mode", e);
+        }
+    }
 }

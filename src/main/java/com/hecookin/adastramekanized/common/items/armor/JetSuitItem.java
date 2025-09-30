@@ -1,11 +1,16 @@
 package com.hecookin.adastramekanized.common.items.armor;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
-import com.hecookin.adastramekanized.common.utils.KeybindManager;
 import com.hecookin.adastramekanized.integration.ModIntegrationManager;
+import mekanism.api.text.EnumColor;
+import mekanism.common.MekanismLang;
+import mekanism.common.item.interfaces.IJetpackItem;
+import mekanism.common.item.interfaces.IModeItem;
+import mekanism.common.registries.MekanismDataComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -20,15 +25,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 /**
  * Jet suit chest piece that stores both oxygen AND nitrogen for flight.
- * Works like Mekanism's jetpack when Mekanism is available.
+ * Implements Mekanism's IJetpackItem and IModeItem interfaces directly for seamless integration.
  * Oxygen provides breathing, nitrogen provides flight fuel.
  */
-public class JetSuitItem extends SpaceSuitItem {
+public class JetSuitItem extends SpaceSuitItem implements IJetpackItem, IModeItem.IAttachmentBasedModeItem<IJetpackItem.JetpackMode> {
 
     protected static final String NITROGEN = "nitrogen";
     private final long nitrogenCapacity;
@@ -53,7 +61,18 @@ public class JetSuitItem extends SpaceSuitItem {
         tooltip.add(Component.literal("Nitrogen: ").withStyle(ChatFormatting.GRAY)
             .append(Component.literal(nitrogenPercentage + "%").withStyle(style -> style.withColor(net.minecraft.network.chat.TextColor.fromRgb(0xE1B4B8)))));
 
+        // Show jetpack mode like Mekanism
+        tooltip.add(MekanismLang.MODE.translateColored(EnumColor.GRAY, getMode(stack).getTextComponent()));
+
         tooltip.add(Component.translatable("tooltip.adastramekanized.jet_suit_info").withStyle(ChatFormatting.GRAY));
+    }
+
+    /**
+     * Override to read from dual-tank oxygen storage
+     */
+    @Override
+    public long getChemicalAmount(ItemStack stack) {
+        return getOxygenAmount(stack);
     }
 
     public long getOxygenAmount(ItemStack stack) {
@@ -183,69 +202,67 @@ public class JetSuitItem extends SpaceSuitItem {
         // Handle oxygen consumption from parent
         super.inventoryTick(stack, level, entity, slotId, isSelected);
 
-        if (!(entity instanceof Player player)) return;
-        if (player.getItemBySlot(EquipmentSlot.CHEST) != stack) return;
-
-        if (player.getAbilities().flying) return;
-        if (player.getCooldowns().isOnCooldown(stack.getItem())) return;
-        if (!hasFullJetSuitSet(player)) return;
-
-        if (!KeybindManager.suitFlightEnabled(player)) return;
-        if (!KeybindManager.jumpDown(player)) return;
-        if (!canFly(player, stack)) return;
-
-        if (KeybindManager.sprintDown(player)) {
-            fullFlight(player);
-            consumeFuel(stack, 2); // Use more fuel for full flight
-        } else {
-            upwardsFlight(player);
-            consumeFuel(stack, 1); // Use less fuel for hover
-        }
+        // Jetpack flight is handled by Mekanism's CommonPlayerTickHandler
+        // We don't need to implement it here - it will automatically detect our IJetpackItem interface
     }
 
-    protected void upwardsFlight(Player player) {
-        double acceleration = sigmoidAcceleration(player.tickCount, 5.0, 1.0, 2.0);
-        acceleration /= 25.0f;
-        player.addDeltaMovement(new Vec3(0, Math.max(0.0025, acceleration), 0));
-        player.fallDistance = Math.max(player.fallDistance / 1.5f, 0.0f);
-    }
+    // ===== IJetpackItem Interface Implementation =====
 
-    protected void fullFlight(Player player) {
-        Vec3 movement = player.getLookAngle().normalize().scale(0.075);
-        if (player.getDeltaMovement().length() > 2.0) return;
-        player.addDeltaMovement(movement);
-        player.fallDistance = Math.max(player.fallDistance / 1.5f, 0.0f);
-        if (!player.isFallFlying()) {
-            player.startFallFlying();
-        }
-    }
-
-    private boolean canFly(Player player, ItemStack stack) {
-        if (player.isCreative()) return true;
-        // Check if we have nitrogen for flight
+    @Override
+    public boolean canUseJetpack(ItemStack stack) {
         return hasNitrogen(stack);
     }
 
-    private void consumeFuel(ItemStack stack, long amount) {
-        // Use nitrogen for flight
-        consumeNitrogen(stack, amount);
+    @Override
+    public JetpackMode getJetpackMode(ItemStack stack) {
+        return getMode(stack);
     }
 
-    protected boolean isFullFlightEnabled(Player player) {
-        return KeybindManager.suitFlightEnabled(player) && KeybindManager.jumpDown(player) && KeybindManager.sprintDown(player);
+    @Override
+    public double getJetpackThrust(ItemStack stack) {
+        return 0.15; // Same as Mekanism's default jetpack thrust
     }
 
-    public static double sigmoidAcceleration(double t, double peakTime, double peakAcceleration, double initialAcceleration) {
-        return ((2 * peakAcceleration) / (1 + Math.exp(-t / peakTime)) - peakAcceleration) + initialAcceleration;
+    @Override
+    public void useJetpackFuel(ItemStack stack) {
+        consumeNitrogen(stack, 1);
+    }
+
+    // ===== IModeItem.IAttachmentBasedModeItem Implementation =====
+
+    @Override
+    public DataComponentType<JetpackMode> getModeDataType() {
+        return MekanismDataComponents.JETPACK_MODE.get();
+    }
+
+    @Override
+    public JetpackMode getDefaultMode() {
+        return JetpackMode.NORMAL;
+    }
+
+    @Override
+    public void changeMode(@NotNull Player player, @NotNull ItemStack stack, int shift, DisplayChange displayChange) {
+        JetpackMode mode = getMode(stack);
+        JetpackMode newMode = mode.adjust(shift);
+        if (mode != newMode) {
+            setMode(stack, player, newMode);
+            displayChange.sendMessage(player, newMode, MekanismLang.JETPACK_MODE_CHANGE::translate);
+        }
+    }
+
+    @Override
+    public boolean supportsSlotType(ItemStack stack, @NotNull EquipmentSlot slotType) {
+        return slotType == EquipmentSlot.CHEST;
     }
 
     public void spawnParticles(Level level, LivingEntity entity, HumanoidModel<?> model, ItemStack stack) {
         if (!(entity instanceof Player player)) return;
-        if (!canFly(player, stack)) return;
+        if (!canUseJetpack(stack)) return;
         if (!hasFullJetSuitSet(player)) return;
-        if (!KeybindManager.suitFlightEnabled(player)) return;
-        if (!KeybindManager.jumpDown(player) || (!KeybindManager.jumpDown(player) && !KeybindManager.sprintDown(player)))
-            return;
+
+        // Check if jetpack mode is active (not DISABLED)
+        JetpackMode mode = getJetpackMode(stack);
+        if (mode == JetpackMode.DISABLED) return;
 
         spawnParticles(level, entity, model.rightArm.xRot + 0.05, entity.isFallFlying() ? 0.0 : 0.8, -0.45);
         spawnParticles(level, entity, model.leftArm.xRot + 0.05, entity.isFallFlying() ? 0.0 : 0.8, 0.45);
@@ -284,7 +301,13 @@ public class JetSuitItem extends SpaceSuitItem {
 
     @SuppressWarnings("unused") // NeoForge
     public boolean canElytraFly(ItemStack stack, LivingEntity entity) {
-        return entity instanceof Player player && canFly(player, stack) && isFullFlightEnabled(player);
+        if (!(entity instanceof Player player)) return false;
+        if (!canUseJetpack(stack)) return false;
+
+        // Check if in NORMAL or VECTOR mode
+        JetpackMode mode = getJetpackMode(stack);
+        // Allow elytra flight in NORMAL and VECTOR modes when falling/flying
+        return (mode == JetpackMode.NORMAL || mode == JetpackMode.VECTOR) && player.isFallFlying();
     }
 
     @Override
@@ -292,6 +315,8 @@ public class JetSuitItem extends SpaceSuitItem {
         ItemStack stack = super.getDefaultInstance();
         // JetSuit stores dual chemicals - oxygen for breathing AND nitrogen for flight
         initializeDualChemicals(stack);
+        // Set default jetpack mode to NORMAL
+        stack.set(getModeDataType(), getDefaultMode());
         return stack;
     }
 
@@ -301,6 +326,10 @@ public class JetSuitItem extends SpaceSuitItem {
         // Ensure the item has dual chemical data when crafted
         if (!hasChemicalData(stack)) {
             initializeDualChemicals(stack);
+        }
+        // Ensure jetpack mode is set
+        if (!stack.has(getModeDataType())) {
+            stack.set(getModeDataType(), getDefaultMode());
         }
     }
 
