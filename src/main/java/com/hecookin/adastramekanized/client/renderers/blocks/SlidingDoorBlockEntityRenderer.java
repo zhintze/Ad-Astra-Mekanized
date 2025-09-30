@@ -65,20 +65,20 @@ public class SlidingDoorBlockEntityRenderer implements BlockEntityRenderer<Slidi
             }
         }
 
+        // Render first door panel
+        minecraft.getBlockRenderer().getModelRenderer().renderModel(
+            poseStack.last(),
+            buffer.getBuffer(Sheets.cutoutBlockSheet()),
+            state,
+            model,
+            1f, 1f, 1f,
+            packedLight, packedOverlay);
+
+        // Move to second door position
+        poseStack.translate(-slide - slide, 0, 0);
+
         if (!isReinforcedDoor) {
-            // For regular doors, render first panel
-            minecraft.getBlockRenderer().getModelRenderer().renderModel(
-                poseStack.last(),
-                buffer.getBuffer(Sheets.cutoutBlockSheet()),
-                state,
-                model,
-                1f, 1f, 1f,
-                packedLight, packedOverlay);
-
-            // Move to second door position
-            poseStack.translate(-slide - slide, 0, 0);
-
-            // Flip 180 degrees
+            // For regular doors, flip 180 degrees
             poseStack.translate(0.5f, 0, 0.5f);
             poseStack.mulPose(Axis.YP.rotationDegrees(180));
             poseStack.translate(-0.5f, 0, -0.5f);
@@ -93,16 +93,24 @@ public class SlidingDoorBlockEntityRenderer implements BlockEntityRenderer<Slidi
                 1f, 1f, 1f,
                 packedLight, packedOverlay);
         } else {
-            // For reinforced door, the model contains both panels
-            // The right panel is at positive X (11 to 32)
-            // The left panel is at negative X (-28 to -7)
-            // We render the whole model and let the sliding translation move them apart
+            // For reinforced door, load and render the flipped model
+            poseStack.translate(-1.25f, 0, 0);
 
+            // Load the flipped model (now registered in ClientModEvents)
+            ModelResourceLocation flippedModelLocation = ModelResourceLocation.standalone(
+                ResourceLocation.fromNamespaceAndPath(
+                    AdAstraMekanized.MOD_ID,
+                    "block/reinforced_door_flipped"
+                )
+            );
+            BakedModel flippedModel = minecraft.getModelManager().getModel(flippedModelLocation);
+
+            // Render the flipped model
             minecraft.getBlockRenderer().getModelRenderer().renderModel(
                 poseStack.last(),
                 buffer.getBuffer(Sheets.cutoutBlockSheet()),
                 state,
-                model,
+                flippedModel,
                 1f, 1f, 1f,
                 packedLight, packedOverlay);
         }

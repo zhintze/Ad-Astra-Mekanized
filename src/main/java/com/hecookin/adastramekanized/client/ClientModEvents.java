@@ -52,6 +52,8 @@ public class ClientModEvents {
         event.register(ModelResourceLocation.standalone(
             ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "block/reinforced_door")));
         event.register(ModelResourceLocation.standalone(
+            ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "block/reinforced_door_flipped")));
+        event.register(ModelResourceLocation.standalone(
             ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "block/iron_sliding_door")));
         event.register(ModelResourceLocation.standalone(
             ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "block/steel_sliding_door")));
