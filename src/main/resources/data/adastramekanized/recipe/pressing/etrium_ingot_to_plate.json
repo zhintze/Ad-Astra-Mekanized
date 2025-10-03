@@ -1,0 +1,19 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "adastramekanized:etrium_ingot"
+    }
+  ],
+  "results": [
+    {
+      "id": "adastramekanized:etrium_plate"
+    }
+  ]
+}
