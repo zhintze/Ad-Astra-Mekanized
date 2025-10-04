@@ -27,7 +27,9 @@ public class VehicleContainer extends SimpleContainer {
         ListTag containerNbt = new ListTag();
         for (int i = 0; i < getContainerSize(); i++) {
             var stack = getItem(i);
-            containerNbt.add(stack.save(registries));
+            if (!stack.isEmpty()) {
+                containerNbt.add(stack.save(registries));
+            }
         }
         return containerNbt;
     }

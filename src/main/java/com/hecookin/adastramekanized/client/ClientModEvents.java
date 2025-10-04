@@ -55,7 +55,9 @@ public class ClientModEvents {
 
         // Register rocket model layers
         event.registerLayerDefinition(RocketModel.TIER_1_LAYER, RocketModel::createTier1Layer);
-        // Tier 2, 3, 4 will be added later when models are ready
+        event.registerLayerDefinition(RocketModel.TIER_2_LAYER, RocketModel::createTier2Layer);
+        event.registerLayerDefinition(RocketModel.TIER_3_LAYER, RocketModel::createTier3Layer);
+        event.registerLayerDefinition(RocketModel.TIER_4_LAYER, RocketModel::createTier4Layer);
     }
 
     @SubscribeEvent
@@ -63,38 +65,65 @@ public class ClientModEvents {
         // Register rocket entity renderers
         event.registerEntityRenderer(ModEntityTypes.TIER_1_ROCKET.get(), context ->
             new RocketRenderer(context, RocketModel.TIER_1_LAYER, RocketRenderer.TIER_1_TEXTURE));
-        // Tier 2, 3, 4 will be added later when models are ready
+        event.registerEntityRenderer(ModEntityTypes.TIER_2_ROCKET.get(), context ->
+            new RocketRenderer(context, RocketModel.TIER_2_LAYER, RocketRenderer.TIER_2_TEXTURE));
+        event.registerEntityRenderer(ModEntityTypes.TIER_3_ROCKET.get(), context ->
+            new RocketRenderer(context, RocketModel.TIER_3_LAYER, RocketRenderer.TIER_3_TEXTURE));
+        event.registerEntityRenderer(ModEntityTypes.TIER_4_ROCKET.get(), context ->
+            new RocketRenderer(context, RocketModel.TIER_4_LAYER, RocketRenderer.TIER_4_TEXTURE));
     }
 
     @SubscribeEvent
     public static void onRegisterClientExtensions(RegisterClientExtensionsEvent event) {
-        // Register rocket item renderers
+        // Register rocket item renderers and arm poses
         event.registerItem(new IClientItemExtensions() {
             @Override
             public net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 return new RocketRenderer.ItemRenderer(RocketModel.TIER_1_LAYER, RocketRenderer.TIER_1_TEXTURE);
+            }
+
+            @Override
+            public net.minecraft.client.model.HumanoidModel.ArmPose getArmPose(net.minecraft.world.entity.LivingEntity entity, net.minecraft.world.InteractionHand hand, net.minecraft.world.item.ItemStack stack) {
+                return net.minecraft.client.model.HumanoidModel.ArmPose.BOW_AND_ARROW;
             }
         }, ModItems.TIER_1_ROCKET.get());
 
-        // Tier 2, 3, 4 will use Tier 1 renderer until their models are ready
+        // Tier 2
         event.registerItem(new IClientItemExtensions() {
             @Override
             public net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return new RocketRenderer.ItemRenderer(RocketModel.TIER_1_LAYER, RocketRenderer.TIER_1_TEXTURE);
+                return new RocketRenderer.ItemRenderer(RocketModel.TIER_2_LAYER, RocketRenderer.TIER_2_TEXTURE);
+            }
+
+            @Override
+            public net.minecraft.client.model.HumanoidModel.ArmPose getArmPose(net.minecraft.world.entity.LivingEntity entity, net.minecraft.world.InteractionHand hand, net.minecraft.world.item.ItemStack stack) {
+                return net.minecraft.client.model.HumanoidModel.ArmPose.BOW_AND_ARROW;
             }
         }, ModItems.TIER_2_ROCKET.get());
 
+        // Tier 3
         event.registerItem(new IClientItemExtensions() {
             @Override
             public net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return new RocketRenderer.ItemRenderer(RocketModel.TIER_1_LAYER, RocketRenderer.TIER_1_TEXTURE);
+                return new RocketRenderer.ItemRenderer(RocketModel.TIER_3_LAYER, RocketRenderer.TIER_3_TEXTURE);
+            }
+
+            @Override
+            public net.minecraft.client.model.HumanoidModel.ArmPose getArmPose(net.minecraft.world.entity.LivingEntity entity, net.minecraft.world.InteractionHand hand, net.minecraft.world.item.ItemStack stack) {
+                return net.minecraft.client.model.HumanoidModel.ArmPose.BOW_AND_ARROW;
             }
         }, ModItems.TIER_3_ROCKET.get());
 
+        // Tier 4
         event.registerItem(new IClientItemExtensions() {
             @Override
             public net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return new RocketRenderer.ItemRenderer(RocketModel.TIER_1_LAYER, RocketRenderer.TIER_1_TEXTURE);
+                return new RocketRenderer.ItemRenderer(RocketModel.TIER_4_LAYER, RocketRenderer.TIER_4_TEXTURE);
+            }
+
+            @Override
+            public net.minecraft.client.model.HumanoidModel.ArmPose getArmPose(net.minecraft.world.entity.LivingEntity entity, net.minecraft.world.InteractionHand hand, net.minecraft.world.item.ItemStack stack) {
+                return net.minecraft.client.model.HumanoidModel.ArmPose.BOW_AND_ARROW;
             }
         }, ModItems.TIER_4_ROCKET.get());
     }

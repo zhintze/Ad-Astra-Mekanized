@@ -22,27 +22,26 @@ public class ModEntityTypes {
 
     public static final Supplier<EntityType<Rocket>> TIER_1_ROCKET = ENTITY_TYPES.register("tier_1_rocket",
             () -> EntityType.Builder.<Rocket>of(Rocket::new, MobCategory.MISC)
-                    .sized(1.0f, 3.0f)
+                    .fireImmune()
                     .clientTrackingRange(10)
                     .build("tier_1_rocket"));
 
     public static final Supplier<EntityType<Rocket>> TIER_2_ROCKET = ENTITY_TYPES.register("tier_2_rocket",
             () -> EntityType.Builder.<Rocket>of(Rocket::new, MobCategory.MISC)
-                    .sized(1.0f, 3.5f)
+                    .fireImmune()
                     .clientTrackingRange(10)
                     .build("tier_2_rocket"));
 
     public static final Supplier<EntityType<Rocket>> TIER_3_ROCKET = ENTITY_TYPES.register("tier_3_rocket",
             () -> EntityType.Builder.<Rocket>of(Rocket::new, MobCategory.MISC)
-                    .sized(1.0f, 4.0f)
+                    .fireImmune()
                     .clientTrackingRange(10)
                     .build("tier_3_rocket"));
 
     public static final Supplier<EntityType<Rocket>> TIER_4_ROCKET = ENTITY_TYPES.register("tier_4_rocket",
             () -> EntityType.Builder.<Rocket>of(Rocket::new, MobCategory.MISC)
-                    .sized(1.2f, 4.5f)
-                    .clientTrackingRange(10)
                     .fireImmune()
+                    .clientTrackingRange(10)
                     .build("tier_4_rocket"));
 
     /**

@@ -122,6 +122,26 @@ public class Rocket extends Vehicle {
     }
 
     @Override
+    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+        // Calculate rocket's forward direction based on yaw
+        double yawRad = Math.toRadians(getYRot());
+        Vec3 forward = new Vec3(-Math.sin(yawRad), 0, Math.cos(yawRad)).normalize();
+
+        // Place player 2.5 blocks in front of rocket
+        Vec3 location = super.getDismountLocationForPassenger(passenger)
+            .add(forward.multiply(2.5, 2, 2.5));
+
+        // Adjust Y position to find ground (same as Ad Astra)
+        for (int i = 0; i < 6; i++) {
+            if (level().getBlockState(BlockPos.containing(location)).isAir()) {
+                location = location.subtract(0, 1, 0);
+            } else break;
+        }
+
+        return location;
+    }
+
+    @Override
     public boolean isSafeToDismount(Player player) {
         return !isLaunching() && !hasLaunched();
     }

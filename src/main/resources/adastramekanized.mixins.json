@@ -9,7 +9,8 @@
   ],
   "client": [
     "LevelRendererMixin",
-    "CustomDyeableArmorItemMixin"
+    "CustomDyeableArmorItemMixin",
+    "HumanoidModelMixin"
   ],
   "server": [],
   "injectors": {

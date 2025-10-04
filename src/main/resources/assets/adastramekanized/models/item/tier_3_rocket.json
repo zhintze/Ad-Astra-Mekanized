@@ -4,24 +4,24 @@
 	"gui_light": "front",
 	"display": {
 		"thirdperson_righthand": {
-			"rotation": [-110, 0, -90],
-			"translation": [-25, 4.5, -4.5],
+			"rotation": [-90, 0, -90],
+			"translation": [-25, 4.5, -1],
 			"scale": [0.8, 0.8, 0.8]
 		},
 		"thirdperson_lefthand": {
-			"rotation": [-110, 0, -90],
-			"translation": [-25, 4.5, -15],
+			"rotation": [-90, 0, -90],
+			"translation": [-25, 4.5, -13.5],
 			"scale": [0.8, 0.8, 0.8]
 		},
 		"firstperson_righthand": {
 			"rotation": [-10, 180, 90],
-			"translation": [-25, 20, -5],
-			"scale": [0.5, 0.5, 0.5]
+			"translation": [-18, 20, 0],
+			"scale": [0.45, 0.45, 0.45]
 		},
 		"firstperson_lefthand": {
 			"rotation": [-10, 180, 90],
-			"translation": [-25, 12, -5],
-			"scale": [0.5, 0.5, 0.5]
+			"translation": [-18, 12, 0],
+			"scale": [0.45, 0.45, 0.45]
 		},
 		"ground": {
 			"translation": [2, 2, 2],

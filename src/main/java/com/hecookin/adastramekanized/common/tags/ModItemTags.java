@@ -23,6 +23,9 @@ public class ModItemTags {
     public static final TagKey<Item> HEAT_RESISTANT_ARMOR = tag("heat_resistant_armor");
     public static final TagKey<Item> FREEZE_RESISTANT_ARMOR = tag("freeze_resistant_armor");
 
+    // Items held overhead (rockets, large items)
+    public static final TagKey<Item> HELD_OVER_HEAD = tag("held_over_head");
+
     private static TagKey<Item> tag(String name) {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, name));
     }
