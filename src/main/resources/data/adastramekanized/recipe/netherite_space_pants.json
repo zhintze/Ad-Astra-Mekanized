@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    "D": {
+      "item": "adastramekanized:desh_sheet"
+    },
+    "N": {
+      "item": "minecraft:netherite_leggings"
+    }
+  },
+  "pattern": [
+    "#N#",
+    "D D",
+    "# #"
+  ],
+  "result": {
+    "id": "adastramekanized:netherite_space_pants"
+  }
+}

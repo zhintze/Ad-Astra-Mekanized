@@ -1,0 +1,36 @@
+{
+  "type": "adastramekanized:nasa_workbench",
+  "ingredients": [
+    {
+      "item": "adastramekanized:steel_rod"
+    },
+    {
+      "item": "adastramekanized:steel_rod"
+    },
+    {
+      "item": "adastramekanized:steel_rod"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
+    },
+    {
+      "item": "minecraft:redstone_block"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
+    },
+    {
+      "item": "adastramekanized:steel_rod"
+    },
+    {
+      "item": "adastramekanized:steel_rod"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:engine_frame"
+  }
+}

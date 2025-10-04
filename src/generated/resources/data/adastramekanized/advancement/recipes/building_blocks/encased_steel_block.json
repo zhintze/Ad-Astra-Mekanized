@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_steel_sheet": {
+      "conditions": {
+        "items": [
+          {
+            "items": "adastramekanized:steel_sheet"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "adastramekanized:encased_steel_block"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_steel_sheet"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "adastramekanized:encased_steel_block"
+    ]
+  }
+}

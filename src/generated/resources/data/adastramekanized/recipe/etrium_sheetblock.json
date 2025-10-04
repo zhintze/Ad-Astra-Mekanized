@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "adastramekanized:etrium_sheet"
+    },
+    {
+      "item": "adastramekanized:etrium_sheet"
+    },
+    {
+      "item": "adastramekanized:etrium_sheet"
+    },
+    {
+      "item": "adastramekanized:etrium_sheet"
+    },
+    {
+      "item": "adastramekanized:etrium_sheet"
+    },
+    {
+      "item": "adastramekanized:etrium_sheet"
+    },
+    {
+      "item": "adastramekanized:etrium_sheet"
+    },
+    {
+      "item": "adastramekanized:etrium_sheet"
+    },
+    {
+      "item": "adastramekanized:etrium_sheet"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:etrium_sheetblock"
+  }
+}

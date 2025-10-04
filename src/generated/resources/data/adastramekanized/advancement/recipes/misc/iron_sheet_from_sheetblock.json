@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_iron_sheetblock": {
+      "conditions": {
+        "items": [
+          {
+            "items": "adastramekanized:iron_sheetblock"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "adastramekanized:iron_sheet_from_sheetblock"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_iron_sheetblock"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "adastramekanized:iron_sheet_from_sheetblock"
+    ]
+  }
+}

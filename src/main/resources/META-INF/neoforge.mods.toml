@@ -73,7 +73,7 @@ side = "BOTH"
 modId = "create"
 type = "optional"
 versionRange = "[0.5.1,)"
-ordering = "AFTER"
+ordering = "BEFORE"
 side = "BOTH"
 
 # Immersive Engineering dependency

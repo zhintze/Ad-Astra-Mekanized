@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "N": {
+      "item": "minecraft:netherite_helmet"
+    }
+  },
+  "pattern": [
+    "#N#",
+    "#G#"
+  ],
+  "result": {
+    "id": "adastramekanized:netherite_space_helmet"
+  }
+}

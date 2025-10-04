@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "adastramekanized:calorite_sheet"
+    },
+    "G": {
+      "item": "minecraft:tinted_glass"
+    },
+    "N": {
+      "item": "adastramekanized:netherite_space_helmet"
+    }
+  },
+  "pattern": [
+    "#N#",
+    "#G#"
+  ],
+  "result": {
+    "id": "adastramekanized:jet_suit_helmet"
+  }
+}

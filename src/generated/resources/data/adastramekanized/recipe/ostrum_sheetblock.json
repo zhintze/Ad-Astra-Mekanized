@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:ostrum_sheetblock"
+  }
+}

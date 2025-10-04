@@ -1,0 +1,16 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "createaddition"
+    }
+  ],
+  "type": "createaddition:rolling",
+  "input": {
+    "item": "adastramekanized:steel_sheet"
+  },
+  "result": {
+    "count": 2,
+    "id": "adastramekanized:steel_rod"
+  }
+}

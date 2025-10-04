@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    "I": {
+      "item": "adastramekanized:ostrum_ingot"
+    }
+  },
+  "pattern": [
+    "#I#",
+    "III",
+    "#I#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:ostrum_panel"
+  }
+}

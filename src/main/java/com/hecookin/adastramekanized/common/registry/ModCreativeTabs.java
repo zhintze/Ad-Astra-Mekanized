@@ -30,15 +30,13 @@ public class ModCreativeTabs {
                     .title(Component.translatable("creativetab.adastramekanized.materials"))
                     .icon(() -> new ItemStack(ModItems.DESH_INGOT.get()))
                     .displayItems((parameters, output) -> {
-                        // Metal Ingots
-                        output.accept(ModItems.STEEL_INGOT.get());
+                        // Metal Ingots (Steel provided by Mekanism)
                         output.accept(ModItems.ETRIUM_INGOT.get());
                         output.accept(ModItems.DESH_INGOT.get());
                         output.accept(ModItems.OSTRUM_INGOT.get());
                         output.accept(ModItems.CALORITE_INGOT.get());
 
-                        // Metal Nuggets
-                        output.accept(ModItems.STEEL_NUGGET.get());
+                        // Metal Nuggets (Steel provided by Mekanism)
                         output.accept(ModItems.ETRIUM_NUGGET.get());
                         output.accept(ModItems.DESH_NUGGET.get());
                         output.accept(ModItems.OSTRUM_NUGGET.get());
@@ -49,13 +47,13 @@ public class ModCreativeTabs {
                         output.accept(ModItems.RAW_OSTRUM.get());
                         output.accept(ModItems.RAW_CALORITE.get());
 
-                        // Processed Materials - Plates
-                        output.accept(ModItems.IRON_PLATE.get());
-                        output.accept(ModItems.STEEL_PLATE.get());
-                        output.accept(ModItems.ETRIUM_PLATE.get());
-                        output.accept(ModItems.DESH_PLATE.get());
-                        output.accept(ModItems.OSTRUM_PLATE.get());
-                        output.accept(ModItems.CALORITE_PLATE.get());
+                        // Processed Materials - Sheets
+                        // Iron sheet provided by Create
+                        output.accept(ModItems.STEEL_SHEET.get());
+                        output.accept(ModItems.ETRIUM_SHEET.get());
+                        output.accept(ModItems.DESH_SHEET.get());
+                        output.accept(ModItems.OSTRUM_SHEET.get());
+                        output.accept(ModItems.CALORITE_SHEET.get());
 
                         // Processed Materials - Rods
                         output.accept(ModItems.IRON_ROD.get());
@@ -201,13 +199,13 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.OSTRUM_PLATING.get());
                         output.accept(ModBlocks.CALORITE_PLATING.get());
 
-                        // Plate Blocks
-                        output.accept(ModBlocks.IRON_PLATEBLOCK.get());
-                        output.accept(ModBlocks.STEEL_PLATEBLOCK.get());
-                        output.accept(ModBlocks.ETRIUM_PLATEBLOCK.get());
-                        output.accept(ModBlocks.DESH_PLATEBLOCK.get());
-                        output.accept(ModBlocks.OSTRUM_PLATEBLOCK.get());
-                        output.accept(ModBlocks.CALORITE_PLATEBLOCK.get());
+                        // Sheet Blocks
+                        output.accept(ModBlocks.IRON_SHEETBLOCK.get());
+                        output.accept(ModBlocks.STEEL_SHEETBLOCK.get());
+                        output.accept(ModBlocks.ETRIUM_SHEETBLOCK.get());
+                        output.accept(ModBlocks.DESH_SHEETBLOCK.get());
+                        output.accept(ModBlocks.OSTRUM_SHEETBLOCK.get());
+                        output.accept(ModBlocks.CALORITE_SHEETBLOCK.get());
 
                         // Panel Blocks
                         output.accept(ModBlocks.IRON_PANEL.get());
@@ -231,15 +229,30 @@ public class ModCreativeTabs {
 
                         // Mekanism-Compatible Workstations
                         output.accept(ModBlocks.OXYGEN_DISTRIBUTOR.get());
-                        output.accept(ModBlocks.OXYGEN_LOADER.get());
                         output.accept(ModBlocks.WIRELESS_POWER_RELAY.get());
+                        output.accept(ModBlocks.NASA_WORKBENCH.get());
                         // Oxygen Network Monitor removed - incomplete feature
                         output.accept(ModItems.OXYGEN_NETWORK_CONTROLLER.get());
 
+                        // Rocket Components
+                        output.accept(ModItems.ROCKET_NOSE_CONE.get());
+                        output.accept(ModItems.ROCKET_FIN.get());
+                        output.accept(ModItems.FAN.get());
+                        output.accept(ModItems.ENGINE_FRAME.get());
+                        output.accept(ModItems.GAS_TANK.get());
+                        output.accept(ModItems.LARGE_GAS_TANK.get());
+                        output.accept(ModItems.STEEL_ENGINE.get());
+                        output.accept(ModItems.DESH_ENGINE.get());
+                        output.accept(ModItems.OSTRUM_ENGINE.get());
+                        output.accept(ModItems.CALORITE_ENGINE.get());
+                        output.accept(ModItems.STEEL_TANK.get());
+                        output.accept(ModItems.DESH_TANK.get());
+                        output.accept(ModItems.OSTRUM_TANK.get());
+                        output.accept(ModItems.CALORITE_TANK.get());
+                        output.accept(ModItems.OXYGEN_GEAR.get());
+
                         // Redstone Toggle Relay
                         output.accept(ModBlocks.REDSTONE_TOGGLE_RELAY.get());
-
-                        output.accept(ModBlocks.ROCKET_ASSEMBLY_STATION.get());
 
                         // Space Suits (also in Equipment tab)
                         output.accept(ModItems.SPACE_HELMET.get());

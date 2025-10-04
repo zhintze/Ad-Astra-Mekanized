@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "create:iron_sheet"
+    },
+    "I": {
+      "item": "mekanism:ingot_steel"
+    }
+  },
+  "pattern": [
+    "III",
+    "###",
+    "III"
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:encased_iron_block"
+  }
+}

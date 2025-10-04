@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "#": {
+      "item": "adastramekanized:steel_sheet"
+    },
+    "C": {
+      "item": "minecraft:comparator"
+    },
+    "P": {
+      "item": "minecraft:repeater"
+    },
+    "R": {
+      "item": "minecraft:redstone_block"
+    }
+  },
+  "pattern": [
+    "#P#",
+    "CRC",
+    "#P#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:redstone_toggle_relay"
+  }
+}

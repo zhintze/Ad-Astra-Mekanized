@@ -1,0 +1,30 @@
+{
+  "type": "adastramekanized:nasa_workbench",
+  "ingredients": [
+    {
+      "item": "adastramekanized:tier_3_rocket"
+    },
+    {
+      "item": "adastramekanized:calorite_tank"
+    },
+    {
+      "item": "adastramekanized:calorite_engine"
+    },
+    {
+      "item": "adastramekanized:calorite_sheetblock"
+    },
+    {
+      "item": "adastramekanized:etrionic_capacitor"
+    },
+    {
+      "item": "adastramekanized:calorite_sheet"
+    },
+    {
+      "item": "adastramekanized:calorite_sheet"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:tier_4_rocket"
+  }
+}

@@ -183,6 +183,88 @@ When creating block models, **always use the correct parent namespace**:
 - **Resolution**: Fixed parent references and reformatted blockstates to multi-line JSON
 - **Prevention**: Always reference working block models when creating new assets
 
+## Recipe Development Guidelines
+
+### ⚠️ CRITICAL: Recipe Generation System
+
+**MOST IMPORTANT RULE**: All standard crafting recipes MUST be added to `ModRecipeProvider`, NOT created as manual JSON files.
+
+#### Why Manual JSON Recipes Don't Work
+- **Problem**: Recipes created manually in `src/main/resources/data/adastramekanized/recipe/` will NOT appear in-game
+- **Root Cause**: The datagen system (`ModRecipeProvider`) controls recipe generation and overrides manual files
+- **Symptoms**: Recipes appear to be correct in JSON but don't show up in JEI or crafting table
+
+#### Correct Recipe Development Workflow
+
+**❌ WRONG - Manual JSON (will NOT work)**:
+```bash
+# Creating files in src/main/resources/data/adastramekanized/recipe/
+echo '{"type": "minecraft:crafting_shapeless", ...}' > my_recipe.json
+```
+
+**✅ CORRECT - Using ModRecipeProvider (WILL work)**:
+```java
+// In ModRecipeProvider.buildCraftingRecipes():
+ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.STEEL_SHEETBLOCK.get())
+    .requires(ModItems.STEEL_SHEET.get(), 9)
+    .unlockedBy("has_steel_sheet", has(ModItems.STEEL_SHEET.get()))
+    .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "steel_sheetblock"));
+```
+
+#### Required Steps for All Recipes
+
+1. **Add to ModRecipeProvider**: Write recipe builder code in appropriate method:
+   - `buildCraftingRecipes()` - Crafting table recipes
+   - `buildNasaWorkbenchRecipes()` - NASA Workbench recipes
+   - `buildSmeltingRecipes()` - Furnace recipes
+   - `buildBlastingRecipes()` - Blast furnace recipes
+
+2. **Run Data Generation**: Execute datagen to create actual JSON files:
+   ```bash
+   ./gradlew runData
+   ```
+
+3. **Verify Generated Files**: Check `src/generated/resources/data/adastramekanized/recipe/` for your recipes
+
+4. **Build and Test**: Run build and verify in-game:
+   ```bash
+   ./gradlew build
+   ```
+
+#### Recipe Types and Locations
+
+| Recipe Type | Method | Generated Location |
+|------------|--------|-------------------|
+| Crafting (shapeless/shaped) | `buildCraftingRecipes()` | `src/generated/resources/data/.../recipe/` |
+| NASA Workbench | `buildNasaWorkbenchRecipes()` | `src/generated/resources/data/.../recipe/` |
+| Smelting | `buildSmeltingRecipes()` | `src/generated/resources/data/.../recipe/` |
+| Blasting | `buildBlastingRecipes()` | `src/generated/resources/data/.../recipe/` |
+| Create Pressing | Manual JSON with conditions | `src/main/resources/data/.../recipe/pressing/` |
+| Create Rolling | Manual JSON with conditions | `src/main/resources/data/.../recipe/rolling/` |
+
+**Note**: Create integration recipes are an exception - they use manual JSON with `neoforge:mod_loaded` conditions since they require special conditional loading.
+
+#### Common Mistakes and Solutions
+
+**October 2025 - Sheetblock Recipes Not Showing**:
+- **Issue**: Created 12 manual JSON sheetblock recipes that didn't appear in-game
+- **Root Cause**: Recipes were manually created in `src/main/resources/` instead of using `ModRecipeProvider`
+- **Resolution**:
+  1. Added all 12 recipes to `buildCraftingRecipes()` using `ShapelessRecipeBuilder`
+  2. Deleted manual JSON files to avoid conflicts
+  3. Ran `./gradlew runData` to generate proper recipes
+  4. Verified recipes appeared in `src/generated/resources/`
+- **Prevention**: ALWAYS use `ModRecipeProvider` for standard Minecraft recipes
+
+#### Recipe Development Checklist
+
+- [ ] Recipe code added to appropriate `ModRecipeProvider` method
+- [ ] `./gradlew runData` executed successfully
+- [ ] Generated JSON exists in `src/generated/resources/`
+- [ ] No manual JSON conflicts in `src/main/resources/` for same recipe
+- [ ] `./gradlew build` completes without errors
+- [ ] Recipe tested in-game (shows in JEI and works in crafting)
+
 ## Future Feature Considerations
 
 ### Celestial Time Systems

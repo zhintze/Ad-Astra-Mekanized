@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_deepslate_desh": {
+      "conditions": {
+        "items": [
+          {
+            "items": "adastramekanized:deepslate_desh_ore"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "adastramekanized:deepslate_desh_from_blasting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_deepslate_desh"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "adastramekanized:deepslate_desh_from_blasting"
+    ]
+  }
+}

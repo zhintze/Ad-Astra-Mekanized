@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "adastramekanized:calorite_sheet"
+    },
+    "C": {
+      "item": "adastramekanized:etrionic_capacitor"
+    },
+    "E": {
+      "item": "adastramekanized:calorite_engine"
+    },
+    "N": {
+      "item": "adastramekanized:netherite_space_suit"
+    },
+    "T": {
+      "item": "adastramekanized:calorite_tank"
+    }
+  },
+  "pattern": [
+    "# #",
+    "TNT",
+    "CEC"
+  ],
+  "result": {
+    "id": "adastramekanized:jet_suit"
+  }
+}

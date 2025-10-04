@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.7,
+  "ingredient": {
+    "item": "adastramekanized:deepslate_calorite_ore"
+  },
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:calorite_ingot"
+  }
+}

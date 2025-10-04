@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "adastramekanized:etrium_sheet"
+    },
+    "I": {
+      "item": "adastramekanized:etrium_ingot"
+    }
+  },
+  "pattern": [
+    "#I#",
+    "III",
+    "#I#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:etrium_panel"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_ostrum_engine": {
+      "conditions": {
+        "items": [
+          {
+            "items": "adastramekanized:ostrum_engine"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "adastramekanized:tier_3_rocket"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_ostrum_engine"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "adastramekanized:tier_3_rocket"
+    ]
+  }
+}

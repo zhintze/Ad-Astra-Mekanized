@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    "N": {
+      "item": "minecraft:netherite_chestplate"
+    },
+    "O": {
+      "item": "adastramekanized:oxygen_gear"
+    },
+    "T": {
+      "item": "adastramekanized:large_gas_tank"
+    }
+  },
+  "pattern": [
+    "# #",
+    "TOT",
+    "#N#"
+  ],
+  "result": {
+    "id": "adastramekanized:netherite_space_suit"
+  }
+}

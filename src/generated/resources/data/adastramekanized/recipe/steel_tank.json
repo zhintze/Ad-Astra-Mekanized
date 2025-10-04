@@ -1,0 +1,30 @@
+{
+  "type": "adastramekanized:nasa_workbench",
+  "ingredients": [
+    {
+      "item": "adastramekanized:steel_sheet"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
+    },
+    {
+      "item": "adastramekanized:gas_tank"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:steel_tank"
+  }
+}

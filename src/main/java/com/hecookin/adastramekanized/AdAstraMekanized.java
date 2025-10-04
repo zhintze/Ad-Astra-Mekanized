@@ -9,8 +9,11 @@ import com.hecookin.adastramekanized.common.registry.ModBlockEntityTypes;
 import com.hecookin.adastramekanized.common.registry.ModBlocks;
 import com.hecookin.adastramekanized.common.registry.ModChunkGenerators;
 import com.hecookin.adastramekanized.common.registry.ModCreativeTabs;
+import com.hecookin.adastramekanized.common.registry.ModEntityTypes;
 import com.hecookin.adastramekanized.common.registry.ModItems;
 import com.hecookin.adastramekanized.common.registry.ModMenuTypes;
+import com.hecookin.adastramekanized.common.registry.ModRecipeTypes;
+import com.hecookin.adastramekanized.common.registry.ModRecipeSerializers;
 import com.hecookin.adastramekanized.config.AdAstraMekanizedConfig;
 import com.hecookin.adastramekanized.integration.ModIntegrationManager;
 import com.hecookin.adastramekanized.integration.mowziesmobs.MowziesMobsIntegration;
@@ -58,7 +61,10 @@ public class AdAstraMekanized {
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
         ModBlockEntityTypes.BLOCK_ENTITY_TYPES.register(modEventBus);
+        ModEntityTypes.register(modEventBus);
         ModMenuTypes.register(modEventBus);
+        ModRecipeTypes.register(modEventBus);
+        ModRecipeSerializers.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
 
         // Register chunk generators
@@ -69,6 +75,9 @@ public class AdAstraMekanized {
 
         // Register networking
         modEventBus.addListener(this::registerNetworking);
+
+        // Register debug events on mod bus
+        modEventBus.register(com.hecookin.adastramekanized.common.events.RegistrationDebugEvents.class);
 
         // Register capabilities for Mekanism integration
         modEventBus.addListener(MekanismCapabilityProvider::registerCapabilities);
@@ -99,6 +108,10 @@ public class AdAstraMekanized {
 
             // Initialize Mowzie's Mobs integration
             MowziesMobsIntegration.init();
+
+            // Initialize rocket tier properties
+            ModEntityTypes.initRocketTiers();
+            LOGGER.info("Rocket tiers initialized");
 
             // Planets are now generated using PlanetMaker system
             LOGGER.info("Using PlanetMaker for planet generation - run './gradlew makePlanets' to regenerate");

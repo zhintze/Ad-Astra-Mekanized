@@ -1,0 +1,30 @@
+{
+  "type": "adastramekanized:nasa_workbench",
+  "ingredients": [
+    {
+      "item": "adastramekanized:desh_sheet"
+    },
+    {
+      "item": "adastramekanized:desh_sheet"
+    },
+    {
+      "item": "adastramekanized:desh_sheet"
+    },
+    {
+      "item": "adastramekanized:desh_sheet"
+    },
+    {
+      "item": "adastramekanized:steel_engine"
+    },
+    {
+      "item": "adastramekanized:desh_sheet"
+    },
+    {
+      "item": "adastramekanized:fan"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:desh_engine"
+  }
+}

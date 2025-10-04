@@ -24,6 +24,9 @@ public class ModCommands {
         // Register planet debug commands
         PlanetDebugCommands.register(dispatcher);
 
+        // Register recipe debug commands
+        RecipeDebugCommand.register(dispatcher);
+
         AdAstraMekanized.LOGGER.info("Command registration complete");
     }
 }

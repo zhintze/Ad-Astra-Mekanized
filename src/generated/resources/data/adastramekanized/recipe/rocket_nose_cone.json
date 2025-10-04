@@ -1,0 +1,27 @@
+{
+  "type": "adastramekanized:nasa_workbench",
+  "ingredients": [
+    {
+      "item": "minecraft:lightning_rod"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:rocket_nose_cone"
+  }
+}

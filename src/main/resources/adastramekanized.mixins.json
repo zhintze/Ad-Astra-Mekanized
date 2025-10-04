@@ -4,7 +4,9 @@
   "package": "com.hecookin.adastramekanized.mixins",
   "compatibilityLevel": "JAVA_17",
   "refmap": "adastramekanized.refmap.json",
-  "mixins": [],
+  "mixins": [
+    "LivingEntityAccessor"
+  ],
   "client": [
     "LevelRendererMixin",
     "CustomDyeableArmorItemMixin"

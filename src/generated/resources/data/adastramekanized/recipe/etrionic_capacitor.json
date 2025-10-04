@@ -1,0 +1,36 @@
+{
+  "type": "adastramekanized:nasa_workbench",
+  "ingredients": [
+    {
+      "item": "minecraft:ender_eye"
+    },
+    {
+      "item": "adastramekanized:etrium_sheet"
+    },
+    {
+      "item": "minecraft:ender_eye"
+    },
+    {
+      "item": "adastramekanized:etrium_sheet"
+    },
+    {
+      "item": "minecraft:diamond"
+    },
+    {
+      "item": "adastramekanized:etrium_sheet"
+    },
+    {
+      "item": "minecraft:ender_eye"
+    },
+    {
+      "item": "adastramekanized:etrium_sheet"
+    },
+    {
+      "item": "minecraft:ender_eye"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:etrionic_capacitor"
+  }
+}

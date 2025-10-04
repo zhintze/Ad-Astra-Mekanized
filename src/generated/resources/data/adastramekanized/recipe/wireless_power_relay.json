@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "adastramekanized:steel_sheet"
+    },
+    "E": {
+      "item": "adastramekanized:etrionic_capacitor"
+    },
+    "R": {
+      "item": "minecraft:redstone_block"
+    },
+    "|": {
+      "item": "minecraft:lightning_rod"
+    }
+  },
+  "pattern": [
+    "#|#",
+    "RER",
+    "#|#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:wireless_power_relay"
+  }
+}

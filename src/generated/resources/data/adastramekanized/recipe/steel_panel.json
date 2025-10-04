@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "adastramekanized:steel_sheet"
+    },
+    "I": {
+      "item": "mekanism:ingot_steel"
+    }
+  },
+  "pattern": [
+    "#I#",
+    "III",
+    "#I#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:steel_panel"
+  }
+}

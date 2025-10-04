@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "adastramekanized:desh_sheet"
+    },
+    {
+      "item": "adastramekanized:desh_sheet"
+    },
+    {
+      "item": "adastramekanized:desh_sheet"
+    },
+    {
+      "item": "adastramekanized:desh_sheet"
+    },
+    {
+      "item": "adastramekanized:desh_sheet"
+    },
+    {
+      "item": "adastramekanized:desh_sheet"
+    },
+    {
+      "item": "adastramekanized:desh_sheet"
+    },
+    {
+      "item": "adastramekanized:desh_sheet"
+    },
+    {
+      "item": "adastramekanized:desh_sheet"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:desh_sheetblock"
+  }
+}

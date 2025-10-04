@@ -1,0 +1,27 @@
+{
+  "type": "adastramekanized:nasa_workbench",
+  "ingredients": [
+    {
+      "item": "adastramekanized:tier_1_rocket"
+    },
+    {
+      "item": "adastramekanized:desh_tank"
+    },
+    {
+      "item": "adastramekanized:desh_engine"
+    },
+    {
+      "item": "adastramekanized:desh_sheetblock"
+    },
+    {
+      "item": "adastramekanized:desh_sheet"
+    },
+    {
+      "item": "adastramekanized:desh_sheet"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:tier_2_rocket"
+  }
+}

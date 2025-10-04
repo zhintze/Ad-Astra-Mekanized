@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_calorite_engine": {
+      "conditions": {
+        "items": [
+          {
+            "items": "adastramekanized:calorite_engine"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "adastramekanized:tier_4_rocket"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_calorite_engine"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "adastramekanized:tier_4_rocket"
+    ]
+  }
+}

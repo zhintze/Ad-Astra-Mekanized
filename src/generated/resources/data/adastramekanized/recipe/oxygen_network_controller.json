@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "adastramekanized:desh_sheet"
+    },
+    "E": {
+      "item": "adastramekanized:etrionic_capacitor"
+    },
+    "F": {
+      "item": "adastramekanized:fan"
+    },
+    "G": {
+      "item": "adastramekanized:large_gas_tank"
+    }
+  },
+  "pattern": [
+    "#F#",
+    "GEG",
+    "#F#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:oxygen_network_controller"
+  }
+}

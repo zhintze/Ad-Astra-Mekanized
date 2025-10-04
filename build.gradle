@@ -166,6 +166,9 @@ dependencies {
     implementation "curse.maven:badOptimizations-949555:5961419"
     //---- END PERFORMANCE ----//
 
+    //localRuntime "blank:create-0.5.1.j-1.21.1"
+    implementation "curse.maven:create-328085:6323264"
+    implementation "curse.maven:createCraftsAndAdditions-439890:6445614"
 
 
     // DUNGEONS

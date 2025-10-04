@@ -1,0 +1,30 @@
+{
+  "type": "adastramekanized:nasa_workbench",
+  "ingredients": [
+    {
+      "item": "adastramekanized:calorite_sheet"
+    },
+    {
+      "item": "adastramekanized:calorite_sheet"
+    },
+    {
+      "item": "adastramekanized:calorite_sheet"
+    },
+    {
+      "item": "adastramekanized:calorite_sheet"
+    },
+    {
+      "item": "adastramekanized:ostrum_engine"
+    },
+    {
+      "item": "adastramekanized:calorite_sheet"
+    },
+    {
+      "item": "adastramekanized:fan"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:calorite_engine"
+  }
+}

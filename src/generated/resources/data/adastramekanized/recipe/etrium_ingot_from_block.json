@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "adastramekanized:etrium_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "adastramekanized:etrium_ingot"
+  }
+}

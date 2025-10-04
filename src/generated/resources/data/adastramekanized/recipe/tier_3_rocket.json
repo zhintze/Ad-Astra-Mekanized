@@ -1,0 +1,27 @@
+{
+  "type": "adastramekanized:nasa_workbench",
+  "ingredients": [
+    {
+      "item": "adastramekanized:tier_2_rocket"
+    },
+    {
+      "item": "adastramekanized:ostrum_tank"
+    },
+    {
+      "item": "adastramekanized:ostrum_engine"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheetblock"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:tier_3_rocket"
+  }
+}

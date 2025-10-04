@@ -487,6 +487,24 @@ public class ModBlocks {
     public static final Supplier<Block> ROCKET_ASSEMBLY_STATION = registerBlock("rocket_assembly_station",
             () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
 
+    // ========== ROCKET INFRASTRUCTURE ==========
+
+    public static final Supplier<Block> LAUNCH_PAD = registerBlock("launch_pad",
+            () -> new com.hecookin.adastramekanized.common.blocks.LaunchPadBlock(
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.METAL)
+                            .strength(5.0f)
+                            .sound(SoundType.METAL)
+                            .noOcclusion()));
+
+    public static final Supplier<Block> FUEL_LOADER = registerBlock("fuel_loader",
+            () -> new com.hecookin.adastramekanized.common.blocks.FuelLoaderBlock(
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.METAL)
+                            .strength(3.5f)
+                            .sound(SoundType.METAL)
+                            .requiresCorrectToolForDrops()));
+
     /**
      * Helper method to register a block with its corresponding BlockItem
      */

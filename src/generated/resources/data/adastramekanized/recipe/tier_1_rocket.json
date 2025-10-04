@@ -1,0 +1,33 @@
+{
+  "type": "adastramekanized:nasa_workbench",
+  "ingredients": [
+    {
+      "item": "adastramekanized:rocket_nose_cone"
+    },
+    {
+      "item": "adastramekanized:steel_tank"
+    },
+    {
+      "item": "adastramekanized:steel_engine"
+    },
+    {
+      "item": "adastramekanized:rocket_fin"
+    },
+    {
+      "item": "adastramekanized:rocket_fin"
+    },
+    {
+      "item": "adastramekanized:rocket_fin"
+    },
+    {
+      "item": "adastramekanized:rocket_fin"
+    },
+    {
+      "item": "adastramekanized:steel_sheetblock"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:tier_1_rocket"
+  }
+}

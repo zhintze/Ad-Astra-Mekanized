@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "adastramekanized:ostrum_sheetblock"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "adastramekanized:ostrum_sheet"
+  }
+}

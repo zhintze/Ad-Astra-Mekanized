@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "adastramekanized:desh_ingot"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "adastramekanized:desh_nugget"
+  }
+}

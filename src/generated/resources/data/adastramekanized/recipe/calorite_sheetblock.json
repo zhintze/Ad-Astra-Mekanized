@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "adastramekanized:calorite_sheet"
+    },
+    {
+      "item": "adastramekanized:calorite_sheet"
+    },
+    {
+      "item": "adastramekanized:calorite_sheet"
+    },
+    {
+      "item": "adastramekanized:calorite_sheet"
+    },
+    {
+      "item": "adastramekanized:calorite_sheet"
+    },
+    {
+      "item": "adastramekanized:calorite_sheet"
+    },
+    {
+      "item": "adastramekanized:calorite_sheet"
+    },
+    {
+      "item": "adastramekanized:calorite_sheet"
+    },
+    {
+      "item": "adastramekanized:calorite_sheet"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:calorite_sheetblock"
+  }
+}

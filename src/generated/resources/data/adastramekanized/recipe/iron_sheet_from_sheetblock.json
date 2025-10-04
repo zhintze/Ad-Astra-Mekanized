@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "adastramekanized:iron_sheetblock"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "create:iron_sheet"
+  }
+}

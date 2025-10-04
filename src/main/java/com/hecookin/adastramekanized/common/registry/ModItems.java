@@ -28,9 +28,7 @@ public class ModItems {
             DeferredRegister.create(Registries.ITEM, AdAstraMekanized.MOD_ID);
 
     // ========== METAL INGOTS ==========
-
-    public static final Supplier<Item> STEEL_INGOT = ITEMS.register("steel_ingot",
-            () -> new Item(new Item.Properties()));
+    // Note: Steel ingot provided by Mekanism (mekanism:steel_ingot)
 
     public static final Supplier<Item> ETRIUM_INGOT = ITEMS.register("etrium_ingot",
             () -> new Item(new Item.Properties()));
@@ -45,9 +43,7 @@ public class ModItems {
             () -> new Item(new Item.Properties().fireResistant()));
 
     // ========== METAL NUGGETS ==========
-
-    public static final Supplier<Item> STEEL_NUGGET = ITEMS.register("steel_nugget",
-            () -> new Item(new Item.Properties()));
+    // Note: Steel nugget provided by Mekanism (mekanism:steel_nugget)
 
     public static final Supplier<Item> ETRIUM_NUGGET = ITEMS.register("etrium_nugget",
             () -> new Item(new Item.Properties()));
@@ -73,32 +69,30 @@ public class ModItems {
             () -> new Item(new Item.Properties()));
 
     // ========== PROCESSED MATERIALS ==========
-
-    public static final Supplier<Item> IRON_PLATE = ITEMS.register("iron_plate",
-            () -> new Item(new Item.Properties()));
+    // Note: Iron sheet provided by Create (create:iron_sheet)
 
     public static final Supplier<Item> IRON_ROD = ITEMS.register("iron_rod",
             () -> new Item(new Item.Properties()));
 
-    public static final Supplier<Item> STEEL_PLATE = ITEMS.register("steel_plate",
+    public static final Supplier<Item> STEEL_SHEET = ITEMS.register("steel_sheet",
             () -> new Item(new Item.Properties()));
 
     public static final Supplier<Item> STEEL_ROD = ITEMS.register("steel_rod",
             () -> new Item(new Item.Properties()));
 
-    public static final Supplier<Item> ETRIUM_PLATE = ITEMS.register("etrium_plate",
+    public static final Supplier<Item> ETRIUM_SHEET = ITEMS.register("etrium_sheet",
             () -> new Item(new Item.Properties()));
 
     public static final Supplier<Item> ETRIUM_ROD = ITEMS.register("etrium_rod",
             () -> new Item(new Item.Properties()));
 
-    public static final Supplier<Item> DESH_PLATE = ITEMS.register("desh_plate",
+    public static final Supplier<Item> DESH_SHEET = ITEMS.register("desh_sheet",
             () -> new Item(new Item.Properties()));
 
-    public static final Supplier<Item> OSTRUM_PLATE = ITEMS.register("ostrum_plate",
+    public static final Supplier<Item> OSTRUM_SHEET = ITEMS.register("ostrum_sheet",
             () -> new Item(new Item.Properties()));
 
-    public static final Supplier<Item> CALORITE_PLATE = ITEMS.register("calorite_plate",
+    public static final Supplier<Item> CALORITE_SHEET = ITEMS.register("calorite_sheet",
             () -> new Item(new Item.Properties()));
 
     // ========== SPECIAL MATERIALS ==========
@@ -112,10 +106,74 @@ public class ModItems {
     public static final Supplier<Item> CHEESE = ITEMS.register("cheese",
             () -> new Item(new Item.Properties().food(FoodProperties.CHEESE)));
 
+    public static final Supplier<Item> ETRIONIC_CAPACITOR = ITEMS.register("etrionic_capacitor",
+            () -> new Item(new Item.Properties()));
+
     // ========== TECHNICAL ITEMS ==========
 
     public static final Supplier<Item> OXYGEN_NETWORK_CONTROLLER = ITEMS.register("oxygen_network_controller",
             () -> new OxygenNetworkController());
+
+    // ========== ROCKET COMPONENTS ==========
+
+    public static final Supplier<Item> ROCKET_NOSE_CONE = ITEMS.register("rocket_nose_cone",
+            () -> new Item(new Item.Properties()));
+
+    public static final Supplier<Item> ROCKET_FIN = ITEMS.register("rocket_fin",
+            () -> new Item(new Item.Properties()));
+
+    public static final Supplier<Item> STEEL_ENGINE = ITEMS.register("steel_engine",
+            () -> new Item(new Item.Properties()));
+
+    public static final Supplier<Item> DESH_ENGINE = ITEMS.register("desh_engine",
+            () -> new Item(new Item.Properties()));
+
+    public static final Supplier<Item> OSTRUM_ENGINE = ITEMS.register("ostrum_engine",
+            () -> new Item(new Item.Properties()));
+
+    public static final Supplier<Item> CALORITE_ENGINE = ITEMS.register("calorite_engine",
+            () -> new Item(new Item.Properties().fireResistant()));
+
+    public static final Supplier<Item> STEEL_TANK = ITEMS.register("steel_tank",
+            () -> new Item(new Item.Properties()));
+
+    public static final Supplier<Item> DESH_TANK = ITEMS.register("desh_tank",
+            () -> new Item(new Item.Properties()));
+
+    public static final Supplier<Item> OSTRUM_TANK = ITEMS.register("ostrum_tank",
+            () -> new Item(new Item.Properties()));
+
+    public static final Supplier<Item> CALORITE_TANK = ITEMS.register("calorite_tank",
+            () -> new Item(new Item.Properties().fireResistant()));
+
+    public static final Supplier<Item> OXYGEN_GEAR = ITEMS.register("oxygen_gear",
+            () -> new Item(new Item.Properties()));
+
+    public static final Supplier<Item> FAN = ITEMS.register("fan",
+            () -> new Item(new Item.Properties()));
+
+    public static final Supplier<Item> ENGINE_FRAME = ITEMS.register("engine_frame",
+            () -> new Item(new Item.Properties()));
+
+    public static final Supplier<Item> GAS_TANK = ITEMS.register("gas_tank",
+            () -> new Item(new Item.Properties()));
+
+    // ========== ROCKETS ==========
+
+    public static final Supplier<Item> TIER_1_ROCKET = ITEMS.register("tier_1_rocket",
+            () -> new Item(new Item.Properties().stacksTo(1)));
+
+    public static final Supplier<Item> TIER_2_ROCKET = ITEMS.register("tier_2_rocket",
+            () -> new Item(new Item.Properties().stacksTo(1)));
+
+    public static final Supplier<Item> TIER_3_ROCKET = ITEMS.register("tier_3_rocket",
+            () -> new Item(new Item.Properties().stacksTo(1)));
+
+    public static final Supplier<Item> TIER_4_ROCKET = ITEMS.register("tier_4_rocket",
+            () -> new Item(new Item.Properties().stacksTo(1).fireResistant()));
+
+    public static final Supplier<Item> LARGE_GAS_TANK = ITEMS.register("large_gas_tank",
+            () -> new Item(new Item.Properties()));
 
     // ========== SPACE SUITS - STANDARD ==========
 

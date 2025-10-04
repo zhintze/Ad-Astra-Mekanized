@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "adastramekanized:steel_sheet"
+    },
+    "O": {
+      "item": "adastramekanized:oxygen_gear"
+    },
+    "T": {
+      "item": "adastramekanized:gas_tank"
+    },
+    "W": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "pattern": [
+    "# #",
+    "TOT",
+    "#W#"
+  ],
+  "result": {
+    "id": "adastramekanized:space_suit"
+  }
+}

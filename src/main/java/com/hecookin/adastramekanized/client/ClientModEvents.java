@@ -6,6 +6,8 @@ import com.hecookin.adastramekanized.client.renderers.blocks.MekanismBasedOxygen
 import com.hecookin.adastramekanized.client.renderers.blocks.OxygenDistributorBlockEntityRenderer;
 import com.hecookin.adastramekanized.client.renderers.blocks.SlidingDoorBlockEntityRenderer;
 import com.hecookin.adastramekanized.client.gui.GuiOxygenDistributor;
+import com.hecookin.adastramekanized.client.screens.FuelLoaderScreen;
+import com.hecookin.adastramekanized.client.screens.NasaWorkbenchScreen;
 import com.hecookin.adastramekanized.client.screens.OxygenControllerScreen;
 import com.hecookin.adastramekanized.client.screens.OxygenMonitorScreen;
 import com.hecookin.adastramekanized.client.screens.WirelessPowerRelayScreen;
@@ -86,6 +88,8 @@ public class ClientModEvents {
         event.register(ModMenuTypes.OXYGEN_CONTROLLER.get(), OxygenControllerScreen::new);
         event.register(ModMenuTypes.WIRELESS_POWER_RELAY.get(), WirelessPowerRelayScreen::new);
         event.register(ModMenuTypes.OXYGEN_MONITOR.get(), OxygenMonitorScreen::new);
+        event.register(ModMenuTypes.NASA_WORKBENCH.get(), NasaWorkbenchScreen::new);
+        event.register(ModMenuTypes.FUEL_LOADER.get(), FuelLoaderScreen::new);
     }
 
     @SubscribeEvent

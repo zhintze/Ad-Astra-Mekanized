@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "adastramekanized:calorite_sheet"
+    },
+    "B": {
+      "item": "adastramekanized:calorite_block"
+    },
+    "N": {
+      "item": "adastramekanized:netherite_space_boots"
+    }
+  },
+  "pattern": [
+    " N ",
+    "# #",
+    "B B"
+  ],
+  "result": {
+    "id": "adastramekanized:jet_suit_boots"
+  }
+}

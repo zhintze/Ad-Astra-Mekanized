@@ -1,6 +1,8 @@
 package com.hecookin.adastramekanized.common.registry;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
+import com.hecookin.adastramekanized.common.blockentities.FuelLoaderBlockEntity;
+import com.hecookin.adastramekanized.common.blockentities.NasaWorkbenchBlockEntity;
 import com.hecookin.adastramekanized.common.blockentities.machines.OxygenDistributorBlockEntity;
 import com.hecookin.adastramekanized.common.blockentities.machines.ImprovedOxygenDistributor;
 import com.hecookin.adastramekanized.common.blockentities.machines.WirelessPowerRelayBlockEntity;
@@ -57,6 +59,20 @@ public class ModBlockEntityTypes {
                 ModBlocks.DESH_SLIDING_DOOR.get(),
                 ModBlocks.OSTRUM_SLIDING_DOOR.get(),
                 ModBlocks.CALORITE_SLIDING_DOOR.get()));
+
+    // NASA Workbench block entity
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<NasaWorkbenchBlockEntity>> NASA_WORKBENCH =
+        BLOCK_ENTITY_TYPES.register("nasa_workbench",
+            () -> createBlockEntityType(
+                NasaWorkbenchBlockEntity::new,
+                ModBlocks.NASA_WORKBENCH.get()));
+
+    // Fuel Loader block entity
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FuelLoaderBlockEntity>> FUEL_LOADER =
+        BLOCK_ENTITY_TYPES.register("fuel_loader",
+            () -> createBlockEntityType(
+                FuelLoaderBlockEntity::new,
+                ModBlocks.FUEL_LOADER.get()));
 
     /**
      * Helper method to create a BlockEntityType

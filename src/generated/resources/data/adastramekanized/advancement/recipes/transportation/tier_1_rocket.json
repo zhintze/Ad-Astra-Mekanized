@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_steel_engine": {
+      "conditions": {
+        "items": [
+          {
+            "items": "adastramekanized:steel_engine"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "adastramekanized:tier_1_rocket"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_steel_engine"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "adastramekanized:tier_1_rocket"
+    ]
+  }
+}

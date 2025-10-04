@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "adastramekanized:steel_sheet"
+    },
+    "I": {
+      "item": "minecraft:iron_block"
+    },
+    "S": {
+      "item": "mekanism:ingot_steel"
+    }
+  },
+  "pattern": [
+    "###",
+    "SIS",
+    "I#I"
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:launch_pad"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "adastramekanized:desh_sheet"
+    },
+    "I": {
+      "item": "adastramekanized:desh_ingot"
+    }
+  },
+  "pattern": [
+    "#I#",
+    "III",
+    "#I#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:desh_panel"
+  }
+}

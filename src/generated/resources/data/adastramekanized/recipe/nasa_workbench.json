@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "adastramekanized:steel_sheet"
+    },
+    "B": {
+      "item": "mekanism:block_steel"
+    },
+    "C": {
+      "item": "minecraft:crafting_table"
+    },
+    "T": {
+      "item": "minecraft:redstone_torch"
+    },
+    "|": {
+      "item": "adastramekanized:iron_rod"
+    }
+  },
+  "pattern": [
+    "|#|",
+    "TCT",
+    "#B#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:nasa_workbench"
+  }
+}

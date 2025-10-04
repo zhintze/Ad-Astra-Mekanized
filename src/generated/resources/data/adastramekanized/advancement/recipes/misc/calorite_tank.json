@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_calorite_sheet": {
+      "conditions": {
+        "items": [
+          {
+            "items": "adastramekanized:calorite_sheet"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "adastramekanized:calorite_tank"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_calorite_sheet"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "adastramekanized:calorite_tank"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "adastramekanized:raw_calorite_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "adastramekanized:raw_calorite"
+  }
+}

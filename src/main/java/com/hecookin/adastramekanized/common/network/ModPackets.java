@@ -49,6 +49,16 @@ public class ModPackets {
             )
         );
 
+        // Register vehicle control packet (client -> server)
+        registrar.playToServer(
+            VehicleControlPacket.TYPE,
+            VehicleControlPacket.CODEC,
+            new DirectionalPayloadHandler<>(
+                null, // No client handler needed
+                VehicleControlPacket::handle
+            )
+        );
+
         AdAstraMekanized.LOGGER.info("Registered network packets");
     }
 }

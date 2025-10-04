@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_gas_tank": {
+      "conditions": {
+        "items": [
+          {
+            "items": "adastramekanized:gas_tank"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "adastramekanized:oxygen_gear"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_gas_tank"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "adastramekanized:oxygen_gear"
+    ]
+  }
+}
