@@ -73,7 +73,7 @@ public class NasaWorkbenchBlockEntity extends BlockEntity implements Container, 
         entity.updateRecipe();
 
         if (entity.currentRecipe != null && entity.canCraft()) {
-            entity.setItem(OUTPUT_SLOT, entity.currentRecipe.result());
+            entity.setItem(OUTPUT_SLOT, entity.currentRecipe.result().copy());
         } else {
             entity.setItem(OUTPUT_SLOT, ItemStack.EMPTY);
         }
@@ -91,7 +91,7 @@ public class NasaWorkbenchBlockEntity extends BlockEntity implements Container, 
     }
 
     public void craft() {
-        if (!canCraft() || level == null) return;
+        if (currentRecipe == null || level == null) return;
 
         if (level instanceof ServerLevel serverLevel) {
             serverLevel.sendParticles(
