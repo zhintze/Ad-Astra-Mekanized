@@ -21,17 +21,17 @@ public class FuelLoaderScreen extends AbstractContainerScreen<FuelLoaderMenu> {
 
     public FuelLoaderScreen(FuelLoaderMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
-        this.imageWidth = 176;
-        this.imageHeight = 166;
+        this.imageWidth = 177;
+        this.imageHeight = 184;
         this.titleLabelY = 6;
-        this.inventoryLabelY = 73;
+        this.inventoryLabelY = 90;
     }
 
     @Override
     protected void renderBg(@NotNull GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
-        graphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
+        graphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
 
         // Render fluid tank
         renderFluidTank(graphics, x, y);
@@ -43,9 +43,9 @@ public class FuelLoaderScreen extends AbstractContainerScreen<FuelLoaderMenu> {
         int capacity = menu.getBlockEntity().getFluidTank().getCapacity();
         int amount = fluidStack.getAmount();
 
-        // Tank rendering area (in GUI coords)
-        int tankX = x + 80;
-        int tankY = y + 18;
+        // Tank rendering area (in GUI coords) - matches Ad Astra position at (43, 22)
+        int tankX = x + 43;
+        int tankY = y + 22;
         int tankWidth = 16;
         int tankHeight = 52;
 
@@ -55,9 +55,9 @@ public class FuelLoaderScreen extends AbstractContainerScreen<FuelLoaderMenu> {
         int fillHeight = (int) ((float) amount / capacity * tankHeight);
         int fillY = tankY + tankHeight - fillHeight;
 
-        // Simple colored rectangle for fluid rendering
-        // Blue color for most fuels (can be customized later)
-        graphics.fill(tankX, fillY, tankX + tankWidth, tankY + tankHeight, 0xFF3366CC);
+        // Simple colored rectangle for fuel rendering
+        // Orange/yellow color for fuel
+        graphics.fill(tankX, fillY, tankX + tankWidth, tankY + tankHeight, 0xFFFF9933);
     }
 
     @Override
@@ -73,9 +73,9 @@ public class FuelLoaderScreen extends AbstractContainerScreen<FuelLoaderMenu> {
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
 
-        // Tank tooltip area
-        int tankX = x + 80;
-        int tankY = y + 18;
+        // Tank tooltip area - matches Ad Astra position
+        int tankX = x + 43;
+        int tankY = y + 22;
         int tankWidth = 16;
         int tankHeight = 52;
 

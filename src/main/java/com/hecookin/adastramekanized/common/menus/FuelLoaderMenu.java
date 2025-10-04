@@ -27,22 +27,22 @@ public class FuelLoaderMenu extends AbstractContainerMenu {
         super(ModMenuTypes.FUEL_LOADER.get(), containerId);
         this.blockEntity = blockEntity;
 
-        // Bucket input slot (for filling tank)
-        addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 44, 35));
+        // Input bucket slot (left side, top)
+        addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 0, 12, 22));
 
-        // Bucket output slot (for draining tank)
-        addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 1, 116, 35));
+        // Output bucket slot (left side, bottom)
+        addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 1, 12, 52));
 
-        // Player inventory
+        // Player inventory (matches Ad Astra oxygen loader at Y=102)
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 9; ++col) {
-                addSlot(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 84 + row * 18));
+                addSlot(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 102 + row * 18));
             }
         }
 
         // Player hotbar
         for (int col = 0; col < 9; ++col) {
-            addSlot(new Slot(playerInventory, col, 8 + col * 18, 142));
+            addSlot(new Slot(playerInventory, col, 8 + col * 18, 160));
         }
     }
 
