@@ -1,4 +1,4 @@
-// 1.21.1	2025-10-03T20:39:34.373455598	Recipes
+// 1.21.1	2025-10-03T22:01:25.824070467	Recipes
 548a03e20d65f9df21f871d8e4e4e85069b3bf4c data/adastramekanized/advancement/recipes/building_blocks/calorite_block.json
 bc2cd64b7b3328b453eacef3440ebdfbd43bf034 data/adastramekanized/advancement/recipes/building_blocks/calorite_panel.json
 adda74d7537c344361dc7bba5e4570c53f9035f8 data/adastramekanized/advancement/recipes/building_blocks/calorite_pillar.json
@@ -50,6 +50,7 @@ a54bbd6e41b5ae6802ecdc5eeb52b1f4978f083e data/adastramekanized/advancement/recip
 262c99d93808f7978cb5f2ca40f604bd5fcac381 data/adastramekanized/advancement/recipes/misc/desh_sheet_from_sheetblock.json
 d81a3f14fe6baa82a3d9d46be84be4c87924aad2 data/adastramekanized/advancement/recipes/misc/desh_tank.json
 e4b98b471de452cbbd4eedb2611d528c52c557d8 data/adastramekanized/advancement/recipes/misc/engine_frame.json
+e4c7a1362eb381c56623d0acd592c5f52b7069f1 data/adastramekanized/advancement/recipes/misc/etrionic_core.json
 fbc22fbf6efcc64414690f908647dc7e25860d6e data/adastramekanized/advancement/recipes/misc/etrium_ingot_from_block.json
 a6ea0f07a6e8fc22107b870c643a4490e76625c7 data/adastramekanized/advancement/recipes/misc/etrium_ingot_from_nuggets.json
 4d720cae126d54d65b0d8f5d832bb18818762749 data/adastramekanized/advancement/recipes/misc/etrium_nugget_from_ingot.json
@@ -163,6 +164,7 @@ fa7489e7abd0b51c71b4e98db12e88926ad533c8 data/adastramekanized/recipe/desh_tank.
 471058c46133e5681cf601450e04b903f8518002 data/adastramekanized/recipe/encased_steel_block.json
 ebbfb5d33bbcfb1f6328345be7394aa25caa67c2 data/adastramekanized/recipe/engine_frame.json
 48f32f30f1b2b117bd81d2cc040afbb2c62d3b18 data/adastramekanized/recipe/etrionic_capacitor.json
+02320119e464e88b3b0fa6efa5d4cd71a4ac7bb1 data/adastramekanized/recipe/etrionic_core.json
 70cfcdce55352790f4c0003938635db505189f4d data/adastramekanized/recipe/etrium_block.json
 d0869ece1bca80211702bacbae6e45a1f1a0e8f5 data/adastramekanized/recipe/etrium_ingot_from_block.json
 da763f88397c47294e368a5ab7b4de021ca5ddc2 data/adastramekanized/recipe/etrium_ingot_from_nuggets.json

@@ -5,6 +5,7 @@ import com.hecookin.adastramekanized.common.items.OxygenNetworkController;
 import com.hecookin.adastramekanized.common.items.armor.*;
 import com.hecookin.adastramekanized.common.items.armor.base.CustomDyeableArmorItem;
 import com.hecookin.adastramekanized.common.items.armor.materials.*;
+import com.hecookin.adastramekanized.common.items.vehicles.RocketItem;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
@@ -161,16 +162,16 @@ public class ModItems {
     // ========== ROCKETS ==========
 
     public static final Supplier<Item> TIER_1_ROCKET = ITEMS.register("tier_1_rocket",
-            () -> new Item(new Item.Properties().stacksTo(1)));
+            () -> new RocketItem(ModEntityTypes.TIER_1_ROCKET, new Item.Properties().stacksTo(1).fireResistant()));
 
     public static final Supplier<Item> TIER_2_ROCKET = ITEMS.register("tier_2_rocket",
-            () -> new Item(new Item.Properties().stacksTo(1)));
+            () -> new RocketItem(ModEntityTypes.TIER_2_ROCKET, new Item.Properties().stacksTo(1).fireResistant()));
 
     public static final Supplier<Item> TIER_3_ROCKET = ITEMS.register("tier_3_rocket",
-            () -> new Item(new Item.Properties().stacksTo(1)));
+            () -> new RocketItem(ModEntityTypes.TIER_3_ROCKET, new Item.Properties().stacksTo(1).fireResistant()));
 
     public static final Supplier<Item> TIER_4_ROCKET = ITEMS.register("tier_4_rocket",
-            () -> new Item(new Item.Properties().stacksTo(1).fireResistant()));
+            () -> new RocketItem(ModEntityTypes.TIER_4_ROCKET, new Item.Properties().stacksTo(1).fireResistant()));
 
     public static final Supplier<Item> LARGE_GAS_TANK = ITEMS.register("large_gas_tank",
             () -> new Item(new Item.Properties()));

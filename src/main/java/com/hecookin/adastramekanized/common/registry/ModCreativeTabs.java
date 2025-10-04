@@ -251,7 +251,18 @@ public class ModCreativeTabs {
                         output.accept(ModItems.CALORITE_TANK.get());
                         output.accept(ModItems.OXYGEN_GEAR.get());
 
-                        // Redstone Toggle Relay
+                        // Rockets
+                        output.accept(ModItems.TIER_1_ROCKET.get());
+                        output.accept(ModItems.TIER_2_ROCKET.get());
+                        output.accept(ModItems.TIER_3_ROCKET.get());
+                        output.accept(ModItems.TIER_4_ROCKET.get());
+
+                        // Rocket Infrastructure
+                        output.accept(ModBlocks.LAUNCH_PAD.get());
+                        output.accept(ModBlocks.FUEL_LOADER.get());
+
+                        // Redstone Components
+                        output.accept(ModItems.ETRIONIC_CAPACITOR.get());
                         output.accept(ModBlocks.REDSTONE_TOGGLE_RELAY.get());
 
                         // Space Suits (also in Equipment tab)

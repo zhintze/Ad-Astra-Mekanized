@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "adastramekanized:steel_sheet"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    "#R#",
+    "RDR",
+    "#R#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:etrionic_core"
+  }
+}

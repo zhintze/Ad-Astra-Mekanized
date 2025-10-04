@@ -1,6 +1,12 @@
 {
-  "parent": "block/cube_all",
+  "parent": "minecraft:block/cube",
   "textures": {
-    "all": "adastramekanized:block/fuel_loader"
+    "down": "adastramekanized:block/steel_machine_bottom",
+    "east": "adastramekanized:block/steel_machine_side",
+    "north": "adastramekanized:block/fuel_loader_front",
+    "particle": "adastramekanized:block/fuel_loader_front",
+    "south": "adastramekanized:block/steel_machine_side",
+    "up": "adastramekanized:block/steel_machine_top",
+    "west": "adastramekanized:block/steel_machine_side"
   }
 }

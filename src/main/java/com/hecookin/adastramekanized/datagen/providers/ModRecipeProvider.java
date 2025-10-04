@@ -793,6 +793,21 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
             .define('C', Items.COMPARATOR)
             .unlockedBy("has_steel_sheet", has(ModItems.STEEL_SHEET.get()))
             .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "redstone_toggle_relay"));
+
+        // ========== Advanced Components ==========
+
+        // Etrionic Core: 4 steel sheets + 4 redstone + 1 diamond -> 1 core
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.ETRIONIC_CORE.get(), 1)
+            .pattern("#R#")
+            .pattern("RDR")
+            .pattern("#R#")
+            .define('#', ModItems.STEEL_SHEET.get())
+            .define('R', Items.REDSTONE)
+            .define('D', Items.DIAMOND)
+            .unlockedBy("has_steel_sheet", has(ModItems.STEEL_SHEET.get()))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "etrionic_core"));
+
+        // Note: Etrionic Capacitor is crafted in NASA Workbench (see buildNasaWorkbenchRecipes)
     }
 
     private void buildSmeltingRecipes(RecipeOutput recipeOutput) {

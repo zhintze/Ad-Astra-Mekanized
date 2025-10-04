@@ -2,9 +2,11 @@ package com.hecookin.adastramekanized.client;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.client.models.armor.SpaceSuitModel;
+import com.hecookin.adastramekanized.client.models.entities.vehicles.RocketModel;
 import com.hecookin.adastramekanized.client.renderers.blocks.MekanismBasedOxygenDistributorRenderer;
 import com.hecookin.adastramekanized.client.renderers.blocks.OxygenDistributorBlockEntityRenderer;
 import com.hecookin.adastramekanized.client.renderers.blocks.SlidingDoorBlockEntityRenderer;
+import com.hecookin.adastramekanized.client.renderers.entities.vehicles.RocketRenderer;
 import com.hecookin.adastramekanized.client.gui.GuiOxygenDistributor;
 import com.hecookin.adastramekanized.client.screens.FuelLoaderScreen;
 import com.hecookin.adastramekanized.client.screens.NasaWorkbenchScreen;
@@ -12,6 +14,7 @@ import com.hecookin.adastramekanized.client.screens.OxygenControllerScreen;
 import com.hecookin.adastramekanized.client.screens.OxygenMonitorScreen;
 import com.hecookin.adastramekanized.client.screens.WirelessPowerRelayScreen;
 import com.hecookin.adastramekanized.common.registry.ModBlockEntityTypes;
+import com.hecookin.adastramekanized.common.registry.ModEntityTypes;
 import com.hecookin.adastramekanized.common.registry.ModItems;
 import com.hecookin.adastramekanized.common.registry.ModMenuTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -24,6 +27,8 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 
 @EventBusSubscriber(modid = AdAstraMekanized.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientModEvents {
@@ -47,6 +52,51 @@ public class ClientModEvents {
         event.registerLayerDefinition(SpaceSuitModel.SPACE_SUIT_LAYER, SpaceSuitModel::createSpaceSuitLayer);
         event.registerLayerDefinition(SpaceSuitModel.NETHERITE_SPACE_SUIT_LAYER, SpaceSuitModel::createNetheriteSpaceSuitLayer);
         event.registerLayerDefinition(SpaceSuitModel.JET_SUIT_LAYER, SpaceSuitModel::createJetSuitLayer);
+
+        // Register rocket model layers
+        event.registerLayerDefinition(RocketModel.TIER_1_LAYER, RocketModel::createTier1Layer);
+        // Tier 2, 3, 4 will be added later when models are ready
+    }
+
+    @SubscribeEvent
+    public static void onRegisterEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        // Register rocket entity renderers
+        event.registerEntityRenderer(ModEntityTypes.TIER_1_ROCKET.get(), context ->
+            new RocketRenderer(context, RocketModel.TIER_1_LAYER, RocketRenderer.TIER_1_TEXTURE));
+        // Tier 2, 3, 4 will be added later when models are ready
+    }
+
+    @SubscribeEvent
+    public static void onRegisterClientExtensions(RegisterClientExtensionsEvent event) {
+        // Register rocket item renderers
+        event.registerItem(new IClientItemExtensions() {
+            @Override
+            public net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                return new RocketRenderer.ItemRenderer(RocketModel.TIER_1_LAYER, RocketRenderer.TIER_1_TEXTURE);
+            }
+        }, ModItems.TIER_1_ROCKET.get());
+
+        // Tier 2, 3, 4 will use Tier 1 renderer until their models are ready
+        event.registerItem(new IClientItemExtensions() {
+            @Override
+            public net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                return new RocketRenderer.ItemRenderer(RocketModel.TIER_1_LAYER, RocketRenderer.TIER_1_TEXTURE);
+            }
+        }, ModItems.TIER_2_ROCKET.get());
+
+        event.registerItem(new IClientItemExtensions() {
+            @Override
+            public net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                return new RocketRenderer.ItemRenderer(RocketModel.TIER_1_LAYER, RocketRenderer.TIER_1_TEXTURE);
+            }
+        }, ModItems.TIER_3_ROCKET.get());
+
+        event.registerItem(new IClientItemExtensions() {
+            @Override
+            public net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                return new RocketRenderer.ItemRenderer(RocketModel.TIER_1_LAYER, RocketRenderer.TIER_1_TEXTURE);
+            }
+        }, ModItems.TIER_4_ROCKET.get());
     }
 
     private static void registerArmorRenderers() {
