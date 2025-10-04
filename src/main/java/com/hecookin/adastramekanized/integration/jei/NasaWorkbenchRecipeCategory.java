@@ -5,11 +5,13 @@ import com.hecookin.adastramekanized.common.recipes.NasaWorkbenchRecipe;
 import com.hecookin.adastramekanized.common.registry.ModBlocks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -21,14 +23,13 @@ public class NasaWorkbenchRecipeCategory implements IRecipeCategory<NasaWorkbenc
             RecipeType.create(AdAstraMekanized.MOD_ID, "nasa_workbench", NasaWorkbenchRecipe.class);
 
     private static final ResourceLocation TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "textures/gui/container/nasa_workbench_jei.png");
+            ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "textures/gui/container/nasa_workbench.png");
 
     private final IDrawable background;
     private final IDrawable icon;
 
     public NasaWorkbenchRecipeCategory(IGuiHelper guiHelper) {
-        // Use the NASA Workbench GUI texture
-        this.background = guiHelper.createDrawable(TEXTURE, 0, 0, 176, 166);
+        this.background = guiHelper.createBlankDrawable(180, 145);
         this.icon = guiHelper.createDrawableItemStack(new ItemStack(ModBlocks.NASA_WORKBENCH.get()));
     }
 
@@ -54,50 +55,36 @@ public class NasaWorkbenchRecipeCategory implements IRecipeCategory<NasaWorkbenc
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, NasaWorkbenchRecipe recipe, IFocusGroup focuses) {
-        // Set up the input slots based on the NASA Workbench GUI layout
-        // These positions match the slot positions in NasaWorkbenchMenu
+        builder.addInvisibleIngredients(RecipeIngredientRole.CATALYST)
+                .addIngredients(Ingredient.of(ModBlocks.NASA_WORKBENCH.get()));
 
-        // Nose cone slot (slot 0)
-        addIngredientSlot(builder, recipe, 0, 56, 20);
-
-        // Body slots (slots 1-6)
-        addIngredientSlot(builder, recipe, 1, 47, 38);
-        addIngredientSlot(builder, recipe, 2, 65, 38);
-        addIngredientSlot(builder, recipe, 3, 47, 56);
-        addIngredientSlot(builder, recipe, 4, 65, 56);
-        addIngredientSlot(builder, recipe, 5, 47, 74);
-        addIngredientSlot(builder, recipe, 6, 65, 74);
-
-        // Engine and fin slots (slots 7-13)
-        addIngredientSlot(builder, recipe, 7, 29, 92);
-        addIngredientSlot(builder, recipe, 8, 47, 92);
-        addIngredientSlot(builder, recipe, 9, 65, 92);
-        addIngredientSlot(builder, recipe, 10, 83, 92);
-        addIngredientSlot(builder, recipe, 11, 29, 110);
-        addIngredientSlot(builder, recipe, 12, 56, 110);
-        addIngredientSlot(builder, recipe, 13, 83, 110);
-
-        // Output slot
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 129, 56)
-                .addItemStack(recipe.result());
-
-        // TODO: Warning/note message display for JEI recipe view
-        // If warnings need to be displayed in the future, they can be added here as tooltip info
-        // on specific slots using .addTooltipCallback() or as custom drawable elements
-        // Example: builder.addSlot(...).addTooltipCallback((recipeSlotView, tooltip) -> {
-        //     if (hasWarning(recipe)) {
-        //         tooltip.add(Component.literal("Warning: ..."));
-        //     }
-        // });
+        slot(builder, recipe, 57, 16, 0);
+        slot(builder, recipe, 48, 34, 1);
+        slot(builder, recipe, 66, 34, 2);
+        slot(builder, recipe, 48, 52, 3);
+        slot(builder, recipe, 66, 52, 4);
+        slot(builder, recipe, 48, 70, 5);
+        slot(builder, recipe, 66, 70, 6);
+        slot(builder, recipe, 30, 88, 7);
+        slot(builder, recipe, 48, 88, 8);
+        slot(builder, recipe, 66, 88, 9);
+        slot(builder, recipe, 84, 88, 10);
+        slot(builder, recipe, 30, 106, 11);
+        slot(builder, recipe, 57, 106, 12);
+        slot(builder, recipe, 84, 106, 13);
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 130, 52).addItemStack(recipe.result());
     }
 
-    private void addIngredientSlot(IRecipeLayoutBuilder builder, NasaWorkbenchRecipe recipe, int index, int x, int y) {
+    private void slot(IRecipeLayoutBuilder builder, NasaWorkbenchRecipe recipe, int x, int y, int index) {
+        var slot = builder.addSlot(RecipeIngredientRole.INPUT, x, y);
         if (index < recipe.ingredients().size()) {
-            Ingredient ingredient = recipe.ingredients().get(index);
-            if (!ingredient.isEmpty()) {
-                builder.addSlot(RecipeIngredientRole.INPUT, x, y)
-                        .addIngredients(ingredient);
-            }
+            slot.addIngredients(recipe.ingredients().get(index));
         }
+    }
+
+    @Override
+    public void draw(NasaWorkbenchRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+        graphics.blit(TEXTURE, 1, -4, 0, 0, 177, 140, 177, 224);
+        graphics.blit(TEXTURE, 1, 136, 0, 217, 177, 7, 177, 224);
     }
 }

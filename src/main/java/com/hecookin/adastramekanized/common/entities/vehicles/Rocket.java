@@ -131,11 +131,15 @@ public class Rocket extends Vehicle {
         Vec3 location = super.getDismountLocationForPassenger(passenger)
             .add(forward.multiply(2.5, 2, 2.5));
 
-        // Adjust Y position to find ground (same as Ad Astra)
+        // Adjust Y position to find ground
         for (int i = 0; i < 6; i++) {
             if (level().getBlockState(BlockPos.containing(location)).isAir()) {
                 location = location.subtract(0, 1, 0);
-            } else break;
+            } else {
+                // Found solid ground - add 0.5 blocks up to avoid being placed inside the block
+                location = location.add(0, 0.5, 0);
+                break;
+            }
         }
 
         return location;

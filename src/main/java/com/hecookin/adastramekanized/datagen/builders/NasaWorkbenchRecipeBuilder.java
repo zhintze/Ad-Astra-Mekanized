@@ -55,8 +55,8 @@ public class NasaWorkbenchRecipeBuilder implements RecipeBuilder {
     }
 
     public NasaWorkbenchRecipeBuilder addIngredient(Ingredient ingredient) {
-        if (ingredients.size() >= 9) {
-            throw new IllegalStateException("NASA Workbench recipes can only have up to 9 ingredients");
+        if (ingredients.size() >= 14) {
+            throw new IllegalStateException("NASA Workbench recipes can only have up to 14 ingredients");
         }
         ingredients.add(ingredient);
         return this;

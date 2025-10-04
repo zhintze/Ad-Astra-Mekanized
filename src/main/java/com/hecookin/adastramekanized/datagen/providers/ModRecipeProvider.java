@@ -211,50 +211,79 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
         // ========== ROCKETS ==========
 
-        // Tier 1 Rocket - Steel-based, basic lunar rocket (9 slots max)
+        // Tier 1 Rocket - Steel-based, basic lunar rocket (14 ingredient slots)
         NasaWorkbenchRecipeBuilder.builder(RecipeCategory.TRANSPORTATION, ModItems.TIER_1_ROCKET.get(), 1)
-            .addIngredient(ModItems.ROCKET_NOSE_CONE.get())
-            .addIngredient(ModItems.STEEL_TANK.get())
-            .addIngredient(ModItems.STEEL_ENGINE.get())
-            .addIngredient(ModItems.ROCKET_FIN.get())
-            .addIngredient(ModItems.ROCKET_FIN.get())
-            .addIngredient(ModItems.ROCKET_FIN.get())
-            .addIngredient(ModItems.ROCKET_FIN.get())
-            .addIngredient(ModBlocks.STEEL_SHEETBLOCK.get())
+            .addIngredient(ModItems.ROCKET_NOSE_CONE.get())           // Slot 0: Nose cone (top)
+            .addIngredient(ModBlocks.STEEL_SHEETBLOCK.get())          // Slot 1: Body left-top
+            .addIngredient(ModBlocks.STEEL_SHEETBLOCK.get())          // Slot 2: Body right-top
+            .addIngredient(ModBlocks.STEEL_SHEETBLOCK.get())          // Slot 3: Body left-middle
+            .addIngredient(ModBlocks.STEEL_SHEETBLOCK.get())          // Slot 4: Body right-middle
+            .addIngredient(ModBlocks.STEEL_SHEETBLOCK.get())          // Slot 5: Body left-bottom
+            .addIngredient(ModBlocks.STEEL_SHEETBLOCK.get())          // Slot 6: Body right-bottom
+            .addIngredient(ModItems.ROCKET_FIN.get())                 // Slot 7: Fin left
+            .addIngredient(ModItems.STEEL_TANK.get())                 // Slot 8: Tank left
+            .addIngredient(ModItems.STEEL_TANK.get())                 // Slot 9: Tank right
+            .addIngredient(ModItems.ROCKET_FIN.get())                 // Slot 10: Fin right
+            .addIngredient(ModItems.ROCKET_FIN.get())                 // Slot 11: Fin bottom-left
+            .addIngredient(ModItems.STEEL_ENGINE.get())               // Slot 12: Engine bottom-center
+            .addIngredient(ModItems.ROCKET_FIN.get())                 // Slot 13: Fin bottom-right
             .unlockedBy("has_steel_engine", has(ModItems.STEEL_ENGINE.get()))
             .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "tier_1_rocket"));
 
-        // Tier 2 Rocket - Desh upgrade (9 slots max)
+        // Tier 2 Rocket - Desh upgrade (14 ingredient slots)
         NasaWorkbenchRecipeBuilder.builder(RecipeCategory.TRANSPORTATION, ModItems.TIER_2_ROCKET.get(), 1)
-            .addIngredient(ModItems.TIER_1_ROCKET.get())
-            .addIngredient(ModItems.DESH_TANK.get())
-            .addIngredient(ModItems.DESH_ENGINE.get())
-            .addIngredient(ModBlocks.DESH_SHEETBLOCK.get())
-            .addIngredient(ModItems.DESH_SHEET.get())
-            .addIngredient(ModItems.DESH_SHEET.get())
+            .addIngredient(ModItems.ROCKET_NOSE_CONE.get())           // Slot 0: Nose cone (top)
+            .addIngredient(ModBlocks.DESH_SHEETBLOCK.get())           // Slot 1: Body left-top
+            .addIngredient(ModBlocks.DESH_SHEETBLOCK.get())           // Slot 2: Body right-top
+            .addIngredient(ModBlocks.DESH_SHEETBLOCK.get())           // Slot 3: Body left-middle
+            .addIngredient(ModBlocks.DESH_SHEETBLOCK.get())           // Slot 4: Body right-middle
+            .addIngredient(ModBlocks.DESH_SHEETBLOCK.get())           // Slot 5: Body left-bottom
+            .addIngredient(ModBlocks.DESH_SHEETBLOCK.get())           // Slot 6: Body right-bottom
+            .addIngredient(ModItems.ROCKET_FIN.get())                 // Slot 7: Fin left
+            .addIngredient(ModItems.DESH_TANK.get())                  // Slot 8: Tank left
+            .addIngredient(ModItems.DESH_TANK.get())                  // Slot 9: Tank right
+            .addIngredient(ModItems.ROCKET_FIN.get())                 // Slot 10: Fin right
+            .addIngredient(ModItems.ROCKET_FIN.get())                 // Slot 11: Fin bottom-left
+            .addIngredient(ModItems.DESH_ENGINE.get())                // Slot 12: Engine bottom-center
+            .addIngredient(ModItems.ROCKET_FIN.get())                 // Slot 13: Fin bottom-right
             .unlockedBy("has_desh_engine", has(ModItems.DESH_ENGINE.get()))
             .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "tier_2_rocket"));
 
-        // Tier 3 Rocket - Ostrum upgrade (9 slots max)
+        // Tier 3 Rocket - Ostrum upgrade (14 ingredient slots)
         NasaWorkbenchRecipeBuilder.builder(RecipeCategory.TRANSPORTATION, ModItems.TIER_3_ROCKET.get(), 1)
-            .addIngredient(ModItems.TIER_2_ROCKET.get())
-            .addIngredient(ModItems.OSTRUM_TANK.get())
-            .addIngredient(ModItems.OSTRUM_ENGINE.get())
-            .addIngredient(ModBlocks.OSTRUM_SHEETBLOCK.get())
-            .addIngredient(ModItems.OSTRUM_SHEET.get())
-            .addIngredient(ModItems.OSTRUM_SHEET.get())
+            .addIngredient(ModItems.ROCKET_NOSE_CONE.get())           // Slot 0: Nose cone (top)
+            .addIngredient(ModBlocks.OSTRUM_SHEETBLOCK.get())         // Slot 1: Body left-top
+            .addIngredient(ModBlocks.OSTRUM_SHEETBLOCK.get())         // Slot 2: Body right-top
+            .addIngredient(ModBlocks.OSTRUM_SHEETBLOCK.get())         // Slot 3: Body left-middle
+            .addIngredient(ModBlocks.OSTRUM_SHEETBLOCK.get())         // Slot 4: Body right-middle
+            .addIngredient(ModBlocks.OSTRUM_SHEETBLOCK.get())         // Slot 5: Body left-bottom
+            .addIngredient(ModBlocks.OSTRUM_SHEETBLOCK.get())         // Slot 6: Body right-bottom
+            .addIngredient(ModItems.ROCKET_FIN.get())                 // Slot 7: Fin left
+            .addIngredient(ModItems.OSTRUM_TANK.get())                // Slot 8: Tank left
+            .addIngredient(ModItems.OSTRUM_TANK.get())                // Slot 9: Tank right
+            .addIngredient(ModItems.ROCKET_FIN.get())                 // Slot 10: Fin right
+            .addIngredient(ModItems.ROCKET_FIN.get())                 // Slot 11: Fin bottom-left
+            .addIngredient(ModItems.OSTRUM_ENGINE.get())              // Slot 12: Engine bottom-center
+            .addIngredient(ModItems.ROCKET_FIN.get())                 // Slot 13: Fin bottom-right
             .unlockedBy("has_ostrum_engine", has(ModItems.OSTRUM_ENGINE.get()))
             .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "tier_3_rocket"));
 
-        // Tier 4 Rocket - Calorite upgrade with capacitor (9 slots max)
+        // Tier 4 Rocket - Calorite upgrade with capacitor (14 ingredient slots)
         NasaWorkbenchRecipeBuilder.builder(RecipeCategory.TRANSPORTATION, ModItems.TIER_4_ROCKET.get(), 1)
-            .addIngredient(ModItems.TIER_3_ROCKET.get())
-            .addIngredient(ModItems.CALORITE_TANK.get())
-            .addIngredient(ModItems.CALORITE_ENGINE.get())
-            .addIngredient(ModBlocks.CALORITE_SHEETBLOCK.get())
-            .addIngredient(ModItems.ETRIONIC_CAPACITOR.get())
-            .addIngredient(ModItems.CALORITE_SHEET.get())
-            .addIngredient(ModItems.CALORITE_SHEET.get())
+            .addIngredient(ModItems.ROCKET_NOSE_CONE.get())           // Slot 0: Nose cone (top)
+            .addIngredient(ModBlocks.CALORITE_SHEETBLOCK.get())       // Slot 1: Body left-top
+            .addIngredient(ModBlocks.CALORITE_SHEETBLOCK.get())       // Slot 2: Body right-top
+            .addIngredient(ModBlocks.CALORITE_SHEETBLOCK.get())       // Slot 3: Body left-middle
+            .addIngredient(ModBlocks.CALORITE_SHEETBLOCK.get())       // Slot 4: Body right-middle
+            .addIngredient(ModBlocks.CALORITE_SHEETBLOCK.get())       // Slot 5: Body left-bottom
+            .addIngredient(ModBlocks.CALORITE_SHEETBLOCK.get())       // Slot 6: Body right-bottom
+            .addIngredient(ModItems.ROCKET_FIN.get())                 // Slot 7: Fin left
+            .addIngredient(ModItems.CALORITE_TANK.get())              // Slot 8: Tank left
+            .addIngredient(ModItems.CALORITE_TANK.get())              // Slot 9: Tank right
+            .addIngredient(ModItems.ROCKET_FIN.get())                 // Slot 10: Fin right
+            .addIngredient(ModItems.ROCKET_FIN.get())                 // Slot 11: Fin bottom-left
+            .addIngredient(ModItems.CALORITE_ENGINE.get())            // Slot 12: Engine bottom-center
+            .addIngredient(ModItems.ROCKET_FIN.get())                 // Slot 13: Fin bottom-right
             .unlockedBy("has_calorite_engine", has(ModItems.CALORITE_ENGINE.get()))
             .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "tier_4_rocket"));
 

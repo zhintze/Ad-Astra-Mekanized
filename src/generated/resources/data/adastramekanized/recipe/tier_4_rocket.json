@@ -2,25 +2,46 @@
   "type": "adastramekanized:nasa_workbench",
   "ingredients": [
     {
-      "item": "adastramekanized:tier_3_rocket"
-    },
-    {
-      "item": "adastramekanized:calorite_tank"
-    },
-    {
-      "item": "adastramekanized:calorite_engine"
+      "item": "adastramekanized:rocket_nose_cone"
     },
     {
       "item": "adastramekanized:calorite_sheetblock"
     },
     {
-      "item": "adastramekanized:etrionic_capacitor"
+      "item": "adastramekanized:calorite_sheetblock"
     },
     {
-      "item": "adastramekanized:calorite_sheet"
+      "item": "adastramekanized:calorite_sheetblock"
     },
     {
-      "item": "adastramekanized:calorite_sheet"
+      "item": "adastramekanized:calorite_sheetblock"
+    },
+    {
+      "item": "adastramekanized:calorite_sheetblock"
+    },
+    {
+      "item": "adastramekanized:calorite_sheetblock"
+    },
+    {
+      "item": "adastramekanized:rocket_fin"
+    },
+    {
+      "item": "adastramekanized:calorite_tank"
+    },
+    {
+      "item": "adastramekanized:calorite_tank"
+    },
+    {
+      "item": "adastramekanized:rocket_fin"
+    },
+    {
+      "item": "adastramekanized:rocket_fin"
+    },
+    {
+      "item": "adastramekanized:calorite_engine"
+    },
+    {
+      "item": "adastramekanized:rocket_fin"
     }
   ],
   "result": {

@@ -2,22 +2,46 @@
   "type": "adastramekanized:nasa_workbench",
   "ingredients": [
     {
-      "item": "adastramekanized:tier_2_rocket"
-    },
-    {
-      "item": "adastramekanized:ostrum_tank"
-    },
-    {
-      "item": "adastramekanized:ostrum_engine"
+      "item": "adastramekanized:rocket_nose_cone"
     },
     {
       "item": "adastramekanized:ostrum_sheetblock"
     },
     {
-      "item": "adastramekanized:ostrum_sheet"
+      "item": "adastramekanized:ostrum_sheetblock"
     },
     {
-      "item": "adastramekanized:ostrum_sheet"
+      "item": "adastramekanized:ostrum_sheetblock"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheetblock"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheetblock"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheetblock"
+    },
+    {
+      "item": "adastramekanized:rocket_fin"
+    },
+    {
+      "item": "adastramekanized:ostrum_tank"
+    },
+    {
+      "item": "adastramekanized:ostrum_tank"
+    },
+    {
+      "item": "adastramekanized:rocket_fin"
+    },
+    {
+      "item": "adastramekanized:rocket_fin"
+    },
+    {
+      "item": "adastramekanized:ostrum_engine"
+    },
+    {
+      "item": "adastramekanized:rocket_fin"
     }
   ],
   "result": {
