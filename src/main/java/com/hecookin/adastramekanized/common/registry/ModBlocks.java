@@ -3,7 +3,6 @@ package com.hecookin.adastramekanized.common.registry;
 import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.common.blocks.BlockProperties;
 import com.hecookin.adastramekanized.common.blocks.machines.OxygenDistributorBlock;
-import com.hecookin.adastramekanized.common.blocks.machines.OxygenLoaderBlock;
 import com.hecookin.adastramekanized.common.blocks.machines.WirelessPowerRelayBlock;
 import com.hecookin.adastramekanized.common.blocks.RedstoneToggleRelay;
 import com.hecookin.adastramekanized.common.blocks.OxygenNetworkMonitorBlock;
@@ -249,23 +248,23 @@ public class ModBlocks {
     public static final Supplier<Block> CALORITE_PLATING = registerBlock("calorite_plating",
             () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
 
-    // Plate Blocks
-    public static final Supplier<Block> IRON_PLATEBLOCK = registerBlock("iron_plateblock",
+    // Sheet Blocks
+    public static final Supplier<Block> IRON_SHEETBLOCK = registerBlock("iron_sheetblock",
             () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
 
-    public static final Supplier<Block> STEEL_PLATEBLOCK = registerBlock("steel_plateblock",
+    public static final Supplier<Block> STEEL_SHEETBLOCK = registerBlock("steel_sheetblock",
             () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
 
-    public static final Supplier<Block> ETRIUM_PLATEBLOCK = registerBlock("etrium_plateblock",
+    public static final Supplier<Block> ETRIUM_SHEETBLOCK = registerBlock("etrium_sheetblock",
             () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
 
-    public static final Supplier<Block> DESH_PLATEBLOCK = registerBlock("desh_plateblock",
+    public static final Supplier<Block> DESH_SHEETBLOCK = registerBlock("desh_sheetblock",
             () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
 
-    public static final Supplier<Block> OSTRUM_PLATEBLOCK = registerBlock("ostrum_plateblock",
+    public static final Supplier<Block> OSTRUM_SHEETBLOCK = registerBlock("ostrum_sheetblock",
             () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
 
-    public static final Supplier<Block> CALORITE_PLATEBLOCK = registerBlock("calorite_plateblock",
+    public static final Supplier<Block> CALORITE_SHEETBLOCK = registerBlock("calorite_sheetblock",
             () -> new Block(BlockProperties.INDUSTRIAL_BLOCK));
 
     // Panel Blocks
@@ -402,10 +401,14 @@ public class ModBlocks {
     // ========== DOORS & ACCESS BLOCKS ==========
 
     public static final Supplier<Block> STEEL_DOOR = registerBlock("steel_door",
-            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));
+            () -> new net.minecraft.world.level.block.DoorBlock(
+                    net.minecraft.world.level.block.state.properties.BlockSetType.IRON,
+                    BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));
 
     public static final Supplier<Block> STEEL_TRAPDOOR = registerBlock("steel_trapdoor",
-            () -> new Block(BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));
+            () -> new net.minecraft.world.level.block.TrapDoorBlock(
+                    net.minecraft.world.level.block.state.properties.BlockSetType.IRON,
+                    BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));
 
     public static final Supplier<Block> AIRLOCK = registerBlock("airlock",
             () -> new SlidingDoorBlock(BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));
@@ -463,11 +466,16 @@ public class ModBlocks {
     public static final Supplier<Block> OXYGEN_DISTRIBUTOR = registerBlock("oxygen_distributor",
             () -> new OxygenDistributorBlock(BlockProperties.INDUSTRIAL_BLOCK));
 
-    public static final Supplier<Block> OXYGEN_LOADER = registerBlock("oxygen_loader",
-            () -> new OxygenLoaderBlock(BlockProperties.INDUSTRIAL_BLOCK));
-
     public static final Supplier<Block> WIRELESS_POWER_RELAY = registerBlock("wireless_power_relay",
             () -> new WirelessPowerRelayBlock(BlockProperties.INDUSTRIAL_BLOCK));
+
+    public static final Supplier<Block> NASA_WORKBENCH = registerBlock("nasa_workbench",
+            () -> new com.hecookin.adastramekanized.common.blocks.NasaWorkbenchBlock(
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.METAL)
+                            .strength(3.5f)
+                            .sound(SoundType.METAL)
+                            .noOcclusion()));
 
     public static final Supplier<Block> OXYGEN_NETWORK_MONITOR = registerBlock("oxygen_network_monitor",
             () -> new OxygenNetworkMonitorBlock(BlockProperties.INDUSTRIAL_BLOCK.noOcclusion()));

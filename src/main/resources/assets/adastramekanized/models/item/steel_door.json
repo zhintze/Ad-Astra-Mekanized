@@ -1,3 +1,6 @@
 {
-  "parent": "adastramekanized:block/steel_door"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "adastramekanized:item/steel_door"
+  }
 }
