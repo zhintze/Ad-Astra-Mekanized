@@ -1,6 +1,7 @@
 package com.hecookin.adastramekanized.common.registry;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
+import com.hecookin.adastramekanized.common.entities.vehicles.Lander;
 import com.hecookin.adastramekanized.common.entities.vehicles.Rocket;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
@@ -43,6 +44,15 @@ public class ModEntityTypes {
                     .fireImmune()
                     .clientTrackingRange(10)
                     .build("tier_4_rocket"));
+
+    // ========== LANDER ==========
+
+    public static final Supplier<EntityType<Lander>> LANDER = ENTITY_TYPES.register("lander",
+            () -> EntityType.Builder.<Lander>of(Lander::new, MobCategory.MISC)
+                    .fireImmune()
+                    .sized(1.5f, 3.0f) // Lander dimensions
+                    .clientTrackingRange(10)
+                    .build("lander"));
 
     /**
      * Initialize rocket tier properties after entity types are registered

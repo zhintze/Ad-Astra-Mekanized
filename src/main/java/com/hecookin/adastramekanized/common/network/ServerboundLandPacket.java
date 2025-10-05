@@ -4,7 +4,9 @@ import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.api.planets.Planet;
 import com.hecookin.adastramekanized.api.planets.PlanetRegistry;
 import com.hecookin.adastramekanized.common.constants.RocketConstants;
+import com.hecookin.adastramekanized.common.entities.vehicles.Lander;
 import com.hecookin.adastramekanized.common.entities.vehicles.Rocket;
+import com.hecookin.adastramekanized.common.registry.ModEntityTypes;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -15,13 +17,14 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * Packet sent from client to server when player selects a planet to land on.
- * Triggers landing animation sequence.
+ * Triggers landing animation sequence by spawning a Lander entity.
  */
 public record ServerboundLandPacket(String planetId, boolean tryPreviousLocation) implements CustomPacketPayload {
 
@@ -42,12 +45,14 @@ public record ServerboundLandPacket(String planetId, boolean tryPreviousLocation
     }
 
     /**
-     * Handle the packet on the server side - initiates landing sequence
+     * Handle the packet on the server side - initiates landing sequence by spawning a Lander.
+     * This follows Ad Astra's approach: replace rocket with lander entity for descent.
      */
     public static void handle(ServerboundLandPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (!(context.player() instanceof ServerPlayer player)) return;
-            if (!(player.getVehicle() instanceof Rocket rocket)) return;
+            Entity vehicle = player.getVehicle();
+            if (!(vehicle instanceof Rocket rocket)) return;
 
             ResourceLocation planetId = ResourceLocation.parse(packet.planetId);
             Planet planet = PlanetRegistry.getInstance().getPlanet(planetId);
@@ -60,7 +65,7 @@ public record ServerboundLandPacket(String planetId, boolean tryPreviousLocation
                 return;
             }
 
-            // Create dimension key from planet's dimension type (e.g., minecraft:overworld for Earth)
+            // Create dimension key from planet's dimension type
             ResourceKey<Level> dimensionKey = ResourceKey.create(Registries.DIMENSION, planet.dimension().dimensionType());
             ServerLevel targetLevel = player.server.getLevel(dimensionKey);
             if (targetLevel == null) {
@@ -71,39 +76,52 @@ public record ServerboundLandPacket(String planetId, boolean tryPreviousLocation
                 return;
             }
 
-            // Teleport rocket and player to atmosphere height in target dimension
+            // Landing position at atmosphere height
             BlockPos targetPos = player.blockPosition();
             Vec3 landingPos = new Vec3(targetPos.getX(), RocketConstants.ATMOSPHERE_LEAVE_HEIGHT, targetPos.getZ());
 
-            // Stop riding temporarily for teleportation
+            // Stop riding for teleportation
             player.stopRiding();
-            player.teleportTo(targetLevel, landingPos.x, landingPos.y, landingPos.z, player.getYRot(), player.getXRot());
 
-            // Create new rocket in target dimension with same properties
-            Rocket newRocket = (Rocket) rocket.getType().create(targetLevel);
-            if (newRocket != null) {
-                newRocket.setPos(landingPos);
-                newRocket.setYRot(rocket.getYRot());
+            // Teleport player to target dimension
+            ServerPlayer teleportedPlayer = teleportToDimension(player, targetLevel, landingPos);
 
-                // Transfer inventory
-                for (int i = 0; i < rocket.inventory().getContainerSize(); i++) {
-                    newRocket.inventory().setItem(i, rocket.inventory().getItem(i));
-                }
-
-                // Transfer fuel
-                newRocket.fluidContainer().fill(rocket.fluidContainer().getFluidInTank(0), net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE);
-
-                // Set landing mode
-                newRocket.setLanding(true);
-
-                targetLevel.addFreshEntity(newRocket);
-                player.startRiding(newRocket);
-
-                // Remove old rocket
-                rocket.discard();
-
-                AdAstraMekanized.LOGGER.info("Player {} landing on planet {}", player.getName().getString(), planetId);
+            // Create Lander entity in target dimension
+            Lander lander = ModEntityTypes.LANDER.get().create(targetLevel);
+            if (lander == null) {
+                AdAstraMekanized.LOGGER.error("Failed to create lander entity for player {}", player.getName().getString());
+                return;
             }
+
+            lander.setPos(landingPos);
+            targetLevel.addFreshEntity(lander);
+
+            // Transfer rocket inventory to lander (slots 1-10)
+            var rocketInventory = rocket.inventory();
+            var landerInventory = lander.inventory();
+            for (int i = 0; i < rocketInventory.getContainerSize(); i++) {
+                landerInventory.setItem(i + 1, rocketInventory.getItem(i));
+            }
+
+            // Store rocket as item in lander inventory (slot 0)
+            landerInventory.setItem(0, rocket.getDropStack());
+
+            // Player rides the lander
+            teleportedPlayer.startRiding(lander);
+
+            // Remove old rocket entity
+            rocket.discard();
+
+            AdAstraMekanized.LOGGER.info("Player {} landing on planet {} in lander", player.getName().getString(), planetId);
         });
+    }
+
+    /**
+     * Teleport player to another dimension.
+     * Returns the player entity in the target dimension (may be different instance).
+     */
+    private static ServerPlayer teleportToDimension(ServerPlayer player, ServerLevel targetLevel, Vec3 pos) {
+        player.teleportTo(targetLevel, pos.x, pos.y, pos.z, player.getYRot(), player.getXRot());
+        return player.server.getPlayerList().getPlayer(player.getUUID());
     }
 }

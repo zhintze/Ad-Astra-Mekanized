@@ -6,6 +6,7 @@ import com.hecookin.adastramekanized.client.models.entities.vehicles.RocketModel
 import com.hecookin.adastramekanized.client.renderers.blocks.MekanismBasedOxygenDistributorRenderer;
 import com.hecookin.adastramekanized.client.renderers.blocks.OxygenDistributorBlockEntityRenderer;
 import com.hecookin.adastramekanized.client.renderers.blocks.SlidingDoorBlockEntityRenderer;
+import com.hecookin.adastramekanized.client.renderers.entities.vehicles.LanderRenderer;
 import com.hecookin.adastramekanized.client.renderers.entities.vehicles.RocketRenderer;
 import com.hecookin.adastramekanized.client.gui.GuiOxygenDistributor;
 import com.hecookin.adastramekanized.client.screens.NasaWorkbenchScreen;
@@ -59,6 +60,9 @@ public class ClientModEvents {
         event.registerLayerDefinition(RocketModel.TIER_2_LAYER, RocketModel::createTier2Layer);
         event.registerLayerDefinition(RocketModel.TIER_3_LAYER, RocketModel::createTier3Layer);
         event.registerLayerDefinition(RocketModel.TIER_4_LAYER, RocketModel::createTier4Layer);
+
+        // Register lander model layer
+        event.registerLayerDefinition(com.hecookin.adastramekanized.client.models.entities.vehicles.LanderModel.LAYER, com.hecookin.adastramekanized.client.models.entities.vehicles.LanderModel::createBodyLayer);
     }
 
     @SubscribeEvent
@@ -72,6 +76,9 @@ public class ClientModEvents {
             new RocketRenderer(context, RocketModel.TIER_3_LAYER, RocketRenderer.TIER_3_TEXTURE));
         event.registerEntityRenderer(ModEntityTypes.TIER_4_ROCKET.get(), context ->
             new RocketRenderer(context, RocketModel.TIER_4_LAYER, RocketRenderer.TIER_4_TEXTURE));
+
+        // Register lander renderer - placeholder until LanderModel is created
+        event.registerEntityRenderer(ModEntityTypes.LANDER.get(), LanderRenderer::new);
     }
 
     @SubscribeEvent
@@ -170,6 +177,8 @@ public class ClientModEvents {
         event.register(ModMenuTypes.OXYGEN_MONITOR.get(), OxygenMonitorScreen::new);
         event.register(ModMenuTypes.NASA_WORKBENCH.get(), NasaWorkbenchScreen::new);
         event.register(ModMenuTypes.ROCKET.get(), RocketScreen::new);
+        // TODO: Create LanderScreen - using RocketScreen as placeholder
+        //event.register(ModMenuTypes.LANDER.get(), RocketScreen::new);
         event.register(ModMenuTypes.PLANETS.get(), PlanetsScreen::new);
     }
 

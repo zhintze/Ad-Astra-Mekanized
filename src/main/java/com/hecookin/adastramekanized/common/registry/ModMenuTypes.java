@@ -1,6 +1,7 @@
 package com.hecookin.adastramekanized.common.registry;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
+import com.hecookin.adastramekanized.common.menus.LanderMenu;
 import com.hecookin.adastramekanized.common.menus.NasaWorkbenchMenu;
 import com.hecookin.adastramekanized.common.menus.OxygenDistributorMenu;
 import com.hecookin.adastramekanized.common.menus.PlanetsMenu;
@@ -44,6 +45,10 @@ public class ModMenuTypes {
     public static final Supplier<MenuType<RocketMenu>> ROCKET =
             MENUS.register("rocket",
                 () -> IMenuTypeExtension.create(RocketMenu::new));
+
+    public static final Supplier<MenuType<LanderMenu>> LANDER =
+            MENUS.register("lander",
+                () -> IMenuTypeExtension.create(LanderMenu::new));
 
     public static final Supplier<MenuType<PlanetsMenu>> PLANETS =
             MENUS.register("planets",

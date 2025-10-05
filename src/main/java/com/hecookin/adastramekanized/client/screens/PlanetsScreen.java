@@ -244,27 +244,44 @@ public class PlanetsScreen extends AbstractContainerScreen<PlanetsMenu> {
     private void renderPlanetInfo(GuiGraphics graphics) {
         if (selectedPlanet == null) return;
 
-        int infoX = 114;
-        int infoY = height / 2 - 60;
+        // Position info box below Land button with padding
+        int boxX = 114;
+        int boxY = height / 2 - 52;  // 5 pixels below Land button (which ends at -57)
+        int boxWidth = 126;  // Wider to fit text comfortably
+        int boxHeight = 54;  // Height for 3 lines + padding
+
+        // Draw info box background (semi-transparent with border)
+        graphics.fill(boxX, boxY, boxX + boxWidth, boxY + boxHeight, 0xCC000000);
+
+        // Border
+        graphics.fill(boxX, boxY, boxX + boxWidth, boxY + 1, 0xFF0F2559); // Top
+        graphics.fill(boxX, boxY + boxHeight - 1, boxX + boxWidth, boxY + boxHeight, 0xFF0F2559); // Bottom
+        graphics.fill(boxX, boxY, boxX + 1, boxY + boxHeight, 0xFF0F2559); // Left
+        graphics.fill(boxX + boxWidth - 1, boxY, boxX + boxWidth, boxY + boxHeight, 0xFF0F2559); // Right
+
+        // Text starts with padding from top and left
+        int textX = boxX + 6;
+        int textY = boxY + 8;
+        int lineSpacing = 14;
 
         // Gravity
         graphics.drawString(font,
             Component.literal("Gravity: " + String.format("%.1fx", selectedPlanet.properties().gravity()))
                 .withStyle(ChatFormatting.GRAY),
-            infoX, infoY, 0xAAAAAA);
+            textX, textY, 0xAAAAAA);
 
         // Temperature
         graphics.drawString(font,
             Component.literal("Temperature: " + String.format("%.0f°C", selectedPlanet.properties().temperature()))
                 .withStyle(ChatFormatting.GRAY),
-            infoX, infoY + 12, 0xAAAAAA);
+            textX, textY + lineSpacing, 0xAAAAAA);
 
         // Atmosphere
         String atmosphere = selectedPlanet.atmosphere().hasAtmosphere() ?
             (selectedPlanet.atmosphere().breathable() ? "Breathable" : "Toxic") : "None";
         graphics.drawString(font,
             Component.literal("Atmosphere: " + atmosphere).withStyle(ChatFormatting.GRAY),
-            infoX, infoY + 24, 0xAAAAAA);
+            textX, textY + lineSpacing * 2, 0xAAAAAA);
     }
 
     @Override

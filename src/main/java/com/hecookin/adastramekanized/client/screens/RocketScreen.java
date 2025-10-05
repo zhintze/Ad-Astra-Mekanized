@@ -21,9 +21,9 @@ public class RocketScreen extends AbstractContainerScreen<RocketMenu> {
 
     // Fluid bar position matching Ad Astra exactly (offset + 6 pixels from base position)
     private static final int FLUID_BAR_X = 43;  // Ad Astra renders at leftPos + 37 + 6 = leftPos + 43
-    private static final int FLUID_BAR_Y = 24;  // Ad Astra renders at topPos + 55 - 31 = topPos + 24
+    private static final int FLUID_BAR_Y = 25;  // Ad Astra renders at topPos + 55 - 31 = topPos + 24
     private static final int FLUID_BAR_WIDTH = 12;
-    private static final int FLUID_BAR_HEIGHT = 46;
+    private static final int FLUID_BAR_HEIGHT = 47;
 
     public RocketScreen(RocketMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -80,13 +80,13 @@ public class RocketScreen extends AbstractContainerScreen<RocketMenu> {
                 y + FLUID_BAR_HEIGHT
             );
 
-            // Render fluid texture tiles (Ad Astra uses i from 1 to 4)
+            // Render fluid texture tiles with proper sizing to prevent overlap
             for (int i = 1; i < 5; i++) {
                 graphics.blit(
                     x + 1,
                     y + FLUID_BAR_HEIGHT - 3 - i * 12,
                     0,
-                    14, 14,
+                    FLUID_BAR_WIDTH - 2, 12,
                     sprite,
                     r, g, b, 1
                 );
