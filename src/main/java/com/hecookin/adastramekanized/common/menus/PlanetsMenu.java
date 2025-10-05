@@ -112,7 +112,9 @@ public class PlanetsMenu extends AbstractContainerMenu {
         return PlanetRegistry.getInstance().getAllPlanets().stream()
             .filter(planet -> !disabledPlanets.contains(planet.id()))
             .filter(planet -> tier >= getPlanetTier(planet))
-            .sorted(Comparator.comparingInt(this::getPlanetTier)
+            .sorted(Comparator
+                .<Planet>comparingInt(p -> p.id().getPath().equals("earth") ? -1 : 0)  // Earth first
+                .thenComparingInt(this::getPlanetTier)
                 .thenComparing(p -> getPlanetName(p.id()).getString()))
             .collect(Collectors.toList());
     }

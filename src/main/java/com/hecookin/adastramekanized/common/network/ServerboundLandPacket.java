@@ -60,8 +60,8 @@ public record ServerboundLandPacket(String planetId, boolean tryPreviousLocation
                 return;
             }
 
-            // Create dimension key from planet id (dimension key is same as planet id)
-            ResourceKey<Level> dimensionKey = ResourceKey.create(Registries.DIMENSION, planet.id());
+            // Create dimension key from planet's dimension type (e.g., minecraft:overworld for Earth)
+            ResourceKey<Level> dimensionKey = ResourceKey.create(Registries.DIMENSION, planet.dimension().dimensionType());
             ServerLevel targetLevel = player.server.getLevel(dimensionKey);
             if (targetLevel == null) {
                 player.displayClientMessage(
