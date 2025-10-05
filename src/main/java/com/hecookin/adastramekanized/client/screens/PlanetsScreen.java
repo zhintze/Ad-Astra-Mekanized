@@ -8,10 +8,16 @@ import com.hecookin.adastramekanized.common.menus.PlanetsMenu;
 import com.hecookin.adastramekanized.common.network.ModNetworking;
 import com.hecookin.adastramekanized.common.network.ServerboundLandPacket;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -175,17 +181,26 @@ public class PlanetsScreen extends AbstractContainerScreen<PlanetsMenu> {
     }
 
     private void renderDiamondGrid(GuiGraphics graphics) {
-        int gridColor = 0xFF0F2559;
+        // Render diamond pattern lines (Ad Astra style)
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        Tesselator tessellator = Tesselator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
+
+        var matrix = graphics.pose().last().pose();
 
         // Diagonal lines going down-right
         for (int i = -height; i <= width; i += 24) {
-            graphics.fill(i, 0, i + 1, height, gridColor);
+            bufferBuilder.addVertex(matrix, i, 0, 0).setColor(0xff0f2559);
+            bufferBuilder.addVertex(matrix, i + height, height, 0).setColor(0xff0f2559);
         }
 
         // Diagonal lines going down-left
         for (int i = width + height; i >= 0; i -= 24) {
-            graphics.fill(i, 0, i + 1, height, gridColor);
+            bufferBuilder.addVertex(matrix, i, 0, 0).setColor(0xff0f2559);
+            bufferBuilder.addVertex(matrix, i - height, height, 0).setColor(0xff0f2559);
         }
+
+        BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
     }
 
     protected void renderSelectionMenu(GuiGraphics graphics) {
@@ -197,6 +212,12 @@ public class PlanetsScreen extends AbstractContainerScreen<PlanetsMenu> {
         // Menu background (semi-transparent dark box)
         graphics.fill(menuX, menuY, menuX + menuWidth, menuY + menuHeight, 0xCC000000);
 
+        // Menu border (subtle outline)
+        graphics.fill(menuX, menuY, menuX + menuWidth, menuY + 1, 0xFF0F2559); // Top
+        graphics.fill(menuX, menuY + menuHeight - 1, menuX + menuWidth, menuY + menuHeight, 0xFF0F2559); // Bottom
+        graphics.fill(menuX, menuY, menuX + 1, menuY + menuHeight, 0xFF0F2559); // Left
+        graphics.fill(menuX + menuWidth - 1, menuY, menuX + menuWidth, menuY + menuHeight, 0xFF0F2559); // Right
+
         // Title
         Component titleText;
         if (pageIndex == 2 && selectedPlanet != null) {
@@ -204,7 +225,7 @@ public class PlanetsScreen extends AbstractContainerScreen<PlanetsMenu> {
         } else if (pageIndex == 1 && selectedSolarSystem != null) {
             titleText = Component.literal(capitalize(selectedSolarSystem.getPath()));
         } else {
-            titleText = Component.literal("Catalog");
+            titleText = Component.literal("Solar System Catalog");
         }
 
         graphics.drawCenteredString(font, titleText, 57, height / 2 - 60, 0xFFFFFF);
