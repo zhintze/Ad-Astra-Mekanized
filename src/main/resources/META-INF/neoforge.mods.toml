@@ -112,3 +112,10 @@ type = "optional"
 versionRange = "[21.0.0,)"
 ordering = "AFTER"
 side = "BOTH"
+
+[[dependencies.adastramekanized]]  # Replace with your mod ID
+modId = "chemlibmekanized"
+type = "required"
+versionRange = "[1.0.0,)"
+ordering = "BEFORE"  # CRITICAL: Load ChemLib BEFORE your mod
+side = "BOTH"
