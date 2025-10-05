@@ -1,7 +1,11 @@
 package com.hecookin.adastramekanized.common.entities.vehicles;
 
+import com.hecookin.adastramekanized.api.planets.Planet;
+import com.hecookin.adastramekanized.api.planets.PlanetRegistry;
 import com.hecookin.adastramekanized.common.blocks.LaunchPadBlock;
 import com.hecookin.adastramekanized.common.constants.RocketConstants;
+import com.hecookin.adastramekanized.common.network.ModNetworking;
+import com.hecookin.adastramekanized.common.network.OpenPlanetSelectionPacket;
 import com.hecookin.adastramekanized.common.registry.ModItems;
 import com.hecookin.adastramekanized.common.tags.ModFluidTags;
 import com.hecookin.adastramekanized.common.utils.FluidUtils;
@@ -223,8 +227,7 @@ public class Rocket extends Vehicle {
     private void flightTick() {
         if (!level().isClientSide() && getY() >= RocketConstants.ATMOSPHERE_LEAVE_HEIGHT) {
             if (getControllingPassenger() instanceof ServerPlayer player) {
-                // TODO: Open planets menu
-                // openPlanetsScreen(player);
+                openPlanetsScreen(player);
             } else {
                 explode();
             }
@@ -331,6 +334,35 @@ public class Rocket extends Vehicle {
 
     public void explode() {
         level().explode(this, getX(), getY(), getZ(), 7 + tier() * 2, Level.ExplosionInteraction.TNT);
+        discard();
+    }
+
+    /**
+     * Opens the planet selection screen for the player
+     */
+    private void openPlanetsScreen(ServerPlayer player) {
+        // Get all available planets from the registry
+        PlanetRegistry registry = PlanetRegistry.getInstance();
+        java.util.List<Planet> planets = java.util.List.copyOf(registry.getAllPlanets());
+
+        if (planets.isEmpty()) {
+            player.displayClientMessage(
+                net.minecraft.network.chat.Component.literal("No planets available for travel!"),
+                false
+            );
+            explode();
+            return;
+        }
+
+        // Send planet list to client
+        java.util.List<String> planetIds = planets.stream()
+            .map(planet -> planet.id().toString())
+            .collect(java.util.stream.Collectors.toList());
+
+        ModNetworking.sendToPlayer(player, new OpenPlanetSelectionPacket(planetIds));
+
+        // Remove the rocket - player will teleport to selected planet
+        drop();
         discard();
     }
 

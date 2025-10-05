@@ -59,6 +59,25 @@ public class ModPackets {
             )
         );
 
+        // Register planet selection packets
+        registrar.playToClient(
+            OpenPlanetSelectionPacket.TYPE,
+            OpenPlanetSelectionPacket.CODEC,
+            new DirectionalPayloadHandler<>(
+                OpenPlanetSelectionPacket::handle,
+                null // No server handler needed
+            )
+        );
+
+        registrar.playToServer(
+            PlanetTeleportPacket.TYPE,
+            PlanetTeleportPacket.CODEC,
+            new DirectionalPayloadHandler<>(
+                null, // No client handler needed
+                PlanetTeleportPacket::handle
+            )
+        );
+
         AdAstraMekanized.LOGGER.info("Registered network packets");
     }
 }
