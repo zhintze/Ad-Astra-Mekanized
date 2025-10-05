@@ -206,7 +206,7 @@ public class PlanetsScreen extends AbstractContainerScreen<PlanetsMenu> {
     protected void renderSelectionMenu(GuiGraphics graphics) {
         int menuX = 7;
         int menuY = height / 2 - 88;
-        int menuWidth = pageIndex == 2 ? 209 : 105;
+        int menuWidth = pageIndex == 2 ? 240 : 105;
         int menuHeight = 177;
 
         // Menu background (semi-transparent dark box)

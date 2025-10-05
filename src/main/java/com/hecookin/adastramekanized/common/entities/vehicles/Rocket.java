@@ -46,6 +46,7 @@ public class Rocket extends Vehicle {
     public static final EntityDataAccessor<Boolean> IS_LAUNCHING = SynchedEntityData.defineId(Rocket.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Integer> LAUNCH_TICKS = SynchedEntityData.defineId(Rocket.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Boolean> HAS_LAUNCHED = SynchedEntityData.defineId(Rocket.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> IS_LANDING = SynchedEntityData.defineId(Rocket.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Long> FUEL = SynchedEntityData.defineId(Rocket.class, EntityDataSerializers.LONG);
     public static final EntityDataAccessor<String> FUEL_TYPE = SynchedEntityData.defineId(Rocket.class, EntityDataSerializers.STRING);
 
@@ -79,6 +80,7 @@ public class Rocket extends Vehicle {
         builder.define(IS_LAUNCHING, false);
         builder.define(LAUNCH_TICKS, -1);
         builder.define(HAS_LAUNCHED, false);
+        builder.define(IS_LANDING, false);
         builder.define(FUEL, 0L);
         builder.define(FUEL_TYPE, "minecraft:empty");
     }
@@ -89,6 +91,7 @@ public class Rocket extends Vehicle {
         entityData.set(IS_LAUNCHING, compound.getBoolean("Launching"));
         entityData.set(LAUNCH_TICKS, compound.getInt("LaunchTicks"));
         entityData.set(HAS_LAUNCHED, compound.getBoolean("HasLaunched"));
+        entityData.set(IS_LANDING, compound.getBoolean("Landing"));
         speed = compound.getFloat("Speed");
         angle = compound.getFloat("Angle");
         fluidContainer.readFromNBT(registryAccess(), compound.getCompound("FluidTank"));
@@ -100,6 +103,7 @@ public class Rocket extends Vehicle {
         compound.putBoolean("Launching", isLaunching());
         compound.putInt("LaunchTicks", launchTicks());
         compound.putBoolean("HasLaunched", hasLaunched());
+        compound.putBoolean("Landing", isLanding());
         compound.putFloat("Speed", speed);
         compound.putFloat("Angle", angle);
         compound.put("FluidTank", fluidContainer.writeToNBT(registryAccess(), new CompoundTag()));
@@ -191,6 +195,8 @@ public class Rocket extends Vehicle {
             spawnSmokeParticles();
         } else if (hasLaunched()) {
             flightTick();
+        } else if (isLanding()) {
+            landingTick();
         }
 
         if (!level().isClientSide()) {
@@ -257,6 +263,45 @@ public class Rocket extends Vehicle {
         if (isObstructed()) explode();
     }
 
+    private void landingTick() {
+        // Check if landed
+        if (onGround()) {
+            setLanding(false);
+            angle = 0;
+            speed = 0.05f;
+            return;
+        }
+
+        var delta = getDeltaMovement();
+        float xxa = -xxa();  // Turning control
+
+        if (xxa != 0) {
+            angle += xxa * 1;
+        } else {
+            angle *= 0.9f;
+        }
+
+        // Slow descent with space key
+        if (passengerHasSpaceDown() && delta.y() < -0.05) {
+            speed += 0.01f;
+            fallDistance *= 0.9f;
+            spawnRocketParticles();
+        } else if (speed > -1.1) {
+            speed -= 0.01f;
+        }
+
+        angle = Mth.clamp(angle, -3, 3);
+        setYRot(getYRot() + angle);
+
+        setDeltaMovement(delta.x(), speed, delta.z());
+
+        // Water landing
+        if (isInWater()) {
+            setDeltaMovement(delta.x(), Math.min(0.06, delta.y() + 0.15), delta.z());
+            speed *= 0.9f;
+        }
+    }
+
     public boolean canLaunch() {
         if (isLaunching() || hasLaunched()) return false;
         if (!hasEnoughFuel()) return false;
@@ -286,6 +331,20 @@ public class Rocket extends Vehicle {
 
     public boolean hasLaunched() {
         return this.entityData.get(HAS_LAUNCHED);
+    }
+
+    public boolean isLanding() {
+        return this.entityData.get(IS_LANDING);
+    }
+
+    public void setLanding(boolean landing) {
+        entityData.set(IS_LANDING, landing);
+        if (landing) {
+            // Reset states when starting landing
+            entityData.set(HAS_LAUNCHED, false);
+            entityData.set(IS_LAUNCHING, false);
+            speed = 0;  // Start descent slowly
+        }
     }
 
     public void spawnSmokeParticles() {
