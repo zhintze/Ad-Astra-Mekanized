@@ -65,6 +65,9 @@ public class PlanetsMenuProvider implements MenuProvider, IContainerFactory<Abst
      * Read disabled planets from buffer
      */
     public static Set<ResourceLocation> createDisabledPlanetsFromBuf(RegistryFriendlyByteBuf buf) {
+        if (buf == null) {
+            return Collections.emptySet();
+        }
         Set<ResourceLocation> disabledPlanets = new HashSet<>();
         String planetsString = buf.readUtf();
         if (!planetsString.isEmpty()) {
@@ -80,6 +83,9 @@ public class PlanetsMenuProvider implements MenuProvider, IContainerFactory<Abst
      * Read space stations from buffer (placeholder)
      */
     public static Map<ResourceLocation, Map<UUID, Set<SpaceStation>>> createSpaceStationsFromBuf(RegistryFriendlyByteBuf buf) {
+        if (buf == null) {
+            return Collections.emptyMap();
+        }
         Map<ResourceLocation, Map<UUID, Set<SpaceStation>>> spaceStationsMap = new HashMap<>();
 
         int planetsSize = buf.readVarInt();
@@ -112,6 +118,9 @@ public class PlanetsMenuProvider implements MenuProvider, IContainerFactory<Abst
      * Read spawn locations from buffer (placeholder)
      */
     public static Set<GlobalPos> createSpawnLocationsFromBuf(RegistryFriendlyByteBuf buf) {
+        if (buf == null) {
+            return Collections.emptySet();
+        }
         Set<GlobalPos> locations = new HashSet<>();
         int locationCount = buf.readVarInt();
         for (int i = 0; i < locationCount; i++) {
