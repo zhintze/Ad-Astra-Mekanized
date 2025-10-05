@@ -59,13 +59,13 @@ public class ModPackets {
             )
         );
 
-        // Register planet teleport packet (client -> server)
+        // Register planet landing packet
         registrar.playToServer(
-            PlanetTeleportPacket.TYPE,
-            PlanetTeleportPacket.CODEC,
+            ServerboundLandPacket.TYPE,
+            ServerboundLandPacket.CODEC,
             new DirectionalPayloadHandler<>(
                 null, // No client handler needed
-                PlanetTeleportPacket::handle
+                ServerboundLandPacket::handle
             )
         );
 

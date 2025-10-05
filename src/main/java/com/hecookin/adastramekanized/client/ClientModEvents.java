@@ -11,6 +11,7 @@ import com.hecookin.adastramekanized.client.gui.GuiOxygenDistributor;
 import com.hecookin.adastramekanized.client.screens.NasaWorkbenchScreen;
 import com.hecookin.adastramekanized.client.screens.OxygenControllerScreen;
 import com.hecookin.adastramekanized.client.screens.OxygenMonitorScreen;
+import com.hecookin.adastramekanized.client.screens.PlanetsScreen;
 import com.hecookin.adastramekanized.client.screens.RocketScreen;
 import com.hecookin.adastramekanized.client.screens.WirelessPowerRelayScreen;
 import com.hecookin.adastramekanized.common.registry.ModBlockEntityTypes;
@@ -169,7 +170,7 @@ public class ClientModEvents {
         event.register(ModMenuTypes.OXYGEN_MONITOR.get(), OxygenMonitorScreen::new);
         event.register(ModMenuTypes.NASA_WORKBENCH.get(), NasaWorkbenchScreen::new);
         event.register(ModMenuTypes.ROCKET.get(), RocketScreen::new);
-        event.register(ModMenuTypes.PLANETS.get(), com.hecookin.adastramekanized.client.screens.PlanetsScreen::new);
+        event.register(ModMenuTypes.PLANETS.get(), PlanetsScreen::new);
     }
 
     @SubscribeEvent

@@ -1,10 +1,9 @@
 package com.hecookin.adastramekanized.common.entities.vehicles;
 
-import com.hecookin.adastramekanized.api.planets.Planet;
-import com.hecookin.adastramekanized.api.planets.PlanetRegistry;
 import com.hecookin.adastramekanized.common.blocks.LaunchPadBlock;
 import com.hecookin.adastramekanized.common.constants.RocketConstants;
 import com.hecookin.adastramekanized.common.menus.PlanetsMenu;
+import com.hecookin.adastramekanized.common.menus.PlanetsMenuProvider;
 import com.hecookin.adastramekanized.common.registry.ModItems;
 import com.hecookin.adastramekanized.common.tags.ModFluidTags;
 import com.hecookin.adastramekanized.common.utils.FluidUtils;
@@ -226,7 +225,10 @@ public class Rocket extends Vehicle {
     private void flightTick() {
         if (!level().isClientSide() && getY() >= RocketConstants.ATMOSPHERE_LEAVE_HEIGHT) {
             if (getControllingPassenger() instanceof ServerPlayer player) {
-                openPlanetsScreen(player);
+                // Only open menu if not already open
+                if (!(player.containerMenu instanceof PlanetsMenu)) {
+                    openPlanetsScreen(player);
+                }
             } else {
                 explode();
             }
@@ -337,49 +339,12 @@ public class Rocket extends Vehicle {
     }
 
     /**
-     * Opens the planet selection screen for the player
+     * Opens the planet selection screen for the player.
+     * Rocket continues flying while menu is open.
      */
     private void openPlanetsScreen(ServerPlayer player) {
-        // Get all available planets from the registry
-        PlanetRegistry registry = PlanetRegistry.getInstance();
-        java.util.List<Planet> planets = java.util.List.copyOf(registry.getAllPlanets());
-
-        if (planets.isEmpty()) {
-            player.displayClientMessage(
-                net.minecraft.network.chat.Component.literal("No planets available for travel!"),
-                false
-            );
-            explode();
-            return;
-        }
-
-        // Open the planets menu
-        player.openMenu(new net.minecraft.world.MenuProvider() {
-            @Override
-            public net.minecraft.network.chat.Component getDisplayName() {
-                return net.minecraft.network.chat.Component.literal("Planetary Catalog");
-            }
-
-            @Override
-            public net.minecraft.world.inventory.AbstractContainerMenu createMenu(int containerId,
-                                                                                   net.minecraft.world.entity.player.Inventory inventory,
-                                                                                   net.minecraft.world.entity.player.Player menuPlayer) {
-                return new PlanetsMenu(containerId, inventory, tier(), planets);
-            }
-        }, buf -> {
-            // Write rocket tier to buffer
-            buf.writeInt(tier());
-            // Write planet count
-            buf.writeInt(planets.size());
-            // Write planet IDs
-            for (Planet planet : planets) {
-                buf.writeResourceLocation(planet.id());
-            }
-        });
-
-        // Remove the rocket - player will teleport to selected planet
-        drop();
-        discard();
+        player.openMenu(new PlanetsMenuProvider());
+        // Note: Rocket stays alive and continues flying at altitude
     }
 
     public boolean consumeFuel(boolean simulate) {
