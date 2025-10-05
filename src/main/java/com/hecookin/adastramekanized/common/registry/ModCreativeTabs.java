@@ -259,7 +259,6 @@ public class ModCreativeTabs {
 
                         // Rocket Infrastructure
                         output.accept(ModBlocks.LAUNCH_PAD.get());
-                        output.accept(ModBlocks.FUEL_LOADER.get());
 
                         // Redstone Components
                         output.accept(ModItems.ETRIONIC_CAPACITOR.get());

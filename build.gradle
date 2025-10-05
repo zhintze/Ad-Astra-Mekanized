@@ -179,6 +179,8 @@ dependencies {
     implementation "blank:constructionwand-1.21.1-2.12"
     implementation "blank:chemlibmekanized-1.0.0"
 
+    implementation "blank:ImmersiveEngineering-1.21.1-12.4.3-194"
+
 
     // EPIC FIGHT
     implementation "curse.maven:EpicFight-405076:6968128"

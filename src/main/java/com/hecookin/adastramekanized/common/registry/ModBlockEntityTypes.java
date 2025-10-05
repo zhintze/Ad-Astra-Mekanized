@@ -1,7 +1,7 @@
 package com.hecookin.adastramekanized.common.registry;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
-import com.hecookin.adastramekanized.common.blockentities.FuelLoaderBlockEntity;
+import com.hecookin.adastramekanized.common.blockentities.LaunchPadBlockEntity;
 import com.hecookin.adastramekanized.common.blockentities.NasaWorkbenchBlockEntity;
 import com.hecookin.adastramekanized.common.blockentities.machines.OxygenDistributorBlockEntity;
 import com.hecookin.adastramekanized.common.blockentities.machines.ImprovedOxygenDistributor;
@@ -67,12 +67,12 @@ public class ModBlockEntityTypes {
                 NasaWorkbenchBlockEntity::new,
                 ModBlocks.NASA_WORKBENCH.get()));
 
-    // Fuel Loader block entity
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FuelLoaderBlockEntity>> FUEL_LOADER =
-        BLOCK_ENTITY_TYPES.register("fuel_loader",
+    // Launch Pad block entity (for automatic fueling)
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LaunchPadBlockEntity>> LAUNCH_PAD =
+        BLOCK_ENTITY_TYPES.register("launch_pad",
             () -> createBlockEntityType(
-                FuelLoaderBlockEntity::new,
-                ModBlocks.FUEL_LOADER.get()));
+                LaunchPadBlockEntity::new,
+                ModBlocks.LAUNCH_PAD.get()));
 
     /**
      * Helper method to create a BlockEntityType

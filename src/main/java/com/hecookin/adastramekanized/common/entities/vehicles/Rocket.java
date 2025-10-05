@@ -109,7 +109,18 @@ public class Rocket extends Vehicle {
 
     @Override
     public ItemStack getDropStack() {
-        return properties.item().getDefaultInstance();
+        ItemStack stack = properties.item().getDefaultInstance();
+
+        // Save fuel data to item
+        FluidStack fluid = fluidContainer.getFluid();
+        if (!fluid.isEmpty()) {
+            CompoundTag tag = new CompoundTag();
+            tag.put("Fluid", fluid.save(registryAccess()));
+            stack.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA,
+                net.minecraft.world.item.component.CustomData.of(tag));
+        }
+
+        return stack;
     }
 
     public int tier() {
@@ -339,13 +350,12 @@ public class Rocket extends Vehicle {
 
     @Override
     public int getInventorySize() {
-        return 2; // Fuel input/output only
+        return 10; // 8 storage slots + 2 fuel slots
     }
 
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        // TODO: Create RocketMenu
-        return null;
+        return new com.hecookin.adastramekanized.common.menus.RocketMenu(containerId, inventory, this);
     }
 
     public FluidStack fluid() {

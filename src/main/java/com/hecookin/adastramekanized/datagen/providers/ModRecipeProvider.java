@@ -773,18 +773,6 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
             .unlockedBy("has_steel_sheet", has(ModItems.STEEL_SHEET.get()))
             .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "launch_pad"));
 
-        // Fuel Loader: 4 steel sheets + 2 steel tanks + 2 steel ingots + 1 piston -> 1 fuel loader
-        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, ModBlocks.FUEL_LOADER.get(), 1)
-            .pattern("#T#")
-            .pattern("SPS")
-            .pattern("#T#")
-            .define('#', ModItems.STEEL_SHEET.get())
-            .define('T', ModItems.STEEL_TANK.get())
-            .define('S', BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("mekanism", "ingot_steel")))
-            .define('P', Items.PISTON)
-            .unlockedBy("has_steel_tank", has(ModItems.STEEL_TANK.get()))
-            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "fuel_loader"));
-
         // ========== Network Components (Example Recipes) ==========
 
         // Wireless Power Relay: 4 steel sheets + 1 etrionic capacitor + 2 redstone blocks + 2 lightning rods -> 1 relay

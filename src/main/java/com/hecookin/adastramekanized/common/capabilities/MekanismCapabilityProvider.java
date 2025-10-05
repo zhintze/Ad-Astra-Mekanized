@@ -1,6 +1,7 @@
 package com.hecookin.adastramekanized.common.capabilities;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
+import com.hecookin.adastramekanized.common.blockentities.LaunchPadBlockEntity;
 import com.hecookin.adastramekanized.common.blockentities.machines.ImprovedOxygenDistributor;
 import com.hecookin.adastramekanized.common.blockentities.machines.WirelessPowerRelayBlockEntity;
 import com.hecookin.adastramekanized.common.blocks.machines.OxygenDistributorBlock;
@@ -107,6 +108,20 @@ public class MekanismCapabilityProvider {
         }
 
         AdAstraMekanized.LOGGER.info("Registered block entity capabilities for energy storage");
+
+        // Register Fluid Handler capability for Launch Pad
+        event.registerBlockEntity(
+            Capabilities.FluidHandler.BLOCK,
+            ModBlockEntityTypes.LAUNCH_PAD.get(),
+            (blockEntity, side) -> {
+                if (blockEntity instanceof LaunchPadBlockEntity launchPad) {
+                    return launchPad.getFluidHandler(side);
+                }
+                return null;
+            }
+        );
+
+        AdAstraMekanized.LOGGER.info("Registered fluid handler capability for launch pad");
 
         // Register item capabilities for space suits
         registerSpaceSuitCapabilities(event);

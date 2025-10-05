@@ -209,7 +209,7 @@ public abstract class Vehicle extends Entity implements PlayerRideable, MenuProv
     @Override
     public void openCustomInventoryScreen(Player player) {
         if (player instanceof ServerPlayer serverPlayer) {
-            serverPlayer.openMenu(this);
+            serverPlayer.openMenu(this, buf -> buf.writeVarInt(this.getId()));
         }
     }
 

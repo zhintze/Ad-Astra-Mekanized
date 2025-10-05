@@ -497,14 +497,6 @@ public class ModBlocks {
                             .sound(SoundType.METAL)
                             .noOcclusion()));
 
-    public static final Supplier<Block> FUEL_LOADER = registerBlock("fuel_loader",
-            () -> new com.hecookin.adastramekanized.common.blocks.FuelLoaderBlock(
-                    BlockBehaviour.Properties.of()
-                            .mapColor(MapColor.METAL)
-                            .strength(3.5f)
-                            .sound(SoundType.METAL)
-                            .requiresCorrectToolForDrops()));
-
     /**
      * Helper method to register a block with its corresponding BlockItem
      */

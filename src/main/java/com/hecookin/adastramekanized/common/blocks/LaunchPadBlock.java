@@ -1,5 +1,6 @@
 package com.hecookin.adastramekanized.common.blocks;
 
+import com.hecookin.adastramekanized.common.blockentities.LaunchPadBlockEntity;
 import com.hecookin.adastramekanized.common.blocks.properties.LaunchPadPartProperty;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,8 +13,12 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -27,9 +32,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * 3x3 multiblock launch pad for rockets
+ * 3x3 multiblock launch pad for rockets with automatic fueling from Mekanism pipes
  */
-public class LaunchPadBlock extends Block implements SimpleWaterloggedBlock {
+public class LaunchPadBlock extends Block implements SimpleWaterloggedBlock, EntityBlock {
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -132,5 +137,20 @@ public class LaunchPadBlock extends Block implements SimpleWaterloggedBlock {
     private BlockPos getController(BlockState state, BlockPos pos) {
         var part = state.getValue(PART);
         return pos.south(part.xOffset()).west(part.yOffset());
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        // Only center part has block entity
+        return state.getValue(PART).isController() ? new LaunchPadBlockEntity(pos, state) : null;
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return state.getValue(PART).isController()
+            ? (level1, pos, state1, blockEntity) -> LaunchPadBlockEntity.tick(level1, pos, state1, (LaunchPadBlockEntity) blockEntity)
+            : null;
     }
 }

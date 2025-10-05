@@ -1,9 +1,9 @@
 package com.hecookin.adastramekanized.common.registry;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
-import com.hecookin.adastramekanized.common.menus.FuelLoaderMenu;
 import com.hecookin.adastramekanized.common.menus.NasaWorkbenchMenu;
 import com.hecookin.adastramekanized.common.menus.OxygenDistributorMenu;
+import com.hecookin.adastramekanized.common.menus.RocketMenu;
 import com.hecookin.adastramekanized.common.menus.OxygenControllerMenu;
 import com.hecookin.adastramekanized.common.menus.OxygenMonitorMenu;
 import com.hecookin.adastramekanized.common.menus.WirelessPowerRelayMenu;
@@ -40,9 +40,9 @@ public class ModMenuTypes {
             MENUS.register("nasa_workbench",
                 () -> IMenuTypeExtension.create(NasaWorkbenchMenu::new));
 
-    public static final Supplier<MenuType<FuelLoaderMenu>> FUEL_LOADER =
-            MENUS.register("fuel_loader",
-                () -> IMenuTypeExtension.create(FuelLoaderMenu::new));
+    public static final Supplier<MenuType<RocketMenu>> ROCKET =
+            MENUS.register("rocket",
+                () -> IMenuTypeExtension.create(RocketMenu::new));
 
     public static void register(IEventBus modEventBus) {
         MENUS.register(modEventBus);
