@@ -59,16 +59,7 @@ public class ModPackets {
             )
         );
 
-        // Register planet selection packets
-        registrar.playToClient(
-            OpenPlanetSelectionPacket.TYPE,
-            OpenPlanetSelectionPacket.CODEC,
-            new DirectionalPayloadHandler<>(
-                OpenPlanetSelectionPacket::handle,
-                null // No server handler needed
-            )
-        );
-
+        // Register planet teleport packet (client -> server)
         registrar.playToServer(
             PlanetTeleportPacket.TYPE,
             PlanetTeleportPacket.CODEC,

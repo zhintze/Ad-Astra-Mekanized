@@ -4,8 +4,7 @@ import com.hecookin.adastramekanized.api.planets.Planet;
 import com.hecookin.adastramekanized.api.planets.PlanetRegistry;
 import com.hecookin.adastramekanized.common.blocks.LaunchPadBlock;
 import com.hecookin.adastramekanized.common.constants.RocketConstants;
-import com.hecookin.adastramekanized.common.network.ModNetworking;
-import com.hecookin.adastramekanized.common.network.OpenPlanetSelectionPacket;
+import com.hecookin.adastramekanized.common.menus.PlanetsMenu;
 import com.hecookin.adastramekanized.common.registry.ModItems;
 import com.hecookin.adastramekanized.common.tags.ModFluidTags;
 import com.hecookin.adastramekanized.common.utils.FluidUtils;
@@ -354,12 +353,29 @@ public class Rocket extends Vehicle {
             return;
         }
 
-        // Send planet list to client
-        java.util.List<String> planetIds = planets.stream()
-            .map(planet -> planet.id().toString())
-            .collect(java.util.stream.Collectors.toList());
+        // Open the planets menu
+        player.openMenu(new net.minecraft.world.MenuProvider() {
+            @Override
+            public net.minecraft.network.chat.Component getDisplayName() {
+                return net.minecraft.network.chat.Component.literal("Planetary Catalog");
+            }
 
-        ModNetworking.sendToPlayer(player, new OpenPlanetSelectionPacket(planetIds));
+            @Override
+            public net.minecraft.world.inventory.AbstractContainerMenu createMenu(int containerId,
+                                                                                   net.minecraft.world.entity.player.Inventory inventory,
+                                                                                   net.minecraft.world.entity.player.Player menuPlayer) {
+                return new PlanetsMenu(containerId, inventory, tier(), planets);
+            }
+        }, buf -> {
+            // Write rocket tier to buffer
+            buf.writeInt(tier());
+            // Write planet count
+            buf.writeInt(planets.size());
+            // Write planet IDs
+            for (Planet planet : planets) {
+                buf.writeResourceLocation(planet.id());
+            }
+        });
 
         // Remove the rocket - player will teleport to selected planet
         drop();

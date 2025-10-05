@@ -3,6 +3,7 @@ package com.hecookin.adastramekanized.common.registry;
 import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.common.menus.NasaWorkbenchMenu;
 import com.hecookin.adastramekanized.common.menus.OxygenDistributorMenu;
+import com.hecookin.adastramekanized.common.menus.PlanetsMenu;
 import com.hecookin.adastramekanized.common.menus.RocketMenu;
 import com.hecookin.adastramekanized.common.menus.OxygenControllerMenu;
 import com.hecookin.adastramekanized.common.menus.OxygenMonitorMenu;
@@ -43,6 +44,10 @@ public class ModMenuTypes {
     public static final Supplier<MenuType<RocketMenu>> ROCKET =
             MENUS.register("rocket",
                 () -> IMenuTypeExtension.create(RocketMenu::new));
+
+    public static final Supplier<MenuType<PlanetsMenu>> PLANETS =
+            MENUS.register("planets",
+                () -> IMenuTypeExtension.create(PlanetsMenu::new));
 
     public static void register(IEventBus modEventBus) {
         MENUS.register(modEventBus);

@@ -169,6 +169,7 @@ public class ClientModEvents {
         event.register(ModMenuTypes.OXYGEN_MONITOR.get(), OxygenMonitorScreen::new);
         event.register(ModMenuTypes.NASA_WORKBENCH.get(), NasaWorkbenchScreen::new);
         event.register(ModMenuTypes.ROCKET.get(), RocketScreen::new);
+        event.register(ModMenuTypes.PLANETS.get(), com.hecookin.adastramekanized.client.screens.PlanetsScreen::new);
     }
 
     @SubscribeEvent
