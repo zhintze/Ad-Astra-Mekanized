@@ -1,24 +1,33 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "redstone",
-  "key": {
-    "#": {
+  "type": "adastramekanized:nasa_workbench",
+  "ingredients": [
+    {
       "item": "adastramekanized:steel_sheet"
     },
-    "C": {
-      "item": "minecraft:comparator"
-    },
-    "P": {
+    {
       "item": "minecraft:repeater"
     },
-    "R": {
+    {
+      "item": "adastramekanized:steel_sheet"
+    },
+    {
+      "item": "minecraft:comparator"
+    },
+    {
+      "item": "minecraft:comparator"
+    },
+    {
       "item": "minecraft:redstone_block"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
+    },
+    {
+      "item": "minecraft:repeater"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
     }
-  },
-  "pattern": [
-    "#P#",
-    "CRC",
-    "#P#"
   ],
   "result": {
     "count": 1,

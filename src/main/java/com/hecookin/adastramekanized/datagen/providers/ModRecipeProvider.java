@@ -254,6 +254,61 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy("has_etrium_core", has(ModItems.ETRIONIC_CORE.get()))
             .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "etrionic_capacitor"));
 
+        // ========== NETWORK & OXYGEN COMPONENTS ==========
+
+        // Wireless Power Relay - 9 items
+        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, ModBlocks.WIRELESS_POWER_RELAY.get(), 1)
+            .addIngredient(ModItems.STEEL_SHEET.get())
+            .addIngredient(Items.LIGHTNING_ROD)
+            .addIngredient(ModItems.STEEL_SHEET.get())
+            .addIngredient(Items.REDSTONE_BLOCK, 2)
+            .addIngredient(ModItems.ETRIONIC_CAPACITOR.get())
+            .addIngredient(ModItems.STEEL_SHEET.get())
+            .addIngredient(Items.LIGHTNING_ROD)
+            .addIngredient(ModItems.STEEL_SHEET.get())
+            .unlockedBy("has_etrionic_capacitor", has(ModItems.ETRIONIC_CAPACITOR.get()))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "wireless_power_relay"));
+
+        // Oxygen Network Controller - 9 items
+        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, ModItems.OXYGEN_NETWORK_CONTROLLER.get(), 1)
+            .addIngredient(ModItems.DESH_SHEET.get())
+            .addIngredient(ModItems.FAN.get())
+            .addIngredient(ModItems.DESH_SHEET.get())
+            .addIngredient(ModItems.LARGE_GAS_TANK.get(), 2)
+            .addIngredient(ModItems.ETRIONIC_CAPACITOR.get())
+            .addIngredient(ModItems.DESH_SHEET.get())
+            .addIngredient(ModItems.FAN.get())
+            .addIngredient(ModItems.DESH_SHEET.get())
+            .unlockedBy("has_etrionic_capacitor", has(ModItems.ETRIONIC_CAPACITOR.get()))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "oxygen_network_controller"));
+
+        // Redstone Toggle Relay - 9 items
+        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.REDSTONE, ModBlocks.REDSTONE_TOGGLE_RELAY.get(), 1)
+            .addIngredient(ModItems.STEEL_SHEET.get())
+            .addIngredient(Items.REPEATER)
+            .addIngredient(ModItems.STEEL_SHEET.get())
+            .addIngredient(Items.COMPARATOR, 2)
+            .addIngredient(Items.REDSTONE_BLOCK)
+            .addIngredient(ModItems.STEEL_SHEET.get())
+            .addIngredient(Items.REPEATER)
+            .addIngredient(ModItems.STEEL_SHEET.get())
+            .unlockedBy("has_steel_sheet", has(ModItems.STEEL_SHEET.get()))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "redstone_toggle_relay"));
+
+        // Oxygen Distributor - 9 items
+        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, ModBlocks.OXYGEN_DISTRIBUTOR.get(), 1)
+            .addIngredient(ModItems.FAN.get())
+            .addIngredient(ModItems.LARGE_GAS_TANK.get())
+            .addIngredient(ModItems.FAN.get())
+            .addIngredient(ModItems.FAN.get())
+            .addIngredient(ModItems.OXYGEN_NETWORK_CONTROLLER.get())
+            .addIngredient(ModItems.FAN.get())
+            .addIngredient(ModItems.DESH_SHEET.get())
+            .addIngredient(ModItems.OXYGEN_GEAR.get())
+            .addIngredient(ModItems.DESH_SHEET.get())
+            .unlockedBy("has_oxygen_gear", has(ModItems.OXYGEN_GEAR.get()))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "oxygen_distributor"));
+
         // ========== ROCKETS ==========
 
         // Tier 1 Rocket - Steel-based, basic lunar rocket (14 ingredient slots)
@@ -817,44 +872,6 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
             .define('S', BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("mekanism", "ingot_steel")))
             .unlockedBy("has_steel_sheet", has(ModItems.STEEL_SHEET.get()))
             .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "launch_pad"));
-
-        // ========== Network Components (Example Recipes) ==========
-
-        // Wireless Power Relay: 4 steel sheets + 1 etrionic capacitor + 2 redstone blocks + 2 lightning rods -> 1 relay
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.WIRELESS_POWER_RELAY.get(), 1)
-            .pattern("#|#")
-            .pattern("RER")
-            .pattern("#|#")
-            .define('#', ModItems.STEEL_SHEET.get())
-            .define('E', ModItems.ETRIONIC_CAPACITOR.get())
-            .define('R', Items.REDSTONE_BLOCK)
-            .define('|', Items.LIGHTNING_ROD)
-            .unlockedBy("has_etrionic_capacitor", has(ModItems.ETRIONIC_CAPACITOR.get()))
-            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "wireless_power_relay"));
-
-        // Oxygen Network Controller: 4 desh sheets + 1 etrionic capacitor + 2 fans + 2 large gas tanks -> 1 controller
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.OXYGEN_NETWORK_CONTROLLER.get(), 1)
-            .pattern("#F#")
-            .pattern("GEG")
-            .pattern("#F#")
-            .define('#', ModItems.DESH_SHEET.get())
-            .define('E', ModItems.ETRIONIC_CAPACITOR.get())
-            .define('F', ModItems.FAN.get())
-            .define('G', ModItems.LARGE_GAS_TANK.get())
-            .unlockedBy("has_etrionic_capacitor", has(ModItems.ETRIONIC_CAPACITOR.get()))
-            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "oxygen_network_controller"));
-
-        // Redstone Toggle Relay: 4 steel sheets + 1 redstone block + 2 repeaters + 2 comparators -> 1 relay
-        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ModBlocks.REDSTONE_TOGGLE_RELAY.get(), 1)
-            .pattern("#P#")
-            .pattern("CRC")
-            .pattern("#P#")
-            .define('#', ModItems.STEEL_SHEET.get())
-            .define('R', Items.REDSTONE_BLOCK)
-            .define('P', Items.REPEATER)
-            .define('C', Items.COMPARATOR)
-            .unlockedBy("has_steel_sheet", has(ModItems.STEEL_SHEET.get()))
-            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "redstone_toggle_relay"));
 
         // ========== Advanced Components ==========
 

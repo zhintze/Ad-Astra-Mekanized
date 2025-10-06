@@ -1,24 +1,33 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "misc",
-  "key": {
-    "#": {
+  "type": "adastramekanized:nasa_workbench",
+  "ingredients": [
+    {
       "item": "adastramekanized:desh_sheet"
     },
-    "E": {
-      "item": "adastramekanized:etrionic_capacitor"
-    },
-    "F": {
+    {
       "item": "adastramekanized:fan"
     },
-    "G": {
+    {
+      "item": "adastramekanized:desh_sheet"
+    },
+    {
       "item": "adastramekanized:large_gas_tank"
+    },
+    {
+      "item": "adastramekanized:large_gas_tank"
+    },
+    {
+      "item": "adastramekanized:etrionic_capacitor"
+    },
+    {
+      "item": "adastramekanized:desh_sheet"
+    },
+    {
+      "item": "adastramekanized:fan"
+    },
+    {
+      "item": "adastramekanized:desh_sheet"
     }
-  },
-  "pattern": [
-    "#F#",
-    "GEG",
-    "#F#"
   ],
   "result": {
     "count": 1,

@@ -1,24 +1,33 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "misc",
-  "key": {
-    "#": {
+  "type": "adastramekanized:nasa_workbench",
+  "ingredients": [
+    {
       "item": "adastramekanized:steel_sheet"
     },
-    "E": {
-      "item": "adastramekanized:etrionic_capacitor"
+    {
+      "item": "minecraft:lightning_rod"
     },
-    "R": {
+    {
+      "item": "adastramekanized:steel_sheet"
+    },
+    {
       "item": "minecraft:redstone_block"
     },
-    "|": {
+    {
+      "item": "minecraft:redstone_block"
+    },
+    {
+      "item": "adastramekanized:etrionic_capacitor"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
+    },
+    {
       "item": "minecraft:lightning_rod"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
     }
-  },
-  "pattern": [
-    "#|#",
-    "RER",
-    "#|#"
   ],
   "result": {
     "count": 1,
