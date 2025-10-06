@@ -4,10 +4,10 @@
   "cookingtime": 200,
   "experience": 0.2,
   "ingredient": {
-    "item": "adastramekanized:glacio_ice_shard_ore"
+    "item": "adastramekanized:mars_etrium_ore"
   },
   "result": {
     "count": 1,
-    "id": "adastramekanized:ice_shard"
+    "id": "adastramekanized:etrium_nugget"
   }
 }

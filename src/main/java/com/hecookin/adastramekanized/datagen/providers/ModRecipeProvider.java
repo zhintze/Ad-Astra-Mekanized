@@ -890,13 +890,13 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         oreSmelting(recipeOutput, "moon_cheese", ModBlocks.MOON_CHEESE_ORE.get(), ModItems.CHEESE.get(), 0.1f, 200);
         oreSmelting(recipeOutput, "moon_desh", ModBlocks.MOON_DESH_ORE.get(), ModItems.DESH_INGOT.get(), 0.7f, 200);
         oreSmelting(recipeOutput, "moon_iron", ModBlocks.MOON_IRON_ORE.get(), Items.IRON_INGOT, 0.7f, 200);
-        oreSmelting(recipeOutput, "moon_ice_shard", ModBlocks.MOON_ICE_SHARD_ORE.get(), ModItems.ICE_SHARD.get(), 0.2f, 200);
+        oreSmelting(recipeOutput, "moon_etrium_nugget", ModBlocks.MOON_ETRIUM_ORE.get(), ModItems.ETRIUM_NUGGET.get(), 0.2f, 200);
 
         // Mars ore smelting
         oreSmelting(recipeOutput, "mars_iron", ModBlocks.MARS_IRON_ORE.get(), Items.IRON_INGOT, 0.7f, 200);
         oreSmelting(recipeOutput, "mars_diamond", ModBlocks.MARS_DIAMOND_ORE.get(), Items.DIAMOND, 1.0f, 200);
         oreSmelting(recipeOutput, "mars_ostrum", ModBlocks.MARS_OSTRUM_ORE.get(), ModItems.OSTRUM_INGOT.get(), 0.7f, 200);
-        oreSmelting(recipeOutput, "mars_ice_shard", ModBlocks.MARS_ICE_SHARD_ORE.get(), ModItems.ICE_SHARD.get(), 0.2f, 200);
+        oreSmelting(recipeOutput, "mars_etrium_nugget", ModBlocks.MARS_ETRIUM_ORE.get(), ModItems.ETRIUM_NUGGET.get(), 0.2f, 200);
 
         // Venus ore smelting
         oreSmelting(recipeOutput, "venus_coal", ModBlocks.VENUS_COAL_ORE.get(), Items.COAL, 0.1f, 200);
@@ -912,7 +912,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         oreSmelting(recipeOutput, "glacio_copper", ModBlocks.GLACIO_COPPER_ORE.get(), Items.COPPER_INGOT, 0.7f, 200);
         oreSmelting(recipeOutput, "glacio_iron", ModBlocks.GLACIO_IRON_ORE.get(), Items.IRON_INGOT, 0.7f, 200);
         oreSmelting(recipeOutput, "glacio_lapis", ModBlocks.GLACIO_LAPIS_ORE.get(), Items.LAPIS_LAZULI, 0.2f, 200);
-        oreSmelting(recipeOutput, "glacio_ice_shard", ModBlocks.GLACIO_ICE_SHARD_ORE.get(), ModItems.ICE_SHARD.get(), 0.2f, 200);
+        oreSmelting(recipeOutput, "glacio_etrium_nugget", ModBlocks.GLACIO_ETRIUM_ORE.get(), ModItems.ETRIUM_NUGGET.get(), 0.2f, 200);
 
         // Overworld deepslate ore smelting
         oreSmelting(recipeOutput, "deepslate_desh", ModBlocks.DEEPSLATE_DESH_ORE.get(), ModItems.DESH_INGOT.get(), 0.7f, 200);
@@ -932,13 +932,13 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         oreBlasting(recipeOutput, "moon_cheese", ModBlocks.MOON_CHEESE_ORE.get(), ModItems.CHEESE.get(), 0.1f, 100);
         oreBlasting(recipeOutput, "moon_desh", ModBlocks.MOON_DESH_ORE.get(), ModItems.DESH_INGOT.get(), 0.7f, 100);
         oreBlasting(recipeOutput, "moon_iron", ModBlocks.MOON_IRON_ORE.get(), Items.IRON_INGOT, 0.7f, 100);
-        oreBlasting(recipeOutput, "moon_ice_shard", ModBlocks.MOON_ICE_SHARD_ORE.get(), ModItems.ICE_SHARD.get(), 0.2f, 100);
+        oreBlasting(recipeOutput, "moon_etrium_nugget", ModBlocks.MOON_ETRIUM_ORE.get(), ModItems.ETRIUM_NUGGET.get(), 0.2f, 100);
 
         // Mars ore blasting
         oreBlasting(recipeOutput, "mars_iron", ModBlocks.MARS_IRON_ORE.get(), Items.IRON_INGOT, 0.7f, 100);
         oreBlasting(recipeOutput, "mars_diamond", ModBlocks.MARS_DIAMOND_ORE.get(), Items.DIAMOND, 1.0f, 100);
         oreBlasting(recipeOutput, "mars_ostrum", ModBlocks.MARS_OSTRUM_ORE.get(), ModItems.OSTRUM_INGOT.get(), 0.7f, 100);
-        oreBlasting(recipeOutput, "mars_ice_shard", ModBlocks.MARS_ICE_SHARD_ORE.get(), ModItems.ICE_SHARD.get(), 0.2f, 100);
+        oreBlasting(recipeOutput, "mars_etrium_nugget", ModBlocks.MARS_ETRIUM_ORE.get(), ModItems.ETRIUM_NUGGET.get(), 0.2f, 100);
 
         // Venus ore blasting
         oreBlasting(recipeOutput, "venus_coal", ModBlocks.VENUS_COAL_ORE.get(), Items.COAL, 0.1f, 100);
@@ -954,7 +954,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         oreBlasting(recipeOutput, "glacio_copper", ModBlocks.GLACIO_COPPER_ORE.get(), Items.COPPER_INGOT, 0.7f, 100);
         oreBlasting(recipeOutput, "glacio_iron", ModBlocks.GLACIO_IRON_ORE.get(), Items.IRON_INGOT, 0.7f, 100);
         oreBlasting(recipeOutput, "glacio_lapis", ModBlocks.GLACIO_LAPIS_ORE.get(), Items.LAPIS_LAZULI, 0.2f, 100);
-        oreBlasting(recipeOutput, "glacio_ice_shard", ModBlocks.GLACIO_ICE_SHARD_ORE.get(), ModItems.ICE_SHARD.get(), 0.2f, 100);
+        oreBlasting(recipeOutput, "glacio_etrium_nugget", ModBlocks.GLACIO_ETRIUM_ORE.get(), ModItems.ETRIUM_NUGGET.get(), 0.2f, 100);
 
         // Overworld deepslate ore blasting
         oreBlasting(recipeOutput, "deepslate_desh", ModBlocks.DEEPSLATE_DESH_ORE.get(), ModItems.DESH_INGOT.get(), 0.7f, 100);

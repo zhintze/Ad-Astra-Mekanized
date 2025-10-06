@@ -324,7 +324,7 @@ public class ModBlocks {
     public static final Supplier<Block> CALORITE_ORE = registerBlock("calorite_ore",
             () -> new Block(BlockProperties.ORE_BLOCK));
 
-    public static final Supplier<Block> ICE_SHARD_ORE = registerBlock("ice_shard_ore",
+    public static final Supplier<Block> ETRIUM_ORE = registerBlock("etrium_ore",
             () -> new Block(BlockProperties.ORE_BLOCK));
 
     // Deepslate Ores
@@ -346,7 +346,7 @@ public class ModBlocks {
     public static final Supplier<Block> MOON_IRON_ORE = registerBlock("moon_iron_ore",
             () -> new Block(BlockProperties.moonStone()));
 
-    public static final Supplier<Block> MOON_ICE_SHARD_ORE = registerBlock("moon_ice_shard_ore",
+    public static final Supplier<Block> MOON_ETRIUM_ORE = registerBlock("moon_etrium_ore",
             () -> new Block(BlockProperties.moonStone()));
 
     public static final Supplier<Block> MOON_CHEESE_ORE = registerBlock("moon_cheese_ore",
@@ -362,7 +362,7 @@ public class ModBlocks {
     public static final Supplier<Block> MARS_OSTRUM_ORE = registerBlock("mars_ostrum_ore",
             () -> new Block(BlockProperties.marsStone()));
 
-    public static final Supplier<Block> MARS_ICE_SHARD_ORE = registerBlock("mars_ice_shard_ore",
+    public static final Supplier<Block> MARS_ETRIUM_ORE = registerBlock("mars_etrium_ore",
             () -> new Block(BlockProperties.marsStone()));
 
     // Venus Ores
@@ -395,7 +395,7 @@ public class ModBlocks {
     public static final Supplier<Block> GLACIO_LAPIS_ORE = registerBlock("glacio_lapis_ore",
             () -> new Block(BlockProperties.glacioStone()));
 
-    public static final Supplier<Block> GLACIO_ICE_SHARD_ORE = registerBlock("glacio_ice_shard_ore",
+    public static final Supplier<Block> GLACIO_ETRIUM_ORE = registerBlock("glacio_etrium_ore",
             () -> new Block(BlockProperties.glacioStone()));
 
     // ========== DOORS & ACCESS BLOCKS ==========

@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "adastramekanized:block/moon_etrium_ore"
+  }
+}

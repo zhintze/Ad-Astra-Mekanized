@@ -101,9 +101,6 @@ public class ModItems {
     public static final Supplier<Item> ETRIONIC_CORE = ITEMS.register("etrionic_core",
             () -> new Item(new Item.Properties()));
 
-    public static final Supplier<Item> ICE_SHARD = ITEMS.register("ice_shard",
-            () -> new Item(new Item.Properties()));
-
     public static final Supplier<Item> CHEESE = ITEMS.register("cheese",
             () -> new Item(new Item.Properties().food(FoodProperties.CHEESE)));
 

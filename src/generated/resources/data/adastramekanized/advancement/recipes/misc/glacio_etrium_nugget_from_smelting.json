@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_moon_ice_shard": {
+    "has_glacio_etrium_nugget": {
       "conditions": {
         "items": [
           {
-            "items": "adastramekanized:moon_ice_shard_ore"
+            "items": "adastramekanized:glacio_etrium_ore"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "adastramekanized:moon_ice_shard_from_smelting"
+        "recipe": "adastramekanized:glacio_etrium_nugget_from_smelting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_moon_ice_shard"
+      "has_glacio_etrium_nugget"
     ]
   ],
   "rewards": {
     "recipes": [
-      "adastramekanized:moon_ice_shard_from_smelting"
+      "adastramekanized:glacio_etrium_nugget_from_smelting"
     ]
   }
 }

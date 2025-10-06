@@ -62,7 +62,6 @@ public class ModCreativeTabs {
 
                         // Special Materials
                         output.accept(ModItems.ETRIONIC_CORE.get());
-                        output.accept(ModItems.ICE_SHARD.get());
                         output.accept(ModItems.CHEESE.get());
                     })
                     .build());
@@ -89,7 +88,7 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.DESH_ORE.get());
                         output.accept(ModBlocks.OSTRUM_ORE.get());
                         output.accept(ModBlocks.CALORITE_ORE.get());
-                        output.accept(ModBlocks.ICE_SHARD_ORE.get());
+                        output.accept(ModBlocks.ETRIUM_ORE.get());
                         output.accept(ModBlocks.DEEPSLATE_DESH_ORE.get());
                         output.accept(ModBlocks.DEEPSLATE_OSTRUM_ORE.get());
                         output.accept(ModBlocks.DEEPSLATE_CALORITE_ORE.get());
@@ -97,12 +96,12 @@ public class ModCreativeTabs {
                         // Planet-Specific Ores
                         output.accept(ModBlocks.MOON_DESH_ORE.get());
                         output.accept(ModBlocks.MOON_IRON_ORE.get());
-                        output.accept(ModBlocks.MOON_ICE_SHARD_ORE.get());
+                        output.accept(ModBlocks.MOON_ETRIUM_ORE.get());
                         output.accept(ModBlocks.MOON_CHEESE_ORE.get());
                         output.accept(ModBlocks.MARS_IRON_ORE.get());
                         output.accept(ModBlocks.MARS_DIAMOND_ORE.get());
                         output.accept(ModBlocks.MARS_OSTRUM_ORE.get());
-                        output.accept(ModBlocks.MARS_ICE_SHARD_ORE.get());
+                        output.accept(ModBlocks.MARS_ETRIUM_ORE.get());
                         output.accept(ModBlocks.VENUS_COAL_ORE.get());
                         output.accept(ModBlocks.VENUS_GOLD_ORE.get());
                         output.accept(ModBlocks.VENUS_DIAMOND_ORE.get());
@@ -112,7 +111,7 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.GLACIO_COPPER_ORE.get());
                         output.accept(ModBlocks.GLACIO_IRON_ORE.get());
                         output.accept(ModBlocks.GLACIO_LAPIS_ORE.get());
-                        output.accept(ModBlocks.GLACIO_ICE_SHARD_ORE.get());
+                        output.accept(ModBlocks.GLACIO_ETRIUM_ORE.get());
 
                         // Special Blocks
                         output.accept(ModBlocks.CHEESE_BLOCK.get());

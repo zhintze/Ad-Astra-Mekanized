@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_glacio_ice_shard": {
+    "has_mars_etrium_nugget": {
       "conditions": {
         "items": [
           {
-            "items": "adastramekanized:glacio_ice_shard_ore"
+            "items": "adastramekanized:mars_etrium_ore"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "adastramekanized:glacio_ice_shard_from_blasting"
+        "recipe": "adastramekanized:mars_etrium_nugget_from_blasting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_glacio_ice_shard"
+      "has_mars_etrium_nugget"
     ]
   ],
   "rewards": {
     "recipes": [
-      "adastramekanized:glacio_ice_shard_from_blasting"
+      "adastramekanized:mars_etrium_nugget_from_blasting"
     ]
   }
 }

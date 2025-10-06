@@ -34,7 +34,6 @@
 
   "item.adastramekanized.etrionic_core": "Etrionic Core",
   "item.adastramekanized.etrionic_capacitor": "Etrionic Capacitor",
-  "item.adastramekanized.ice_shard": "Ice Shard",
   "item.adastramekanized.cheese": "Cheese",
 
   "item.adastramekanized.rocket_nose_cone": "Rocket Nose Cone",
@@ -102,7 +101,7 @@
   "block.adastramekanized.desh_ore": "Desh Ore",
   "block.adastramekanized.ostrum_ore": "Ostrum Ore",
   "block.adastramekanized.calorite_ore": "Calorite Ore",
-  "block.adastramekanized.ice_shard_ore": "Ice Shard Ore",
+  "block.adastramekanized.etrium_ore": "Etrium Ore",
   "block.adastramekanized.deepslate_desh_ore": "Deepslate Desh Ore",
   "block.adastramekanized.deepslate_ostrum_ore": "Deepslate Ostrum Ore",
   "block.adastramekanized.deepslate_calorite_ore": "Deepslate Calorite Ore",
@@ -231,12 +230,12 @@
 
   "block.adastramekanized.moon_desh_ore": "Moon Desh Ore",
   "block.adastramekanized.moon_iron_ore": "Moon Iron Ore",
-  "block.adastramekanized.moon_ice_shard_ore": "Moon Ice Shard Ore",
+  "block.adastramekanized.moon_etrium_ore": "Moon Etrium Ore",
   "block.adastramekanized.moon_cheese_ore": "Moon Cheese Ore",
   "block.adastramekanized.mars_iron_ore": "Mars Iron Ore",
   "block.adastramekanized.mars_diamond_ore": "Mars Diamond Ore",
   "block.adastramekanized.mars_ostrum_ore": "Mars Ostrum Ore",
-  "block.adastramekanized.mars_ice_shard_ore": "Mars Ice Shard Ore",
+  "block.adastramekanized.mars_etrium_ore": "Mars Etrium Ore",
   "block.adastramekanized.venus_coal_ore": "Venus Coal Ore",
   "block.adastramekanized.venus_gold_ore": "Venus Gold Ore",
   "block.adastramekanized.venus_diamond_ore": "Venus Diamond Ore",
@@ -246,7 +245,7 @@
   "block.adastramekanized.glacio_copper_ore": "Glacio Copper Ore",
   "block.adastramekanized.glacio_iron_ore": "Glacio Iron Ore",
   "block.adastramekanized.glacio_lapis_ore": "Glacio Lapis Ore",
-  "block.adastramekanized.glacio_ice_shard_ore": "Glacio Ice Shard Ore",
+  "block.adastramekanized.glacio_etrium_ore": "Glacio Etrium Ore",
 
   "block.adastramekanized.steel_door": "Steel Door",
   "block.adastramekanized.steel_trapdoor": "Steel Trapdoor",
