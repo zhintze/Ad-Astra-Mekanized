@@ -1,21 +1,39 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "misc",
-  "key": {
-    "#": {
-      "item": "adastramekanized:steel_sheet"
+  "type": "adastramekanized:nasa_workbench",
+  "ingredients": [
+    {
+      "item": "adastramekanized:etrium_sheet"
     },
-    "D": {
-      "item": "minecraft:diamond"
+    {
+      "item": "minecraft:redstone_lamp"
     },
-    "R": {
-      "item": "minecraft:redstone"
+    {
+      "item": "minecraft:redstone_lamp"
+    },
+    {
+      "item": "adastramekanized:etrium_rod"
+    },
+    {
+      "item": "adastramekanized:etrium_rod"
+    },
+    {
+      "item": "adastramekanized:etrium_sheet"
+    },
+    {
+      "item": "adastramekanized:etrium_sheet"
+    },
+    {
+      "item": "adastramekanized:etrium_nugget"
+    },
+    {
+      "item": "adastramekanized:etrium_nugget"
+    },
+    {
+      "item": "adastramekanized:etrium_nugget"
+    },
+    {
+      "item": "adastramekanized:etrium_nugget"
     }
-  },
-  "pattern": [
-    "#R#",
-    "RDR",
-    "#R#"
   ],
   "result": {
     "count": 1,

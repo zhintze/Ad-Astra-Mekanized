@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_gas_tank": {
+    "has_desh_nugget": {
       "conditions": {
         "items": [
           {
-            "items": "adastramekanized:gas_tank"
+            "items": "adastramekanized:desh_nugget"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_gas_tank"
+      "has_desh_nugget"
     ]
   ],
   "rewards": {

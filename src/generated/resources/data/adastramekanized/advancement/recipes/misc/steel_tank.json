@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_steel_sheet": {
+    "has_gas_tank": {
       "conditions": {
         "items": [
           {
-            "items": "adastramekanized:steel_sheet"
+            "items": "adastramekanized:gas_tank"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_steel_sheet"
+      "has_gas_tank"
     ]
   ],
   "rewards": {

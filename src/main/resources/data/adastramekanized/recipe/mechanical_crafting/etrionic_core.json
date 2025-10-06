@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:mechanical_crafting",
+  "key": {
+    "E": {
+      "item": "adastramekanized:etrium_sheet"
+    },
+    "L": {
+      "item": "minecraft:redstone_lamp"
+    },
+    "R": {
+      "item": "adastramekanized:etrium_rod"
+    },
+    "N": {
+      "item": "adastramekanized:etrium_nugget"
+    }
+  },
+  "pattern": [
+    "    E    ",
+    "   L L   ",
+    "   R R   ",
+    "   E E   ",
+    " N N N N "
+  ],
+  "result": {
+    "id": "adastramekanized:etrionic_core"
+  },
+  "accept_mirrored": false
+}

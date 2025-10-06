@@ -1,0 +1,31 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:mechanical_crafting",
+  "key": {
+    "S": {
+      "item": "adastramekanized:steel_sheet"
+    },
+    "R": {
+      "item": "adastramekanized:steel_rod"
+    },
+    "I": {
+      "item": "adastramekanized:iron_rod"
+    }
+  },
+  "pattern": [
+    "   S S   ",
+    "   S S   ",
+    "    S    ",
+    "  R R R  ",
+    "I   I   R"
+  ],
+  "result": {
+    "id": "adastramekanized:rocket_fin"
+  },
+  "accept_mirrored": false
+}

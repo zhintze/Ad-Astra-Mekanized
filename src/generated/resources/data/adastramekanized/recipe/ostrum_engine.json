@@ -2,25 +2,37 @@
   "type": "adastramekanized:nasa_workbench",
   "ingredients": [
     {
-      "item": "adastramekanized:ostrum_sheet"
-    },
-    {
-      "item": "adastramekanized:ostrum_sheet"
-    },
-    {
-      "item": "adastramekanized:ostrum_sheet"
-    },
-    {
-      "item": "adastramekanized:ostrum_sheet"
-    },
-    {
       "item": "adastramekanized:desh_engine"
     },
     {
-      "item": "adastramekanized:ostrum_sheet"
+      "item": "adastramekanized:etrionic_core"
+    },
+    {
+      "item": "adastramekanized:etrionic_core"
+    },
+    {
+      "item": "adastramekanized:engine_frame"
+    },
+    {
+      "item": "adastramekanized:engine_frame"
     },
     {
       "item": "adastramekanized:fan"
+    },
+    {
+      "item": "adastramekanized:fan"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
     }
   ],
   "result": {

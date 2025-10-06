@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:mechanical_crafting",
+  "key": {
+    "L": {
+      "item": "minecraft:lightning_rod"
+    },
+    "S": {
+      "item": "adastramekanized:steel_sheet"
+    },
+    "R": {
+      "item": "adastramekanized:steel_rod"
+    },
+    "D": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    "    L    ",
+    "   S S   ",
+    "   R R   ",
+    "   D D   ",
+    " S S S S "
+  ],
+  "result": {
+    "id": "adastramekanized:rocket_nose_cone"
+  },
+  "accept_mirrored": false
+}

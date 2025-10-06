@@ -10,6 +10,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -54,160 +55,204 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
     private void buildNasaWorkbenchRecipes(RecipeOutput recipeOutput) {
         AdAstraMekanized.LOGGER.info("Building NASA Workbench recipes...");
 
-        // Test recipe: Iron Ingot -> Diamond
-        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, Items.DIAMOND, 1)
-            .addIngredient(Items.IRON_INGOT)
-            .unlockedBy("has_iron", has(Items.IRON_INGOT))
-            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "nasa_test_minimal"));
+        // ========== BASIC STEEL TIER (T1) - No planet drops required ==========
 
-        // Steel Engine
-        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.TRANSPORTATION, ModItems.STEEL_ENGINE.get(), 1)
-            .addIngredient(ModItems.STEEL_SHEET.get(), 4)
-            .addIngredient(ModItems.ENGINE_FRAME.get())
-            .addIngredient(ModItems.STEEL_SHEET.get())
-            .addIngredient(ModItems.FAN.get())
-            .unlockedBy("has_steel_sheet", has(ModItems.STEEL_SHEET.get()))
-            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "steel_engine"));
-
-        // Steel Tank
-        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, ModItems.STEEL_TANK.get(), 1)
-            .addIngredient(ModItems.STEEL_SHEET.get(), 4)
-            .addIngredient(ModItems.GAS_TANK.get())
-            .addIngredient(ModItems.STEEL_SHEET.get(), 2)
-            .unlockedBy("has_steel_sheet", has(ModItems.STEEL_SHEET.get()))
-            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "steel_tank"));
-
-        // Desh Engine
-        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.TRANSPORTATION, ModItems.DESH_ENGINE.get(), 1)
-            .addIngredient(ModItems.DESH_SHEET.get(), 4)
-            .addIngredient(ModItems.STEEL_ENGINE.get())
-            .addIngredient(ModItems.DESH_SHEET.get())
-            .addIngredient(ModItems.FAN.get())
-            .unlockedBy("has_desh_sheet", has(ModItems.DESH_SHEET.get()))
-            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "desh_engine"));
-
-        // Desh Tank
-        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, ModItems.DESH_TANK.get(), 1)
-            .addIngredient(ModItems.DESH_SHEET.get(), 4)
-            .addIngredient(ModItems.STEEL_TANK.get())
-            .addIngredient(ModItems.DESH_SHEET.get(), 2)
-            .unlockedBy("has_desh_sheet", has(ModItems.DESH_SHEET.get()))
-            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "desh_tank"));
-
-        // Ostrum Engine
-        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.TRANSPORTATION, ModItems.OSTRUM_ENGINE.get(), 1)
-            .addIngredient(ModItems.OSTRUM_SHEET.get(), 4)
-            .addIngredient(ModItems.DESH_ENGINE.get())
-            .addIngredient(ModItems.OSTRUM_SHEET.get())
-            .addIngredient(ModItems.FAN.get())
-            .unlockedBy("has_ostrum_sheet", has(ModItems.OSTRUM_SHEET.get()))
-            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "ostrum_engine"));
-
-        // Ostrum Tank
-        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, ModItems.OSTRUM_TANK.get(), 1)
-            .addIngredient(ModItems.OSTRUM_SHEET.get(), 4)
-            .addIngredient(ModItems.DESH_TANK.get())
-            .addIngredient(ModItems.OSTRUM_SHEET.get(), 2)
-            .unlockedBy("has_ostrum_sheet", has(ModItems.OSTRUM_SHEET.get()))
-            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "ostrum_tank"));
-
-        // Calorite Engine
-        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.TRANSPORTATION, ModItems.CALORITE_ENGINE.get(), 1)
-            .addIngredient(ModItems.CALORITE_SHEET.get(), 4)
-            .addIngredient(ModItems.OSTRUM_ENGINE.get())
-            .addIngredient(ModItems.CALORITE_SHEET.get())
-            .addIngredient(ModItems.FAN.get())
-            .unlockedBy("has_calorite_sheet", has(ModItems.CALORITE_SHEET.get()))
-            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "calorite_engine"));
-
-        // Calorite Tank
-        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, ModItems.CALORITE_TANK.get(), 1)
-            .addIngredient(ModItems.CALORITE_SHEET.get(), 4)
-            .addIngredient(ModItems.OSTRUM_TANK.get())
-            .addIngredient(ModItems.CALORITE_SHEET.get(), 2)
-            .unlockedBy("has_calorite_sheet", has(ModItems.CALORITE_SHEET.get()))
-            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "calorite_tank"));
-
-        // Engine Frame
-        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, ModItems.ENGINE_FRAME.get(), 1)
-            .addIngredient(ModItems.STEEL_ROD.get(), 3)
-            .addIngredient(ModItems.STEEL_SHEET.get())
-            .addIngredient(Items.REDSTONE_BLOCK)
-            .addIngredient(ModItems.STEEL_SHEET.get())
-            .addIngredient(ModItems.STEEL_ROD.get(), 2)
-            .addIngredient(ModItems.STEEL_SHEET.get())
-            .unlockedBy("has_steel_rod", has(ModItems.STEEL_ROD.get()))
-            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "engine_frame"));
-
-        // Etrionic Capacitor
-        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.REDSTONE, ModItems.ETRIONIC_CAPACITOR.get(), 1)
-            .addIngredient(Items.ENDER_EYE)
-            .addIngredient(ModItems.ETRIUM_SHEET.get())
-            .addIngredient(Items.ENDER_EYE)
-            .addIngredient(ModItems.ETRIUM_SHEET.get())
-            .addIngredient(Items.DIAMOND)
-            .addIngredient(ModItems.ETRIUM_SHEET.get())
-            .addIngredient(Items.ENDER_EYE)
-            .addIngredient(ModItems.ETRIUM_SHEET.get())
-            .addIngredient(Items.ENDER_EYE)
-            .unlockedBy("has_etrium_sheet", has(ModItems.ETRIUM_SHEET.get()))
-            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "etrionic_capacitor"));
-
-        // Fan
+        // Fan (prerequisite for engines) - 10 items
         NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, ModItems.FAN.get(), 1)
-            .addIngredient(ModItems.STEEL_ROD.get(), 3)
-            .addIngredient(ModItems.STEEL_SHEET.get())
-            .addIngredient(ModItems.STEEL_ROD.get())
+                .addIngredient(ModItems.IRON_ROD.get(), 1)
+                .addIngredient(ModItems.STEEL_SHEET.get(), 2)
+                .addIngredient(ModItems.STEEL_ROD.get(), 2)
             .addIngredient(ModItems.STEEL_SHEET.get(), 2)
+            .addIngredient(ModItems.IRON_ROD.get(), 4)
             .unlockedBy("has_steel_rod", has(ModItems.STEEL_ROD.get()))
             .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "fan"));
 
-        // Gas Tank
+        // Engine Frame (prerequisite for steel engine) - 10 items
+        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, ModItems.ENGINE_FRAME.get(), 1)
+            .addIngredient(ModItems.STEEL_SHEET.get(), 1)
+                .addIngredient(Items.REDSTONE_BLOCK, 2)
+                .addIngredient(ModItems.STEEL_ROD.get(), 2)
+            .addIngredient(ModItems.STEEL_SHEET.get(), 2)
+            .unlockedBy("has_steel_rod", has(ModItems.STEEL_ROD.get()))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "engine_frame"));
+
+        // Gas Tank (prerequisite for steel tank) - 10 items
         NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, ModItems.GAS_TANK.get(), 1)
-            .addIngredient(ModItems.STEEL_SHEET.get(), 2)
-            .addIngredient(getCreateIronSheet())
-            .addIngredient(ModItems.STEEL_SHEET.get(), 2)
-            .addIngredient(getCreateIronSheet())
-            .addIngredient(ModItems.STEEL_SHEET.get(), 2)
-            .unlockedBy("has_steel_sheet", has(ModItems.STEEL_SHEET.get()))
+                .addIngredient(ModItems.IRON_ROD.get())
+                .addIngredient(getCreateIronSheet())
+            .addIngredient(ModItems.STEEL_ROD.get())
+            .addIngredient(ModItems.STEEL_SHEET.get())
+                .addIngredient(ModItems.STEEL_ROD.get())
+                .addIngredient(ModItems.STEEL_SHEET.get(), 2)
+
+                .unlockedBy("has_steel_sheet", has(ModItems.STEEL_SHEET.get()))
             .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "gas_tank"));
 
-        // Large Gas Tank
-        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, ModItems.LARGE_GAS_TANK.get(), 1)
-            .addIngredient(ModItems.STEEL_SHEET.get(), 3)
-            .addIngredient(ModItems.GAS_TANK.get())
-            .addIngredient(ModItems.STEEL_SHEET.get())
-            .addIngredient(ModItems.GAS_TANK.get())
-            .addIngredient(ModItems.STEEL_SHEET.get(), 3)
+        // Rocket Fin - 10 items
+        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.TRANSPORTATION, ModItems.ROCKET_FIN.get(), 1)
+            .addIngredient(ModItems.STEEL_SHEET.get(), 5)
+            .addIngredient(ModItems.STEEL_ROD.get(), 3)
+            .addIngredient(ModItems.IRON_ROD.get(),2)
+                .addIngredient(ModItems.STEEL_ROD.get(), 1)
+
+                .unlockedBy("has_steel_sheet", has(ModItems.STEEL_SHEET.get()))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "rocket_fin"));
+
+        // Rocket Nose Cone - 10 items
+        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.TRANSPORTATION, ModItems.ROCKET_NOSE_CONE.get(), 1)
+            .addIngredient(Items.LIGHTNING_ROD)
+            .addIngredient(ModItems.STEEL_SHEET.get(), 2)
+            .addIngredient(ModItems.STEEL_ROD.get(), 2)
+            .addIngredient(Items.REDSTONE, 2)
+            .addIngredient(ModItems.STEEL_SHEET.get(), 4)
+                .unlockedBy("has_lightning_rod", has(Items.LIGHTNING_ROD))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "rocket_nose_cone"));
+
+        // Steel Engine - 10 items
+        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.TRANSPORTATION, ModItems.STEEL_ENGINE.get(), 1)
+                .addIngredient(Items.REDSTONE_BLOCK, 1)
+            .addIngredient(ModItems.STEEL_ROD.get(), 2)
+                .addIngredient(ModItems.ENGINE_FRAME.get())
+                .addIngredient(ModItems.ENGINE_FRAME.get())
+            .addIngredient(ModItems.FAN.get())
+            .addIngredient(ModItems.FAN.get())
+            .addIngredient(ModItems.STEEL_SHEET.get(), 4)
+
+                .unlockedBy("has_engine_frame", has(ModItems.ENGINE_FRAME.get()))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "steel_engine"));
+
+        // Steel Tank - 10 items
+        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, ModItems.STEEL_TANK.get(), 1)
+                .addIngredient(ModItems.GAS_TANK.get())
+                .addIngredient(getCreateIronSheet())
+                .addIngredient(ModItems.STEEL_ROD.get())
+                .addIngredient(ModItems.STEEL_SHEET.get())
+                .addIngredient(ModItems.STEEL_ROD.get())
+                .addIngredient(ModItems.STEEL_ROD.get())
+                .addIngredient(ModItems.STEEL_ROD.get())
+                .addIngredient(ModItems.STEEL_SHEET.get(), 4)
             .unlockedBy("has_gas_tank", has(ModItems.GAS_TANK.get()))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "steel_tank"));
+
+        // ========== DESH TIER (T2) - Requires desh nuggets from Moon exploration ==========
+
+        // Large Gas Tank (upgraded gas tank) - 10 items, gated by desh nuggets
+        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, ModItems.LARGE_GAS_TANK.get(), 1)
+                .addIngredient(ModItems.STEEL_SHEET.get(), 3)
+                .addIngredient(ModItems.GAS_TANK.get(), 2)
+                .addIngredient(ModItems.GAS_TANK.get(),2)
+                .addIngredient(ModItems.STEEL_SHEET.get(),4)
+            .unlockedBy("has_desh_nugget", has(ModItems.DESH_NUGGET.get()))
             .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "large_gas_tank"));
 
-        // Oxygen Gear
+        // Oxygen Gear - 10 items, requires desh nuggets
         NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, ModItems.OXYGEN_GEAR.get(), 1)
             .addIngredient(ModItems.DESH_SHEET.get(), 3)
-            .addIngredient(ModItems.GAS_TANK.get())
-            .addIngredient(ModItems.DESH_SHEET.get())
-            .addIngredient(ModItems.GAS_TANK.get())
-            .addIngredient(ModItems.DESH_SHEET.get(), 2)
+            .addIngredient(ModItems.GAS_TANK.get(), 2)
+            .addIngredient(ModItems.STEEL_ROD.get(),2)
+            .addIngredient(ModItems.STEEL_SHEET.get(),4)
             .unlockedBy("has_gas_tank", has(ModItems.GAS_TANK.get()))
             .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "oxygen_gear"));
 
-        // Rocket Fin
-        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.TRANSPORTATION, ModItems.ROCKET_FIN.get(), 1)
-            .addIngredient(ModItems.STEEL_SHEET.get(), 2)
-            .addIngredient(ModItems.STEEL_ROD.get())
-            .addIngredient(ModItems.STEEL_SHEET.get(), 3)
-            .addIngredient(ModItems.STEEL_ROD.get())
-            .addIngredient(ModItems.STEEL_SHEET.get(), 2)
-            .unlockedBy("has_steel_sheet", has(ModItems.STEEL_SHEET.get()))
-            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "rocket_fin"));
+        // Desh Engine (upgrade from steel engine) - 10 items, requires desh nuggets
+        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.TRANSPORTATION, ModItems.DESH_ENGINE.get(), 1)
+                .addIngredient(ModItems.STEEL_ENGINE.get(), 1)
+                .addIngredient(ModItems.DESH_SHEET.get(), 2)
+                .addIngredient(ModItems.ENGINE_FRAME.get())
+                .addIngredient(ModItems.ENGINE_FRAME.get())
+                .addIngredient(ModItems.FAN.get())
+                .addIngredient(ModItems.FAN.get())
+                .addIngredient(ModItems.DESH_SHEET.get(), 4)
+            .unlockedBy("has_desh_sheet", has(ModItems.DESH_SHEET.get()))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "desh_engine"));
 
-        // Rocket Nose Cone
-        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.TRANSPORTATION, ModItems.ROCKET_NOSE_CONE.get(), 1)
-            .addIngredient(Items.LIGHTNING_ROD)
-            .addIngredient(ModItems.STEEL_SHEET.get(), 5)
-            .unlockedBy("has_lightning_rod", has(Items.LIGHTNING_ROD))
-            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "rocket_nose_cone"));
+        // Desh Tank (upgrade from steel tank) - 10 items, requires desh nuggets
+        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, ModItems.DESH_TANK.get(), 1)
+                .addIngredient(ModItems.STEEL_TANK.get())
+                .addIngredient(ModItems.STEEL_SHEET.get())
+                .addIngredient(ModItems.STEEL_ROD.get())
+                .addIngredient(ModItems.DESH_SHEET.get())
+                .addIngredient(ModItems.STEEL_ROD.get())
+                .addIngredient(ModItems.DESH_SHEET.get())
+                .addIngredient(ModItems.STEEL_ROD.get())
+                .addIngredient(ModItems.DESH_SHEET.get(), 4)
+            .unlockedBy("has_desh_sheet", has(ModItems.DESH_SHEET.get()))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "desh_tank"));
+
+        // ========== OSTRUM TIER (T3) - Requires ostrum nuggets from Mars exploration ==========
+
+        // Ostrum Engine (upgrade from desh engine) - 10 items, requires ostrum nuggets
+        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.TRANSPORTATION, ModItems.OSTRUM_ENGINE.get(), 1)
+                .addIngredient(ModItems.DESH_ENGINE.get(), 1)
+                .addIngredient(ModItems.ETRIONIC_CORE.get(), 2)
+                .addIngredient(ModItems.ENGINE_FRAME.get())
+                .addIngredient(ModItems.ENGINE_FRAME.get())
+                .addIngredient(ModItems.FAN.get())
+                .addIngredient(ModItems.FAN.get())
+                .addIngredient(ModItems.OSTRUM_SHEET.get(), 4)
+            .unlockedBy("has_ostrum_sheet", has(ModItems.OSTRUM_SHEET.get()))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "ostrum_engine"));
+
+        // Ostrum Tank (upgrade from desh tank) - 10 items, requires ostrum nuggets
+        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, ModItems.OSTRUM_TANK.get(), 1)
+                .addIngredient(ModItems.DESH_TANK.get())
+                .addIngredient(ModItems.DESH_SHEET.get())
+                .addIngredient(ModItems.ETRIUM_ROD.get())
+                .addIngredient(ModItems.OSTRUM_SHEET.get())
+                .addIngredient(ModItems.STEEL_ROD.get())
+                .addIngredient(ModItems.OSTRUM_SHEET.get())
+                .addIngredient(ModItems.STEEL_ROD.get())
+                .addIngredient(ModItems.OSTRUM_SHEET.get(), 4)
+            .unlockedBy("has_ostrum_sheet", has(ModItems.OSTRUM_SHEET.get()))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "ostrum_tank"));
+
+        // ========== CALORITE TIER (T4) - Requires calorite nuggets from Venus exploration ==========
+
+        // Calorite Engine (upgrade from ostrum engine) - 10 items, requires calorite nuggets
+        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.TRANSPORTATION, ModItems.CALORITE_ENGINE.get(), 1)
+                .addIngredient(ModItems.DESH_ENGINE.get(), 1)
+                .addIngredient(ModItems.ETRIONIC_CAPACITOR.get(), 2)
+                .addIngredient(ModItems.ENGINE_FRAME.get())
+                .addIngredient(ModItems.ENGINE_FRAME.get())
+                .addIngredient(ModItems.FAN.get())
+                .addIngredient(ModItems.FAN.get())
+                .addIngredient(ModItems.OSTRUM_SHEET.get(), 4)
+            .unlockedBy("has_calorite_nugget", has(ModItems.CALORITE_NUGGET.get()))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "calorite_engine"));
+
+        // Calorite Tank (upgrade from ostrum tank) - 10 items, requires calorite nuggets
+        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, ModItems.CALORITE_TANK.get(), 1)
+                .addIngredient(ModItems.OSTRUM_TANK.get())
+                .addIngredient(ModItems.OSTRUM_SHEET.get())
+                .addIngredient(ModItems.ETRIUM_ROD.get())
+                .addIngredient(ModItems.CALORITE_SHEET.get())
+                .addIngredient(ModItems.ETRIUM_ROD.get())
+                .addIngredient(ModItems.CALORITE_SHEET.get())
+                .addIngredient(ModItems.STEEL_ROD.get())
+                .addIngredient(ModItems.CALORITE_SHEET.get(), 4)
+            .unlockedBy("has_calorite_sheet", has(ModItems.CALORITE_SHEET.get()))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "calorite_tank"));
+
+        // ========== ETRIUM TIER (Endgame) - Requires etrium nuggets from planet mob drops ==========
+
+        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.REDSTONE, ModItems.ETRIONIC_CORE.get(), 1)
+                .addIngredient(ModItems.ETRIUM_SHEET.get())
+                .addIngredient(Items.REDSTONE_LAMP, 2)
+                .addIngredient(ModItems.ETRIUM_ROD.get(), 2)
+                .addIngredient(ModItems.ETRIUM_SHEET.get(), 2)
+                .addIngredient(ModItems.ETRIUM_NUGGET.get(), 4)
+                .unlockedBy("has_etrium_nugget", has(ModItems.ETRIUM_NUGGET.get()))
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "etrionic_core"));
+
+        // Etrionic Capacitor (endgame component) - 10 items, requires etrium nuggets from planet mobs
+        NasaWorkbenchRecipeBuilder.builder(RecipeCategory.REDSTONE, ModItems.ETRIONIC_CAPACITOR.get(), 1)
+                .addIngredient(ModItems.ETRIONIC_CORE.get())
+                .addIngredient(Items.ENDER_EYE, 2)
+            .addIngredient(ModItems.ETRIUM_ROD.get(), 4)
+                .addIngredient(ModItems.ETRIUM_NUGGET.get(), 4)
+
+                .unlockedBy("has_etrium_core", has(ModItems.ETRIONIC_CORE.get()))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "etrionic_capacitor"));
 
         // ========== ROCKETS ==========
 
@@ -813,18 +858,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
         // ========== Advanced Components ==========
 
-        // Etrionic Core: 4 steel sheets + 4 redstone + 1 diamond -> 1 core
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.ETRIONIC_CORE.get(), 1)
-            .pattern("#R#")
-            .pattern("RDR")
-            .pattern("#R#")
-            .define('#', ModItems.STEEL_SHEET.get())
-            .define('R', Items.REDSTONE)
-            .define('D', Items.DIAMOND)
-            .unlockedBy("has_steel_sheet", has(ModItems.STEEL_SHEET.get()))
-            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "etrionic_core"));
 
-        // Note: Etrionic Capacitor is crafted in NASA Workbench (see buildNasaWorkbenchRecipes)
     }
 
     private void buildSmeltingRecipes(RecipeOutput recipeOutput) {

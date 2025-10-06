@@ -8,9 +8,6 @@
       "item": "adastramekanized:steel_sheet"
     },
     {
-      "item": "adastramekanized:steel_rod"
-    },
-    {
       "item": "adastramekanized:steel_sheet"
     },
     {
@@ -23,10 +20,19 @@
       "item": "adastramekanized:steel_rod"
     },
     {
-      "item": "adastramekanized:steel_sheet"
+      "item": "adastramekanized:steel_rod"
     },
     {
-      "item": "adastramekanized:steel_sheet"
+      "item": "adastramekanized:steel_rod"
+    },
+    {
+      "item": "adastramekanized:iron_rod"
+    },
+    {
+      "item": "adastramekanized:iron_rod"
+    },
+    {
+      "item": "adastramekanized:steel_rod"
     }
   ],
   "result": {

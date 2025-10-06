@@ -2,19 +2,31 @@
   "type": "adastramekanized:nasa_workbench",
   "ingredients": [
     {
-      "item": "adastramekanized:desh_sheet"
-    },
-    {
-      "item": "adastramekanized:desh_sheet"
-    },
-    {
-      "item": "adastramekanized:desh_sheet"
-    },
-    {
-      "item": "adastramekanized:desh_sheet"
-    },
-    {
       "item": "adastramekanized:steel_tank"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
+    },
+    {
+      "item": "adastramekanized:steel_rod"
+    },
+    {
+      "item": "adastramekanized:desh_sheet"
+    },
+    {
+      "item": "adastramekanized:steel_rod"
+    },
+    {
+      "item": "adastramekanized:desh_sheet"
+    },
+    {
+      "item": "adastramekanized:steel_rod"
+    },
+    {
+      "item": "adastramekanized:desh_sheet"
+    },
+    {
+      "item": "adastramekanized:desh_sheet"
     },
     {
       "item": "adastramekanized:desh_sheet"

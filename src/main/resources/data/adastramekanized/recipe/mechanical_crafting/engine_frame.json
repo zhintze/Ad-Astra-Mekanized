@@ -1,0 +1,30 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:mechanical_crafting",
+  "key": {
+    "S": {
+      "item": "adastramekanized:steel_sheet"
+    },
+    "R": {
+      "item": "minecraft:redstone_block"
+    },
+    "D": {
+      "item": "adastramekanized:steel_rod"
+    }
+  },
+  "pattern": [
+    "    S    ",
+    "   R R   ",
+    "   D D   ",
+    "   S S   "
+  ],
+  "result": {
+    "id": "adastramekanized:engine_frame"
+  },
+  "accept_mirrored": false
+}

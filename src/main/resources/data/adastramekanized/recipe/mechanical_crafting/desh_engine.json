@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:mechanical_crafting",
+  "key": {
+    "A": {
+      "item": "adastramekanized:steel_engine"
+    },
+    "B": {
+      "item": "adastramekanized:desh_sheet"
+    },
+    "C": {
+      "item": "adastramekanized:engine_frame"
+    },
+    "D": {
+      "item": "adastramekanized:fan"
+    }
+  },
+  "pattern": [
+    "    A    ",
+    "   B B   ",
+    "   C C   ",
+    "   D D   ",
+    " B B B B "
+  ],
+  "result": {
+    "id": "adastramekanized:desh_engine"
+  },
+  "accept_mirrored": false
+}

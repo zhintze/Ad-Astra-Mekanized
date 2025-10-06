@@ -2,19 +2,31 @@
   "type": "adastramekanized:nasa_workbench",
   "ingredients": [
     {
-      "item": "adastramekanized:calorite_sheet"
-    },
-    {
-      "item": "adastramekanized:calorite_sheet"
-    },
-    {
-      "item": "adastramekanized:calorite_sheet"
-    },
-    {
-      "item": "adastramekanized:calorite_sheet"
-    },
-    {
       "item": "adastramekanized:ostrum_tank"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    {
+      "item": "adastramekanized:etrium_rod"
+    },
+    {
+      "item": "adastramekanized:calorite_sheet"
+    },
+    {
+      "item": "adastramekanized:etrium_rod"
+    },
+    {
+      "item": "adastramekanized:calorite_sheet"
+    },
+    {
+      "item": "adastramekanized:steel_rod"
+    },
+    {
+      "item": "adastramekanized:calorite_sheet"
+    },
+    {
+      "item": "adastramekanized:calorite_sheet"
     },
     {
       "item": "adastramekanized:calorite_sheet"

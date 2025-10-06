@@ -2,22 +2,19 @@
   "type": "adastramekanized:nasa_workbench",
   "ingredients": [
     {
-      "item": "adastramekanized:steel_sheet"
-    },
-    {
-      "item": "adastramekanized:steel_sheet"
+      "item": "adastramekanized:iron_rod"
     },
     {
       "item": "create:iron_sheet"
     },
     {
-      "item": "adastramekanized:steel_sheet"
+      "item": "adastramekanized:steel_rod"
     },
     {
       "item": "adastramekanized:steel_sheet"
     },
     {
-      "item": "create:iron_sheet"
+      "item": "adastramekanized:steel_rod"
     },
     {
       "item": "adastramekanized:steel_sheet"

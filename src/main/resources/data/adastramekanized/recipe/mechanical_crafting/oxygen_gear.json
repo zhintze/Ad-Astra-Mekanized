@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:mechanical_crafting",
+  "key": {
+    "D": {
+      "item": "adastramekanized:desh_sheet"
+    },
+    "G": {
+      "item": "adastramekanized:gas_tank"
+    },
+    "R": {
+      "item": "adastramekanized:steel_rod"
+    },
+    "S": {
+      "item": "adastramekanized:steel_sheet"
+    }
+  },
+  "pattern": [
+    "   D D   ",
+    "    D    ",
+    "   G G   ",
+    "   R R   ",
+    " S S S S "
+  ],
+  "result": {
+    "id": "adastramekanized:oxygen_gear"
+  },
+  "accept_mirrored": false
+}

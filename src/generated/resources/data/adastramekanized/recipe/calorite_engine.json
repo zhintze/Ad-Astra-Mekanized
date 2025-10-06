@@ -2,25 +2,37 @@
   "type": "adastramekanized:nasa_workbench",
   "ingredients": [
     {
-      "item": "adastramekanized:calorite_sheet"
+      "item": "adastramekanized:desh_engine"
     },
     {
-      "item": "adastramekanized:calorite_sheet"
+      "item": "adastramekanized:etrionic_capacitor"
     },
     {
-      "item": "adastramekanized:calorite_sheet"
+      "item": "adastramekanized:etrionic_capacitor"
     },
     {
-      "item": "adastramekanized:calorite_sheet"
+      "item": "adastramekanized:engine_frame"
     },
     {
-      "item": "adastramekanized:ostrum_engine"
-    },
-    {
-      "item": "adastramekanized:calorite_sheet"
+      "item": "adastramekanized:engine_frame"
     },
     {
       "item": "adastramekanized:fan"
+    },
+    {
+      "item": "adastramekanized:fan"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
     }
   ],
   "result": {

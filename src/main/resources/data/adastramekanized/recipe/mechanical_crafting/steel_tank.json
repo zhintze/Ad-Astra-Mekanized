@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:mechanical_crafting",
+  "key": {
+    "A": {
+      "item": "adastramekanized:gas_tank"
+    },
+    "B": {
+      "item": "create:iron_sheet"
+    },
+    "C": {
+      "item": "adastramekanized:steel_rod"
+    },
+    "D": {
+      "item": "adastramekanized:steel_sheet"
+    }
+  },
+  "pattern": [
+    "    A    ",
+    "   B C   ",
+    "   D C   ",
+    "   C C   ",
+    " D D D D "
+  ],
+  "result": {
+    "id": "adastramekanized:steel_tank"
+  },
+  "accept_mirrored": false
+}

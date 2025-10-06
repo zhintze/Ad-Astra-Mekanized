@@ -2,25 +2,37 @@
   "type": "adastramekanized:nasa_workbench",
   "ingredients": [
     {
-      "item": "adastramekanized:steel_sheet"
+      "item": "minecraft:redstone_block"
     },
     {
-      "item": "adastramekanized:steel_sheet"
+      "item": "adastramekanized:steel_rod"
     },
     {
-      "item": "adastramekanized:steel_sheet"
-    },
-    {
-      "item": "adastramekanized:steel_sheet"
+      "item": "adastramekanized:steel_rod"
     },
     {
       "item": "adastramekanized:engine_frame"
     },
     {
-      "item": "adastramekanized:steel_sheet"
+      "item": "adastramekanized:engine_frame"
     },
     {
       "item": "adastramekanized:fan"
+    },
+    {
+      "item": "adastramekanized:fan"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
     }
   ],
   "result": {

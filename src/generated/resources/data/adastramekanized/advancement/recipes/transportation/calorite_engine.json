@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_calorite_sheet": {
+    "has_calorite_nugget": {
       "conditions": {
         "items": [
           {
-            "items": "adastramekanized:calorite_sheet"
+            "items": "adastramekanized:calorite_nugget"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_calorite_sheet"
+      "has_calorite_nugget"
     ]
   ],
   "rewards": {

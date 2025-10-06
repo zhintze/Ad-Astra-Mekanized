@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:mechanical_crafting",
+  "key": {
+    "A": {
+      "item": "adastramekanized:steel_tank"
+    },
+    "B": {
+      "item": "adastramekanized:steel_sheet"
+    },
+    "C": {
+      "item": "adastramekanized:steel_rod"
+    },
+    "D": {
+      "item": "adastramekanized:desh_sheet"
+    }
+  },
+  "pattern": [
+    "    A    ",
+    "   B C   ",
+    "   D C   ",
+    "   D C   ",
+    " D D D D "
+  ],
+  "result": {
+    "id": "adastramekanized:desh_tank"
+  },
+  "accept_mirrored": false
+}

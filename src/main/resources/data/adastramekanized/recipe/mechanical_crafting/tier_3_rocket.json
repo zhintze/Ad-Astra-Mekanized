@@ -1,0 +1,38 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:mechanical_crafting",
+  "key": {
+    "N": {
+      "item": "adastramekanized:rocket_nose_cone"
+    },
+    "S": {
+      "item": "adastramekanized:ostrum_sheetblock"
+    },
+    "F": {
+      "item": "adastramekanized:rocket_fin"
+    },
+    "T": {
+      "item": "adastramekanized:ostrum_tank"
+    },
+    "E": {
+      "item": "adastramekanized:ostrum_engine"
+    }
+  },
+  "pattern": [
+    "    N    ",
+    "   S S   ",
+    "   S S   ",
+    "   S S   ",
+    "  FT TF  ",
+    "  F E F  "
+  ],
+  "result": {
+    "id": "adastramekanized:tier_3_rocket"
+  },
+  "accept_mirrored": false
+}

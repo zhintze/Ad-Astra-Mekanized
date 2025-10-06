@@ -2,19 +2,31 @@
   "type": "adastramekanized:nasa_workbench",
   "ingredients": [
     {
-      "item": "adastramekanized:ostrum_sheet"
-    },
-    {
-      "item": "adastramekanized:ostrum_sheet"
-    },
-    {
-      "item": "adastramekanized:ostrum_sheet"
-    },
-    {
-      "item": "adastramekanized:ostrum_sheet"
-    },
-    {
       "item": "adastramekanized:desh_tank"
+    },
+    {
+      "item": "adastramekanized:desh_sheet"
+    },
+    {
+      "item": "adastramekanized:etrium_rod"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    {
+      "item": "adastramekanized:steel_rod"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    {
+      "item": "adastramekanized:steel_rod"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
+    },
+    {
+      "item": "adastramekanized:ostrum_sheet"
     },
     {
       "item": "adastramekanized:ostrum_sheet"

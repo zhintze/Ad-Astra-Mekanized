@@ -2,31 +2,37 @@
   "type": "adastramekanized:nasa_workbench",
   "ingredients": [
     {
-      "item": "minecraft:ender_eye"
-    },
-    {
-      "item": "adastramekanized:etrium_sheet"
+      "item": "adastramekanized:etrionic_core"
     },
     {
       "item": "minecraft:ender_eye"
     },
     {
-      "item": "adastramekanized:etrium_sheet"
-    },
-    {
-      "item": "minecraft:diamond"
-    },
-    {
-      "item": "adastramekanized:etrium_sheet"
-    },
-    {
       "item": "minecraft:ender_eye"
     },
     {
-      "item": "adastramekanized:etrium_sheet"
+      "item": "adastramekanized:etrium_rod"
     },
     {
-      "item": "minecraft:ender_eye"
+      "item": "adastramekanized:etrium_rod"
+    },
+    {
+      "item": "adastramekanized:etrium_rod"
+    },
+    {
+      "item": "adastramekanized:etrium_rod"
+    },
+    {
+      "item": "adastramekanized:etrium_nugget"
+    },
+    {
+      "item": "adastramekanized:etrium_nugget"
+    },
+    {
+      "item": "adastramekanized:etrium_nugget"
+    },
+    {
+      "item": "adastramekanized:etrium_nugget"
     }
   ],
   "result": {
