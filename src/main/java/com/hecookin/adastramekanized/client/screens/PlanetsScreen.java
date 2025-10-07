@@ -46,6 +46,7 @@ public class PlanetsScreen extends AbstractContainerScreen<PlanetsMenu> {
     private ResourceLocation selectedSolarSystem = ResourceLocation.fromNamespaceAndPath("adastramekanized", "solar_system");
     private Planet selectedPlanet;
 
+
     public PlanetsScreen(PlanetsMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         this.imageWidth = width;
@@ -173,34 +174,11 @@ public class PlanetsScreen extends AbstractContainerScreen<PlanetsMenu> {
         // Dark space background
         graphics.fill(0, 0, width, height, 0xFF000419);
 
-        // Diamond grid pattern (Ad Astra style)
-        renderDiamondGrid(graphics);
+        // Static starfield background
+        renderStarfield(graphics);
 
         // Selection menu box
         renderSelectionMenu(graphics);
-    }
-
-    private void renderDiamondGrid(GuiGraphics graphics) {
-        // Render diamond pattern lines (Ad Astra style)
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
-
-        var matrix = graphics.pose().last().pose();
-
-        // Diagonal lines going down-right
-        for (int i = -height; i <= width; i += 24) {
-            bufferBuilder.addVertex(matrix, i, 0, 0).setColor(0xff0f2559);
-            bufferBuilder.addVertex(matrix, i + height, height, 0).setColor(0xff0f2559);
-        }
-
-        // Diagonal lines going down-left
-        for (int i = width + height; i >= 0; i -= 24) {
-            bufferBuilder.addVertex(matrix, i, 0, 0).setColor(0xff0f2559);
-            bufferBuilder.addVertex(matrix, i - height, height, 0).setColor(0xff0f2559);
-        }
-
-        BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
     }
 
     protected void renderSelectionMenu(GuiGraphics graphics) {
@@ -282,6 +260,30 @@ public class PlanetsScreen extends AbstractContainerScreen<PlanetsMenu> {
         graphics.drawString(font,
             Component.literal("Atmosphere: " + atmosphere).withStyle(ChatFormatting.GRAY),
             textX, textY + lineSpacing * 2, 0xAAAAAA);
+    }
+
+    private void renderStarfield(GuiGraphics graphics) {
+        // Static starfield
+        int starCount = 400;
+        var starRandom = net.minecraft.util.RandomSource.create(10842);
+
+        // Generate static star positions
+        for (int i = 0; i < starCount; i++) {
+            // Generate star position
+            int starX = (int) (starRandom.nextFloat() * width);
+            int starY = (int) (starRandom.nextFloat() * height);
+
+            // Star size (1-2 pixels)
+            int size = 1 + starRandom.nextInt(2);
+
+            // Star brightness variation
+            float brightness = 0.6f + starRandom.nextFloat() * 0.4f;
+            int alpha = (int) (brightness * 255);
+            int color = (alpha << 24) | 0xFFFFFF;
+
+            // Draw star as small filled rectangle
+            graphics.fill(starX, starY, starX + size, starY + size, color);
+        }
     }
 
     @Override
