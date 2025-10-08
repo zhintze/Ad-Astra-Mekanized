@@ -37,10 +37,10 @@ public class LanderRenderer extends EntityRenderer<Lander> {
 
         poseStack.pushPose();
 
-        // Lander is always 2x scale
-        float scale = 2.0F;
+        // Lander is 1.5x scale
+        float scale = 1.5F;
 
-        // Position adjustments (Ad Astra uses 1.55F, scaled 2x)
+        // Position adjustments (Ad Astra uses 1.55F, scaled 1.5x)
         poseStack.translate(0.0F, 1.55F * scale, 0.0F);
 
         // Rotate to face direction

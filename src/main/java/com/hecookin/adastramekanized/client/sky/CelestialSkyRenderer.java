@@ -133,7 +133,16 @@ public class CelestialSkyRenderer {
     }
 
     /**
-     * Renders stars in the sky based on planet configuration
+     * Renders stars in the sky based on planet configuration.
+     *
+     * Stars are rendered in a full 360° sphere around the player with depth testing disabled,
+     * making them visible in all directions (above, below, and around). This is physically
+     * accurate for airless worlds where there's no horizon blocking the view of space.
+     *
+     * Applies to ALL planets with star rendering enabled, especially important for:
+     * - Airless worlds (Moon, Mercury, asteroids)
+     * - Space stations and orbital platforms
+     * - Any environment where stars should surround the player
      */
     public static void renderStars(PoseStack poseStack, Matrix4f projectionMatrix, float partialTick,
                                   ClientLevel level, AtmosphericRendering.SkyConfiguration skyConfig) {
@@ -162,17 +171,19 @@ public class CelestialSkyRenderer {
         poseStack.mulPose(com.mojang.math.Axis.YP.rotationDegrees(-90.0f));
         poseStack.mulPose(com.mojang.math.Axis.XP.rotationDegrees(90.0f));
 
-        // Set up star rendering state
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.depthMask(false);
-
         // Use reasonable star count for performance
         int starCount = Math.min(skyConfig.starCount() / 10, 1000);
 
-        // Set up rendering for all stars at once
+        // Set up star rendering state - configure shader first, then render states
         RenderSystem.setShader(GameRenderer::getPositionShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, skyConfig.starBrightness());
+
+        // Enable full-sphere rendering for stars (visible in all directions)
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.depthMask(false);
+        RenderSystem.disableCull(); // Disable backface culling
+        RenderSystem.disableDepthTest(); // Disable depth testing to render stars in full 360° sphere
 
         Matrix4f matrix = poseStack.last().pose();
         BufferBuilder bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
@@ -195,8 +206,8 @@ public class CelestialSkyRenderer {
             float y = Mth.cos(phi);
             float z = sinPhi * Mth.sin(theta);
 
-            // Scale to sky distance
-            float skyDistance = 100.0f;
+            // Scale to sky distance (farther than celestial bodies to prevent z-fighting)
+            float skyDistance = 150.0f;
             float starX = x * skyDistance;
             float starY = y * skyDistance;
             float starZ = z * skyDistance;
@@ -214,9 +225,11 @@ public class CelestialSkyRenderer {
         // Render all stars at once
         BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
 
-        // Reset render state
+        // Reset render state to defaults
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.depthMask(true);
+        RenderSystem.enableCull(); // Restore face culling
+        RenderSystem.enableDepthTest(); // Restore depth testing
         RenderSystem.disableBlend();
 
         poseStack.popPose();

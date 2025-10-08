@@ -319,6 +319,11 @@ public class Rocket extends Vehicle {
         entityData.set(HAS_LAUNCHED, true);
         entityData.set(IS_LAUNCHING, false);
         entityData.set(LAUNCH_TICKS, -1);
+
+        // Save launch coordinates for the player's current dimension
+        if (!level().isClientSide() && getControllingPassenger() instanceof net.minecraft.server.level.ServerPlayer player) {
+            com.hecookin.adastramekanized.common.util.LaunchCoordinateTracker.saveLaunchCoordinates(player);
+        }
     }
 
     public boolean isLaunching() {

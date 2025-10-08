@@ -45,8 +45,9 @@ public record ServerboundLandPacket(String planetId, boolean tryPreviousLocation
     }
 
     /**
-     * Handle the packet on the server side - initiates landing sequence by spawning a Lander.
-     * This follows Ad Astra's approach: replace rocket with lander entity for descent.
+     * Handle the packet on the server side - initiates landing sequence.
+     * For regular planets: spawns a Lander entity for descent.
+     * For Earth's Orbit: teleports directly to space station and drops rocket + items.
      */
     public static void handle(ServerboundLandPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
@@ -76,44 +77,65 @@ public record ServerboundLandPacket(String planetId, boolean tryPreviousLocation
                 return;
             }
 
-            // Landing position at atmosphere height
-            BlockPos targetPos = player.blockPosition();
-            Vec3 landingPos = new Vec3(targetPos.getX(), RocketConstants.ATMOSPHERE_LEAVE_HEIGHT, targetPos.getZ());
-
-            // Stop riding for teleportation
-            player.stopRiding();
-
-            // Teleport player to target dimension
-            ServerPlayer teleportedPlayer = teleportToDimension(player, targetLevel, landingPos);
-
-            // Create Lander entity in target dimension
-            Lander lander = ModEntityTypes.LANDER.get().create(targetLevel);
-            if (lander == null) {
-                AdAstraMekanized.LOGGER.error("Failed to create lander entity for player {}", player.getName().getString());
-                return;
-            }
-
-            lander.setPos(landingPos);
-            targetLevel.addFreshEntity(lander);
-
-            // Transfer rocket inventory to lander (slots 1-10)
-            var rocketInventory = rocket.inventory();
-            var landerInventory = lander.inventory();
-            for (int i = 0; i < rocketInventory.getContainerSize(); i++) {
-                landerInventory.setItem(i + 1, rocketInventory.getItem(i));
-            }
-
-            // Store rocket as item in lander inventory (slot 0)
-            landerInventory.setItem(0, rocket.getDropStack());
-
-            // Player rides the lander
-            teleportedPlayer.startRiding(lander);
-
-            // Remove old rocket entity
-            rocket.discard();
-
-            AdAstraMekanized.LOGGER.info("Player {} landing on planet {} in lander", player.getName().getString(), planetId);
+            // All planets use the same landing sequence
+            handlePlanetLanding(player, rocket, targetLevel, planetId);
         });
+    }
+
+    /**
+     * Handle planet landing with lander entity.
+     * Works for all planets including Earth's Orbit.
+     */
+    private static void handlePlanetLanding(ServerPlayer player, Rocket rocket, ServerLevel targetLevel, ResourceLocation planetId) {
+        // Try to use saved launch coordinates if available, otherwise use current position
+        BlockPos savedPos = com.hecookin.adastramekanized.common.util.LaunchCoordinateTracker.getLaunchCoordinates(player, targetLevel.dimension());
+        BlockPos targetPos;
+
+        if (savedPos != null) {
+            // Use saved launch coordinates (X and Z)
+            targetPos = savedPos;
+            AdAstraMekanized.LOGGER.info("Player {} landing at saved coordinates: {}", player.getName().getString(), targetPos);
+        } else {
+            // No saved coordinates, use current position
+            targetPos = player.blockPosition();
+            AdAstraMekanized.LOGGER.info("Player {} landing at current position: {}", player.getName().getString(), targetPos);
+        }
+
+        Vec3 landingPos = new Vec3(targetPos.getX(), RocketConstants.ATMOSPHERE_LEAVE_HEIGHT, targetPos.getZ());
+
+        // Stop riding for teleportation
+        player.stopRiding();
+
+        // Teleport player to target dimension
+        ServerPlayer teleportedPlayer = teleportToDimension(player, targetLevel, landingPos);
+
+        // Create Lander entity in target dimension
+        Lander lander = ModEntityTypes.LANDER.get().create(targetLevel);
+        if (lander == null) {
+            AdAstraMekanized.LOGGER.error("Failed to create lander entity for player {}", player.getName().getString());
+            return;
+        }
+
+        lander.setPos(landingPos);
+        targetLevel.addFreshEntity(lander);
+
+        // Transfer rocket inventory to lander (slots 1-10)
+        var rocketInventory = rocket.inventory();
+        var landerInventory = lander.inventory();
+        for (int i = 0; i < rocketInventory.getContainerSize(); i++) {
+            landerInventory.setItem(i + 1, rocketInventory.getItem(i));
+        }
+
+        // Store rocket as item in lander inventory (slot 0)
+        landerInventory.setItem(0, rocket.getDropStack());
+
+        // Player rides the lander
+        teleportedPlayer.startRiding(lander);
+
+        // Remove old rocket entity
+        rocket.discard();
+
+        AdAstraMekanized.LOGGER.info("Player {} landing on planet {} in lander", player.getName().getString(), planetId);
     }
 
     /**

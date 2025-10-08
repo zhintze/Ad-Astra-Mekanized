@@ -9,6 +9,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 
 public class RocketMenu extends AbstractContainerMenu {
@@ -70,10 +73,23 @@ public class RocketMenu extends AbstractContainerMenu {
                     return ItemStack.EMPTY;
                 }
             }
-            // From player inventory to rocket storage slots
+            // From player inventory to rocket
             else {
-                if (!moveItemStackTo(slotStack, 0, 10, false)) {
-                    return ItemStack.EMPTY;
+                // Check if item contains valid fuel for this rocket tier
+                if (containsValidFuel(slotStack)) {
+                    // Try to move to fuel input slot first (index 0)
+                    if (!moveItemStackTo(slotStack, 0, 1, false)) {
+                        // If fuel slot is full, try storage slots
+                        if (!moveItemStackTo(slotStack, 2, 10, false)) {
+                            return ItemStack.EMPTY;
+                        }
+                    }
+                }
+                // Regular items go to storage slots
+                else {
+                    if (!moveItemStackTo(slotStack, 2, 10, false)) {
+                        return ItemStack.EMPTY;
+                    }
                 }
             }
 
@@ -85,6 +101,27 @@ public class RocketMenu extends AbstractContainerMenu {
         }
 
         return itemStack;
+    }
+
+    /**
+     * Checks if an ItemStack contains a fluid that is valid fuel for this rocket tier
+     */
+    private boolean containsValidFuel(ItemStack stack) {
+        IFluidHandlerItem fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        if (fluidHandler == null) {
+            return false;
+        }
+
+        // Check if the item contains any fluid
+        for (int tank = 0; tank < fluidHandler.getTanks(); tank++) {
+            FluidStack fluidStack = fluidHandler.getFluidInTank(tank);
+            if (!fluidStack.isEmpty()) {
+                // Check if this fluid is valid for the rocket's fuel tank (tank 0)
+                return rocket.fluidContainer().isFluidValid(0, fluidStack);
+            }
+        }
+
+        return false;
     }
 
     @Override

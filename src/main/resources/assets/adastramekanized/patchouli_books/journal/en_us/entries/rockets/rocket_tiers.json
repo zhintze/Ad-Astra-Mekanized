@@ -1,0 +1,36 @@
+{
+  "name": "Rocket Tiers",
+  "icon": "adastramekanized:tier_2_rocket",
+  "category": "adastramekanized:rockets",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "There are four rocket tiers, each with different capabilities and fuel requirements. Higher tiers can travel to more distant planets and have more inventory space."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "adastramekanized:tier_1_rocket",
+      "text": "$(bold)Tier 1 Rocket$()$(br)$(br)Your first rocket for reaching nearby destinations like the Moon and Earth Orbit.$(br)$(br)$(bold)Fuel:$() Liquid Ethanol$(br)$(br)Standard speed and cargo capacity."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "adastramekanized:tier_2_rocket",
+      "text": "$(bold)Tier 2 Rocket$()$(br)$(br)Improved rocket for reaching Mars and intermediate destinations.$(br)$(br)$(bold)Fuel:$() Liquid Propane$(br)$(br)Increased cargo space for longer missions."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "adastramekanized:tier_3_rocket",
+      "text": "$(bold)Tier 3 Rocket$()$(br)$(br)Advanced rocket for outer system exploration.$(br)$(br)$(bold)Fuel:$() Liquid Ethylene or Mekanism Ethene$(br)$(br)Greater cargo capacity for extended expeditions."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "adastramekanized:tier_4_rocket",
+      "text": "$(bold)Tier 4 Rocket$()$(br)$(br)The ultimate rocket for deep space travel.$(br)$(br)$(bold)Fuel:$() Liquid Methane$(br)$(br)Maximum speed (1.7x faster) and cargo capacity. Fireproof construction."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Cargo Capacity",
+      "text": "Each rocket has 10 inventory slots:$(br)- 8 storage slots for cargo$(br)- 2 fuel slots$(br)$(br)Use these slots to transport resources between planets, carry oxygen supplies, and store equipment for your missions."
+    }
+  ]
+}
