@@ -202,8 +202,151 @@ public class JetSuitItem extends SpaceSuitItem implements IJetpackItem, IModeIte
         // Handle oxygen consumption from parent
         super.inventoryTick(stack, level, entity, slotId, isSelected);
 
+        // Auto-refill nitrogen from inventory gas tanks (for jetpack)
+        if (entity instanceof Player player && !level.isClientSide()) {
+            // Only refill every second to avoid performance issues
+            if (entity.tickCount % 20 == 0) {
+                tryRefillNitrogenFromInventory(player, stack);
+            }
+        }
+
         // Jetpack flight is handled by Mekanism's CommonPlayerTickHandler
         // We don't need to implement it here - it will automatically detect our IJetpackItem interface
+    }
+
+    /**
+     * Try to refill nitrogen from gas tanks in player inventory (instant refill when suit is equipped)
+     */
+    private void tryRefillNitrogenFromInventory(Player player, ItemStack jetSuit) {
+        // Only refill if this suit is currently equipped
+        if (player.getItemBySlot(EquipmentSlot.CHEST) != jetSuit) {
+            return;
+        }
+
+        long currentNitrogen = getNitrogenAmount(jetSuit);
+        long maxRefill = nitrogenCapacity - currentNitrogen;
+
+        if (maxRefill <= 0) {
+            return; // Suit is already full
+        }
+
+        // Try to refill from gas tanks in inventory (instant transfer)
+        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+            ItemStack stack = player.getInventory().getItem(i);
+            if (stack.isEmpty() || player.getInventory().armor.contains(stack)) continue;
+
+            // Check if this is a Gas Tank with nitrogen
+            if (stack.getItem() instanceof com.hecookin.adastramekanized.common.items.GasTankItem gasTank) {
+                String chemicalType = getGasTankChemicalType(stack);
+                if ("nitrogen".equalsIgnoreCase(chemicalType)) {
+                    long available = gasTank.getChemicalAmount(stack);
+                    if (available > 0) {
+                        long toTransfer = Math.min(available, maxRefill); // Instant transfer - no rate limit
+                        gasTank.consumeChemical(stack, toTransfer);
+                        addNitrogenToSuit(jetSuit, toTransfer);
+                        maxRefill -= toTransfer;
+
+                        if (maxRefill <= 0) {
+                            return; // Suit is now full
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private String getGasTankChemicalType(ItemStack stack) {
+        net.minecraft.world.item.component.CustomData customData = stack.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.EMPTY);
+        net.minecraft.nbt.CompoundTag tag = customData.copyTag();
+        if (tag.contains("mekanism")) {
+            net.minecraft.nbt.CompoundTag mekData = tag.getCompound("mekanism");
+            if (mekData.contains("stored")) {
+                return mekData.getCompound("stored").getString("chemical");
+            }
+        }
+        return "oxygen"; // Default
+    }
+
+    private void addNitrogenToSuit(ItemStack stack, long amount) {
+        // ALWAYS update NBT directly to ensure nitrogen is added
+        // (Mekanism integration can fail silently, so we use direct NBT)
+        try {
+            net.minecraft.world.item.component.CustomData customData = stack.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.EMPTY);
+            net.minecraft.nbt.CompoundTag tag = customData.copyTag();
+
+            // Initialize NBT structure if it doesn't exist (dual-tank structure)
+            if (!tag.contains("mekanism")) {
+                AdAstraMekanized.LOGGER.info("Initializing dual-tank mekanism NBT for jet suit");
+                initializeDualChemicals(stack);
+                // Re-read after initialization
+                customData = stack.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.EMPTY);
+                tag = customData.copyTag();
+            }
+
+            net.minecraft.nbt.CompoundTag mekData = tag.getCompound("mekanism");
+
+            // Initialize "nitrogen" if it doesn't exist
+            if (!mekData.contains("nitrogen")) {
+                AdAstraMekanized.LOGGER.info("Initializing nitrogen NBT for jet suit");
+                net.minecraft.nbt.CompoundTag nitrogenData = new net.minecraft.nbt.CompoundTag();
+                nitrogenData.putLong("amount", 0L);
+                nitrogenData.putLong("capacity", nitrogenCapacity);
+                mekData.put("nitrogen", nitrogenData);
+            }
+
+            net.minecraft.nbt.CompoundTag nitrogenData = mekData.getCompound("nitrogen");
+            long currentAmount = nitrogenData.getLong("amount");
+            long newAmount = Math.min(nitrogenCapacity, currentAmount + amount);
+            nitrogenData.putLong("amount", newAmount);
+            mekData.put("nitrogen", nitrogenData);
+            tag.put("mekanism", mekData);
+            stack.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.of(tag));
+            AdAstraMekanized.LOGGER.info("Added {} mB nitrogen to jet suit (was {}, now {})", amount, currentAmount, newAmount);
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.error("Failed to add nitrogen to jet suit: ", e);
+        }
+    }
+
+    @Override
+    protected void addOxygenToSuit(ItemStack stack, long amount) {
+        // ALWAYS update NBT directly to ensure oxygen is added
+        // (Mekanism integration can fail silently, so we use direct NBT)
+        // JetSuitItem uses dual-tank structure with separate "oxygen" and "nitrogen" tags
+        try {
+            net.minecraft.world.item.component.CustomData customData = stack.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.EMPTY);
+            net.minecraft.nbt.CompoundTag tag = customData.copyTag();
+
+            // Initialize NBT structure if it doesn't exist (dual-tank structure)
+            if (!tag.contains("mekanism")) {
+                AdAstraMekanized.LOGGER.info("Initializing dual-tank mekanism NBT for jet suit");
+                initializeDualChemicals(stack);
+                // Re-read after initialization
+                customData = stack.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.EMPTY);
+                tag = customData.copyTag();
+            }
+
+            net.minecraft.nbt.CompoundTag mekData = tag.getCompound("mekanism");
+
+            // Initialize "oxygen" if it doesn't exist
+            if (!mekData.contains("oxygen")) {
+                AdAstraMekanized.LOGGER.info("Initializing oxygen NBT for jet suit");
+                net.minecraft.nbt.CompoundTag oxygenData = new net.minecraft.nbt.CompoundTag();
+                oxygenData.putLong("amount", 0L);
+                oxygenData.putLong("capacity", capacity);
+                mekData.put("oxygen", oxygenData);
+            }
+
+            net.minecraft.nbt.CompoundTag oxygenData = mekData.getCompound("oxygen");
+            long currentAmount = oxygenData.getLong("amount");
+            long newAmount = Math.min(capacity, currentAmount + amount);
+            oxygenData.putLong("amount", newAmount);
+            mekData.put("oxygen", oxygenData);
+            tag.put("mekanism", mekData);
+            stack.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.of(tag));
+            AdAstraMekanized.LOGGER.info("Added {} mB oxygen to jet suit (was {}, now {})", amount, currentAmount, newAmount);
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.error("Failed to add oxygen to jet suit: ", e);
+        }
     }
 
     // ===== IJetpackItem Interface Implementation =====

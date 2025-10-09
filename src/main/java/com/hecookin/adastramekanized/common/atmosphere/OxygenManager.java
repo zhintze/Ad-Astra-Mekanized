@@ -150,13 +150,21 @@ public class OxygenManager implements OxygenApi {
             return;
         }
 
-        // Check for space suit protection
-        if (hasSpaceSuitProtection(entity)) {
-            // Clear freeze effect when protected
-            entity.setTicksFrozen(0);
-            // Consume oxygen from the suit
-            consumeSpaceSuitOxygen(entity);
-            return;
+        // Check if entity has full space suit equipment (regardless of oxygen level)
+        if (hasFullSpaceSuit(entity)) {
+            // Check if oxygen is available (without consuming)
+            boolean hasOxygenAvailable = hasOxygenAvailable(entity);
+
+            if (hasOxygenAvailable) {
+                // Clear freeze effect when protected
+                entity.setTicksFrozen(0);
+
+                // Consume oxygen every 12 ticks
+                if (entity.tickCount % 12 == 0) {
+                    consumeOxygen(entity);
+                }
+                return;
+            }
         }
 
         // Apply oxygen damage with pulsing freeze effect
@@ -193,6 +201,80 @@ public class OxygenManager implements OxygenApi {
                 // Keep minimal visibility between pulses
                 entity.setTicksFrozen(entity.getTicksRequiredToFreeze() / 10);
             }
+        }
+    }
+
+    /**
+     * Check if entity has full space suit equipment (without checking oxygen level)
+     */
+    private boolean hasFullSpaceSuit(LivingEntity entity) {
+        boolean hasHelmet = false;
+        boolean hasChestplate = false;
+        boolean hasLeggings = false;
+        boolean hasBoots = false;
+
+        for (var stack : entity.getArmorSlots()) {
+            if (stack.isEmpty()) continue;
+
+            // Check if the armor piece is broken (no durability left)
+            if (stack.isDamageableItem() && stack.getDamageValue() >= stack.getMaxDamage()) {
+                continue; // Skip broken armor
+            }
+
+            // Check if it's any type of space suit piece
+            if (stack.is(com.hecookin.adastramekanized.common.tags.ModItemTags.SPACE_SUITS) ||
+                stack.is(com.hecookin.adastramekanized.common.tags.ModItemTags.NETHERITE_SPACE_SUITS) ||
+                stack.is(com.hecookin.adastramekanized.common.tags.ModItemTags.JET_SUITS)) {
+
+                // Determine which piece it is based on slot
+                if (stack.getItem() instanceof net.minecraft.world.item.ArmorItem armorItem) {
+                    switch (armorItem.getType()) {
+                        case HELMET -> hasHelmet = true;
+                        case CHESTPLATE -> hasChestplate = true;
+                        case LEGGINGS -> hasLeggings = true;
+                        case BOOTS -> hasBoots = true;
+                    }
+                }
+            }
+        }
+
+        // Need full set of any space suit pieces
+        return hasHelmet && hasChestplate && hasLeggings && hasBoots;
+    }
+
+    /**
+     * Check if oxygen is available in the space suit (without consuming)
+     * Suits auto-refill from gas tanks via SpaceSuitItem.tryRefillOxygenFromInventory()
+     * This method ONLY checks the suit's internal storage
+     */
+    private boolean hasOxygenAvailable(LivingEntity entity) {
+        // Check suit internal storage only
+        var chestStack = entity.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.CHEST);
+        if (chestStack.getItem() instanceof com.hecookin.adastramekanized.common.items.armor.SpaceSuitItem suit) {
+            return suit.getChemicalAmount(chestStack) > 0;
+        } else if (chestStack.getItem() instanceof com.hecookin.adastramekanized.common.items.armor.NetheriteSpaceSuitItem suit) {
+            return suit.getChemicalAmount(chestStack) > 0;
+        } else if (chestStack.getItem() instanceof com.hecookin.adastramekanized.common.items.armor.JetSuitItem suit) {
+            return suit.getChemicalAmount(chestStack) > 0;
+        }
+
+        return false;
+    }
+
+    /**
+     * Consume oxygen from the space suit ONLY
+     * Gas tanks are used to auto-refill suits via SpaceSuitItem.tryRefillOxygenFromInventory()
+     * This method ONLY consumes from the suit's internal storage
+     */
+    private void consumeOxygen(LivingEntity entity) {
+        // Consume from the suit itself (suits auto-refill from gas tanks in their inventoryTick)
+        var chestStack = entity.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.CHEST);
+        if (chestStack.getItem() instanceof com.hecookin.adastramekanized.common.items.armor.SpaceSuitItem suit) {
+            suit.consumeOxygen(chestStack, 1);
+        } else if (chestStack.getItem() instanceof com.hecookin.adastramekanized.common.items.armor.NetheriteSpaceSuitItem suit) {
+            suit.consumeOxygen(chestStack, 1);
+        } else if (chestStack.getItem() instanceof com.hecookin.adastramekanized.common.items.armor.JetSuitItem suit) {
+            suit.consumeOxygen(chestStack, 1);
         }
     }
 
@@ -280,23 +362,6 @@ public class OxygenManager implements OxygenApi {
         }
 
         return false;
-    }
-
-    /**
-     * Consume oxygen from space suit
-     */
-    private void consumeSpaceSuitOxygen(LivingEntity entity) {
-        // Consume oxygen every 12 ticks (same rate as in SpaceSuitItem.inventoryTick)
-        if (entity.tickCount % 12 != 0) return;
-
-        var chestStack = entity.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.CHEST);
-        if (chestStack.getItem() instanceof com.hecookin.adastramekanized.common.items.armor.SpaceSuitItem suit) {
-            suit.consumeOxygen(chestStack, 1);
-        } else if (chestStack.getItem() instanceof com.hecookin.adastramekanized.common.items.armor.NetheriteSpaceSuitItem suit) {
-            suit.consumeOxygen(chestStack, 1);
-        } else if (chestStack.getItem() instanceof com.hecookin.adastramekanized.common.items.armor.JetSuitItem suit) {
-            suit.consumeOxygen(chestStack, 1);
-        }
     }
 
     /**

@@ -2,6 +2,7 @@ package com.hecookin.adastramekanized.common.items.armor;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.common.atmosphere.OxygenManager;
+import com.hecookin.adastramekanized.common.items.GasTankItem;
 import com.hecookin.adastramekanized.common.items.MekanismCompatibleItems;
 import com.hecookin.adastramekanized.common.items.armor.base.ItemChemicalArmor;
 import com.hecookin.adastramekanized.common.tags.ModItemTags;
@@ -90,11 +91,21 @@ public class SpaceSuitItem extends ItemChemicalArmor {
         super.inventoryTick(stack, level, entity, slotId, isSelected);
         if (level.isClientSide()) return;
         if (!(entity instanceof LivingEntity livingEntity)) return;
-        if (livingEntity instanceof Player player && (player.isCreative() || player.isSpectator())) return;
         if (livingEntity.getItemBySlot(EquipmentSlot.CHEST) != stack) return;
+
+        // Auto-refill oxygen from inventory gas tanks (works in all modes including creative)
+        if (entity instanceof Player player) {
+            // Only refill every second to avoid performance issues
+            if (entity.tickCount % 20 == 0) {
+                tryRefillOxygenFromInventory(player, stack);
+            }
+        }
 
         // Don't clear freeze effect here - let OxygenManager handle it based on full suit protection
         // This was preventing the ice overlay from showing when missing other armor pieces
+
+        // Skip oxygen consumption for creative/spectator players
+        if (livingEntity instanceof Player player && (player.isCreative() || player.isSpectator())) return;
 
         // Every 12 ticks = 10 minutes per 1,000 mB (1 bucket) oxygen
         if (livingEntity.tickCount % 12 == 0 && hasOxygen(stack)) {
@@ -125,5 +136,104 @@ public class SpaceSuitItem extends ItemChemicalArmor {
     public static boolean hasOxygen(ItemStack stack) {
         if (!(stack.getItem() instanceof SpaceSuitItem suit)) return false;
         return suit.hasChemical(stack);
+    }
+
+    /**
+     * Try to refill oxygen from gas tanks in player inventory (instant refill when suit is equipped)
+     */
+    private void tryRefillOxygenFromInventory(Player player, ItemStack spaceSuit) {
+        // Only refill if this suit is currently equipped
+        if (player.getItemBySlot(EquipmentSlot.CHEST) != spaceSuit) {
+            return;
+        }
+
+        long currentOxygen = getChemicalAmount(spaceSuit);
+        long maxRefill = capacity - currentOxygen;
+
+        if (maxRefill <= 0) {
+            return; // Suit is already full
+        }
+
+        // Try to refill from gas tanks in inventory (instant transfer)
+        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+            ItemStack stack = player.getInventory().getItem(i);
+            if (stack.isEmpty() || player.getInventory().armor.contains(stack)) continue;
+
+            // Check if this is a Gas Tank with oxygen
+            if (stack.getItem() instanceof GasTankItem gasTank) {
+                String chemicalType = getGasTankChemicalType(stack);
+                if ("oxygen".equalsIgnoreCase(chemicalType)) {
+                    long available = gasTank.getChemicalAmount(stack);
+                    if (available > 0) {
+                        long toTransfer = Math.min(available, maxRefill); // Instant transfer - no rate limit
+                        gasTank.consumeChemical(stack, toTransfer);
+                        addOxygenToSuit(spaceSuit, toTransfer);
+                        maxRefill -= toTransfer;
+
+                        if (maxRefill <= 0) {
+                            return; // Suit is now full
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private String getGasTankChemicalType(ItemStack stack) {
+        CustomData customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        CompoundTag tag = customData.copyTag();
+        if (tag.contains("mekanism")) {
+            CompoundTag mekData = tag.getCompound("mekanism");
+            if (mekData.contains("stored")) {
+                return mekData.getCompound("stored").getString("chemical");
+            }
+        }
+        return "oxygen"; // Default
+    }
+
+    protected void addOxygenToSuit(ItemStack stack, long amount) {
+        // ALWAYS update NBT directly to ensure oxygen is added
+        // (Mekanism integration can fail silently, so we use direct NBT)
+        try {
+            CustomData customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+            CompoundTag tag = customData.copyTag();
+
+            // Initialize NBT structure if it doesn't exist
+            if (!tag.contains("mekanism")) {
+                AdAstraMekanized.LOGGER.info("Initializing mekanism NBT for space suit");
+                CompoundTag mekData = new CompoundTag();
+                mekData.putLong("capacity", capacity);
+                mekData.putString("chemicalType", OXYGEN);
+
+                CompoundTag storedData = new CompoundTag();
+                storedData.putLong("amount", 0L);
+                storedData.putString("chemical", OXYGEN);
+                mekData.put("stored", storedData);
+
+                tag.put("mekanism", mekData);
+            }
+
+            CompoundTag mekData = tag.getCompound("mekanism");
+
+            // Initialize "stored" if it doesn't exist
+            if (!mekData.contains("stored")) {
+                AdAstraMekanized.LOGGER.info("Initializing stored NBT for space suit");
+                CompoundTag storedData = new CompoundTag();
+                storedData.putLong("amount", 0L);
+                storedData.putString("chemical", OXYGEN);
+                mekData.put("stored", storedData);
+            }
+
+            CompoundTag storedData = mekData.getCompound("stored");
+            long currentAmount = storedData.getLong("amount");
+            long newAmount = Math.min(capacity, currentAmount + amount);
+            storedData.putLong("amount", newAmount);
+            mekData.put("stored", storedData);
+            tag.put("mekanism", mekData);
+            stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+            AdAstraMekanized.LOGGER.info("Added {} mB oxygen to space suit (was {}, now {})", amount, currentAmount, newAmount);
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.error("Failed to add oxygen to space suit: ", e);
+        }
     }
 }

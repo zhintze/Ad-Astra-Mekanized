@@ -1,0 +1,32 @@
+{
+  "name": "Gas Tanks",
+  "icon": "adastramekanized:gas_tank",
+  "category": "adastramekanized:oxygen_system",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "adastramekanized:gas_tank",
+      "text": "$(bold)Gas Tanks$() are portable oxygen storage that automatically refill your equipped space suit. Simply carry filled gas tanks in your inventory while wearing a space suit."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Auto-Refill System",
+      "text": "Gas tanks work automatically:$(br)$(br)$(li)Equip a space suit$(br)$(li)Carry filled gas tanks in your inventory$(br)$(li)The suit pulls oxygen from tanks every second$(br)$(li)No manual interaction needed$(br)$(br)Your suit's internal oxygen is consumed for breathing, and gas tanks keep it topped up."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "adastramekanized:large_gas_tank",
+      "text": "$(bold)Large Gas Tanks$() store 5x more oxygen than standard tanks (50,000 mB vs 10,000 mB). Ideal for long missions or extended exploration."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Filling Gas Tanks",
+      "text": "Fill gas tanks using $(bold)Mekanism Chemical Tanks$():$(br)$(br)$(li)Place a Chemical Tank$(br)$(li)Fill it with Oxygen$(br)$(li)Right-click with empty gas tank$(br)$(li)Tank fills automatically$(br)$(br)Chemical Tanks can be filled from Electrolytic Separators (water electrolysis) or other Mekanism machines."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Tips",
+      "text": "$(li)Always carry multiple gas tanks$(br)$(li)Oxygen depletes slowly - one tank lasts several minutes$(br)$(li)Creative mode players can still test the refill system$(br)$(li)Check your suit's oxygen bar to monitor levels$(br)$(li)Gas tanks work with all space suit tiers$(br)$(li)Jet suits use nitrogen tanks for flight fuel"
+    }
+  ]
+}
