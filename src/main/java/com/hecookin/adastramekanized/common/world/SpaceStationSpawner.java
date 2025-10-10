@@ -133,12 +133,20 @@ public class SpaceStationSpawner extends SavedData {
             SpaceStationBlockProtection protection = SpaceStationBlockProtection.get(level);
             int blocksProtected = 0;
 
-            // Iterate through structure and protect all non-air blocks
-            for (StructureTemplate.StructureBlockInfo blockInfo : stationStructure.filterBlocks(stationPos, settings, net.minecraft.world.level.block.Blocks.STRUCTURE_VOID)) {
-                BlockPos blockPos = blockInfo.pos();
-                if (!level.getBlockState(blockPos).isAir()) {
-                    protection.protectBlock(blockPos);
-                    blocksProtected++;
+            // Iterate through structure bounds and protect all non-air blocks
+            BlockPos structureSize = stationStructure.getSize();
+            for (int x = 0; x < structureSize.getX(); x++) {
+                for (int y = 0; y < structureSize.getY(); y++) {
+                    for (int z = 0; z < structureSize.getZ(); z++) {
+                        BlockPos relativePos = new BlockPos(x, y, z);
+                        BlockPos worldPos = stationPos.offset(relativePos);
+
+                        // Check if block in world is not air (structure has been placed)
+                        if (!level.getBlockState(worldPos).isAir()) {
+                            protection.protectBlock(worldPos);
+                            blocksProtected++;
+                        }
+                    }
                 }
             }
 

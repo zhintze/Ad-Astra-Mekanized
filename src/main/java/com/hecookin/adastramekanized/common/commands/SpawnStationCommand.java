@@ -46,6 +46,41 @@ public class SpawnStationCommand {
                         return 1;
                     })
                 )
+                .then(Commands.literal("status")
+                    .executes(context -> {
+                        ServerLevel level = context.getSource().getLevel();
+
+                        com.hecookin.adastramekanized.common.world.SpaceStationBlockProtection protection =
+                            com.hecookin.adastramekanized.common.world.SpaceStationBlockProtection.get(level);
+
+                        int protectedCount = protection.getProtectedBlockCount();
+
+                        context.getSource().sendSuccess(
+                            () -> Component.literal("Protected blocks in this dimension: " + protectedCount),
+                            false
+                        );
+
+                        return 1;
+                    })
+                )
+                .then(Commands.literal("clearprotection")
+                    .executes(context -> {
+                        ServerLevel level = context.getSource().getLevel();
+
+                        com.hecookin.adastramekanized.common.world.SpaceStationBlockProtection protection =
+                            com.hecookin.adastramekanized.common.world.SpaceStationBlockProtection.get(level);
+
+                        int clearedCount = protection.getProtectedBlockCount();
+                        protection.clearAll();
+
+                        context.getSource().sendSuccess(
+                            () -> Component.literal("Cleared " + clearedCount + " protected blocks"),
+                            true
+                        );
+
+                        return 1;
+                    })
+                )
         );
     }
 }

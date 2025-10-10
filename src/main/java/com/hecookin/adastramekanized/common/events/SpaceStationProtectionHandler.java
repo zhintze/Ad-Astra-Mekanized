@@ -32,6 +32,12 @@ public class SpaceStationProtectionHandler {
                     true // actionBar = true (shows above hotbar)
                 );
             }
+
+            com.hecookin.adastramekanized.AdAstraMekanized.LOGGER.debug(
+                "Blocked player {} from breaking protected block at {}",
+                event.getPlayer() != null ? event.getPlayer().getName().getString() : "Unknown",
+                event.getPos()
+            );
         }
     }
 }
