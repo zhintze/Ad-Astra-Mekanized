@@ -28,7 +28,7 @@
   "rendering": {
     "sky": {
       "sky_color": 657930,
-      "sunrise_color": 16777087,
+      "sunrise_color": 0,
       "custom_sky": true,
       "has_stars": true,
       "star_count": 50000,
