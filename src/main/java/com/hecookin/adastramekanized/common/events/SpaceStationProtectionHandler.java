@@ -74,11 +74,12 @@ public class SpaceStationProtectionHandler {
 
         if (!toRemove.isEmpty()) {
             affectedBlocks.removeAll(toRemove);
+            var source = event.getExplosion().getDirectSourceEntity();
             com.hecookin.adastramekanized.AdAstraMekanized.LOGGER.info(
                 "Protected {} space station blocks from explosion at {} (explosion source: {})",
                 toRemove.size(),
                 event.getExplosion().center(),
-                event.getExplosion().getExploder() != null ? event.getExplosion().getExploder().getClass().getSimpleName() : "Unknown"
+                source != null ? source.getClass().getSimpleName() : "Unknown"
             );
         }
     }
@@ -87,19 +88,24 @@ public class SpaceStationProtectionHandler {
      * Prevent pistons from moving protected blocks.
      */
     @SubscribeEvent
-    public static void onPistonMove(BlockEvent.PistonMoveBlocks event) {
+    public static void onPistonPre(net.neoforged.neoforge.event.level.PistonEvent.Pre event) {
         if (event.getLevel().isClientSide()) return;
 
         ServerLevel level = (ServerLevel) event.getLevel();
         SpaceStationBlockProtection protection = SpaceStationBlockProtection.get(level);
 
-        // Check if any blocks being moved are protected
-        for (BlockPos pos : event.getToBeMoved()) {
-            if (protection.isProtected(pos)) {
+        // Get the piston position and check direction
+        BlockPos pistonPos = event.getPos();
+        net.minecraft.core.Direction direction = event.getDirection();
+
+        // Check blocks in the push direction for protection
+        for (int i = 1; i <= 12; i++) { // Max piston push distance is 12 blocks
+            BlockPos checkPos = pistonPos.relative(direction, i);
+            if (protection.isProtected(checkPos)) {
                 event.setCanceled(true);
                 com.hecookin.adastramekanized.AdAstraMekanized.LOGGER.debug(
                     "Blocked piston from moving protected block at {}",
-                    pos
+                    checkPos
                 );
                 return;
             }
