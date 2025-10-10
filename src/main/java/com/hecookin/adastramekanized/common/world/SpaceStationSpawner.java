@@ -134,7 +134,7 @@ public class SpaceStationSpawner extends SavedData {
             int blocksProtected = 0;
 
             // Iterate through structure bounds and protect all non-air blocks
-            BlockPos structureSize = stationStructure.getSize();
+            net.minecraft.core.Vec3i structureSize = stationStructure.getSize();
             for (int x = 0; x < structureSize.getX(); x++) {
                 for (int y = 0; y < structureSize.getY(); y++) {
                     for (int z = 0; z < structureSize.getZ(); z++) {
