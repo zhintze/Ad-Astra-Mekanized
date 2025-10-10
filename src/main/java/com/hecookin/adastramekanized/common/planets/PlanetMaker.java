@@ -2356,7 +2356,8 @@ public class PlanetMaker {
         // Sky configuration
         JsonObject sky = new JsonObject();
         sky.addProperty("sky_color", planet.skyColor);
-        sky.addProperty("sunrise_color", 16777087); // Default sunrise color
+        // Airless planets have no atmospheric sunrise/sunset effects
+        sky.addProperty("sunrise_color", planet.hasAtmosphere ? 16777087 : 0);
         sky.addProperty("custom_sky", true);
         sky.addProperty("has_stars", true);
         sky.addProperty("star_count", planet.starCount);
