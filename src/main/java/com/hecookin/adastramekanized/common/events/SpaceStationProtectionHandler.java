@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.level.BlockEvent;
@@ -50,9 +51,10 @@ public class SpaceStationProtectionHandler {
 
     /**
      * Prevent explosions from destroying protected blocks.
-     * This includes TNT, creepers, ghasts, withers, etc.
+     * This includes TNT, creepers, ghasts, withers, rockets, etc.
+     * Using HIGHEST priority to ensure we intercept before other handlers.
      */
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onExplosionDetonate(ExplosionEvent.Detonate event) {
         Level level = event.getLevel();
         if (level.isClientSide()) return;
@@ -72,10 +74,11 @@ public class SpaceStationProtectionHandler {
 
         if (!toRemove.isEmpty()) {
             affectedBlocks.removeAll(toRemove);
-            com.hecookin.adastramekanized.AdAstraMekanized.LOGGER.debug(
-                "Protected {} space station blocks from explosion at {}",
+            com.hecookin.adastramekanized.AdAstraMekanized.LOGGER.info(
+                "Protected {} space station blocks from explosion at {} (explosion source: {})",
                 toRemove.size(),
-                event.getExplosion().center()
+                event.getExplosion().center(),
+                event.getExplosion().getExploder() != null ? event.getExplosion().getExploder().getClass().getSimpleName() : "Unknown"
             );
         }
     }
