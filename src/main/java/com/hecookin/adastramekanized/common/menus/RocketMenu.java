@@ -77,17 +77,17 @@ public class RocketMenu extends AbstractContainerMenu {
             else {
                 // Check if item contains valid fuel for this rocket tier
                 if (containsValidFuel(slotStack)) {
-                    // Try to move to fuel input slot first (index 0)
-                    if (!moveItemStackTo(slotStack, 0, 1, false)) {
-                        // If fuel slot is full, try storage slots
-                        if (!moveItemStackTo(slotStack, 2, 10, false)) {
+                    // Try to move to fuel input slot first (menu slot 8)
+                    if (!moveItemStackTo(slotStack, 8, 9, false)) {
+                        // If fuel slot is full, try storage slots (menu slots 0-7)
+                        if (!moveItemStackTo(slotStack, 0, 8, false)) {
                             return ItemStack.EMPTY;
                         }
                     }
                 }
-                // Regular items go to storage slots
+                // Regular items go to storage slots (menu slots 0-7)
                 else {
-                    if (!moveItemStackTo(slotStack, 2, 10, false)) {
+                    if (!moveItemStackTo(slotStack, 0, 8, false)) {
                         return ItemStack.EMPTY;
                     }
                 }
@@ -107,12 +107,18 @@ public class RocketMenu extends AbstractContainerMenu {
      * Checks if an ItemStack contains a fluid that is valid fuel for this rocket tier
      */
     private boolean containsValidFuel(ItemStack stack) {
-        IFluidHandlerItem fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        IFluidHandlerItem fluidHandler = null;
 
-        // Fallback: try Mekanism's attachment system if standard capability is null
-        if (fluidHandler == null) {
-            com.hecookin.adastramekanized.AdAstraMekanized.LOGGER.debug("No FluidHandler capability for item: {}, trying Mekanism fallback", stack.getItem());
+        // Check if this is a Mekanism item - if so, prioritize Mekanism's attachment system
+        String itemId = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
+        if (itemId.startsWith("mekanism:")) {
+            com.hecookin.adastramekanized.AdAstraMekanized.LOGGER.debug("Detected Mekanism item: {}, using Mekanism fluid handler", itemId);
             fluidHandler = getMekanismFluidHandler(stack);
+        }
+
+        // Fallback to standard capability if Mekanism handler not available
+        if (fluidHandler == null) {
+            fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
         }
 
         if (fluidHandler == null) {
@@ -150,8 +156,10 @@ public class RocketMenu extends AbstractContainerMenu {
             // Note: createHandler (not createHandlerIfData) handles empty containers properly
             Class<?> containerTypeClass = Class.forName("mekanism.common.attachments.containers.ContainerType");
             Object fluidContainerType = containerTypeClass.getField("FLUID").get(null);
-            Object handler = containerTypeClass.getMethod("createHandler", ItemStack.class)
-                .invoke(fluidContainerType, stack);
+
+            // Get the method from the actual object's class, not the enum class
+            java.lang.reflect.Method createHandlerMethod = fluidContainerType.getClass().getMethod("createHandler", ItemStack.class);
+            Object handler = createHandlerMethod.invoke(fluidContainerType, stack);
 
             if (handler instanceof IFluidHandlerItem) {
                 com.hecookin.adastramekanized.AdAstraMekanized.LOGGER.debug("Successfully got Mekanism fluid handler for item: {}", stack.getItem());
