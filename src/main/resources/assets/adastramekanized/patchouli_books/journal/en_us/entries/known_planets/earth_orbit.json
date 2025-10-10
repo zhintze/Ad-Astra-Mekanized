@@ -1,0 +1,23 @@
+{
+  "name": "Earth Orbit",
+  "icon": "minecraft:air",
+  "category": "adastramekanized:known_planets",
+  "advancement": "adastramekanized:planets/visited_earth_orbit",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "Planetary Data",
+      "text": "$(bold)Gravity:$() 16.6% of Earth$(br)$(bold)Atmosphere:$() None (requires oxygen)$(br)$(bold)Temperature:$() [Not Yet Implemented]$(br)$(bold)Sky Color:$() #000000$(br)$(bold)Ambient Light:$() 0.0%$(br)$(bold)Clouds:$() No$(br)$(bold)Rain:$() No"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Biomes",
+      "text": "$(bold)Terrain Biomes:$()$(br)$(br)• Earth Orbit$(br)"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Surface Composition",
+      "text": "$(bold)Surface Layers:$()$(br)$(br)• $(bold)Surface:$() Air$(br)• $(bold)Subsurface:$() Air$(br)• $(bold)Deep:$() Air$(br)• $(bold)Bedrock:$() Bedrock$(br)$(br)$(bold)Sea Level:$() Y\u003d100"
+    }
+  ]
+}

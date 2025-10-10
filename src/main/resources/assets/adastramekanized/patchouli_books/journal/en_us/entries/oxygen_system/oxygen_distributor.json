@@ -1,0 +1,27 @@
+{
+  "name": "Oxygen Distributor",
+  "icon": "minecraft:cyan_terracotta",
+  "category": "adastramekanized:oxygen_system",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "item": "adastramekanized:oxygen_distributor",
+      "text": "The Oxygen Distributor creates a breathable bubble of oxygen in airless environments. It uses advanced flood-fill technology to detect enclosed spaces and fill them with oxygen."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Setup",
+      "text": "1. Supply oxygen (via Mekanism chemical system)$(br)2. Provide power (FE/RF)$(br)3. The distributor will fill the area around it$(br)$(br)4. Use \"Show Oxygen\" button in GUI to see oxygen blocks."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "How It Works",
+      "text": "1. Scans the surrounding area for enclosed spaces$(br)2. Detects walls, floors, and ceilings$(br)3. Fills area with oxygen blocks$(br)4. Maintains oxygen levels as long as powered"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Mekanism Integration",
+      "text": "Oxygen Distributors use Mekanism's oxygen chemical:$(br)$(br)- Connect oxygen pipes to the distributor$(br)- Use Mekanism's chemical tanks$(br)- Electrolytic Separators produce oxygen$(br)$(br)This provides realistic oxygen generation and distribution."
+    }
+  ]
+}

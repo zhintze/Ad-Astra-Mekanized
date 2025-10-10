@@ -1,0 +1,10 @@
+{
+  "criteria": {
+    "visited_hemphy": {
+      "trigger": "minecraft:changed_dimension",
+      "conditions": {
+        "to": "adastramekanized:hemphy"
+      }
+    }
+  }
+}

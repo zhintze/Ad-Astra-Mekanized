@@ -190,6 +190,9 @@ dependencies {
     implementation "curse.maven:MowiesMobs-250498:6700443"
     implementation "curse.maven:geckolib-388172:6659026"
 
+    // Patchouli for guide book
+    implementation "vazkii.patchouli:Patchouli:1.21-87-NEOFORGE"
+
 
 
     // Example optional mod dependency with JEI

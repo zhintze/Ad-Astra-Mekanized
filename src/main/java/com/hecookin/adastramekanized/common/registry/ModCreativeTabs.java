@@ -226,12 +226,20 @@ public class ModCreativeTabs {
                         output.accept(ModBlocks.CALORITE_PILLAR.get());
                         output.accept(ModBlocks.MARKED_IRON_PILLAR.get());
 
+                        // Glowing Pillar Blocks
+                        output.accept(ModBlocks.GLOWING_IRON_PILLAR.get());
+                        output.accept(ModBlocks.GLOWING_STEEL_PILLAR.get());
+                        output.accept(ModBlocks.GLOWING_DESH_PILLAR.get());
+                        output.accept(ModBlocks.GLOWING_OSTRUM_PILLAR.get());
+                        output.accept(ModBlocks.GLOWING_CALORITE_PILLAR.get());
+
                         // Mekanism-Compatible Workstations
                         output.accept(ModBlocks.OXYGEN_DISTRIBUTOR.get());
                         output.accept(ModBlocks.WIRELESS_POWER_RELAY.get());
                         output.accept(ModBlocks.NASA_WORKBENCH.get());
                         // Oxygen Network Monitor removed - incomplete feature
                         output.accept(ModItems.OXYGEN_NETWORK_CONTROLLER.get());
+                        output.accept(ModItems.ASTRONOMER_JOURNAL.get());
 
                         // Rocket Components
                         output.accept(ModItems.ROCKET_NOSE_CONE.get());

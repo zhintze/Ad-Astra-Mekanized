@@ -1,0 +1,10 @@
+{
+  "criteria": {
+    "visited_oretest": {
+      "trigger": "minecraft:changed_dimension",
+      "conditions": {
+        "to": "adastramekanized:oretest"
+      }
+    }
+  }
+}

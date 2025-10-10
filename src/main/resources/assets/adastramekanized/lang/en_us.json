@@ -1,28 +1,23 @@
 {
   "_comment": "Ad Astra Mekanized Localization",
-
   "creativetab.adastramekanized.materials": "Ad Astra Materials",
   "creativetab.adastramekanized.building_blocks": "Ad Astra Building Blocks",
   "creativetab.adastramekanized.industrial": "Ad Astra Industrial",
   "creativetab.adastramekanized.equipment": "Ad Astra Equipment",
   "creativetab.adastramekanized.decorative": "Ad Astra Decorative",
-
   "item.adastramekanized.steel_ingot": "Steel Ingot",
   "item.adastramekanized.etrium_ingot": "Etrium Ingot",
   "item.adastramekanized.desh_ingot": "Desh Ingot",
   "item.adastramekanized.ostrum_ingot": "Ostrum Ingot",
   "item.adastramekanized.calorite_ingot": "Calorite Ingot",
-
   "item.adastramekanized.steel_nugget": "Steel Nugget",
   "item.adastramekanized.etrium_nugget": "Etrium Nugget",
   "item.adastramekanized.desh_nugget": "Desh Nugget",
   "item.adastramekanized.ostrum_nugget": "Ostrum Nugget",
   "item.adastramekanized.calorite_nugget": "Calorite Nugget",
-
   "item.adastramekanized.raw_desh": "Raw Desh",
   "item.adastramekanized.raw_ostrum": "Raw Ostrum",
   "item.adastramekanized.raw_calorite": "Raw Calorite",
-
   "item.adastramekanized.iron_rod": "Iron Rod",
   "item.adastramekanized.steel_sheet": "Steel Sheet",
   "item.adastramekanized.steel_rod": "Steel Rod",
@@ -31,11 +26,9 @@
   "item.adastramekanized.desh_sheet": "Desh Sheet",
   "item.adastramekanized.ostrum_sheet": "Ostrum Sheet",
   "item.adastramekanized.calorite_sheet": "Calorite Sheet",
-
   "item.adastramekanized.etrionic_core": "Etrionic Core",
   "item.adastramekanized.etrionic_capacitor": "Etrionic Capacitor",
   "item.adastramekanized.cheese": "Cheese",
-
   "item.adastramekanized.rocket_nose_cone": "Rocket Nose Cone",
   "item.adastramekanized.rocket_fin": "Rocket Fin",
   "item.adastramekanized.steel_engine": "Steel Engine",
@@ -51,53 +44,44 @@
   "item.adastramekanized.engine_frame": "Engine Frame",
   "item.adastramekanized.gas_tank": "Gas Tank",
   "item.adastramekanized.large_gas_tank": "Large Gas Tank",
-
   "item.adastramekanized.tier_1_rocket": "Tier 1 Rocket",
   "item.adastramekanized.tier_2_rocket": "Tier 2 Rocket",
   "item.adastramekanized.tier_3_rocket": "Tier 3 Rocket",
   "item.adastramekanized.tier_4_rocket": "Tier 4 Rocket",
-
   "entity.adastramekanized.tier_1_rocket": "Tier 1 Rocket",
   "entity.adastramekanized.tier_2_rocket": "Tier 2 Rocket",
   "entity.adastramekanized.tier_3_rocket": "Tier 3 Rocket",
   "entity.adastramekanized.tier_4_rocket": "Tier 4 Rocket",
   "entity.adastramekanized.lander": "Planetary Lander",
-
   "block.adastramekanized.nasa_workbench": "NASA Workbench",
   "container.adastramekanized.nasa_workbench": "NASA Workbench",
-
   "block.adastramekanized.launch_pad": "Launch Pad",
   "block.adastramekanized.fuel_loader": "Fuel Loader",
   "container.adastramekanized.fuel_loader": "Fuel Loader",
-
   "item.adastramekanized.space_helmet": "Space Helmet",
   "item.adastramekanized.space_suit": "Space Suit",
   "item.adastramekanized.space_pants": "Space Pants",
   "item.adastramekanized.space_boots": "Space Boots",
-
   "item.adastramekanized.netherite_space_helmet": "Netherite Space Helmet",
   "item.adastramekanized.netherite_space_suit": "Netherite Space Suit",
   "item.adastramekanized.netherite_space_pants": "Netherite Space Pants",
   "item.adastramekanized.netherite_space_boots": "Netherite Space Boots",
-
   "item.adastramekanized.jet_suit_helmet": "Jet Suit Helmet",
   "item.adastramekanized.jet_suit": "Jet Suit",
   "item.adastramekanized.jet_suit_pants": "Jet Suit Pants",
   "item.adastramekanized.jet_suit_boots": "Jet Suit Boots",
-
   "tooltip.adastramekanized.space_suit_info": "Provides oxygen in space",
   "tooltip.adastramekanized.jet_suit_info": "Uses Mekanism jetpack controls",
-
+  "tooltip.adastramekanized.gas_tank.stored": "%s: %s / %s mB",
+  "tooltip.adastramekanized.gas_tank.info": "Fill in Mekanism Chemical Tank",
   "block.adastramekanized.steel_block": "Block of Steel",
   "block.adastramekanized.etrium_block": "Block of Etrium",
   "block.adastramekanized.desh_block": "Block of Desh",
   "block.adastramekanized.ostrum_block": "Block of Ostrum",
   "block.adastramekanized.calorite_block": "Block of Calorite",
-
   "block.adastramekanized.raw_desh_block": "Block of Raw Desh",
   "block.adastramekanized.raw_ostrum_block": "Block of Raw Ostrum",
   "block.adastramekanized.raw_calorite_block": "Block of Raw Calorite",
-
   "block.adastramekanized.desh_ore": "Desh Ore",
   "block.adastramekanized.ostrum_ore": "Ostrum Ore",
   "block.adastramekanized.calorite_ore": "Calorite Ore",
@@ -105,94 +89,80 @@
   "block.adastramekanized.deepslate_desh_ore": "Deepslate Desh Ore",
   "block.adastramekanized.deepslate_ostrum_ore": "Deepslate Ostrum Ore",
   "block.adastramekanized.deepslate_calorite_ore": "Deepslate Calorite Ore",
-
   "block.adastramekanized.cheese_block": "Cheese Block",
   "block.adastramekanized.sky_stone": "Sky Stone",
-
   "block.adastramekanized.moon_stone": "Moon Stone",
   "block.adastramekanized.moon_cobblestone": "Moon Cobblestone",
   "block.adastramekanized.moon_deepslate": "Moon Deepslate",
   "block.adastramekanized.moon_sand": "Moon Sand",
-
   "block.adastramekanized.mars_stone": "Mars Stone",
   "block.adastramekanized.mars_cobblestone": "Mars Cobblestone",
   "block.adastramekanized.mars_sand": "Mars Sand",
   "block.adastramekanized.conglomerate": "Conglomerate",
   "block.adastramekanized.polished_conglomerate": "Polished Conglomerate",
-
   "block.adastramekanized.venus_stone": "Venus Stone",
   "block.adastramekanized.venus_cobblestone": "Venus Cobblestone",
   "block.adastramekanized.venus_sand": "Venus Sand",
   "block.adastramekanized.venus_sandstone": "Venus Sandstone",
-
   "block.adastramekanized.mercury_stone": "Mercury Stone",
   "block.adastramekanized.mercury_cobblestone": "Mercury Cobblestone",
-
   "block.adastramekanized.glacio_stone": "Glacio Stone",
   "block.adastramekanized.glacio_cobblestone": "Glacio Cobblestone",
   "block.adastramekanized.permafrost": "Permafrost",
-
   "block.adastramekanized.moon_stone_stairs": "Moon Stone Stairs",
   "block.adastramekanized.moon_stone_slab": "Moon Stone Slab",
   "block.adastramekanized.moon_cobblestone_stairs": "Moon Cobblestone Stairs",
   "block.adastramekanized.moon_cobblestone_slab": "Moon Cobblestone Slab",
-
   "block.adastramekanized.mars_stone_stairs": "Mars Stone Stairs",
   "block.adastramekanized.mars_stone_slab": "Mars Stone Slab",
   "block.adastramekanized.mars_cobblestone_stairs": "Mars Cobblestone Stairs",
   "block.adastramekanized.mars_cobblestone_slab": "Mars Cobblestone Slab",
-
   "block.adastramekanized.venus_stone_stairs": "Venus Stone Stairs",
   "block.adastramekanized.venus_stone_slab": "Venus Stone Slab",
   "block.adastramekanized.venus_cobblestone_stairs": "Venus Cobblestone Stairs",
   "block.adastramekanized.venus_cobblestone_slab": "Venus Cobblestone Slab",
-
   "block.adastramekanized.mercury_stone_stairs": "Mercury Stone Stairs",
   "block.adastramekanized.mercury_stone_slab": "Mercury Stone Slab",
   "block.adastramekanized.mercury_cobblestone_stairs": "Mercury Cobblestone Stairs",
   "block.adastramekanized.mercury_cobblestone_slab": "Mercury Cobblestone Slab",
-
   "block.adastramekanized.glacio_stone_stairs": "Glacio Stone Stairs",
   "block.adastramekanized.glacio_stone_slab": "Glacio Stone Slab",
   "block.adastramekanized.glacio_cobblestone_stairs": "Glacio Cobblestone Stairs",
   "block.adastramekanized.glacio_cobblestone_slab": "Glacio Cobblestone Slab",
-
   "block.adastramekanized.sky_stone_stairs": "Sky Stone Stairs",
   "block.adastramekanized.sky_stone_slab": "Sky Stone Slab",
-
   "block.adastramekanized.iron_factory_block": "Iron Factory Block",
   "block.adastramekanized.steel_factory_block": "Steel Factory Block",
-
   "block.adastramekanized.iron_plating": "Iron Plating",
   "block.adastramekanized.steel_plating": "Steel Plating",
   "block.adastramekanized.desh_plating": "Desh Plating",
   "block.adastramekanized.ostrum_plating": "Ostrum Plating",
   "block.adastramekanized.calorite_plating": "Calorite Plating",
-
   "block.adastramekanized.iron_sheetblock": "Iron Sheet Block",
   "block.adastramekanized.steel_sheetblock": "Steel Sheet Block",
   "block.adastramekanized.etrium_sheetblock": "Etrium Sheet Block",
   "block.adastramekanized.desh_sheetblock": "Desh Sheet Block",
   "block.adastramekanized.ostrum_sheetblock": "Ostrum Sheet Block",
   "block.adastramekanized.calorite_sheetblock": "Calorite Sheet Block",
-
   "block.adastramekanized.iron_panel": "Iron Panel",
   "block.adastramekanized.steel_panel": "Steel Panel",
   "block.adastramekanized.etrium_panel": "Etrium Panel",
   "block.adastramekanized.desh_panel": "Desh Panel",
   "block.adastramekanized.ostrum_panel": "Ostrum Panel",
   "block.adastramekanized.calorite_panel": "Calorite Panel",
-
   "block.adastramekanized.encased_iron_block": "Encased Iron Block",
   "block.adastramekanized.encased_steel_block": "Encased Steel Block",
-
   "block.adastramekanized.iron_pillar": "Iron Pillar",
   "block.adastramekanized.steel_pillar": "Steel Pillar",
   "block.adastramekanized.desh_pillar": "Desh Pillar",
   "block.adastramekanized.ostrum_pillar": "Ostrum Pillar",
   "block.adastramekanized.calorite_pillar": "Calorite Pillar",
   "block.adastramekanized.marked_iron_pillar": "Marked Iron Pillar",
-
+  "block.adastramekanized.glowing_iron_pillar": "Glowing Iron Pillar",
+  "block.adastramekanized.glowing_steel_pillar": "Glowing Steel Pillar",
+  "block.adastramekanized.glowing_desh_pillar": "Glowing Desh Pillar",
+  "block.adastramekanized.glowing_ostrum_pillar": "Glowing Ostrum Pillar",
+  "block.adastramekanized.glowing_calorite_pillar": "Glowing Calorite Pillar",
   "block.adastramekanized.glacian_log": "Glacian Log",
   "block.adastramekanized.stripped_glacian_log": "Stripped Glacian Log",
   "block.adastramekanized.glacian_planks": "Glacian Planks",
@@ -201,33 +171,25 @@
   "block.adastramekanized.aeronos_stem": "Aeronos Stem",
   "block.adastramekanized.strophar_mushroom": "Strophar Mushroom",
   "block.adastramekanized.strophar_stem": "Strophar Stem",
-
   "block.adastramekanized.oxygen_distributor": "Oxygen Distributor",
   "block.adastramekanized.oxygen_loader": "Oxygen Loader",
   "block.adastramekanized.wireless_power_relay": "Wireless Power Relay",
   "block.adastramekanized.wireless_power_relay.tooltip": "Distributes power wirelessly to linked oxygen distributors",
   "block.adastramekanized.wireless_power_relay.tooltip2": "Insert an Oxygen Network Controller to link distributors",
-
   "block.adastramekanized.redstone_toggle_relay": "Redstone Toggle Relay",
   "block.adastramekanized.redstone_toggle_relay.tooltip": "Toggles linked oxygen distributors when powered by redstone",
-
   "item.adastramekanized.oxygen_network_controller": "Oxygen Network Controller",
-
+  "item.adastramekanized.astronomer_journal": "Astronomer\u0027s Journal",
   "block.adastramekanized.oxygen_network_monitor": "Oxygen Network Monitor",
-
   "block.adastramekanized.iron_wireless_button": "Iron Wireless Control Button",
   "block.adastramekanized.steel_wireless_button": "Steel Wireless Control Button",
   "block.adastramekanized.desh_wireless_button": "Desh Wireless Control Button",
   "block.adastramekanized.wireless_control_button.tooltip": "Links with Oxygen Network Controller",
   "block.adastramekanized.wireless_control_button.tooltip2": "Sneak + Right-click with controller to bind",
-
   "block.adastramekanized.rocket_assembly_station": "Rocket Assembly Station",
-
   "warning.adastramekanized.no_oxygen": "WARNING: NO OXYGEN!",
-
   "death.attack.oxygen_deprivation": "%s suffocated in the vacuum of space",
   "death.attack.oxygen_deprivation.player": "%s ran out of oxygen while fighting %s",
-
   "block.adastramekanized.moon_desh_ore": "Moon Desh Ore",
   "block.adastramekanized.moon_iron_ore": "Moon Iron Ore",
   "block.adastramekanized.moon_etrium_ore": "Moon Etrium Ore",
@@ -246,7 +208,6 @@
   "block.adastramekanized.glacio_iron_ore": "Glacio Iron Ore",
   "block.adastramekanized.glacio_lapis_ore": "Glacio Lapis Ore",
   "block.adastramekanized.glacio_etrium_ore": "Glacio Etrium Ore",
-
   "block.adastramekanized.steel_door": "Steel Door",
   "block.adastramekanized.steel_trapdoor": "Steel Trapdoor",
   "block.adastramekanized.airlock": "Airlock",
@@ -255,5 +216,16 @@
   "block.adastramekanized.steel_sliding_door": "Steel Sliding Door",
   "block.adastramekanized.desh_sliding_door": "Desh Sliding Door",
   "block.adastramekanized.ostrum_sliding_door": "Ostrum Sliding Door",
-  "block.adastramekanized.calorite_sliding_door": "Calorite Sliding Door"
+  "block.adastramekanized.calorite_sliding_door": "Calorite Sliding Door",
+  "biome.adastramekanized.moon_highlands": "Lunar Highlands",
+  "biome.adastramekanized.moon_maria": "Lunar Maria",
+  "biome.adastramekanized.moon_craters": "Lunar Craters",
+  "biome.adastramekanized.cavetest_caverns": "Test Caverns",
+  "biome.adastramekanized.mars_highlands": "Martian Highlands",
+  "biome.adastramekanized.mars_canyons": "Martian Canyons",
+  "biome.adastramekanized.mars_polar": "Martian Polar Ice Caps",
+  "biome.adastramekanized.hemphy_volcanic": "Hemphy Volcanic Fields",
+  "biome.adastramekanized.hemphy_infernal": "Hemphy Infernal Plains",
+  "biome.adastramekanized.hemphy_ashlands": "Hemphy Ashlands",
+  "biome.adastramekanized.earth_orbit": "Earth Orbit"
 }

@@ -1,0 +1,23 @@
+{
+  "name": "Glacio",
+  "icon": "minecraft:snow_block",
+  "category": "adastramekanized:known_planets",
+  "advancement": "adastramekanized:planets/visited_glacio",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "Planetary Data",
+      "text": "$(bold)Gravity:$() 80.0% of Earth$(br)$(bold)Atmosphere:$() Yes$(br)$(bold)Temperature:$() [Not Yet Implemented]$(br)$(bold)Sky Color:$() #E6F3FF$(br)$(bold)Ambient Light:$() 60.0%$(br)$(bold)Clouds:$() Yes$(br)$(bold)Rain:$() No"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Resources",
+      "text": "$(bold)Ore Deposits:$()$(br)$(br)Standard ore distribution enabled."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Surface Composition",
+      "text": "$(bold)Surface Layers:$()$(br)$(br)• $(bold)Surface:$() Snow Block$(br)• $(bold)Subsurface:$() Ice$(br)• $(bold)Deep:$() Stone$(br)• $(bold)Bedrock:$() Bedrock$(br)$(br)$(bold)Sea Level:$() Y\u003d63"
+    }
+  ]
+}

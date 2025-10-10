@@ -45,6 +45,8 @@ public class PlanetsScreen extends AbstractContainerScreen<PlanetsMenu> {
     private int pageIndex;
     private ResourceLocation selectedSolarSystem = ResourceLocation.fromNamespaceAndPath("adastramekanized", "solar_system");
     private Planet selectedPlanet;
+    private boolean isEarthSelected = false;
+    private boolean isMysteryPlanet = false;
 
 
     public PlanetsScreen(PlanetsMenu menu, Inventory playerInventory, Component title) {
@@ -70,7 +72,7 @@ public class PlanetsScreen extends AbstractContainerScreen<PlanetsMenu> {
             case 0 -> createSolarSystemButtons();
             case 1, 2 -> {
                 createPlanetButtons();
-                if (pageIndex == 2 && selectedPlanet != null) {
+                if (pageIndex == 2 && (selectedPlanet != null || isEarthSelected)) {
                     createSelectedPlanetButtons();
                 }
             }
@@ -79,6 +81,11 @@ public class PlanetsScreen extends AbstractContainerScreen<PlanetsMenu> {
         // Back button (left side)
         backButton = addRenderableWidget(Button.builder(Component.literal("<"), b -> {
             if (pageIndex != 2) this.scrollAmount = 0;
+            if (pageIndex == 2) {
+                isEarthSelected = false;
+                selectedPlanet = null;
+                isMysteryPlanet = false;
+            }
             pageIndex--;
             rebuildWidgets();
         }).bounds(10, height / 2 - 85, 20, 20).build());
@@ -110,6 +117,32 @@ public class PlanetsScreen extends AbstractContainerScreen<PlanetsMenu> {
     }
 
     private void createPlanetButtons() {
+        // Add mystery button first if tier 4+ and there are undiscovered planets
+        if (menu.tier() >= 4) {
+            var undiscoveredPlanets = menu.getUndiscoveredRandomPlanets();
+            if (!undiscoveredPlanets.isEmpty()) {
+                var mysteryButton = addWidget(Button.builder(
+                    Component.literal("???").withStyle(ChatFormatting.BOLD, ChatFormatting.LIGHT_PURPLE),
+                    b -> selectRandomPlanet()
+                ).bounds(10, 0, 99, 20).build());
+
+                buttons.add(mysteryButton);
+            }
+        }
+
+        // Add Earth button
+        buttons.add(addWidget(Button.builder(
+            Component.literal("Earth"),
+            b -> {
+                pageIndex = 2;
+                isEarthSelected = true;
+                selectedPlanet = null;
+                isMysteryPlanet = false;
+                rebuildWidgets();
+            }
+        ).bounds(10, 0, 99, 20).build()));
+
+        // Add all other planets
         for (var planet : menu.getSortedPlanets()) {
             if (!menu.getSolarSystem(planet).equals(selectedSolarSystem)) continue;
 
@@ -118,16 +151,41 @@ public class PlanetsScreen extends AbstractContainerScreen<PlanetsMenu> {
                 b -> {
                     pageIndex = 2;
                     selectedPlanet = planet;
+                    isMysteryPlanet = false;
                     rebuildWidgets();
                 }
             ).bounds(10, 0, 99, 20).build()));
         }
     }
 
+    private void selectRandomPlanet() {
+        var undiscoveredPlanets = menu.getUndiscoveredRandomPlanets();
+        if (undiscoveredPlanets.isEmpty()) {
+            return;
+        }
+
+        var random = minecraft.level.random;
+        var randomPlanet = undiscoveredPlanets.get(random.nextInt(undiscoveredPlanets.size()));
+
+        pageIndex = 2;
+        selectedPlanet = randomPlanet;
+        isMysteryPlanet = true;
+        rebuildWidgets();
+    }
+
     private void createSelectedPlanetButtons() {
+        if (isEarthSelected) {
+            // Earth Land button
+            var landButton = addRenderableWidget(Button.builder(
+                Component.literal("Land"),
+                b -> land(ResourceLocation.fromNamespaceAndPath("minecraft", "overworld"))
+            ).bounds(114, height / 2 - 77, 99, 20).build());
+            return;
+        }
+
         if (selectedPlanet == null) return;
 
-        // Land button
+        // Planet Land button
         var landButton = addRenderableWidget(Button.builder(
             Component.literal("Land"),
             b -> land(selectedPlanet.id())
@@ -198,7 +256,11 @@ public class PlanetsScreen extends AbstractContainerScreen<PlanetsMenu> {
 
         // Title
         Component titleText;
-        if (pageIndex == 2 && selectedPlanet != null) {
+        if (pageIndex == 2 && isMysteryPlanet) {
+            titleText = Component.literal("???").withStyle(ChatFormatting.BOLD, ChatFormatting.LIGHT_PURPLE);
+        } else if (pageIndex == 2 && isEarthSelected) {
+            titleText = Component.literal("Earth");
+        } else if (pageIndex == 2 && selectedPlanet != null) {
             titleText = Component.literal(selectedPlanet.displayName());
         } else if (pageIndex == 1 && selectedSolarSystem != null) {
             titleText = Component.literal(capitalize(selectedSolarSystem.getPath()));
@@ -208,20 +270,13 @@ public class PlanetsScreen extends AbstractContainerScreen<PlanetsMenu> {
 
         graphics.drawCenteredString(font, titleText, 57, height / 2 - 60, 0xFFFFFF);
 
-        // Space Station label (if on details page)
-        if (pageIndex == 2) {
-            graphics.drawCenteredString(font, Component.literal("Space Stations"), 163, height / 2 - 15, 0xFFFFFF);
-        }
-
         // Planet info (when hovering over selected planet)
-        if (pageIndex == 2 && selectedPlanet != null) {
+        if (pageIndex == 2 && (isEarthSelected || selectedPlanet != null)) {
             renderPlanetInfo(graphics);
         }
     }
 
     private void renderPlanetInfo(GuiGraphics graphics) {
-        if (selectedPlanet == null) return;
-
         // Position info box below Land button with padding
         int boxX = 114;
         int boxY = height / 2 - 52;  // 5 pixels below Land button (which ends at -57)
@@ -242,24 +297,46 @@ public class PlanetsScreen extends AbstractContainerScreen<PlanetsMenu> {
         int textY = boxY + 8;
         int lineSpacing = 14;
 
-        // Gravity
-        graphics.drawString(font,
-            Component.literal("Gravity: " + String.format("%.1fx", selectedPlanet.properties().gravity()))
-                .withStyle(ChatFormatting.GRAY),
-            textX, textY, 0xAAAAAA);
+        if (isMysteryPlanet) {
+            // Mystery planet message
+            Component message = Component.literal("Explore the Galaxy")
+                .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC);
+            graphics.drawCenteredString(font, message, boxX + boxWidth / 2, textY + 5, 0xFFAA55FF);
 
-        // Temperature
-        graphics.drawString(font,
-            Component.literal("Temperature: " + String.format("%.0f°C", selectedPlanet.properties().temperature()))
-                .withStyle(ChatFormatting.GRAY),
-            textX, textY + lineSpacing, 0xAAAAAA);
+            Component message2 = Component.literal("for new Planets")
+                .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC);
+            graphics.drawCenteredString(font, message2, boxX + boxWidth / 2, textY + 5 + lineSpacing, 0xFFAA55FF);
+        } else if (isEarthSelected) {
+            // Earth info
+            graphics.drawString(font,
+                Component.literal("Gravity: 1.0x").withStyle(ChatFormatting.GRAY),
+                textX, textY, 0xAAAAAA);
 
-        // Atmosphere
-        String atmosphere = selectedPlanet.atmosphere().hasAtmosphere() ?
-            (selectedPlanet.atmosphere().breathable() ? "Breathable" : "Toxic") : "None";
-        graphics.drawString(font,
-            Component.literal("Atmosphere: " + atmosphere).withStyle(ChatFormatting.GRAY),
-            textX, textY + lineSpacing * 2, 0xAAAAAA);
+            graphics.drawString(font,
+                Component.literal("Temperature: 20°C").withStyle(ChatFormatting.GRAY),
+                textX, textY + lineSpacing, 0xAAAAAA);
+
+            graphics.drawString(font,
+                Component.literal("Atmosphere: Breathable").withStyle(ChatFormatting.GRAY),
+                textX, textY + lineSpacing * 2, 0xAAAAAA);
+        } else if (selectedPlanet != null) {
+            // Planet info
+            graphics.drawString(font,
+                Component.literal("Gravity: " + String.format("%.1fx", selectedPlanet.properties().gravity()))
+                    .withStyle(ChatFormatting.GRAY),
+                textX, textY, 0xAAAAAA);
+
+            graphics.drawString(font,
+                Component.literal("Temperature: " + String.format("%.0f°C", selectedPlanet.properties().temperature()))
+                    .withStyle(ChatFormatting.GRAY),
+                textX, textY + lineSpacing, 0xAAAAAA);
+
+            String atmosphere = selectedPlanet.atmosphere().hasAtmosphere() ?
+                (selectedPlanet.atmosphere().breathable() ? "Breathable" : "Toxic") : "None";
+            graphics.drawString(font,
+                Component.literal("Atmosphere: " + atmosphere).withStyle(ChatFormatting.GRAY),
+                textX, textY + lineSpacing * 2, 0xAAAAAA);
+        }
     }
 
     private void renderStarfield(GuiGraphics graphics) {

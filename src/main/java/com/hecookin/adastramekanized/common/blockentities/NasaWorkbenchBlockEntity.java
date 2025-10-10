@@ -5,6 +5,7 @@ import com.hecookin.adastramekanized.common.recipes.NasaWorkbenchRecipe;
 import com.hecookin.adastramekanized.common.registry.ModBlockEntityTypes;
 import com.hecookin.adastramekanized.common.registry.ModRecipeTypes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;

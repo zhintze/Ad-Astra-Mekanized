@@ -1,6 +1,7 @@
 package com.hecookin.adastramekanized.common.registry;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
+import com.hecookin.adastramekanized.common.items.AstronomerJournalItem;
 import com.hecookin.adastramekanized.common.items.OxygenNetworkController;
 import com.hecookin.adastramekanized.common.items.armor.*;
 import com.hecookin.adastramekanized.common.items.armor.base.CustomDyeableArmorItem;
@@ -112,6 +113,9 @@ public class ModItems {
     public static final Supplier<Item> OXYGEN_NETWORK_CONTROLLER = ITEMS.register("oxygen_network_controller",
             () -> new OxygenNetworkController());
 
+    public static final Supplier<Item> ASTRONOMER_JOURNAL = ITEMS.register("astronomer_journal",
+            () -> new AstronomerJournalItem(new Item.Properties().stacksTo(1)));
+
     // ========== ROCKET COMPONENTS ==========
 
     public static final Supplier<Item> ROCKET_NOSE_CONE = ITEMS.register("rocket_nose_cone",
@@ -154,7 +158,7 @@ public class ModItems {
             () -> new Item(new Item.Properties()));
 
     public static final Supplier<Item> GAS_TANK = ITEMS.register("gas_tank",
-            () -> new Item(new Item.Properties()));
+            () -> new com.hecookin.adastramekanized.common.items.GasTankItem(10000L, new Item.Properties())); // 10,000 mB capacity
 
     // ========== ROCKETS ==========
 
@@ -171,7 +175,7 @@ public class ModItems {
             () -> new RocketItem(ModEntityTypes.TIER_4_ROCKET, new Item.Properties().stacksTo(1).fireResistant()));
 
     public static final Supplier<Item> LARGE_GAS_TANK = ITEMS.register("large_gas_tank",
-            () -> new Item(new Item.Properties()));
+            () -> new com.hecookin.adastramekanized.common.items.GasTankItem(50000L, new Item.Properties())); // 50,000 mB capacity
 
     // ========== SPACE SUITS - STANDARD ==========
 

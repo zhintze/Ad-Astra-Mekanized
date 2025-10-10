@@ -1,33 +1,156 @@
-[26Sep2025 01:18:28.361] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Starting planet generation with PlanetMaker...
-[26Sep2025 01:18:28.392] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating planets using PlanetMaker system...
-[26Sep2025 01:18:28.405] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: moon
-[26Sep2025 01:18:28.406] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating configured ores: [gold, diamond, iron, copper, coal, redstone]
-[26Sep2025 01:18:28.419] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: moon
-[26Sep2025 01:18:28.420] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: moon
-[26Sep2025 01:18:28.423] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: cavetest
-[26Sep2025 01:18:28.423] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating configured ores: [lapis]
-[26Sep2025 01:18:28.425] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: cavetest
-[26Sep2025 01:18:28.425] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: cavetest
-[26Sep2025 01:18:28.427] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: mars
-[26Sep2025 01:18:28.428] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis, redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten]
-[26Sep2025 01:18:28.445] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: mars
-[26Sep2025 01:18:28.446] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: mars
-[26Sep2025 01:18:28.447] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: hemphy
-[26Sep2025 01:18:28.448] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis, redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten]
-[26Sep2025 01:18:28.462] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: hemphy
-[26Sep2025 01:18:28.463] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: hemphy
-[26Sep2025 01:18:28.464] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: oretest
-[26Sep2025 01:18:28.465] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis, redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten]
-[26Sep2025 01:18:28.481] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: oretest
-[26Sep2025 01:18:28.483] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: oretest
-[26Sep2025 01:18:28.484] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: primal
-[26Sep2025 01:18:28.484] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis, redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten]
-[26Sep2025 01:18:28.493] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: primal
-[26Sep2025 01:18:28.493] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: primal
-[26Sep2025 01:18:28.494] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: tribal
-[26Sep2025 01:18:28.494] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis, redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten]
-[26Sep2025 01:18:28.503] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: tribal
-[26Sep2025 01:18:28.504] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: tribal
-[26Sep2025 01:18:28.504] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating 7 planets
-[26Sep2025 01:18:28.504] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Planet generation uses multi-noise biome sources for variety
-[26Sep2025 01:18:28.504] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Planet generation completed successfully!
+[09Oct2025 15:35:33.999] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: moon
+[09Oct2025 15:35:34.001] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: moon
+[09Oct2025 15:35:34.004] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: cavetest
+[09Oct2025 15:35:34.004] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: cavetest
+[09Oct2025 15:35:34.006] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: mars
+[09Oct2025 15:35:34.006] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: mars
+[09Oct2025 15:35:34.010] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: hemphy
+[09Oct2025 15:35:34.011] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: hemphy
+[09Oct2025 15:35:34.012] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: oretest
+[09Oct2025 15:35:34.013] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: oretest
+[09Oct2025 15:35:34.014] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: primal
+[09Oct2025 15:35:34.014] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: primal
+[09Oct2025 15:35:34.015] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: tribal
+[09Oct2025 15:35:34.015] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: tribal
+[09Oct2025 15:35:34.016] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: earth_orbit
+[09Oct2025 15:35:34.016] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: earth_orbit
+[09Oct2025 15:35:34.017] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: venus
+[09Oct2025 15:35:34.017] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: venus
+[09Oct2025 15:35:34.018] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: mercury
+[09Oct2025 15:35:34.019] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: mercury
+[09Oct2025 15:35:34.019] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: glacio
+[09Oct2025 15:35:34.020] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: glacio
+[09Oct2025 15:35:34.021] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: earth_example
+[09Oct2025 15:35:34.021] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: earth_example
+[09Oct2025 15:35:34.022] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: binary_world
+[09Oct2025 15:35:34.022] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: binary_world
+[09Oct2025 15:35:34.022] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Planet registry initialized with 13 planets
+[09Oct2025 15:35:34.023] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Starting planet generation with PlanetMaker...
+[09Oct2025 15:35:34.024] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: moon
+[09Oct2025 15:35:34.024] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: moon
+[09Oct2025 15:35:34.025] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: cavetest
+[09Oct2025 15:35:34.025] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: cavetest
+[09Oct2025 15:35:34.026] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: mars
+[09Oct2025 15:35:34.026] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: mars
+[09Oct2025 15:35:34.028] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: hemphy
+[09Oct2025 15:35:34.028] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: hemphy
+[09Oct2025 15:35:34.029] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: oretest
+[09Oct2025 15:35:34.029] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: oretest
+[09Oct2025 15:35:34.030] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: primal
+[09Oct2025 15:35:34.031] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: primal
+[09Oct2025 15:35:34.031] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: tribal
+[09Oct2025 15:35:34.032] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: tribal
+[09Oct2025 15:35:34.032] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: earth_orbit
+[09Oct2025 15:35:34.033] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: earth_orbit
+[09Oct2025 15:35:34.034] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: venus
+[09Oct2025 15:35:34.034] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: venus
+[09Oct2025 15:35:34.035] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: mercury
+[09Oct2025 15:35:34.035] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: mercury
+[09Oct2025 15:35:34.035] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: glacio
+[09Oct2025 15:35:34.036] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: glacio
+[09Oct2025 15:35:34.036] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: earth_example
+[09Oct2025 15:35:34.036] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: earth_example
+[09Oct2025 15:35:34.037] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated Patchouli entry for planet: binary_world
+[09Oct2025 15:35:34.037] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated unlock advancement for planet: binary_world
+[09Oct2025 15:35:34.038] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating planets using PlanetMaker system...
+[09Oct2025 15:35:34.049] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: moon
+[09Oct2025 15:35:34.050] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating configured ores: [gold, diamond, iron, copper, coal, redstone]
+[09Oct2025 15:35:34.057] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: moon
+[09Oct2025 15:35:34.058] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: moon
+[09Oct2025 15:35:34.063] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: cavetest
+[09Oct2025 15:35:34.063] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating configured ores: [lapis]
+[09Oct2025 15:35:34.065] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: cavetest
+[09Oct2025 15:35:34.065] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: cavetest
+[09Oct2025 15:35:34.069] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: mars
+[09Oct2025 15:35:34.069] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten, coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis]
+[09Oct2025 15:35:34.088] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: mars
+[09Oct2025 15:35:34.089] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: mars
+[09Oct2025 15:35:34.092] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: hemphy
+[09Oct2025 15:35:34.093] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten, coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis]
+[09Oct2025 15:35:34.108] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: hemphy
+[09Oct2025 15:35:34.109] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: hemphy
+[09Oct2025 15:35:34.113] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: oretest
+[09Oct2025 15:35:34.113] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten, coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis]
+[09Oct2025 15:35:34.127] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: oretest
+[09Oct2025 15:35:34.128] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: oretest
+[09Oct2025 15:35:34.131] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: primal
+[09Oct2025 15:35:34.131] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten, coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis]
+[09Oct2025 15:35:34.146] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: primal
+[09Oct2025 15:35:34.148] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: primal
+[09Oct2025 15:35:34.150] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: tribal
+[09Oct2025 15:35:34.151] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten, coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis]
+[09Oct2025 15:35:34.170] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: tribal
+[09Oct2025 15:35:34.171] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: tribal
+[09Oct2025 15:35:34.174] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: earth_orbit
+[09Oct2025 15:35:34.175] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: venus
+[09Oct2025 15:35:34.175] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten, coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis]
+[09Oct2025 15:35:34.189] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: venus
+[09Oct2025 15:35:34.190] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: venus
+[09Oct2025 15:35:34.191] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: mercury
+[09Oct2025 15:35:34.191] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten, coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis]
+[09Oct2025 15:35:34.203] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: mercury
+[09Oct2025 15:35:34.203] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: mercury
+[09Oct2025 15:35:34.204] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: glacio
+[09Oct2025 15:35:34.204] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten, coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis]
+[09Oct2025 15:35:34.211] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: glacio
+[09Oct2025 15:35:34.212] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: glacio
+[09Oct2025 15:35:34.212] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: earth_example
+[09Oct2025 15:35:34.212] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten, coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis]
+[09Oct2025 15:35:34.220] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: earth_example
+[09Oct2025 15:35:34.220] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: earth_example
+[09Oct2025 15:35:34.221] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: binary_world
+[09Oct2025 15:35:34.221] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten, coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis]
+[09Oct2025 15:35:34.228] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: binary_world
+[09Oct2025 15:35:34.228] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: binary_world
+[09Oct2025 15:35:34.229] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: moon
+[09Oct2025 15:35:34.230] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating configured ores: [gold, diamond, iron, copper, coal, redstone]
+[09Oct2025 15:35:34.232] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: moon
+[09Oct2025 15:35:34.233] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: moon
+[09Oct2025 15:35:34.234] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: cavetest
+[09Oct2025 15:35:34.235] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating configured ores: [lapis]
+[09Oct2025 15:35:34.235] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: cavetest
+[09Oct2025 15:35:34.235] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: cavetest
+[09Oct2025 15:35:34.237] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: mars
+[09Oct2025 15:35:34.237] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten, coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis]
+[09Oct2025 15:35:34.246] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: mars
+[09Oct2025 15:35:34.246] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: mars
+[09Oct2025 15:35:34.247] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: hemphy
+[09Oct2025 15:35:34.247] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten, coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis]
+[09Oct2025 15:35:34.255] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: hemphy
+[09Oct2025 15:35:34.256] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: hemphy
+[09Oct2025 15:35:34.257] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: oretest
+[09Oct2025 15:35:34.257] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten, coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis]
+[09Oct2025 15:35:34.264] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: oretest
+[09Oct2025 15:35:34.265] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: oretest
+[09Oct2025 15:35:34.266] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: primal
+[09Oct2025 15:35:34.267] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten, coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis]
+[09Oct2025 15:35:34.276] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: primal
+[09Oct2025 15:35:34.276] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: primal
+[09Oct2025 15:35:34.278] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: tribal
+[09Oct2025 15:35:34.278] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten, coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis]
+[09Oct2025 15:35:34.287] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: tribal
+[09Oct2025 15:35:34.288] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: tribal
+[09Oct2025 15:35:34.289] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: earth_orbit
+[09Oct2025 15:35:34.290] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: venus
+[09Oct2025 15:35:34.290] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten, coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis]
+[09Oct2025 15:35:34.299] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: venus
+[09Oct2025 15:35:34.300] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: venus
+[09Oct2025 15:35:34.300] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: mercury
+[09Oct2025 15:35:34.301] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten, coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis]
+[09Oct2025 15:35:34.310] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: mercury
+[09Oct2025 15:35:34.310] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: mercury
+[09Oct2025 15:35:34.311] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: glacio
+[09Oct2025 15:35:34.311] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten, coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis]
+[09Oct2025 15:35:34.321] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: glacio
+[09Oct2025 15:35:34.321] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: glacio
+[09Oct2025 15:35:34.322] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: earth_example
+[09Oct2025 15:35:34.322] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten, coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis]
+[09Oct2025 15:35:34.331] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: earth_example
+[09Oct2025 15:35:34.331] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: earth_example
+[09Oct2025 15:35:34.332] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generating ore features for planet: binary_world
+[09Oct2025 15:35:34.332] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: No ores configured, using comprehensive ore list: [redstone, diamond, nickel, fluorite, copper, gold, emerald, tungsten, coal, bauxite, aluminum, platinum, silver, zinc, lead, tin, osmium, iron, uranium, lapis]
+[09Oct2025 15:35:34.342] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating ore features for planet: binary_world
+[09Oct2025 15:35:34.342] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Generated planet: binary_world
+[09Oct2025 15:35:34.342] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Completed generating 26 planets
+[09Oct2025 15:35:34.342] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Planet generation uses multi-noise biome sources for variety
+[09Oct2025 15:35:34.342] [main/INFO] [com.hecookin.adastramekanized.AdAstraMekanized/]: Planet generation completed successfully!

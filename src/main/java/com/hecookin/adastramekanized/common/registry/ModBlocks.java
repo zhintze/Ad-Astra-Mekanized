@@ -312,6 +312,22 @@ public class ModBlocks {
     public static final Supplier<Block> MARKED_IRON_PILLAR = registerBlock("marked_iron_pillar",
             () -> new RotatedPillarBlock(BlockProperties.INDUSTRIAL_BLOCK));
 
+    // Glowing Pillar Blocks (emit light level 15)
+    public static final Supplier<Block> GLOWING_IRON_PILLAR = registerBlock("glowing_iron_pillar",
+            () -> new RotatedPillarBlock(BlockProperties.INDUSTRIAL_BLOCK.lightLevel(state -> 15)));
+
+    public static final Supplier<Block> GLOWING_STEEL_PILLAR = registerBlock("glowing_steel_pillar",
+            () -> new RotatedPillarBlock(BlockProperties.INDUSTRIAL_BLOCK.lightLevel(state -> 15)));
+
+    public static final Supplier<Block> GLOWING_DESH_PILLAR = registerBlock("glowing_desh_pillar",
+            () -> new RotatedPillarBlock(BlockProperties.INDUSTRIAL_BLOCK.lightLevel(state -> 15)));
+
+    public static final Supplier<Block> GLOWING_OSTRUM_PILLAR = registerBlock("glowing_ostrum_pillar",
+            () -> new RotatedPillarBlock(BlockProperties.INDUSTRIAL_BLOCK.lightLevel(state -> 15)));
+
+    public static final Supplier<Block> GLOWING_CALORITE_PILLAR = registerBlock("glowing_calorite_pillar",
+            () -> new RotatedPillarBlock(BlockProperties.INDUSTRIAL_BLOCK.lightLevel(state -> 15)));
+
     // ========== ORE BLOCKS ==========
 
     // Standard Ores

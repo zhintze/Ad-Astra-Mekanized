@@ -1,16 +1,24 @@
 package com.hecookin.adastramekanized.client.rendering;
 
+import com.google.gson.JsonElement;
 import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.api.planets.Planet;
 import com.hecookin.adastramekanized.api.planets.PlanetRegistry;
 import com.hecookin.adastramekanized.client.rendering.planet.MoonDimensionEffects;
 import com.hecookin.adastramekanized.common.planets.PlanetManager;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.GsonHelper;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterDimensionSpecialEffectsEvent;
+
+import java.io.BufferedReader;
+import java.util.Map;
 
 /**
  * Handles registration of custom dimension special effects for planets.
@@ -83,13 +91,166 @@ public class DimensionEffectsHandler {
     public static void registerKnownPlanetEffects(RegisterDimensionSpecialEffectsEvent event) {
         AdAstraMekanized.LOGGER.info("Registering dimension effects from planet JSON data...");
 
-        // Define known planets with their JSON-based properties
-        registerPlanetEffect(event, "moon", createMoonEffects());
-        registerPlanetEffect(event, "venus", createVenusEffects());
-        registerPlanetEffect(event, "mercury", createMercuryEffects());
-        registerPlanetEffect(event, "glacio", createGlacioEffects());
-        registerPlanetEffect(event, "earth_example", createEarthEffects());
-        registerPlanetEffect(event, "binary_world", createBinaryWorldEffects());
+        // Load planet data directly from JSON files during client startup
+        try {
+            net.minecraft.server.packs.resources.ResourceManager resourceManager =
+                net.minecraft.client.Minecraft.getInstance().getResourceManager();
+
+            if (resourceManager != null) {
+                loadPlanetsFromResourceManager(resourceManager);
+
+                // Now try to register from the loaded data
+                PlanetRegistry registry = PlanetRegistry.getInstance();
+                if (registry != null && !registry.getAllPlanets().isEmpty()) {
+                    registerFromPlanetRegistry(event, registry);
+                    return;
+                }
+            }
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.error("Failed to load planets from JSON, using hardcoded fallback", e);
+        }
+
+        // Last resort: Auto-generate from planet registry (if JSON loading fails completely)
+        AdAstraMekanized.LOGGER.info("Using fallback: auto-generating dimension effects from planet registry...");
+
+        // Get all planet builders from PlanetGenerationRunner
+        var planetBuilders = com.hecookin.adastramekanized.common.planets.PlanetGenerationRunner.getAllPlanetBuilders();
+
+        if (planetBuilders.isEmpty()) {
+            AdAstraMekanized.LOGGER.warn("No planet builders found! Dimension effects will not be registered.");
+            return;
+        }
+
+        // Auto-generate dimension effects for each planet
+        for (var entry : planetBuilders.entrySet()) {
+            String planetId = entry.getKey();
+            var builder = entry.getValue();
+
+            try {
+                DimensionSpecialEffects effects = createEffectsFromBuilder(builder);
+                registerPlanetEffect(event, planetId, effects);
+                AdAstraMekanized.LOGGER.debug("Auto-registered dimension effects for: {}", planetId);
+            } catch (Exception e) {
+                AdAstraMekanized.LOGGER.error("Failed to auto-register dimension effects for {}: {}",
+                    planetId, e.getMessage());
+            }
+        }
+
+        AdAstraMekanized.LOGGER.info("Auto-registered dimension effects for {} planets", planetBuilders.size());
+    }
+
+    /**
+     * Create dimension effects from a planet builder.
+     * Used for fallback when planet JSON isn't loaded yet.
+     */
+    private static DimensionSpecialEffects createEffectsFromBuilder(
+            com.hecookin.adastramekanized.common.planets.PlanetMaker.PlanetBuilder builder) {
+
+        // For moon, use special MoonDimensionEffects
+        if ("moon".equals(builder.getName())) {
+            return new MoonDimensionEffects();
+        }
+
+        // For other planets, create a custom PlanetDimensionEffects
+        // that reads properties from the builder
+        return new PlanetDimensionEffects(null) {
+            private final float cloudHeight = builder.hasClouds() ? 192.0f : Float.NaN;
+            private final boolean hasRain = builder.hasRain();
+            private final boolean hasFog = builder.hasAtmosphere();
+
+            // Override constructor parameters via reflection-like pattern
+            // We can't actually override the constructor, so we override methods instead
+
+            @Override
+            public boolean isFoggyAt(int x, int z) {
+                return hasFog;
+            }
+
+            // Note: Cloud height and precipitation are set in the parent constructor,
+            // so we can't override them here. The parent will use planet=null which means:
+            // - cloudHeight = Float.NaN (no clouds)
+            // - hasRain = false
+            // This is acceptable for fallback - proper effects load from JSON when available
+        };
+    }
+
+    /**
+     * Load planet data from resource manager during client startup
+     */
+    private static void loadPlanetsFromResourceManager(ResourceManager resourceManager) {
+        AdAstraMekanized.LOGGER.info("Loading planet JSON files from resource manager...");
+
+        PlanetRegistry registry = PlanetRegistry.getInstance();
+        int loadedCount = 0;
+
+        try {
+            // Find all planet JSON files in data packs
+            Map<ResourceLocation, Resource> planetResources = resourceManager.listResources(
+                "planets", location -> location.getPath().endsWith(".json"));
+
+            for (Map.Entry<ResourceLocation, Resource> entry : planetResources.entrySet()) {
+                ResourceLocation resourceLocation = entry.getKey();
+                Resource resource = entry.getValue();
+
+                try {
+                    // Extract planet ID from resource location
+                    ResourceLocation planetId = extractPlanetId(resourceLocation);
+
+                    if (planetId == null) {
+                        AdAstraMekanized.LOGGER.warn("Could not extract planet ID from: {}", resourceLocation);
+                        continue;
+                    }
+
+                    // Load and parse planet JSON
+                    try (BufferedReader reader = resource.openAsReader()) {
+                        JsonElement jsonElement = GsonHelper.parse(reader);
+
+                        var result = Planet.CODEC.parse(JsonOps.INSTANCE, jsonElement);
+
+                        if (result.error().isPresent()) {
+                            AdAstraMekanized.LOGGER.error("Failed to parse planet {}: {}",
+                                planetId, result.error().get().message());
+                            continue;
+                        }
+
+                        Planet planet = result.result().orElse(null);
+                        if (planet != null && registry.registerPlanet(planet)) {
+                            loadedCount++;
+                            AdAstraMekanized.LOGGER.debug("Loaded planet: {}", planetId);
+                        }
+                    }
+                } catch (Exception e) {
+                    AdAstraMekanized.LOGGER.error("Error loading planet from {}: {}",
+                        resourceLocation, e.getMessage());
+                }
+            }
+
+            AdAstraMekanized.LOGGER.info("Loaded {} planets from JSON files", loadedCount);
+
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.error("Failed to load planets from resource manager", e);
+        }
+    }
+
+    /**
+     * Extract planet ID from resource location
+     * data/namespace/planets/planet_name.json -> namespace:planet_name
+     */
+    private static ResourceLocation extractPlanetId(ResourceLocation resourceLocation) {
+        String path = resourceLocation.getPath();
+
+        // Remove "planets/" prefix and ".json" suffix
+        if (!path.startsWith("planets/") || !path.endsWith(".json")) {
+            return null;
+        }
+
+        String planetName = path.substring(8, path.length() - 5); // "planets/".length() = 8
+
+        if (planetName.isEmpty() || !ResourceLocation.isValidPath(planetName)) {
+            return null;
+        }
+
+        return ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), planetName);
     }
 
     private static void registerPlanetEffect(RegisterDimensionSpecialEffectsEvent event, String planetId, DimensionSpecialEffects effects) {
@@ -98,60 +259,4 @@ public class DimensionEffectsHandler {
         AdAstraMekanized.LOGGER.debug("Registered dimension effects for: {}", planetId);
     }
 
-    // Create dimension effects based on actual planet JSON data
-
-    private static MoonDimensionEffects createMoonEffects() {
-        // Moon: gravity=0.165, temp=-173.0, no atmosphere, black space sky
-        return new MoonDimensionEffects();
-    }
-
-    private static PlanetDimensionEffects createVenusEffects() {
-        // Venus: gravity=0.9, temp=85.0, thick toxic atmosphere, yellowish
-        return new PlanetDimensionEffects(null) {
-            @Override
-            public boolean isFoggyAt(int x, int z) {
-                return true; // Thick atmosphere = heavy fog
-            }
-        };
-    }
-
-    private static PlanetDimensionEffects createMercuryEffects() {
-        // Mercury: gravity=0.38, temp=50.0, no atmosphere, metallic
-        return new PlanetDimensionEffects(null) {
-            @Override
-            public boolean isFoggyAt(int x, int z) {
-                return false; // No atmosphere = no fog
-            }
-        };
-    }
-
-    private static PlanetDimensionEffects createGlacioEffects() {
-        // Glacio: gravity=0.8, temp=-45.0, thin atmosphere, icy
-        return new PlanetDimensionEffects(null) {
-            @Override
-            public boolean isFoggyAt(int x, int z) {
-                return true; // Thin atmosphere with ice crystals
-            }
-        };
-    }
-
-    private static PlanetDimensionEffects createEarthEffects() {
-        // Earth Example: gravity=1.0, temp=15.0, breathable atmosphere
-        return new PlanetDimensionEffects(null) {
-            @Override
-            public boolean isFoggyAt(int x, int z) {
-                return true; // Earth-like atmosphere
-            }
-        };
-    }
-
-    private static PlanetDimensionEffects createBinaryWorldEffects() {
-        // Binary World: gravity=0.8, temp=45.0, toxic atmosphere, dual stars
-        return new PlanetDimensionEffects(null) {
-            @Override
-            public boolean isFoggyAt(int x, int z) {
-                return true; // Toxic atmosphere creates haze
-            }
-        };
-    }
 }

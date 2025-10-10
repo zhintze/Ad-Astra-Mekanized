@@ -109,6 +109,12 @@ public class PlanetTeleportationSystem {
      * Find a safe spawn position in the target level
      */
     private Vec3 findSafeSpawnPosition(ServerLevel level) {
+        // Special handling for Earth Orbit - spawn at fixed coordinates above the space station
+        ResourceLocation earthOrbit = ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "earth_orbit");
+        if (level.dimension().location().equals(earthOrbit)) {
+            return new Vec3(1.5, 600.0, 0.5);
+        }
+
         // Start at world spawn coordinates
         BlockPos spawnPos = level.getSharedSpawnPos();
 

@@ -150,6 +150,9 @@ public class AdAstraMekanized {
         PlanetManager planetManager = PlanetManager.getInstance();
         planetManager.initialize(event.getServer());
 
+        // Load planet data from JSON files
+        planetManager.loadPlanetData();
+
         // Initialize teleportation system
         PlanetTeleportationSystem teleportSystem = PlanetTeleportationSystem.getInstance();
         teleportSystem.initialize(event.getServer());

@@ -1,0 +1,28 @@
+{
+  "name": "Mars",
+  "icon": "adastramekanized:mars_sand",
+  "category": "adastramekanized:known_planets",
+  "advancement": "adastramekanized:planets/visited_mars",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "Planetary Data",
+      "text": "$(bold)Gravity:$() 38.0% of Earth$(br)$(bold)Atmosphere:$() Yes$(br)$(bold)Temperature:$() [Not Yet Implemented]$(br)$(bold)Sky Color:$() #D2691E$(br)$(bold)Ambient Light:$() 20.0%$(br)$(bold)Clouds:$() No$(br)$(bold)Rain:$() No"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Resources",
+      "text": "$(bold)Ore Deposits:$()$(br)$(br)Standard ore distribution enabled."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Biomes",
+      "text": "$(bold)Terrain Biomes:$()$(br)$(br)• Mars Highlands$(br)• Mars Canyons$(br)• Mars Polar$(br)"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Surface Composition",
+      "text": "$(bold)Surface Layers:$()$(br)$(br)• $(bold)Surface:$() Mars Sand$(br)• $(bold)Subsurface:$() Mars Stone$(br)• $(bold)Deep:$() Stone$(br)• $(bold)Bedrock:$() Bedrock$(br)$(br)$(bold)Sea Level:$() Y\u003d48"
+    }
+  ]
+}

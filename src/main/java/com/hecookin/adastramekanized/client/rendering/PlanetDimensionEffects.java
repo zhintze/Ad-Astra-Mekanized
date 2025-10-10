@@ -1,5 +1,6 @@
 package com.hecookin.adastramekanized.client.rendering;
 
+import com.hecookin.adastramekanized.AdAstraMekanized;
 import com.hecookin.adastramekanized.api.planets.Planet;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.world.phys.Vec3;
@@ -20,10 +21,10 @@ public class PlanetDimensionEffects extends DimensionSpecialEffects {
 
     public PlanetDimensionEffects(Planet planet) {
         super(
-            // Cloud height - adjust based on atmosphere
-            (planet != null && planet.atmosphere().hasAtmosphere()) ? 192.0f : Float.NaN,
+            // Cloud height - check if clouds are enabled in rendering config
+            (planet != null && planet.rendering().weather().hasClouds()) ? 192.0f : Float.NaN,
             // Has precipitation - based on planet weather
-            planet != null && planet.atmosphere().hasAtmosphere() && planet.atmosphere().breathable(),
+            planet != null && planet.rendering().weather().hasRain(),
             // Sky type - always normal for planets
             SkyType.NORMAL,
             // Force bright lightmap - false for natural lighting
@@ -32,13 +33,21 @@ public class PlanetDimensionEffects extends DimensionSpecialEffects {
             planet == null || !planet.atmosphere().breathable()
         );
         this.planet = planet;
+
+        // Debug cloud configuration
+        if (planet != null) {
+            boolean hasClouds = planet.rendering().weather().hasClouds();
+            float cloudHeight = hasClouds ? 192.0f : Float.NaN;
+            AdAstraMekanized.LOGGER.info("Planet {} clouds: {} (height: {})",
+                planet.id(), hasClouds, cloudHeight);
+        }
     }
 
     @Override
     public @NotNull Vec3 getBrightnessDependentFogColor(@NotNull Vec3 skyColor, float celestialAngle) {
-        // Handle null planet case
+        // Handle null planet case or no atmosphere
         if (planet == null || !planet.atmosphere().hasAtmosphere()) {
-            // No atmosphere = space-like black fog
+            // No atmosphere = constant black space, no sunrise/sunset color transitions
             return new Vec3(0.0, 0.0, 0.0);
         }
 
@@ -50,9 +59,17 @@ public class PlanetDimensionEffects extends DimensionSpecialEffects {
 
         Vec3 fogColor = new Vec3(r, g, b);
 
-        // Blend with celestial angle for day/night variation
-        float brightness = 0.5f + 0.5f * (float) Math.cos(celestialAngle * 2.0 * Math.PI);
-        return fogColor.scale(brightness);
+        // Apply brightness variation based on atmosphere type
+        // Non-breathable atmospheres have minimal color transitions to avoid Earth-like sunrises
+        if (!planet.atmosphere().breathable()) {
+            // Thin/toxic atmospheres: very minimal variation (90-100% brightness)
+            float brightness = 0.9f + 0.1f * (float) Math.cos(celestialAngle * 2.0 * Math.PI);
+            return fogColor.scale(brightness);
+        } else {
+            // Breathable atmospheres: normal day/night variation like Earth
+            float brightness = 0.5f + 0.5f * (float) Math.cos(celestialAngle * 2.0 * Math.PI);
+            return fogColor.scale(brightness);
+        }
     }
 
     @Override

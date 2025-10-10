@@ -27,6 +27,9 @@ public class ModCommands {
         // Register recipe debug commands
         RecipeDebugCommand.register(dispatcher);
 
+        // Register space station spawn command
+        SpawnStationCommand.register(dispatcher);
+
         AdAstraMekanized.LOGGER.info("Command registration complete");
     }
 }

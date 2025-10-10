@@ -376,33 +376,130 @@ ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.STEEL
 
 ## Planet Generation System
 
+### Architecture Overview
+
+**Single Source of Truth: `PlanetGenerationRunner.configurePlanets()`**
+
+The planet system uses a centralized registry architecture where planets are defined once and automatically generate both JSON files and dimension effects:
+
+```
+PlanetGenerationRunner (Java Code - Single Definition)
+         ↓
+   registerPlanet(id) → Static Registry Map
+         ↓                         ↓
+    .generate() → JSON         DimensionEffectsHandler → Auto-generated fallback effects
+```
+
+**Key Benefits:**
+- ✅ Define planets once in Java - no manual duplication
+- ✅ Automatic JSON generation for world data
+- ✅ Automatic dimension effects fallback (clouds, fog, atmosphere)
+- ✅ Adding new planets requires changes in only ONE place
+
 ### PlanetMaker API Usage
 
-The comprehensive PlanetMaker system provides complete control over planetary generation. Key usage:
+**IMPORTANT:** Always use `registerPlanet(id)` instead of `PlanetMaker.planet(id)` to ensure automatic dimension effects registration.
 
 ```java
-// Example: Balanced test planet
-PlanetMaker.planet("oretest")
-    .continentalScale(25.0f)           // Continental landmass control
-    .erosionScale(35.0f)               // Erosion pattern intensity
-    .ridgeScale(15.0f)                 // Ridge formation strength
-    .heightVariation(15.0f, 10.0f, 5.0f, 3.0f)  // Multi-level height control
-    .jaggednessScale(0.3f)             // Mountain sharpness
-    .jaggednessNoiseScale(800.0f)      // Mountain feature scale
-    .surfaceBlock("minecraft:grass_block")      // Surface material
-    .subsurfaceBlock("minecraft:dirt")          // Subsurface layer
-    .veinToggle(0.8f)                  // Ore vein activation
-    .addCustomOreVein("minecraft:diamond_ore")  // Specific ore types
-    .oreVeinDensity(1.0f)              // Ore density multiplier
-    .worldDimensions(-64, 384)         // World height bounds
+// Example: Balanced test planet with automatic registration
+registerPlanet("oretest")
+    .continentalScale(2.0f)            // Continental landmass control (lower = more connected)
+    .erosionScale(3.0f)                // Erosion pattern intensity
+    .ridgeScale(1.0f)                  // Ridge formation strength
+    .heightVariation(0.8f, 0.5f, 0.3f, 0.2f)  // Multi-level height control (gentle)
+    .jaggednessScale(0.15f)            // Mountain sharpness (0.15 = gentle hills)
+    .jaggednessNoiseScale(600.0f)      // Mountain feature scale
+
+    // Surface blocks
+    .surfaceBlock("minecraft:grass_block")
+    .subsurfaceBlock("minecraft:dirt")
+    .deepBlock("minecraft:stone")
+    .bedrockBlock("minecraft:bedrock")
+
+    // World dimensions
+    .worldDimensions(-32, 256)         // World height bounds (reduced underground)
     .seaLevel(64)                      // Sea level height
-    .skyColor(0x87CEEB)                # Sky color (hex)
-    .generate();
+
+    // Atmosphere and visuals
+    .skyColor(0x87CEEB)                // Sky color (hex)
+    .fogColor(0xC0C0C0)                // Fog color
+    .hasAtmosphere(true)               // Has breathable atmosphere
+    .ambientLight(0.8f)                // Ambient light level
+
+    // Weather and celestial
+    .cloudsEnabled(true)               // Show clouds
+    .rainEnabled(true)                 // Allow rain
+    .starsVisibleDuringDay(false)      // Stars only at night
+
+    // Ore generation
+    .oreVeinsEnabled(true)             // Enable vanilla ore system
+    .configureOre("diamond", 4)        // Custom ore veins per chunk
+
+    // Biomes
+    .clearBiomes()
+    .addBiome("minecraft:plains", 0.30f)
+    .addBiome("minecraft:forest", 0.25f)
+
+    .generate();                       // Adds to generation queue AND registry
 ```
+
+### Available Planets (13 Total)
+
+The mod includes 13 pre-configured planets in `PlanetGenerationRunner.configurePlanets()`:
+
+#### Playable Worlds
+1. **moon** - Airless lunar landscape with Earth visible, lava oceans, 1/6 gravity
+2. **mars** - Red planet with canyons, thin atmosphere, two moons (Phobos & Deimos)
+3. **earth_orbit** - Space station dimension, void world with Earth below
+4. **venus** - Thick toxic atmosphere, heavy fog, yellowish sky
+5. **mercury** - Airless metallic world, extreme temperatures
+6. **glacio** - Icy world with thin atmosphere, snow and ice
+7. **earth_example** - Earth-like breathable world for testing
+8. **binary_world** - Toxic atmosphere with dual stars
+
+#### Test/Development Worlds
+9. **cavetest** - Extreme cave generation testing (maximum caves, decorations)
+10. **hemphy** - Absolute stress test (maximum ALL parameters, lava world)
+11. **oretest** - Balanced Overworld-like planet for ore testing
+12. **primal** - Jungle world (Mowzie's Mobs integration)
+13. **tribal** - Savanna world (Mowzie's Mobs Umvuthana civilization)
+
+### Automated Dimension Effects System
+
+**How it works:**
+When `registerPlanet(id)` is called, the planet builder is stored in a static registry. During client startup, if planet JSON files haven't loaded yet, `DimensionEffectsHandler` automatically generates dimension effects from the registry:
+
+```java
+// In PlanetGenerationRunner - planet is registered
+registerPlanet("neptune")
+    .hasAtmosphere(false)
+    .cloudsEnabled(false)
+    .generate();
+
+// In DimensionEffectsHandler - effects auto-generated from builder properties:
+// - Cloud height: Float.NaN (no clouds, because cloudsEnabled=false)
+// - Fog: None (no atmosphere)
+// - No manual createNeptuneEffects() method needed!
+```
+
+**Properties automatically used for dimension effects:**
+- `hasAtmosphere()` → Controls fog rendering
+- `cloudsEnabled()` → Sets cloud height (192.0 or NaN)
+- `rainEnabled()` → Controls precipitation
+- `skyColor()` → Sky rendering color
+- `fogColor()` → Fog rendering color
 
 ### Ore Generation System
 
-The noise-based ore generation uses threshold-based rarity:
+The noise-based ore generation uses threshold-based rarity controlled by `configureOre()`:
+
+```java
+.configureOre("diamond", 4)    // 4 diamond veins per chunk
+.configureOre("iron", 50)      // 50 iron veins per chunk
+.configureOre("gold", 3)       // 3 gold veins per chunk
+```
+
+**Threshold-based rarity (for noise-based generation):**
 - **Diamond**: 0.92-1.0 threshold (8% spawn chance)
 - **Gold**: 0.85-1.0 threshold (15% spawn chance)
 - **Iron**: 0.7-1.0 threshold (30% spawn chance)
@@ -410,23 +507,71 @@ The noise-based ore generation uses threshold-based rarity:
 
 Ore distribution is controlled by `minecraft:ore_gap` noise with proper depth conditions.
 
+### Adding a New Planet
+
+**Complete workflow (single location!):**
+
+```java
+// In PlanetGenerationRunner.configurePlanets()
+registerPlanet("neptune")
+    .gravity(1.1f)
+    .surfaceBlock("minecraft:blue_ice")
+    .skyColor(0x0066FF)
+    .hasAtmosphere(true)
+    .cloudsEnabled(true)
+    .starsVisibleDuringDay(false)
+    .generate();
+
+// That's it! The planet will:
+// 1. Generate JSON files during ./gradlew makePlanets
+// 2. Auto-register dimension effects (clouds, fog, atmosphere)
+// 3. Be available via /planet teleport neptune
+```
+
 ### Planet Configuration Examples
 
-**For detailed planet generation documentation, see [planetary_generation.md](./planetary_generation.md)**
+#### Airless World (Moon-style)
+```java
+registerPlanet("titan")
+    .hasAtmosphere(false)          // No atmosphere
+    .cloudsEnabled(false)          // No clouds
+    .rainEnabled(false)            // No rain
+    .starsVisibleDuringDay(true)   // Stars always visible
+    .starCount(50000)              // Dense starfield
+    .starBrightness(2.5f)          // Very bright stars
+    .skyColor(0x000000)            // Black space
+    .ambientLight(0.0f)            // No ambient light
+    .generate();
+```
+
+#### Earth-like World
+```java
+registerPlanet("habitable_world")
+    .hasAtmosphere(true)           // Breathable atmosphere
+    .cloudsEnabled(true)           // Show clouds
+    .rainEnabled(true)             // Allow rain/weather
+    .starsVisibleDuringDay(false)  // Stars only at night
+    .skyColor(0x87CEEB)            // Sky blue
+    .ambientLight(0.8f)            // Bright ambient light
+    .generate();
+```
 
 #### Extreme Testing (Hemphy)
-- Continental scale: 50.0 (maximum landmass variation)
-- Erosion scale: 100.0 (extreme erosion patterns)
+- Continental scale: 0.5 (very low for connected hellscape)
+- Erosion scale: 1.0 (minimal for stability)
 - Jaggedness: 1.0 with 2000.0 noise scale (maximum terrain drama)
-- Ore density: 3.0x (triple normal ore spawning)
-- World height: -128 to 512 (640 total height)
+- Ore density: N/A (uses vanilla ore system)
+- World height: -64 to 384 (reduced from extreme to manageable)
+- Surface: Magma blocks, netherrack, crying obsidian
+- Lava oceans at Y=32
 
 #### Balanced Testing (Oretest)
-- Continental scale: 25.0 (moderate landmass variation)
-- Erosion scale: 35.0 (normal erosion patterns)
-- Jaggedness: 0.3 with 800.0 noise scale (moderate mountains)
-- Ore density: 1.0x (normal ore spawning)
-- World height: -64 to 384 (standard Minecraft range)
+- Continental scale: 2.0 (lower for connected landmasses)
+- Erosion scale: 3.0 (minimal erosion for stability)
+- Jaggedness: 0.15 with 600.0 noise scale (gentle rolling hills)
+- Ore density: 1.0x (normal ore spawning via vanilla system)
+- World height: -32 to 256 (reduced underground for gameplay)
+- Surface: Grass, dirt, stone (Overworld-like)
 
 ## Project Documentation References
 

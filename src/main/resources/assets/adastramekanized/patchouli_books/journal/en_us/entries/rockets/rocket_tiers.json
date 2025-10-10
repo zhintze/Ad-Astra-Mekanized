@@ -5,32 +5,32 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "There are four rocket tiers, each with different capabilities and fuel requirements. Higher tiers can travel to more distant planets and have more inventory space."
+      "text": "There are four rocket tiers, each with different capabilities and fuel requirements. Higher tiers can travel to more distant planets."
     },
     {
       "type": "patchouli:spotlight",
       "item": "adastramekanized:tier_1_rocket",
-      "text": "$(bold)Tier 1 Rocket$()$(br)$(br)Your first rocket for reaching nearby destinations like the Moon and Earth Orbit.$(br)$(br)$(bold)Fuel:$() Liquid Ethanol$(br)$(br)Standard speed and cargo capacity."
+      "text": "$(bold)Tier 1 Rocket$()$(br)$(br)Your first rocket for reaching nearby destinations.$(br)$(br)$(bold)Fuel:$() Liquid Ethanol$(br)$(br)$(bold)Accessible Planets:$()$(br)- Earth$(br)- Moon$(br)- Earth Orbit"
     },
     {
       "type": "patchouli:spotlight",
       "item": "adastramekanized:tier_2_rocket",
-      "text": "$(bold)Tier 2 Rocket$()$(br)$(br)Improved rocket for reaching Mars and intermediate destinations.$(br)$(br)$(bold)Fuel:$() Liquid Propane$(br)$(br)Increased cargo space for longer missions."
+      "text": "$(bold)Tier 2 Rocket$()$(br)$(br)Improved rocket for reaching the inner planets.$(br)$(br)$(bold)Fuel:$() Liquid Propane$(br)$(br)$(bold)Accessible Planets:$()$(br)- All Tier 1 planets$(br)- Mars$(br)- Mercury"
     },
     {
       "type": "patchouli:spotlight",
       "item": "adastramekanized:tier_3_rocket",
-      "text": "$(bold)Tier 3 Rocket$()$(br)$(br)Advanced rocket for outer system exploration.$(br)$(br)$(bold)Fuel:$() Liquid Ethylene or Mekanism Ethene$(br)$(br)Greater cargo capacity for extended expeditions."
+      "text": "$(bold)Tier 3 Rocket$()$(br)$(br)Advanced rocket for outer system exploration.$(br)$(br)$(bold)Fuel:$() Liquid Ethylene$(br)$(br)$(bold)Accessible Planets:$()$(br)- All Tier 1-2 planets$(br)- Venus$(br)- Glacio$(br)$(br)Fireproof construction."
     },
     {
       "type": "patchouli:spotlight",
       "item": "adastramekanized:tier_4_rocket",
-      "text": "$(bold)Tier 4 Rocket$()$(br)$(br)The ultimate rocket for deep space travel.$(br)$(br)$(bold)Fuel:$() Liquid Methane$(br)$(br)Maximum speed (1.7x faster) and cargo capacity. Fireproof construction."
+      "text": "$(bold)Tier 4 Rocket$()$(br)$(br)The ultimate rocket for deep space exploration.$(br)$(br)$(bold)Fuel:$() Liquid Methane$(br)$(br)$(bold)Accessible Planets:$()$(br)- All Tier 1-3 planets$(br)- Unknown planets via the $(bold)$(#AA55FF)???$() mystery selector$(br)$(br)Greater fuel efficiency for extended expeditions."
     },
     {
       "type": "patchouli:text",
       "title": "Cargo Capacity",
-      "text": "Each rocket has 10 inventory slots:$(br)- 8 storage slots for cargo$(br)- 2 fuel slots$(br)$(br)Use these slots to transport resources between planets, carry oxygen supplies, and store equipment for your missions."
+      "text": "Each rocket has 8 storage slots for cargo$(br)$(br)Use these slots to transport resources between planets, carry oxygen supplies, and store equipment for your missions."
     }
   ]
 }

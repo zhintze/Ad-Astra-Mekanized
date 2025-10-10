@@ -1,0 +1,16 @@
+{
+  "name": "NASA Workbench",
+  "icon": "adastramekanized:nasa_workbench",
+  "category": "adastramekanized:nasa_workbench",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The NASA Workbench is a specialized crafting station for creating rockets and advanced space equipment. It provides a larger crafting grid for complex recipes."
+    },
+    {
+      "type": "patchouli:text",
+      "item": "create:mechanical_crafter",
+      "text": "$(bold)Create Integration$()$(br2)If you have Create installed, you can use Mechanical Crafters to automate rocket production! All NASA Workbench recipes are available, allowing for full automation of your space program."
+    }
+  ]
+}

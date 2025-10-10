@@ -2,7 +2,10 @@
   "type": "adastramekanized:nasa_workbench",
   "ingredients": [
     {
-      "item": "adastramekanized:desh_sheet"
+      "item": "minecraft:lightning_rod"
+    },
+    {
+      "item": "adastramekanized:fan"
     },
     {
       "item": "adastramekanized:fan"
@@ -14,19 +17,13 @@
       "item": "adastramekanized:large_gas_tank"
     },
     {
-      "item": "adastramekanized:large_gas_tank"
+      "item": "minecraft:comparator"
     },
     {
       "item": "adastramekanized:etrionic_capacitor"
     },
     {
-      "item": "adastramekanized:desh_sheet"
-    },
-    {
-      "item": "adastramekanized:fan"
-    },
-    {
-      "item": "adastramekanized:desh_sheet"
+      "item": "adastramekanized:etrionic_capacitor"
     }
   ],
   "result": {

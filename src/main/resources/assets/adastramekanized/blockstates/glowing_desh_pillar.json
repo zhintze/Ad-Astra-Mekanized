@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "adastramekanized:block/glowing_desh_pillar",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "adastramekanized:block/glowing_desh_pillar"
+    },
+    "axis=z": {
+      "model": "adastramekanized:block/glowing_desh_pillar",
+      "x": 90
+    }
+  }
+}

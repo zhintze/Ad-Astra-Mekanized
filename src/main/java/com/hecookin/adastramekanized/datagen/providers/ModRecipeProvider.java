@@ -259,26 +259,24 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         // Wireless Power Relay - 9 items
         NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, ModBlocks.WIRELESS_POWER_RELAY.get(), 1)
             .addIngredient(ModItems.STEEL_SHEET.get())
-            .addIngredient(Items.LIGHTNING_ROD)
-            .addIngredient(ModItems.STEEL_SHEET.get())
+            .addIngredient(Items.LIGHTNING_ROD).addIngredient(Items.LIGHTNING_ROD)
+
             .addIngredient(Items.REDSTONE_BLOCK, 2)
-            .addIngredient(ModItems.ETRIONIC_CAPACITOR.get())
-            .addIngredient(ModItems.STEEL_SHEET.get())
-            .addIngredient(Items.LIGHTNING_ROD)
-            .addIngredient(ModItems.STEEL_SHEET.get())
-            .unlockedBy("has_etrionic_capacitor", has(ModItems.ETRIONIC_CAPACITOR.get()))
+            .addIngredient(ModItems.ETRIONIC_CORE.get())          .addIngredient(ModItems.ETRIONIC_CORE.get())
+                .addIngredient(ModItems.STEEL_SHEET.get())
+            .addIngredient(ModItems.STEEL_SHEET.get()).addIngredient(ModItems.STEEL_SHEET.get()).addIngredient(ModItems.STEEL_SHEET.get())
+            .unlockedBy("has_etrionic_core", has(ModItems.ETRIONIC_CORE.get()))
             .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "wireless_power_relay"));
 
         // Oxygen Network Controller - 9 items
         NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, ModItems.OXYGEN_NETWORK_CONTROLLER.get(), 1)
+                .addIngredient(Items.LIGHTNING_ROD)
+
+                .addIngredient(ModItems.FAN.get(),2)
             .addIngredient(ModItems.DESH_SHEET.get())
-            .addIngredient(ModItems.FAN.get())
-            .addIngredient(ModItems.DESH_SHEET.get())
-            .addIngredient(ModItems.LARGE_GAS_TANK.get(), 2)
-            .addIngredient(ModItems.ETRIONIC_CAPACITOR.get())
-            .addIngredient(ModItems.DESH_SHEET.get())
-            .addIngredient(ModItems.FAN.get())
-            .addIngredient(ModItems.DESH_SHEET.get())
+            .addIngredient(ModItems.LARGE_GAS_TANK.get(), 1)
+                .addIngredient(Items.COMPARATOR)
+                .addIngredient(ModItems.ETRIONIC_CAPACITOR.get(),2)
             .unlockedBy("has_etrionic_capacitor", has(ModItems.ETRIONIC_CAPACITOR.get()))
             .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "oxygen_network_controller"));
 
@@ -286,26 +284,24 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         NasaWorkbenchRecipeBuilder.builder(RecipeCategory.REDSTONE, ModBlocks.REDSTONE_TOGGLE_RELAY.get(), 1)
             .addIngredient(ModItems.STEEL_SHEET.get())
             .addIngredient(Items.REPEATER)
-            .addIngredient(ModItems.STEEL_SHEET.get())
             .addIngredient(Items.COMPARATOR, 2)
-            .addIngredient(Items.REDSTONE_BLOCK)
-            .addIngredient(ModItems.STEEL_SHEET.get())
-            .addIngredient(Items.REPEATER)
-            .addIngredient(ModItems.STEEL_SHEET.get())
-            .unlockedBy("has_steel_sheet", has(ModItems.STEEL_SHEET.get()))
+                .addIngredient(Items.REPEATER)
+                .addIngredient(ModItems.FAN.get(),2)
+                .addIngredient(ModItems.STEEL_SHEET.get())
+            .addIngredient(ModItems.STEEL_SHEET.get()).addIngredient(ModItems.STEEL_SHEET.get())
+                .addIngredient(ModItems.STEEL_SHEET.get())
+            .unlockedBy("has_fan", has(ModItems.FAN.get()))
             .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "redstone_toggle_relay"));
 
         // Oxygen Distributor - 9 items
         NasaWorkbenchRecipeBuilder.builder(RecipeCategory.MISC, ModBlocks.OXYGEN_DISTRIBUTOR.get(), 1)
             .addIngredient(ModItems.FAN.get())
-            .addIngredient(ModItems.LARGE_GAS_TANK.get())
-            .addIngredient(ModItems.FAN.get())
-            .addIngredient(ModItems.FAN.get())
-            .addIngredient(ModItems.OXYGEN_NETWORK_CONTROLLER.get())
-            .addIngredient(ModItems.FAN.get())
-            .addIngredient(ModItems.DESH_SHEET.get())
-            .addIngredient(ModItems.OXYGEN_GEAR.get())
-            .addIngredient(ModItems.DESH_SHEET.get())
+            .addIngredient(ModItems.GAS_TANK.get()).addIngredient(ModItems.DESH_SHEET.get()).addIngredient(ModItems.DESH_SHEET.get())
+            .addIngredient(ModItems.GAS_TANK.get()).addIngredient(ModItems.OXYGEN_GEAR.get())
+
+            .addIngredient(ModItems.DESH_SHEET.get()).addIngredient(ModItems.FAN.get())
+                .addIngredient(ModItems.FAN.get())
+                .addIngredient(ModItems.FAN.get()).addIngredient(ModItems.FAN.get())
             .unlockedBy("has_oxygen_gear", has(ModItems.OXYGEN_GEAR.get()))
             .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "oxygen_distributor"));
 
@@ -781,6 +777,37 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
             .requires(Items.BLACK_DYE)
             .unlockedBy("has_iron_pillar", has(ModBlocks.IRON_PILLAR.get()))
             .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "marked_iron_pillar"));
+
+        // Glowing Pillars: pillar + glowstone dust
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.GLOWING_IRON_PILLAR.get())
+            .requires(ModBlocks.IRON_PILLAR.get())
+            .requires(Items.GLOWSTONE_DUST)
+            .unlockedBy("has_iron_pillar", has(ModBlocks.IRON_PILLAR.get()))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "glowing_iron_pillar"));
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.GLOWING_STEEL_PILLAR.get())
+            .requires(ModBlocks.STEEL_PILLAR.get())
+            .requires(Items.GLOWSTONE_DUST)
+            .unlockedBy("has_steel_pillar", has(ModBlocks.STEEL_PILLAR.get()))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "glowing_steel_pillar"));
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.GLOWING_DESH_PILLAR.get())
+            .requires(ModBlocks.DESH_PILLAR.get())
+            .requires(Items.GLOWSTONE_DUST)
+            .unlockedBy("has_desh_pillar", has(ModBlocks.DESH_PILLAR.get()))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "glowing_desh_pillar"));
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.GLOWING_OSTRUM_PILLAR.get())
+            .requires(ModBlocks.OSTRUM_PILLAR.get())
+            .requires(Items.GLOWSTONE_DUST)
+            .unlockedBy("has_ostrum_pillar", has(ModBlocks.OSTRUM_PILLAR.get()))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "glowing_ostrum_pillar"));
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.GLOWING_CALORITE_PILLAR.get())
+            .requires(ModBlocks.CALORITE_PILLAR.get())
+            .requires(Items.GLOWSTONE_DUST)
+            .unlockedBy("has_calorite_pillar", has(ModBlocks.CALORITE_PILLAR.get()))
+            .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(AdAstraMekanized.MOD_ID, "glowing_calorite_pillar"));
 
         // ========== Factory Blocks ==========
 

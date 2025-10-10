@@ -1,0 +1,12 @@
+{
+  "name": "Astronomer's Journal",
+  "landing_text": "Your comprehensive guide to space exploration, planetary travel, and advanced systems in Ad Astra Mekanized.",
+  "book_texture": "patchouli:textures/gui/book_blue.png",
+  "dont_generate_book": true,
+  "custom_book_item": "adastramekanized:astronomer_journal",
+  "model": "patchouli:book_blue",
+  "use_blocky_font": true,
+  "version": 1,
+  "show_progress": false,
+  "use_resource_pack": true
+}

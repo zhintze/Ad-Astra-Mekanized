@@ -1,0 +1,21 @@
+{
+  "name": "Launching Sequence",
+  "icon": "minecraft:ender_pearl",
+  "category": "adastramekanized:planet_travel",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Travel between planets using your rocket. Each planet requires different preparation and has unique challenges. Plan your missions carefully!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Selecting Destination",
+      "text": "When launching in a rocket:$(br)$(br)1. Launch the rocket (press SPACE)$(br)2. Reach space (high altitude)$(br)3. The planet selection GUI will open automatically$(br)4. Choose your destination$(br)5. Land carefully!"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Mission Planning",
+      "text": "Before traveling:$(br)$(br)- Check planet atmosphere$(br)- Pack oxygen if needed$(br)- Bring enough fuel$(br)- Prepare for different gravity and alien life-forms"
+    }
+  ]
+}

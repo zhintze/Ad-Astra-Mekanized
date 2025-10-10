@@ -47,7 +47,7 @@ public record ServerboundLandPacket(String planetId, boolean tryPreviousLocation
     /**
      * Handle the packet on the server side - initiates landing sequence.
      * For regular planets: spawns a Lander entity for descent.
-     * For Earth's Orbit: teleports directly to space station and drops rocket + items.
+     * For Earth/Overworld: special case handling.
      */
     public static void handle(ServerboundLandPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
@@ -56,6 +56,16 @@ public record ServerboundLandPacket(String planetId, boolean tryPreviousLocation
             if (!(vehicle instanceof Rocket rocket)) return;
 
             ResourceLocation planetId = ResourceLocation.parse(packet.planetId);
+
+            if (planetId.equals(ResourceLocation.fromNamespaceAndPath("minecraft", "overworld"))) {
+                ResourceKey<Level> overworldKey = Level.OVERWORLD;
+                ServerLevel overworld = player.server.getLevel(overworldKey);
+                if (overworld != null) {
+                    handlePlanetLanding(player, rocket, overworld, planetId);
+                }
+                return;
+            }
+
             Planet planet = PlanetRegistry.getInstance().getPlanet(planetId);
 
             if (planet == null) {
@@ -66,7 +76,6 @@ public record ServerboundLandPacket(String planetId, boolean tryPreviousLocation
                 return;
             }
 
-            // Create dimension key from planet's dimension type
             ResourceKey<Level> dimensionKey = ResourceKey.create(Registries.DIMENSION, planet.dimension().dimensionType());
             ServerLevel targetLevel = player.server.getLevel(dimensionKey);
             if (targetLevel == null) {
@@ -77,7 +86,6 @@ public record ServerboundLandPacket(String planetId, boolean tryPreviousLocation
                 return;
             }
 
-            // All planets use the same landing sequence
             handlePlanetLanding(player, rocket, targetLevel, planetId);
         });
     }
@@ -87,21 +95,33 @@ public record ServerboundLandPacket(String planetId, boolean tryPreviousLocation
      * Works for all planets including Earth's Orbit.
      */
     private static void handlePlanetLanding(ServerPlayer player, Rocket rocket, ServerLevel targetLevel, ResourceLocation planetId) {
-        // Try to use saved launch coordinates if available, otherwise use current position
-        BlockPos savedPos = com.hecookin.adastramekanized.common.util.LaunchCoordinateTracker.getLaunchCoordinates(player, targetLevel.dimension());
+        // Earth Orbit special handling: always land at station coordinates
+        boolean isEarthOrbit = planetId.getPath().equals("earth_orbit");
         BlockPos targetPos;
+        int landingHeight;
 
-        if (savedPos != null) {
-            // Use saved launch coordinates (X and Z)
-            targetPos = savedPos;
-            AdAstraMekanized.LOGGER.info("Player {} landing at saved coordinates: {}", player.getName().getString(), targetPos);
+        if (isEarthOrbit) {
+            // Earth Orbit: spawn at station coordinates (0, 0) at Y=600, centered at 0.5, 0.5
+            targetPos = new BlockPos(0, 0, 0);
+            landingHeight = 600;
+            AdAstraMekanized.LOGGER.info("Player {} landing at Earth Orbit station: {}", player.getName().getString(), targetPos);
         } else {
-            // No saved coordinates, use current position
-            targetPos = player.blockPosition();
-            AdAstraMekanized.LOGGER.info("Player {} landing at current position: {}", player.getName().getString(), targetPos);
+            // Other planets: use saved coordinates if available, otherwise current position
+            BlockPos savedPos = com.hecookin.adastramekanized.common.util.LaunchCoordinateTracker.getLaunchCoordinates(player, targetLevel.dimension());
+
+            if (savedPos != null) {
+                // Use saved launch coordinates (X and Z)
+                targetPos = savedPos;
+                AdAstraMekanized.LOGGER.info("Player {} landing at saved coordinates: {}", player.getName().getString(), targetPos);
+            } else {
+                // No saved coordinates, use current position
+                targetPos = player.blockPosition();
+                AdAstraMekanized.LOGGER.info("Player {} landing at current position: {}", player.getName().getString(), targetPos);
+            }
+            landingHeight = RocketConstants.ATMOSPHERE_LEAVE_HEIGHT;
         }
 
-        Vec3 landingPos = new Vec3(targetPos.getX(), RocketConstants.ATMOSPHERE_LEAVE_HEIGHT, targetPos.getZ());
+        Vec3 landingPos = new Vec3(targetPos.getX() + 0.5, landingHeight, targetPos.getZ() + 0.5);
 
         // Stop riding for teleportation
         player.stopRiding();
@@ -135,6 +155,9 @@ public record ServerboundLandPacket(String planetId, boolean tryPreviousLocation
         // Remove old rocket entity
         rocket.discard();
 
+        // Grant planet visited advancement
+        grantPlanetVisitedAdvancement(teleportedPlayer, planetId);
+
         AdAstraMekanized.LOGGER.info("Player {} landing on planet {} in lander", player.getName().getString(), planetId);
     }
 
@@ -145,5 +168,39 @@ public record ServerboundLandPacket(String planetId, boolean tryPreviousLocation
     private static ServerPlayer teleportToDimension(ServerPlayer player, ServerLevel targetLevel, Vec3 pos) {
         player.teleportTo(targetLevel, pos.x, pos.y, pos.z, player.getYRot(), player.getXRot());
         return player.server.getPlayerList().getPlayer(player.getUUID());
+    }
+
+    /**
+     * Grant the planet visited advancement to a player.
+     * Advancement ID format: adastramekanized:planets/visited_<planet_path>
+     */
+    private static void grantPlanetVisitedAdvancement(ServerPlayer player, ResourceLocation planetId) {
+        // Convert planet ID to advancement ID
+        // minecraft:overworld -> adastramekanized:planets/visited_overworld
+        // adastramekanized:mars -> adastramekanized:planets/visited_mars
+        String planetPath = planetId.getPath();
+        ResourceLocation advancementId = ResourceLocation.fromNamespaceAndPath(
+            AdAstraMekanized.MOD_ID,
+            "planets/visited_" + planetPath
+        );
+
+        // Get the advancement
+        net.minecraft.advancements.AdvancementHolder advancement = player.server.getAdvancements().get(advancementId);
+
+        if (advancement == null) {
+            AdAstraMekanized.LOGGER.debug("No advancement found for planet: {}", planetId);
+            return;
+        }
+
+        // Grant all criteria for the advancement
+        net.minecraft.advancements.AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
+
+        if (!progress.isDone()) {
+            for (String criterion : progress.getRemainingCriteria()) {
+                player.getAdvancements().award(advancement, criterion);
+            }
+            AdAstraMekanized.LOGGER.info("Granted planet visited advancement for {} to player {}",
+                planetPath, player.getName().getString());
+        }
     }
 }

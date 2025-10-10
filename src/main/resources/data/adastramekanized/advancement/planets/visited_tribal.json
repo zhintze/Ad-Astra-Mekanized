@@ -1,0 +1,10 @@
+{
+  "criteria": {
+    "visited_tribal": {
+      "trigger": "minecraft:changed_dimension",
+      "conditions": {
+        "to": "adastramekanized:tribal"
+      }
+    }
+  }
+}

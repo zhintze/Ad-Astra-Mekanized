@@ -9,6 +9,7 @@ import com.hecookin.adastramekanized.AdAstraMekanized;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -325,6 +326,24 @@ public class PlanetMaker {
 
         // Planet physical properties
         private float gravity = 1.0f; // Gravity multiplier (1.0 = Earth gravity)
+
+        // Celestial bodies configuration
+        private java.util.List<SunConfig> suns = new java.util.ArrayList<>();
+        private java.util.List<MoonConfig> moons = new java.util.ArrayList<>();
+        private java.util.List<PlanetConfig> visiblePlanets = new java.util.ArrayList<>();
+
+        // Star configuration
+        private boolean starsVisibleDuringDay = false;
+        private int starCount = 15000;
+        private float starBrightness = 1.0f;
+
+        // Weather configuration
+        private boolean cloudsEnabled = true;
+        private boolean rainEnabled = true;
+        private boolean snowEnabled = true;
+        private boolean stormsEnabled = false;
+        private boolean acidRainDamage = false;
+        private float acidRainDamageAmount = 1.0f;
 
         private PlanetBuilder(String name) {
             this.name = name;
@@ -918,6 +937,158 @@ public class PlanetMaker {
             return this;
         }
 
+        // Celestial bodies configuration methods
+
+        /**
+         * Add a sun to this planet's sky
+         * @param texture Sun texture resource location
+         * @param scale Sun size scale (1.0 = vanilla sun size)
+         * @param color Sun color tint (RGB hex, 0xFFFFFF = white)
+         * @param visible Whether the sun is visible
+         */
+        public PlanetBuilder addSun(net.minecraft.resources.ResourceLocation texture, float scale, int color, boolean visible) {
+            this.suns.add(new SunConfig(texture, scale, color, visible));
+            return this;
+        }
+
+        /**
+         * Add a visible sun with default visibility (true)
+         */
+        public PlanetBuilder addSun(net.minecraft.resources.ResourceLocation texture, float scale, int color) {
+            return addSun(texture, scale, color, true);
+        }
+
+        /**
+         * Add a vanilla sun (default texture, white color, scale 1.0)
+         */
+        public PlanetBuilder addSun() {
+            return addSun(net.minecraft.resources.ResourceLocation.parse("minecraft:textures/environment/sun.png"), 1.0f, 0xFFFFFF, true);
+        }
+
+        /**
+         * Add a moon to this planet's sky
+         * @param texture Moon texture resource location
+         * @param scale Moon size scale
+         * @param color Moon color tint (RGB hex)
+         * @param horizontalPosition Horizontal position in sky (-1.0 to 1.0)
+         * @param verticalPosition Vertical position in sky (-1.0 to 1.0, 0.0 = horizon)
+         * @param movesWithTime Whether moon moves across sky with time
+         * @param visible Whether moon is visible
+         */
+        public PlanetBuilder addMoon(net.minecraft.resources.ResourceLocation texture, float scale, int color,
+                                    float horizontalPosition, float verticalPosition, boolean movesWithTime, boolean visible) {
+            this.moons.add(new MoonConfig(texture, scale, color, horizontalPosition, verticalPosition, movesWithTime, visible));
+            return this;
+        }
+
+        /**
+         * Add a visible moon with default parameters
+         */
+        public PlanetBuilder addMoon(net.minecraft.resources.ResourceLocation texture, float scale, int color,
+                                    float horizontalPosition, float verticalPosition, boolean movesWithTime) {
+            return addMoon(texture, scale, color, horizontalPosition, verticalPosition, movesWithTime, true);
+        }
+
+        /**
+         * Add a visible planet (like Earth from Moon) to this planet's sky
+         * @param texture Planet texture resource location
+         * @param scale Planet size scale
+         * @param color Planet color tint (RGB hex)
+         * @param horizontalPosition Horizontal position in sky (-1.0 to 1.0)
+         * @param verticalPosition Vertical position in sky (-1.0 to 1.0, 0.0 = horizon)
+         * @param movesWithTime Whether planet moves across sky with time
+         * @param visible Whether planet is visible
+         */
+        public PlanetBuilder addVisiblePlanet(net.minecraft.resources.ResourceLocation texture, float scale, int color,
+                                             float horizontalPosition, float verticalPosition, boolean movesWithTime, boolean visible) {
+            this.visiblePlanets.add(new PlanetConfig(texture, scale, color, horizontalPosition, verticalPosition, movesWithTime, visible));
+            return this;
+        }
+
+        /**
+         * Add a visible planet with default parameters
+         */
+        public PlanetBuilder addVisiblePlanet(net.minecraft.resources.ResourceLocation texture, float scale, int color,
+                                             float horizontalPosition, float verticalPosition, boolean movesWithTime) {
+            return addVisiblePlanet(texture, scale, color, horizontalPosition, verticalPosition, movesWithTime, true);
+        }
+
+        // Star configuration methods
+
+        /**
+         * Set whether stars are visible during the day
+         */
+        public PlanetBuilder starsVisibleDuringDay(boolean visible) {
+            this.starsVisibleDuringDay = visible;
+            return this;
+        }
+
+        /**
+         * Set the number of stars to render
+         */
+        public PlanetBuilder starCount(int count) {
+            this.starCount = Math.max(0, count);
+            return this;
+        }
+
+        /**
+         * Set star brightness multiplier
+         */
+        public PlanetBuilder starBrightness(float brightness) {
+            this.starBrightness = Math.max(0.0f, brightness);
+            return this;
+        }
+
+        // Weather configuration methods
+
+        /**
+         * Enable or disable clouds
+         */
+        public PlanetBuilder cloudsEnabled(boolean enabled) {
+            this.cloudsEnabled = enabled;
+            return this;
+        }
+
+        /**
+         * Enable or disable rain
+         */
+        public PlanetBuilder rainEnabled(boolean enabled) {
+            this.rainEnabled = enabled;
+            return this;
+        }
+
+        /**
+         * Enable or disable snow
+         */
+        public PlanetBuilder snowEnabled(boolean enabled) {
+            this.snowEnabled = enabled;
+            return this;
+        }
+
+        /**
+         * Enable or disable storms
+         */
+        public PlanetBuilder stormsEnabled(boolean enabled) {
+            this.stormsEnabled = enabled;
+            return this;
+        }
+
+        /**
+         * Enable acid rain damage on this planet
+         */
+        public PlanetBuilder acidRainDamage(boolean damage) {
+            this.acidRainDamage = damage;
+            return this;
+        }
+
+        /**
+         * Set acid rain damage amount per tick
+         */
+        public PlanetBuilder acidRainDamageAmount(float damage) {
+            this.acidRainDamageAmount = Math.max(0.0f, damage);
+            return this;
+        }
+
         // World structure configuration methods
         public PlanetBuilder worldDimensions(int minY, int height) {
             this.minY = minY;
@@ -996,8 +1167,24 @@ public class PlanetMaker {
          */
         public PlanetBuilder addBiome(String biomeName, float temperature, float humidity,
                                      float continentalness, float erosion, float depth, float weirdness) {
+            return addBiome(biomeName, temperature, humidity, continentalness, erosion, depth, weirdness, null);
+        }
+
+        /**
+         * Add a biome to this planet with custom climate parameters and translation
+         * @param biomeName Full biome resource location (e.g., "minecraft:plains")
+         * @param temperature Temperature parameter (-1.0 to 1.0)
+         * @param humidity Humidity parameter (-1.0 to 1.0)
+         * @param continentalness Continental parameter (-1.0 to 1.0)
+         * @param erosion Erosion parameter (-1.0 to 1.0)
+         * @param depth Depth parameter (-1.0 to 1.0)
+         * @param weirdness Weirdness parameter (-1.0 to 1.0)
+         * @param translation English translation for the biome (e.g., "Lunar Plains")
+         */
+        public PlanetBuilder addBiome(String biomeName, float temperature, float humidity,
+                                     float continentalness, float erosion, float depth, float weirdness, String translation) {
             this.customBiomes.add(new BiomeEntry(biomeName, temperature, humidity,
-                                                continentalness, erosion, depth, weirdness));
+                                                continentalness, erosion, depth, weirdness, translation));
             return this;
         }
 
@@ -1007,40 +1194,50 @@ public class PlanetMaker {
          * @param weight Relative weight/frequency of this biome (0.1-1.0)
          */
         public PlanetBuilder addBiome(String biomeName, float weight) {
+            return addBiome(biomeName, weight, null);
+        }
+
+        /**
+         * Add a biome with simplified parameters and translation
+         * @param biomeName Full biome resource location
+         * @param weight Relative weight/frequency of this biome (0.1-1.0)
+         * @param translation English translation for the biome (e.g., "Lunar Plains")
+         */
+        public PlanetBuilder addBiome(String biomeName, float weight, String translation) {
             // Generate climate parameters based on weight and biome type
             float baseParam = (weight - 0.5f) * 2; // Convert weight to -1 to 1 range
 
             // Auto-generate reasonable climate parameters based on biome name
             if (biomeName.contains("desert") || biomeName.contains("badlands")) {
                 // Hot, dry biomes
-                this.customBiomes.add(new BiomeEntry(biomeName, 0.8f, -0.8f, baseParam, baseParam * 0.5f, 0.0f, 0.0f));
+                this.customBiomes.add(new BiomeEntry(biomeName, 0.8f, -0.8f, baseParam, baseParam * 0.5f, 0.0f, 0.0f, translation));
             } else if (biomeName.contains("frozen") || biomeName.contains("snowy") || biomeName.contains("ice")) {
                 // Cold biomes
-                this.customBiomes.add(new BiomeEntry(biomeName, -0.8f, -0.2f, baseParam, baseParam * 0.3f, 0.0f, 0.1f));
+                this.customBiomes.add(new BiomeEntry(biomeName, -0.8f, -0.2f, baseParam, baseParam * 0.3f, 0.0f, 0.1f, translation));
             } else if (biomeName.contains("jungle") || biomeName.contains("swamp")) {
                 // Hot, wet biomes
-                this.customBiomes.add(new BiomeEntry(biomeName, 0.7f, 0.9f, baseParam, -baseParam * 0.4f, -0.2f, 0.0f));
+                this.customBiomes.add(new BiomeEntry(biomeName, 0.7f, 0.9f, baseParam, -baseParam * 0.4f, -0.2f, 0.0f, translation));
             } else if (biomeName.contains("forest") || biomeName.contains("taiga")) {
                 // Temperate biomes
-                this.customBiomes.add(new BiomeEntry(biomeName, 0.2f, 0.3f, baseParam, baseParam * 0.2f, 0.0f, 0.0f));
+                this.customBiomes.add(new BiomeEntry(biomeName, 0.2f, 0.3f, baseParam, baseParam * 0.2f, 0.0f, 0.0f, translation));
             } else if (biomeName.contains("ocean") || biomeName.contains("river")) {
                 // Water biomes
-                this.customBiomes.add(new BiomeEntry(biomeName, 0.5f, 0.5f, baseParam, -0.5f, -0.8f, 0.0f));
+                this.customBiomes.add(new BiomeEntry(biomeName, 0.5f, 0.5f, baseParam, -0.5f, -0.8f, 0.0f, translation));
             } else if (biomeName.contains("mountain") || biomeName.contains("peaks")) {
                 // Mountain biomes
-                this.customBiomes.add(new BiomeEntry(biomeName, -0.3f, -0.1f, baseParam * 0.8f, 0.6f, 0.8f, 0.2f));
+                this.customBiomes.add(new BiomeEntry(biomeName, -0.3f, -0.1f, baseParam * 0.8f, 0.6f, 0.8f, 0.2f, translation));
             } else if (biomeName.contains("plains") || biomeName.contains("meadow")) {
                 // Plains biomes
-                this.customBiomes.add(new BiomeEntry(biomeName, 0.4f, 0.0f, baseParam, 0.0f, 0.0f, 0.0f));
+                this.customBiomes.add(new BiomeEntry(biomeName, 0.4f, 0.0f, baseParam, 0.0f, 0.0f, 0.0f, translation));
             } else if (biomeName.contains("savanna")) {
                 // Savanna biomes
-                this.customBiomes.add(new BiomeEntry(biomeName, 0.9f, -0.5f, baseParam, baseParam * 0.3f, 0.1f, 0.0f));
+                this.customBiomes.add(new BiomeEntry(biomeName, 0.9f, -0.5f, baseParam, baseParam * 0.3f, 0.1f, 0.0f, translation));
             } else if (biomeName.contains("basalt") || biomeName.contains("soul") || biomeName.contains("nether")) {
                 // Nether-like biomes for volcanic planets
-                this.customBiomes.add(new BiomeEntry(biomeName, 1.0f, -1.0f, baseParam, baseParam * 0.7f, 0.3f, 0.5f));
+                this.customBiomes.add(new BiomeEntry(biomeName, 1.0f, -1.0f, baseParam, baseParam * 0.7f, 0.3f, 0.5f, translation));
             } else {
                 // Default parameters
-                this.customBiomes.add(new BiomeEntry(biomeName, 0.0f, 0.0f, baseParam, 0.0f, 0.0f, 0.0f));
+                this.customBiomes.add(new BiomeEntry(biomeName, 0.0f, 0.0f, baseParam, 0.0f, 0.0f, 0.0f, translation));
             }
             return this;
         }
@@ -1624,6 +1821,235 @@ public class PlanetMaker {
             return this;
         }
 
+        // ========== GETTERS FOR DIMENSION EFFECTS FALLBACK ==========
+
+        /**
+         * Get the planet name
+         * @return Planet identifier
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * Check if planet has atmosphere
+         * @return True if planet has atmosphere
+         */
+        public boolean hasAtmosphere() {
+            return hasAtmosphere;
+        }
+
+        /**
+         * Check if clouds are enabled
+         * @return True if clouds should render
+         */
+        public boolean hasClouds() {
+            return cloudsEnabled;
+        }
+
+        /**
+         * Check if rain is enabled
+         * @return True if rain can occur
+         */
+        public boolean hasRain() {
+            return rainEnabled;
+        }
+
+        /**
+         * Get sky color
+         * @return Sky color as RGB integer
+         */
+        public int getSkyColor() {
+            return skyColor;
+        }
+
+        /**
+         * Get fog color
+         * @return Fog color as RGB integer
+         */
+        public int getFogColor() {
+            return fogColor;
+        }
+
+        /**
+         * Generate Patchouli journal entry for this planet
+         */
+        private void generatePatchouliEntry() {
+            try {
+                JsonObject entry = new JsonObject();
+                entry.addProperty("name", capitalizeWords(name.replace("_", " ")));
+                entry.addProperty("icon", getIconForPlanet());
+                entry.addProperty("category", "adastramekanized:known_planets");
+                entry.addProperty("advancement", "adastramekanized:planets/visited_" + name);
+
+                JsonArray pages = new JsonArray();
+
+                // Page 1: Planetary Data - Stats
+                JsonObject statsPage = new JsonObject();
+                statsPage.addProperty("type", "patchouli:text");
+                statsPage.addProperty("title", "Planetary Data");
+
+                StringBuilder statsText = new StringBuilder();
+                statsText.append("$(bold)Gravity:$() ").append(String.format("%.1f", gravity * 100)).append("% of Earth$(br)");
+                statsText.append("$(bold)Atmosphere:$() ").append(hasAtmosphere ? "Yes" : "None (requires oxygen)").append("$(br)");
+                statsText.append("$(bold)Temperature:$() [Not Yet Implemented]$(br)");
+                statsText.append("$(bold)Sky Color:$() #").append(String.format("%06X", skyColor)).append("$(br)");
+                statsText.append("$(bold)Ambient Light:$() ").append(String.format("%.1f%%", ambientLight * 100)).append("$(br)");
+                statsText.append("$(bold)Clouds:$() ").append(cloudsEnabled ? "Yes" : "No").append("$(br)");
+                statsText.append("$(bold)Rain:$() ").append(rainEnabled ? "Yes" : "No");
+
+                statsPage.addProperty("text", statsText.toString());
+                pages.add(statsPage);
+
+                // Page 2: Ore/Resource Listings
+                if (!oreVeinCounts.isEmpty() || oreVeinsEnabled) {
+                    JsonObject oresPage = new JsonObject();
+                    oresPage.addProperty("type", "patchouli:text");
+                    oresPage.addProperty("title", "Resources");
+
+                    StringBuilder oresText = new StringBuilder();
+                    oresText.append("$(bold)Ore Deposits:$()$(br)$(br)");
+
+                    if (!oreVeinCounts.isEmpty()) {
+                        List<java.util.Map.Entry<String, Integer>> sortedOres = new ArrayList<>(oreVeinCounts.entrySet());
+                        sortedOres.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+
+                        for (java.util.Map.Entry<String, Integer> ore : sortedOres) {
+                            String oreName = capitalizeWords(ore.getKey());
+                            oresText.append("• ").append(oreName);
+                            int veins = ore.getValue();
+                            if (veins >= 20) {
+                                oresText.append(" (Abundant)");
+                            } else if (veins >= 10) {
+                                oresText.append(" (Common)");
+                            } else if (veins >= 5) {
+                                oresText.append(" (Uncommon)");
+                            } else {
+                                oresText.append(" (Rare)");
+                            }
+                            oresText.append("$(br)");
+                        }
+                    } else {
+                        oresText.append("Standard ore distribution enabled.");
+                    }
+
+                    oresPage.addProperty("text", oresText.toString());
+                    pages.add(oresPage);
+                }
+
+                // Page 3: Biome Information
+                if (!customBiomes.isEmpty()) {
+                    JsonObject biomesPage = new JsonObject();
+                    biomesPage.addProperty("type", "patchouli:text");
+                    biomesPage.addProperty("title", "Biomes");
+
+                    StringBuilder biomesText = new StringBuilder();
+                    biomesText.append("$(bold)Terrain Biomes:$()$(br)$(br)");
+
+                    for (BiomeEntry biome : customBiomes) {
+                        String biomeName = biome.biomeName;
+                        if (biomeName.contains(":")) {
+                            biomeName = biomeName.substring(biomeName.indexOf(":") + 1);
+                        }
+                        biomeName = capitalizeWords(biomeName.replace("_", " "));
+                        biomesText.append("• ").append(biomeName).append("$(br)");
+                    }
+
+                    biomesPage.addProperty("text", biomesText.toString());
+                    pages.add(biomesPage);
+                }
+
+                // Page 4: Surface Composition
+                JsonObject surfacePage = new JsonObject();
+                surfacePage.addProperty("type", "patchouli:text");
+                surfacePage.addProperty("title", "Surface Composition");
+
+                StringBuilder surfaceText = new StringBuilder();
+                surfaceText.append("$(bold)Surface Layers:$()$(br)$(br)");
+                surfaceText.append("• $(bold)Surface:$() ").append(getBlockDisplayName(surfaceBlock)).append("$(br)");
+                surfaceText.append("• $(bold)Subsurface:$() ").append(getBlockDisplayName(subsurfaceBlock)).append("$(br)");
+                surfaceText.append("• $(bold)Deep:$() ").append(getBlockDisplayName(deepBlock)).append("$(br)");
+                surfaceText.append("• $(bold)Bedrock:$() ").append(getBlockDisplayName(bedrockBlock)).append("$(br)$(br)");
+                surfaceText.append("$(bold)Sea Level:$() Y=").append(seaLevel);
+
+                surfacePage.addProperty("text", surfaceText.toString());
+                pages.add(surfacePage);
+
+                entry.add("pages", pages);
+
+                String patchouliPath = "src/main/resources/assets/adastramekanized/patchouli_books/journal/en_us/entries/known_planets/" + name + ".json";
+                writeJsonFile(patchouliPath, entry);
+                AdAstraMekanized.LOGGER.info("Generated Patchouli entry for planet: {}", name);
+            } catch (Exception e) {
+                AdAstraMekanized.LOGGER.error("Failed to generate Patchouli entry for planet: {}", name, e);
+            }
+        }
+
+        /**
+         * Generate unlock advancement for visiting this planet
+         */
+        private void generateUnlockAdvancement() {
+            try {
+                JsonObject advancement = new JsonObject();
+
+                JsonObject criteria = new JsonObject();
+                JsonObject visitCriteria = new JsonObject();
+                visitCriteria.addProperty("trigger", "minecraft:changed_dimension");
+
+                JsonObject conditions = new JsonObject();
+                conditions.addProperty("to", "adastramekanized:" + name);
+                visitCriteria.add("conditions", conditions);
+
+                criteria.add("visited_" + name, visitCriteria);
+                advancement.add("criteria", criteria);
+
+                String advancementPath = RESOURCES_PATH + "advancement/planets/visited_" + name + ".json";
+                writeJsonFile(advancementPath, advancement);
+                AdAstraMekanized.LOGGER.info("Generated unlock advancement for planet: {}", name);
+            } catch (Exception e) {
+                AdAstraMekanized.LOGGER.error("Failed to generate unlock advancement for planet: {}", name, e);
+            }
+        }
+
+        /**
+         * Helper: Get a suitable icon for the planet
+         */
+        private String getIconForPlanet() {
+            if (surfaceBlock.contains(":")) {
+                return surfaceBlock;
+            }
+            return "minecraft:stone";
+        }
+
+        /**
+         * Helper: Get display name for a block
+         */
+        private String getBlockDisplayName(String blockId) {
+            if (blockId.contains(":")) {
+                String name = blockId.substring(blockId.indexOf(":") + 1);
+                return capitalizeWords(name.replace("_", " "));
+            }
+            return capitalizeWords(blockId.replace("_", " "));
+        }
+
+        /**
+         * Helper: Capitalize first letter of each word
+         */
+        private String capitalizeWords(String str) {
+            String[] words = str.split("\\s+");
+            StringBuilder result = new StringBuilder();
+            for (String word : words) {
+                if (!word.isEmpty()) {
+                    result.append(Character.toUpperCase(word.charAt(0)));
+                    if (word.length() > 1) {
+                        result.append(word.substring(1).toLowerCase());
+                    }
+                    result.append(" ");
+                }
+            }
+            return result.toString().trim();
+        }
+
         /**
          * Generate this planet and add it to the generation queue
          */
@@ -1631,6 +2057,9 @@ public class PlanetMaker {
             PLANETS.add(this);
             // Generate equipment configuration if any mobs have equipment
             generateMobEquipmentConfig();
+            // Generate Patchouli entry and unlock advancement
+            generatePatchouliEntry();
+            generateUnlockAdvancement();
             return this;
         }
 
@@ -1688,9 +2117,10 @@ public class PlanetMaker {
             final float erosion;
             final float depth;
             final float weirdness;
+            final String translation;
 
             BiomeEntry(String biomeName, float temperature, float humidity,
-                      float continentalness, float erosion, float depth, float weirdness) {
+                      float continentalness, float erosion, float depth, float weirdness, String translation) {
                 this.biomeName = biomeName;
                 this.temperature = temperature;
                 this.humidity = humidity;
@@ -1698,6 +2128,7 @@ public class PlanetMaker {
                 this.erosion = erosion;
                 this.depth = depth;
                 this.weirdness = weirdness;
+                this.translation = translation;
             }
         }
 
@@ -1783,6 +2214,71 @@ public class PlanetMaker {
                 this.charge = charge;
             }
         }
+
+        /**
+         * Inner class for sun configuration
+         */
+        private static class SunConfig {
+            final net.minecraft.resources.ResourceLocation texture;
+            final float scale;
+            final int color;
+            final boolean visible;
+
+            SunConfig(net.minecraft.resources.ResourceLocation texture, float scale, int color, boolean visible) {
+                this.texture = texture;
+                this.scale = scale;
+                this.color = color;
+                this.visible = visible;
+            }
+        }
+
+        /**
+         * Inner class for moon configuration
+         */
+        private static class MoonConfig {
+            final net.minecraft.resources.ResourceLocation texture;
+            final float scale;
+            final int color;
+            final float horizontalPosition;
+            final float verticalPosition;
+            final boolean movesWithTime;
+            final boolean visible;
+
+            MoonConfig(net.minecraft.resources.ResourceLocation texture, float scale, int color,
+                      float horizontalPosition, float verticalPosition, boolean movesWithTime, boolean visible) {
+                this.texture = texture;
+                this.scale = scale;
+                this.color = color;
+                this.horizontalPosition = horizontalPosition;
+                this.verticalPosition = verticalPosition;
+                this.movesWithTime = movesWithTime;
+                this.visible = visible;
+            }
+        }
+
+        /**
+         * Inner class for visible planet configuration
+         */
+        private static class PlanetConfig {
+            final net.minecraft.resources.ResourceLocation texture;
+            final float scale;
+            final int color;
+            final float horizontalPosition;
+            final float verticalPosition;
+            final boolean movesWithTime;
+            final boolean visible;
+
+            PlanetConfig(net.minecraft.resources.ResourceLocation texture, float scale, int color,
+                        float horizontalPosition, float verticalPosition, boolean movesWithTime, boolean visible) {
+                this.texture = texture;
+                this.scale = scale;
+                this.color = color;
+                this.horizontalPosition = horizontalPosition;
+                this.verticalPosition = verticalPosition;
+                this.movesWithTime = movesWithTime;
+                this.visible = visible;
+            }
+        }
     }
 
     private static void createDirectories() {
@@ -1793,6 +2289,8 @@ public class PlanetMaker {
         new File(RESOURCES_PATH + "worldgen/configured_feature").mkdirs();
         new File(RESOURCES_PATH + "worldgen/placed_feature").mkdirs();
         new File(RESOURCES_PATH + "worldgen/biome").mkdirs();
+        new File(RESOURCES_PATH + "advancement/planets").mkdirs();
+        new File("src/main/resources/assets/adastramekanized/patchouli_books/journal/en_us/entries/known_planets").mkdirs();
     }
 
     /**
@@ -1852,7 +2350,156 @@ public class PlanetMaker {
         dimension.addProperty("ambient_light", planet.ambientLight);
         planetJson.add("dimension", dimension);
 
+        // Atmospheric rendering configuration
+        JsonObject atmosphericRendering = new JsonObject();
+
+        // Sky configuration
+        JsonObject sky = new JsonObject();
+        sky.addProperty("sky_color", planet.skyColor);
+        sky.addProperty("sunrise_color", 16777087); // Default sunrise color
+        sky.addProperty("custom_sky", true);
+        sky.addProperty("has_stars", true);
+        sky.addProperty("star_count", planet.starCount);
+        sky.addProperty("star_brightness", planet.starBrightness);
+        sky.addProperty("star_visibility", planet.starsVisibleDuringDay ? "constant" : "night_only");
+        atmosphericRendering.add("sky", sky);
+
+        // Fog configuration
+        JsonObject fog = new JsonObject();
+        fog.addProperty("fog_color", planet.fogColor);
+        fog.addProperty("has_fog", planet.hasAtmosphere);
+        fog.addProperty("fog_density", planet.hasAtmosphere ? 0.5f : 0.0f);
+        fog.addProperty("near_plane", 192.0f);
+        fog.addProperty("far_plane", 512.0f);
+        atmosphericRendering.add("fog", fog);
+
+        // Celestial bodies configuration
+        JsonObject celestialBodies = new JsonObject();
+
+        // Suns
+        JsonArray sunsArray = new JsonArray();
+        if (planet.suns.isEmpty()) {
+            // Add default sun if none specified
+            JsonObject defaultSun = new JsonObject();
+            defaultSun.addProperty("texture", "minecraft:textures/environment/sun.png");
+            defaultSun.addProperty("scale", 1.0f);
+            defaultSun.addProperty("color", 0xFFFFFF);
+            defaultSun.addProperty("visible", planet.hasSkylight);
+            sunsArray.add(defaultSun);
+        } else {
+            for (PlanetBuilder.SunConfig sun : planet.suns) {
+                JsonObject sunJson = new JsonObject();
+                sunJson.addProperty("texture", sun.texture.toString());
+                sunJson.addProperty("scale", sun.scale);
+                sunJson.addProperty("color", sun.color);
+                sunJson.addProperty("visible", sun.visible);
+                sunsArray.add(sunJson);
+            }
+        }
+        celestialBodies.add("sun", sunsArray.size() == 1 ? sunsArray.get(0) : sunsArray);
+
+        // Moons
+        JsonArray moonsArray = new JsonArray();
+        for (PlanetBuilder.MoonConfig moon : planet.moons) {
+            JsonObject moonJson = new JsonObject();
+            moonJson.addProperty("texture", moon.texture.toString());
+            moonJson.addProperty("scale", moon.scale);
+            moonJson.addProperty("color", moon.color);
+            moonJson.addProperty("horizontal_position", moon.horizontalPosition);
+            moonJson.addProperty("vertical_position", moon.verticalPosition);
+            moonJson.addProperty("moves_with_time", moon.movesWithTime);
+            moonJson.addProperty("visible", moon.visible);
+            moonsArray.add(moonJson);
+        }
+        celestialBodies.add("moons", moonsArray);
+
+        // Visible planets
+        JsonArray planetsArray = new JsonArray();
+        for (PlanetBuilder.PlanetConfig planet2 : planet.visiblePlanets) {
+            JsonObject planetJson2 = new JsonObject();
+            planetJson2.addProperty("texture", planet2.texture.toString());
+            planetJson2.addProperty("scale", planet2.scale);
+            planetJson2.addProperty("color", planet2.color);
+            planetJson2.addProperty("horizontal_position", planet2.horizontalPosition);
+            planetJson2.addProperty("vertical_position", planet2.verticalPosition);
+            planetJson2.addProperty("moves_with_time", planet2.movesWithTime);
+            planetJson2.addProperty("visible", planet2.visible);
+            planetsArray.add(planetJson2);
+        }
+        celestialBodies.add("visible_planets", planetsArray);
+
+        atmosphericRendering.add("celestial_bodies", celestialBodies);
+
+        // Weather configuration
+        JsonObject weather = new JsonObject();
+        weather.addProperty("has_clouds", planet.cloudsEnabled);
+        weather.addProperty("has_rain", planet.rainEnabled);
+        weather.addProperty("has_snow", planet.snowEnabled);
+        weather.addProperty("has_storms", planet.stormsEnabled);
+        weather.addProperty("rain_acidity", planet.acidRainDamage ? planet.acidRainDamageAmount : 0.0f);
+        atmosphericRendering.add("weather", weather);
+
+        // Particle configuration
+        JsonObject particles = new JsonObject();
+        particles.addProperty("has_dust", false);
+        particles.addProperty("has_ash", false);
+        particles.addProperty("has_spores", false);
+        particles.addProperty("has_snowfall", false);
+        particles.addProperty("particle_density", 0.0f);
+        particles.addProperty("particle_color", 16777215); // White
+        atmosphericRendering.add("particles", particles);
+
+        planetJson.add("rendering", atmosphericRendering);
+
         writeJsonFile(RESOURCES_PATH + "planets/" + planet.name + ".json", planetJson);
+
+        // Update translations for biomes
+        updateBiomeTranslations(planet);
+    }
+
+    /**
+     * Update en_us.json with biome translations
+     */
+    private static void updateBiomeTranslations(PlanetBuilder planet) {
+        if (planet.customBiomes.isEmpty()) {
+            return; // No custom biomes to translate
+        }
+
+        String langPath = "src/main/resources/assets/adastramekanized/lang/en_us.json";
+        File langFile = new File(langPath);
+
+        try {
+            // Read existing translations
+            JsonObject translations;
+            if (langFile.exists()) {
+                String content = Files.readString(langFile.toPath());
+                translations = new Gson().fromJson(content, JsonObject.class);
+            } else {
+                translations = new JsonObject();
+            }
+
+            // Add biome translations
+            for (PlanetBuilder.BiomeEntry biome : planet.customBiomes) {
+                if (biome.translation != null && !biome.translation.isEmpty()) {
+                    // Extract namespace and path from biome name (e.g., "adastramekanized:lunar_plains")
+                    String[] parts = biome.biomeName.split(":");
+                    if (parts.length == 2) {
+                        String translationKey = "biome." + parts[0] + "." + parts[1];
+                        translations.addProperty(translationKey, biome.translation);
+                    }
+                }
+            }
+
+            // Write updated translations back to file
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String json = gson.toJson(translations);
+            Files.writeString(langFile.toPath(), json);
+
+            System.out.println("Updated biome translations in " + langPath);
+
+        } catch (IOException e) {
+            System.err.println("Failed to update biome translations: " + e.getMessage());
+        }
     }
 
     /**

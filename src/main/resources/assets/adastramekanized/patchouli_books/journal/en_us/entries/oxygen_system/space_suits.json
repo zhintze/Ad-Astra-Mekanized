@@ -1,0 +1,31 @@
+{
+  "name": "Space Suits",
+  "icon": "adastramekanized:space_suit",
+  "category": "adastramekanized:oxygen_system",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Space suits provide portable oxygen and protection from hostile environments. There are three tiers of space suits, each offering different levels of protection and capabilities."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "adastramekanized:space_suit",
+      "text": "$(bold)Basic Space Suit$()$(br)$(br)The standard space suit provides oxygen and basic protection. Consists of helmet, suit, pants, and boots. Sufficient for most airless environments."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "adastramekanized:netherite_space_suit",
+      "text": "$(bold)Netherite Space Suit$()$(br)$(br)Advanced suit with netherite plating. Provides better protection and is fireproof. Ideal for dangerous environments with extreme conditions."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "adastramekanized:jet_suit",
+      "text": "$(bold)Jet Suit$()$(br)$(br)The ultimate space suit with built-in jet propulsion. Allows flight in space. Requires Nitrogen gas for flight."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Oxygen Tanks",
+      "text": "Space suits require oxygen tanks to function:$(br)$(br)- Insert filled oxygen tanks into suit slots$(br)- Tanks slowly deplete as you breathe$(br)- Replace empty tanks with full ones$(br)- Always carry spare tanks!$(br)$(br)Check JEI for oxygen tank crafting and filling."
+    }
+  ]
+}

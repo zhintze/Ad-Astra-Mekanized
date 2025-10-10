@@ -1,0 +1,26 @@
+{
+  "name": "Wireless Power Relay",
+  "icon": "minecraft:beacon",
+  "category": "adastramekanized:power_systems",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The Wireless Power Relay transmits power wirelessly across distances, perfect for space stations and remote outposts where running cables is impractical."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "How It Works",
+      "text": "Wireless Power Relays work in pairs:$(br)$(br)1. Place a $(bold)transmitter relay$() near your power source$(br)2. Place a $(bold)receiver relay$() near machines that need power$(br)3. Configure the channel in the GUI$(br)4. Power flows wirelessly!$(br)$(br)Multiple relays can share the same channel."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Setup Guide",
+      "text": "To set up wireless power:$(br)$(br)1. Place transmitter relay$(br)2. Connect it to power source$(br)3. Open GUI and set channel$(br)4. Place receiver relay at destination$(br)5. Set to same channel$(br)6. Power transmits wirelessly$(br)$(br)Range is limited - check the GUI for maximum distance."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Advanced Usage",
+      "text": "Tips for wireless power:$(br)$(br)- Use different channels for different systems$(br)- Monitor power flow in the GUI$(br)- Place multiple receivers for high power needs$(br)- Transmitters can send to multiple receivers$(br)$(br)Essential for orbital stations!"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "criteria": {
+    "visited_primal": {
+      "trigger": "minecraft:changed_dimension",
+      "conditions": {
+        "to": "adastramekanized:primal"
+      }
+    }
+  }
+}

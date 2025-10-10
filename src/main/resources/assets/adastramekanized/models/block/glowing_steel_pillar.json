@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "end": "adastramekanized:block/glowing_steel_pillar_top",
+    "side": "adastramekanized:block/glowing_steel_pillar"
+  }
+}

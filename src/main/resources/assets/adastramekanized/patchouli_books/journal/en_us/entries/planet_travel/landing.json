@@ -1,0 +1,21 @@
+{
+  "name": "Landing Tips",
+  "icon": "adastramekanized:space_boots",
+  "category": "adastramekanized:planet_travel",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Landing on a new planet requires skill and caution. The landing system helps you descend safely, but you must still control your approach."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Descent Phase",
+      "text": "When approaching a planet:$(br)$(br)1. The rocket begins automatic descent$(br)2. Atmospheric entry may cause effects$(br)3. You regain control during landing$(br)4. Use SPACE to slow descent$(br)5. Touch down gently!$(br)$(br)Hard landings may damage the rocket."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "After Landing",
+      "text": "Once you land:$(br)$(br)1. Exit the lander to retrieve rocket and supplies$(br)2. Check your oxygen supply$(br)3. Put on space suit if needed$(br)4. Mark your rocket location$(br)5. Begin exploration!"
+    }
+  ]
+}

@@ -181,7 +181,27 @@ public class MekanismCapabilityProvider {
                     ModItems.JET_SUIT.get()
                 );
 
-                AdAstraMekanized.LOGGER.info("Registered Mekanism chemical capabilities for space suits");
+                // Register for Gas Tank
+                event.registerItem(
+                    capability,
+                    (stack, context) -> {
+                        ensureChemicalData(stack, "oxygen", "nitrogen");
+                        return createChemicalHandler(stack, "oxygen", "nitrogen");
+                    },
+                    ModItems.GAS_TANK.get()
+                );
+
+                // Register for Large Gas Tank
+                event.registerItem(
+                    capability,
+                    (stack, context) -> {
+                        ensureChemicalData(stack, "oxygen", "nitrogen");
+                        return createChemicalHandler(stack, "oxygen", "nitrogen");
+                    },
+                    ModItems.LARGE_GAS_TANK.get()
+                );
+
+                AdAstraMekanized.LOGGER.info("Registered Mekanism chemical capabilities for space suits and gas tanks");
             }
         } catch (Exception e) {
             AdAstraMekanized.LOGGER.info("Mekanism not available, skipping chemical capability registration for items: {}", e.getMessage());
@@ -214,12 +234,22 @@ public class MekanismCapabilityProvider {
     }
 
     /**
-     * Get the actual capacity from the armor item
+     * Get the actual capacity from the armor item or gas tank
      */
     private static long getArmorCapacity(ItemStack stack) {
         if (stack.getItem() instanceof com.hecookin.adastramekanized.common.items.armor.base.ItemChemicalArmor armor) {
             // Access the capacity field from the armor
             return armor.getCapacity();
+        }
+        if (stack.getItem() instanceof com.hecookin.adastramekanized.common.items.GasTankItem gasTank) {
+            // Get capacity from GasTankItem field
+            try {
+                java.lang.reflect.Field capacityField = com.hecookin.adastramekanized.common.items.GasTankItem.class.getDeclaredField("capacity");
+                capacityField.setAccessible(true);
+                return (long) capacityField.get(gasTank);
+            } catch (Exception e) {
+                AdAstraMekanized.LOGGER.debug("Failed to get capacity from GasTankItem: {}", e.getMessage());
+            }
         }
         // Default fallback
         return 1000L;
@@ -507,12 +537,24 @@ public class MekanismCapabilityProvider {
             Class<?> holderClass = Class.forName("net.minecraft.core.Holder");
             Class<?> actionClass = Class.forName("mekanism.api.Action");
 
-            // Get references to oxygen and hydrogen
+            // Get references to oxygen and hydrogen from Mekanism
             Object oxygenHolder = mekanismChemicalsClass.getField("OXYGEN").get(null);
             Object hydrogenHolder = mekanismChemicalsClass.getField("HYDROGEN").get(null);
             java.lang.reflect.Method getValue = holderClass.getMethod("value");
             Object oxygen = getValue.invoke(oxygenHolder);
             Object hydrogen = getValue.invoke(hydrogenHolder);
+
+            // Get nitrogen from ChemLibMekanized
+            Object nitrogen = null;
+            try {
+                Class<?> chemLibChemicalsClass = Class.forName("com.hecookin.chemlibmekanized.registry.ChemlibMekanizedChemicals");
+                Object nitrogenHolder = chemLibChemicalsClass.getField("NITROGEN").get(null);
+                nitrogen = getValue.invoke(nitrogenHolder);
+            } catch (Exception e) {
+                AdAstraMekanized.LOGGER.debug("ChemLibMekanized nitrogen not available: {}", e.getMessage());
+            }
+
+            final Object finalNitrogen = nitrogen;
 
             // Get ChemicalStack.EMPTY and Action enum values
             Object chemicalStackEmpty = chemicalStackClass.getField("EMPTY").get(null);
@@ -545,7 +587,14 @@ public class MekanismCapabilityProvider {
                                 long amount = storedData.getLong("amount");
                                 String chemicalType = storedData.getString("chemical");
                                 if (amount > 0) {
-                                    Object chemical = "hydrogen".equals(chemicalType) ? hydrogen : oxygen;
+                                    Object chemical;
+                                    if ("hydrogen".equals(chemicalType)) {
+                                        chemical = hydrogen;
+                                    } else if ("nitrogen".equals(chemicalType) && finalNitrogen != null) {
+                                        chemical = finalNitrogen;
+                                    } else {
+                                        chemical = oxygen;
+                                    }
                                     // Use ChemicalStack constructor instead of static create method
                                     java.lang.reflect.Constructor<?> constructor = chemicalStackClass.getConstructor(chemicalClass, long.class);
                                     return (ChemicalStack) constructor.newInstance(chemical, amount);
@@ -578,6 +627,7 @@ public class MekanismCapabilityProvider {
                         for (String accepted : acceptedChemicals) {
                             if ("oxygen".equalsIgnoreCase(accepted) && chemical.equals(oxygen)) return true;
                             if ("hydrogen".equalsIgnoreCase(accepted) && chemical.equals(hydrogen)) return true;
+                            if ("nitrogen".equalsIgnoreCase(accepted) && finalNitrogen != null && chemical.equals(finalNitrogen)) return true;
                         }
                     } catch (Exception e) {
                         AdAstraMekanized.LOGGER.debug("Failed to validate chemical: {}", e.getMessage());
@@ -617,14 +667,24 @@ public class MekanismCapabilityProvider {
                             CompoundTag storedData = new CompoundTag();
 
                             storedData.putLong("amount", currentAmount + canInsert);
-                            storedData.putString("chemical", chemical.equals(hydrogen) ? "hydrogen" : "oxygen");
+
+                            // Determine chemical name
+                            String chemicalName;
+                            if (chemical.equals(hydrogen)) {
+                                chemicalName = "hydrogen";
+                            } else if (finalNitrogen != null && chemical.equals(finalNitrogen)) {
+                                chemicalName = "nitrogen";
+                            } else {
+                                chemicalName = "oxygen";
+                            }
+                            storedData.putString("chemical", chemicalName);
 
                             mekData.put("stored", storedData);
                             mekData.putLong("capacity", capacity);
                             newTag.put("mekanism", mekData);
                             stack.set(DataComponents.CUSTOM_DATA, CustomData.of(newTag));
 
-                            AdAstraMekanized.LOGGER.debug("Inserted {} chemical, new amount: {}", canInsert, currentAmount + canInsert);
+                            AdAstraMekanized.LOGGER.debug("Inserted {} mB of {}, new amount: {}", canInsert, chemicalName, currentAmount + canInsert);
                         }
 
                         if (canInsert == toInsert) {
@@ -655,7 +715,14 @@ public class MekanismCapabilityProvider {
 
                                 long toExtract = Math.min(amount, currentAmount);
                                 if (toExtract > 0) {
-                                    Object chemical = "hydrogen".equals(chemicalType) ? hydrogen : oxygen;
+                                    Object chemical;
+                                    if ("hydrogen".equals(chemicalType)) {
+                                        chemical = hydrogen;
+                                    } else if ("nitrogen".equals(chemicalType) && finalNitrogen != null) {
+                                        chemical = finalNitrogen;
+                                    } else {
+                                        chemical = oxygen;
+                                    }
 
                                     if (action == actionExecute) {
                                         // Update NBT with new amount
@@ -667,7 +734,7 @@ public class MekanismCapabilityProvider {
                                         newTag.put("mekanism", newMekData);
                                         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(newTag));
 
-                                        AdAstraMekanized.LOGGER.debug("Extracted {} chemical, new amount: {}", toExtract, currentAmount - toExtract);
+                                        AdAstraMekanized.LOGGER.debug("Extracted {} mB of {}, new amount: {}", toExtract, chemicalType, currentAmount - toExtract);
                                     }
 
                                     // Use ChemicalStack constructor instead of static create method
@@ -699,6 +766,8 @@ public class MekanismCapabilityProvider {
 
                             if (chemical.equals(hydrogen)) {
                                 storedData.putString("chemical", "hydrogen");
+                            } else if (finalNitrogen != null && chemical.equals(finalNitrogen)) {
+                                storedData.putString("chemical", "nitrogen");
                             } else {
                                 storedData.putString("chemical", "oxygen");
                             }

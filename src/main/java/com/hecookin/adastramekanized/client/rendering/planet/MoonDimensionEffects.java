@@ -40,17 +40,9 @@ public class MoonDimensionEffects extends DimensionSpecialEffects {
 
     @Override
     public @NotNull Vec3 getBrightnessDependentFogColor(@NotNull Vec3 skyColor, float celestialAngle) {
-        // Moon has minimal atmosphere, so fog is very faint and gray
-        float r = ((FOG_COLOR >> 16) & 0xFF) / 255.0f;
-        float g = ((FOG_COLOR >> 8) & 0xFF) / 255.0f;
-        float b = (FOG_COLOR & 0xFF) / 255.0f;
-
-        Vec3 fogColor = new Vec3(r, g, b);
-
-        // Moon fog doesn't change much with time due to no atmosphere
-        // Very minimal variation based on celestial angle
-        float intensity = 0.1f + 0.05f * (float) Math.cos(celestialAngle * 2.0 * Math.PI);
-        return fogColor.scale(intensity);
+        // Moon has no atmosphere - fog color is constant black space, no sunrise/sunset
+        // Return pure black to prevent any color transitions that look like sunrises
+        return new Vec3(0.0, 0.0, 0.0);
     }
 
     @Override

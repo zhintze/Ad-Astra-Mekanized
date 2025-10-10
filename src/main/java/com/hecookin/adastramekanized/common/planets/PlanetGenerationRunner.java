@@ -2,10 +2,60 @@ package com.hecookin.adastramekanized.common.planets;
 
 import com.hecookin.adastramekanized.AdAstraMekanized;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
- * Runner to generate planet files using PlanetMaker system
+ * Runner to generate planet files using PlanetMaker system.
+ *
+ * This class serves as the single source of truth for all planet definitions.
+ * Planet builders registered here are used for both:
+ * - JSON generation (via PlanetMaker)
+ * - Dimension effects fallback (via DimensionEffectsHandler)
  */
 public class PlanetGenerationRunner {
+
+    /**
+     * Static registry of all planet builders.
+     * LinkedHashMap preserves insertion order for predictable generation.
+     */
+    private static final Map<String, PlanetMaker.PlanetBuilder> PLANET_REGISTRY = new LinkedHashMap<>();
+
+    // Static initialization - populate planet registry when class is loaded
+    static {
+        configurePlanets();
+        AdAstraMekanized.LOGGER.info("Planet registry initialized with {} planets", PLANET_REGISTRY.size());
+    }
+
+    /**
+     * Register a planet builder for both JSON generation and dimension effects.
+     *
+     * @param planetId The planet identifier (e.g., "moon", "mars")
+     * @return The planet builder for method chaining
+     */
+    public static PlanetMaker.PlanetBuilder registerPlanet(String planetId) {
+        PlanetMaker.PlanetBuilder builder = PlanetMaker.planet(planetId);
+        PLANET_REGISTRY.put(planetId, builder);
+        return builder;
+    }
+
+    /**
+     * Get all registered planet builders.
+     * Used by DimensionEffectsHandler for fallback generation.
+     *
+     * @return Unmodifiable map of planet ID to builder
+     */
+    public static Map<String, PlanetMaker.PlanetBuilder> getAllPlanetBuilders() {
+        return Map.copyOf(PLANET_REGISTRY);
+    }
+
+    /**
+     * Clear the planet registry.
+     * Used for testing or regeneration.
+     */
+    public static void clearRegistry() {
+        PLANET_REGISTRY.clear();
+    }
 
     /**
      * Regenerate all planet files - call this to update planet configurations
@@ -265,7 +315,7 @@ public class PlanetGenerationRunner {
      */
     private static void configurePlanets() {
         // Moon planet with advanced terrain controls - craterous lunar landscape
-        PlanetMaker.PlanetBuilder moon = PlanetMaker.planet("moon")
+        PlanetMaker.PlanetBuilder moon = registerPlanet("moon")
             // Gentle, connected terrain for Moon
             .continentalScale(0.3f)  // Very low for fully connected terrain
             .erosionScale(0.5f)      // Minimal erosion for smooth landmasses
@@ -314,14 +364,14 @@ public class PlanetGenerationRunner {
             .veinGap(0.4f)     // Moderate vein gaps
             // CAVES DISABLED for stable terrain
             .caveConfig(.1f, .5f)  // No caves
-            .cheeseCaves(true)      // Disabled
+            .cheeseCaves(false)      // Disabled
             .spaghettiCaves(false)   // Disabled
             .noodleCaves(false)      // Disabled
             // Custom Moon biomes (will be properly created)
             .clearBiomes()  // Clear default biomes
-            .addBiome("adastramekanized:moon_highlands", -0.8f, -0.9f, 0.4f, 0.2f, 0.0f, 0.1f)  // Lunar highlands
-            .addBiome("adastramekanized:moon_maria", -0.6f, -0.8f, -0.2f, 0.3f, -0.5f, -0.1f)  // Lunar lowlands
-            .addBiome("adastramekanized:moon_craters", 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f)  // Crater biome
+            .addBiome("adastramekanized:moon_highlands", -0.8f, -0.9f, 0.4f, 0.2f, 0.0f, 0.1f, "Lunar Highlands")
+            .addBiome("adastramekanized:moon_maria", -0.6f, -0.8f, -0.2f, 0.3f, -0.5f, -0.1f, "Lunar Maria")
+            .addBiome("adastramekanized:moon_craters", 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, "Lunar Craters")
             // Visual properties
             .skyColor(0x0A0A0A)
             .fogColor(0x0A0A0A)
@@ -337,7 +387,23 @@ public class PlanetGenerationRunner {
             .lavaLakes(-20, 0.0f)                           // Deep lava pools
             .undergroundLiquids("minecraft:lava", false)     // Lava aquifers
             // Physical properties
-            .gravity(0.166f);  // Moon has 1/6 Earth gravity
+            .gravity(0.166f)  // Moon has 1/6 Earth gravity
+            // Celestial configuration - Moon has Earth visible in sky
+            .addSun()  // Default vanilla sun
+            .addVisiblePlanet(
+                net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("adastramekanized", "textures/celestial/earth.png"),
+                .2f,      // Large Earth in sky
+                0x4169E1,  // Royal blue color
+                0.5f,      // Horizontal position
+                0.8f,      // Vertical position (high in sky)
+                true       // Moves with time
+            )
+            .starsVisibleDuringDay(true)  // Stars always visible (no atmosphere)
+            .starCount(50000)             // Dense starfield
+            .starBrightness(2.5f)         // Very bright stars
+            .cloudsEnabled(false)          // No clouds on Moon
+            .rainEnabled(false)            // No rain on Moon
+            .snowEnabled(false);           // No snow on Moon
 
 
         // Apply Moon mob preset
@@ -345,7 +411,7 @@ public class PlanetGenerationRunner {
         moon.generate();
 
         // CAVETEST PLANET - Extreme cave generation test
-        PlanetMaker.PlanetBuilder cavetest = PlanetMaker.planet("cavetest")
+        PlanetMaker.PlanetBuilder cavetest = registerPlanet("cavetest")
             .gravity(0.5f)  // Half gravity for fun cave exploration
             // Moderate terrain for cave visibility
             .continentalScale(0.5f)
@@ -394,7 +460,7 @@ public class PlanetGenerationRunner {
             .veinGap(0.5f)
             // Add custom biome for ore generation to work
             .clearBiomes()
-            .addBiome("adastramekanized:cavetest_caverns", 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f)
+            .addBiome("adastramekanized:cavetest_caverns", 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, "Test Caverns")
             // Visual properties
             .skyColor(0x78A7FF)
             .fogColor(0x00FF00)
@@ -415,7 +481,7 @@ public class PlanetGenerationRunner {
         cavetest.generate();
 
         // Mars planet with advanced atmospheric controls and varied terrain
-        PlanetMaker.planet("mars")
+        registerPlanet("mars")
             .gravity(0.38f)  // Mars has 3/8 Earth gravity
             .continentalScale(0.4f)  // Very low for fully connected Mars terrain
             .erosionScale(0.8f)      // Minimal erosion to prevent separation
@@ -462,21 +528,45 @@ public class PlanetGenerationRunner {
             .addMobSpawn("monster", "minecraft:enderman", 15, 1, 1)  // Dimensional visitors
             // Add custom biomes for Mars
             .clearBiomes()
-            .addBiome("adastramekanized:mars_highlands", -0.2f, -0.7f, 0.6f, -0.1f, 0.5f, 0.0f)  // Mars highlands
-            .addBiome("adastramekanized:mars_canyons", 0.1f, -0.6f, 0.2f, 0.4f, -0.3f, -0.1f)  // Mars valleys
-            .addBiome("adastramekanized:mars_polar", -0.9f, -0.8f, 0.8f, 0.0f, 0.2f, 0.3f)  // Mars polar
+            .addBiome("adastramekanized:mars_highlands", -0.2f, -0.7f, 0.6f, -0.1f, 0.5f, 0.0f, "Martian Highlands")
+            .addBiome("adastramekanized:mars_canyons", 0.1f, -0.6f, 0.2f, 0.4f, -0.3f, -0.1f, "Martian Canyons")
+            .addBiome("adastramekanized:mars_polar", -0.9f, -0.8f, 0.8f, 0.0f, 0.2f, 0.3f, "Martian Polar Ice Caps")
             // Enhanced atmospheric rendering
             .skyColor(0xD2691E)
             .fogColor(0xCD853F)
             .hasAtmosphere(true)
             .ambientLight(0.2f)
+            // Celestial configuration - Mars has two moons: Phobos and Deimos
+            .addSun()  // Default vanilla sun
+            .addMoon(
+                net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("adastramekanized", "textures/celestial/phobos.png"),
+                0.3f,      // Small moon (Phobos)
+                0xAA8866,  // Brownish color
+                0.4f,      // Horizontal position
+                0.15f,     // Low in sky
+                true       // Moves with time
+            )
+            .addMoon(
+                net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("adastramekanized", "textures/celestial/deimos.png"),
+                0.2f,      // Tiny moon (Deimos)
+                0x998877,  // Grayish brown
+                -0.3f,     // Opposite side
+                1.30f,     // Different height
+                true       // Moves with time
+            )
+            .starsVisibleDuringDay(false)  // Stars only at night (thin atmosphere)
+            .starCount(8000)               // Moderate starfield
+            .starBrightness(1.2f)          // Slightly brighter than Earth
+            .cloudsEnabled(false)          // No clouds on Mars (thin atmosphere)
+            .rainEnabled(false)            // No rain on Mars
+            .snowEnabled(false)            // No snow on Mars
             .generate();
 
 
         // HEMPHY PLANET - ABSOLUTE STRESS TEST OF ALL GENERATION LIMITS
         // WARNING: This planet pushes EVERY parameter to extreme values!
         // Use this as a reference for the maximum safe bounds of each setting.
-        PlanetMaker.planet("hemphy")
+        registerPlanet("hemphy")
                 .gravity(2.0f)  // Double gravity for stress testing
                 // ========== STABILIZED TERRAIN SHAPING ==========
                 .continentalScale(0.5f)         // Very low for connected hellscape
@@ -593,9 +683,9 @@ public class PlanetGenerationRunner {
 
                 // ========== CUSTOM BIOME SYSTEM - VOLCANIC HELLSCAPE ==========
                 .clearBiomes()                   // Clear any default biomes
-                .addBiome("adastramekanized:hemphy_volcanic", -0.5f, -0.7f, 0.3f, 0.1f, 0.2f, 0.0f)  // Volcanic regions
-                .addBiome("adastramekanized:hemphy_infernal", 0.2f, -0.3f, -0.1f, 0.4f, -0.2f, -0.1f) // Infernal plains
-                .addBiome("adastramekanized:hemphy_ashlands", -0.8f, -0.9f, 0.5f, 0.0f, 0.1f, 0.2f)  // Ash-covered lands
+                .addBiome("adastramekanized:hemphy_volcanic", -0.5f, -0.7f, 0.3f, 0.1f, 0.2f, 0.0f, "Hemphy Volcanic Fields")
+                .addBiome("adastramekanized:hemphy_infernal", 0.2f, -0.3f, -0.1f, 0.4f, -0.2f, -0.1f, "Hemphy Infernal Plains")
+                .addBiome("adastramekanized:hemphy_ashlands", -0.8f, -0.9f, 0.5f, 0.0f, 0.1f, 0.2f, "Hemphy Ashlands")
 
                 // ========== LIQUID SYSTEM - LAVA OCEANS & LAKES ==========
                 .oceanConfig("minecraft:lava", 32, 0.6f)        // Massive lava oceans at Y=32
@@ -630,7 +720,7 @@ public class PlanetGenerationRunner {
 
         // ========== ORE TEST PLANET - OVERWORLD-LIKE SETTINGS ==========
         // Adjusted for realistic Overworld-style terrain with proper ore generation
-        PlanetMaker.planet("oretest")
+        registerPlanet("oretest")
                 .gravity(1.0f)  // Earth-like gravity
                 // ========== REALISTIC TERRAIN SHAPING ==========
                 .continentalScale(2.0f)         // Lower for connected landmasses
@@ -777,7 +867,7 @@ public class PlanetGenerationRunner {
 
         // PRIMAL PLANET - Jungle world showcasing Mowzie's Mobs integration
         // REQUIRES: Mowzie's Mobs installed with spawn_rate set to 0 in config
-        PlanetMaker.planet("primal")
+        registerPlanet("primal")
                 .gravity(1.1f)  // Slightly higher gravity for denser jungle atmosphere
 
                 // ========== JUNGLE TERRAIN CONFIGURATION ==========
@@ -855,7 +945,7 @@ public class PlanetGenerationRunner {
 
         // TRIBAL PLANET - Savanna world with Umvuthana civilization
         // REQUIRES: Mowzie's Mobs installed with spawn_rate set to 0 in config
-        PlanetMaker.planet("tribal")
+        registerPlanet("tribal")
                 .gravity(0.95f)  // Slightly lower gravity for vast savannas
 
                 // ========== SAVANNA TERRAIN CONFIGURATION ==========
@@ -922,6 +1012,143 @@ public class PlanetGenerationRunner {
                 .addBiome("minecraft:savanna_plateau", 0.30f)
                 .addBiome("minecraft:desert", 0.20f)
 
+                .generate();
+
+        // EARTH'S ORBIT - Space station dimension with Earth view below
+        registerPlanet("earth_orbit")
+                .gravity(0.166f)  // Moon-like gravity
+                // ========== FLAT VOID DIMENSION ==========
+                .continentalScale(0.0f)
+                .erosionScale(0.0f)
+                .ridgeScale(0.0f)
+                .heightVariation(0.0f, 0.0f, 0.0f, 0.0f)
+                // ========== VOID CONFIGURATION ==========
+                .surfaceBlock("minecraft:air")
+                .subsurfaceBlock("minecraft:air")
+                .deepBlock("minecraft:air")
+                .defaultBlock("minecraft:air")
+                .bedrockBlock("minecraft:bedrock")
+                // ========== WORLD STRUCTURE ==========
+                .worldDimensions(0, 256)
+                .seaLevel(100)
+                .disableMobGeneration(true)  // No spawning in orbit
+                .aquifersEnabled(false)
+                .oreVeinsEnabled(false)
+                .caveConfig(0.0f, 0.0f)
+                .cheeseCaves(false)
+                .spaghettiCaves(false)
+                .noodleCaves(false)
+                // ========== NO LIQUIDS ==========
+                .oceanConfig("minecraft:air", 0, 0.0f)          // No oceans
+                .lakeConfig("minecraft:air", 0.0f)              // No lakes
+                .lavaLakes(0, 0.0f)                             // No lava lakes
+                .undergroundLiquids("minecraft:air", false)     // No underground liquids
+                .waterRule(false)                                // Disable water surface rules
+                // ========== SPACE VISUALS ==========
+                .skyColor(0x000000)  // Black space
+                .fogColor(0x000000)
+                .hasAtmosphere(false)
+                .ambientLight(0.0f)  // Always dark
+                .hasSkylight(false)
+
+
+                // Celestial configuration - Earth orbit with massive Earth below
+                .addSun(
+                    net.minecraft.resources.ResourceLocation.parse("minecraft:textures/environment/sun.png"),
+                    1.0f,
+                    0xFFFFFF,
+                    false  // Sun not visible (in Earth's shadow)
+                )
+                .addVisiblePlanet(
+                    net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("adastramekanized", "textures/celestial/earth.png"),
+                    1.0f,      // Massive Earth below
+                    0x4169E1,  // Royal blue
+                    0.0f,      // Centered
+                    -0.5f,     // Low (below horizon)
+                    false      // Static (not moving - we're orbiting it)
+                )
+                .starsVisibleDuringDay(true)  // Stars always visible in space
+                .starCount(100000)            // Ultra dense starfield
+                .starBrightness(3.0f)         // Maximum brightness
+                .cloudsEnabled(false)         // No clouds in space
+                .rainEnabled(false)           // No rain in space
+                .snowEnabled(false)           // No snow in space
+                // ========== SINGLE BIOME ==========
+                .clearBiomes()
+                .addBiome("adastramekanized:earth_orbit", 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, "Earth Orbit")
+                .generate();
+
+        // VENUS - Thick toxic atmosphere with heavy fog
+        registerPlanet("venus")
+                .gravity(0.9f)
+                .surfaceBlock("minecraft:yellow_terracotta")
+                .subsurfaceBlock("minecraft:orange_terracotta")
+                .skyColor(0xFFCC66)
+                .fogColor(0xFFAA33)
+                .hasAtmosphere(true)
+                .ambientLight(0.3f)
+                .cloudsEnabled(true)
+                .rainEnabled(true)
+                .starsVisibleDuringDay(false)
+                .generate();
+
+        // MERCURY - Airless metallic world
+        registerPlanet("mercury")
+                .gravity(0.38f)
+                .surfaceBlock("minecraft:light_gray_concrete")
+                .subsurfaceBlock("minecraft:gray_concrete")
+                .skyColor(0x000000)
+                .fogColor(0x000000)
+                .hasAtmosphere(false)
+                .ambientLight(0.0f)
+                .cloudsEnabled(false)
+                .rainEnabled(false)
+                .starsVisibleDuringDay(true)
+                .starCount(30000)
+                .starBrightness(2.0f)
+                .generate();
+
+        // GLACIO - Icy world with thin atmosphere
+        registerPlanet("glacio")
+                .gravity(0.8f)
+                .surfaceBlock("minecraft:snow_block")
+                .subsurfaceBlock("minecraft:ice")
+                .skyColor(0xE6F3FF)
+                .fogColor(0xC0E8FF)
+                .hasAtmosphere(true)
+                .ambientLight(0.6f)
+                .cloudsEnabled(true)
+                .rainEnabled(false)
+                .snowEnabled(true)
+                .starsVisibleDuringDay(false)
+                .generate();
+
+        // EARTH_EXAMPLE - Earth-like breathable world
+        registerPlanet("earth_example")
+                .gravity(1.0f)
+                .surfaceBlock("minecraft:grass_block")
+                .subsurfaceBlock("minecraft:dirt")
+                .skyColor(0x87CEEB)
+                .fogColor(0xC0C0C0)
+                .hasAtmosphere(true)
+                .ambientLight(0.8f)
+                .cloudsEnabled(true)
+                .rainEnabled(true)
+                .starsVisibleDuringDay(false)
+                .generate();
+
+        // BINARY_WORLD - Toxic atmosphere with dual stars
+        registerPlanet("binary_world")
+                .gravity(0.8f)
+                .surfaceBlock("minecraft:purple_terracotta")
+                .subsurfaceBlock("minecraft:magenta_terracotta")
+                .skyColor(0xFF6699)
+                .fogColor(0xFF3366)
+                .hasAtmosphere(true)
+                .ambientLight(0.9f)
+                .cloudsEnabled(true)
+                .rainEnabled(true)
+                .starsVisibleDuringDay(false)
                 .generate();
 
     }

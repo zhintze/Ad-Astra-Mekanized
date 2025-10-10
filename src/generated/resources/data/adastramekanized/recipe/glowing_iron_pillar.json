@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "adastramekanized:iron_pillar"
+    },
+    {
+      "item": "minecraft:glowstone_dust"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "adastramekanized:glowing_iron_pillar"
+  }
+}

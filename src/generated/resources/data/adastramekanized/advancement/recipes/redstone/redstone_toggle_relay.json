@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_steel_sheet": {
+    "has_fan": {
       "conditions": {
         "items": [
           {
-            "items": "adastramekanized:steel_sheet"
+            "items": "adastramekanized:fan"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_steel_sheet"
+      "has_fan"
     ]
   ],
   "rewards": {

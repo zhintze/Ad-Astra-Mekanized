@@ -8,22 +8,28 @@
       "item": "minecraft:lightning_rod"
     },
     {
-      "item": "adastramekanized:steel_sheet"
-    },
-    {
-      "item": "minecraft:redstone_block"
-    },
-    {
-      "item": "minecraft:redstone_block"
-    },
-    {
-      "item": "adastramekanized:etrionic_capacitor"
-    },
-    {
-      "item": "adastramekanized:steel_sheet"
-    },
-    {
       "item": "minecraft:lightning_rod"
+    },
+    {
+      "item": "minecraft:redstone_block"
+    },
+    {
+      "item": "minecraft:redstone_block"
+    },
+    {
+      "item": "adastramekanized:etrionic_core"
+    },
+    {
+      "item": "adastramekanized:etrionic_core"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
+    },
+    {
+      "item": "adastramekanized:steel_sheet"
     },
     {
       "item": "adastramekanized:steel_sheet"

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_desh_pillar": {
+      "conditions": {
+        "items": [
+          {
+            "items": "adastramekanized:desh_pillar"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "adastramekanized:glowing_desh_pillar"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_desh_pillar"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "adastramekanized:glowing_desh_pillar"
+    ]
+  }
+}

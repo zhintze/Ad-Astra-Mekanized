@@ -108,20 +108,60 @@ public class RocketMenu extends AbstractContainerMenu {
      */
     private boolean containsValidFuel(ItemStack stack) {
         IFluidHandlerItem fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+
+        // Fallback: try Mekanism's attachment system if standard capability is null
         if (fluidHandler == null) {
+            com.hecookin.adastramekanized.AdAstraMekanized.LOGGER.debug("No FluidHandler capability for item: {}, trying Mekanism fallback", stack.getItem());
+            fluidHandler = getMekanismFluidHandler(stack);
+        }
+
+        if (fluidHandler == null) {
+            com.hecookin.adastramekanized.AdAstraMekanized.LOGGER.debug("No fluid handler found for item: {}", stack.getItem());
             return false;
         }
+
+        com.hecookin.adastramekanized.AdAstraMekanized.LOGGER.debug("Checking fuel for item: {}, tanks: {}", stack.getItem(), fluidHandler.getTanks());
 
         // Check if the item contains any fluid
         for (int tank = 0; tank < fluidHandler.getTanks(); tank++) {
             FluidStack fluidStack = fluidHandler.getFluidInTank(tank);
+            com.hecookin.adastramekanized.AdAstraMekanized.LOGGER.debug("Tank {}: {}", tank, fluidStack);
+
             if (!fluidStack.isEmpty()) {
+                boolean isValid = rocket.fluidContainer().isFluidValid(0, fluidStack);
+                com.hecookin.adastramekanized.AdAstraMekanized.LOGGER.debug("Fluid {} is valid: {}", fluidStack.getFluid(), isValid);
+
                 // Check if this fluid is valid for the rocket's fuel tank (tank 0)
-                return rocket.fluidContainer().isFluidValid(0, fluidStack);
+                if (isValid) {
+                    return true;
+                }
             }
         }
 
         return false;
+    }
+
+    /**
+     * Tries to get a fluid handler using Mekanism's attachment system (reflection-based fallback)
+     */
+    private IFluidHandlerItem getMekanismFluidHandler(ItemStack stack) {
+        try {
+            // Try to access: mekanism.common.attachments.containers.ContainerType.FLUID.createHandler(stack)
+            // Note: createHandler (not createHandlerIfData) handles empty containers properly
+            Class<?> containerTypeClass = Class.forName("mekanism.common.attachments.containers.ContainerType");
+            Object fluidContainerType = containerTypeClass.getField("FLUID").get(null);
+            Object handler = containerTypeClass.getMethod("createHandler", ItemStack.class)
+                .invoke(fluidContainerType, stack);
+
+            if (handler instanceof IFluidHandlerItem) {
+                com.hecookin.adastramekanized.AdAstraMekanized.LOGGER.debug("Successfully got Mekanism fluid handler for item: {}", stack.getItem());
+                return (IFluidHandlerItem) handler;
+            }
+        } catch (Exception e) {
+            // Mekanism not present or reflection failed - this is expected when Mekanism isn't loaded
+            com.hecookin.adastramekanized.AdAstraMekanized.LOGGER.debug("Could not access Mekanism fluid handler (Mekanism may not be loaded): {}", e.getMessage());
+        }
+        return null;
     }
 
     @Override

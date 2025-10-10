@@ -1,0 +1,21 @@
+{
+  "name": "Power Systems",
+  "icon": "minecraft:redstone",
+  "category": "adastramekanized:power_systems",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Space stations and planetary bases require reliable power systems. Ad Astra Mekanized uses Forge Energy (FE/RF) for all power requirements, making it compatible with most tech mods."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Power Requirements",
+      "text": "These machines require power:$(br)$(br)- Oxygen Distributors$(br)- NASA Workbenches$(br)- Power Relays$(br)- Wireless Power Relays$(br)- Various other machinery$(br)$(br)Use any FE/RF power generation system to supply energy."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Power Distribution",
+      "text": "Power can be distributed using:$(br)$(br)1. $(bold)Direct connections$() - Connect machines to generators$(br)2. $(bold)Power cables$() - Use cables from tech mods$(br)3. $(bold)Power Relays$() - Transfer power over distances$(br)4. $(bold)Wireless Relays$() - Wireless power transmission"
+    }
+  ]
+}

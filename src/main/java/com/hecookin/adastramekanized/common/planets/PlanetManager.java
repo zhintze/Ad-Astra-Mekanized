@@ -104,6 +104,12 @@ public class PlanetManager {
                 AdAstraMekanized.LOGGER.info("Planet data loading completed. {} planets loaded",
                         registry.getPlanetCount());
 
+                // Debug: List all loaded planets
+                AdAstraMekanized.LOGGER.debug("Loaded planets:");
+                for (var planet : registry.getAllPlanets()) {
+                    AdAstraMekanized.LOGGER.debug("  - {} ({})", planet.id(), planet.displayName());
+                }
+
             return CompletableFuture.completedFuture(null);
         } catch (Exception e) {
             AdAstraMekanized.LOGGER.error("Failed to load planet data", e);

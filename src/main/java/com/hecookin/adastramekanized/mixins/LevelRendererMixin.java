@@ -46,6 +46,12 @@ public class LevelRendererMixin {
 
         Planet planet = PlanetRegistry.getInstance().getPlanet(planetId);
 
+        // Debug: Check if planet was found
+        if (planet == null) {
+            AdAstraMekanized.LOGGER.debug("Planet not found in registry for dimension: {} (registry has {} planets)",
+                dimensionKey.location(), PlanetRegistry.getInstance().getPlanetCount());
+        }
+
         // Only replace sky rendering for planets with custom celestial bodies
         if (planet != null && planet.rendering() != null && planet.rendering().celestialBodies() != null) {
             // Cancel vanilla sky rendering

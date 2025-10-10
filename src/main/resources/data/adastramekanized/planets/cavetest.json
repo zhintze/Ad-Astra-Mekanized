@@ -24,5 +24,48 @@
     "sky_color": 7907327,
     "fog_color": 65280,
     "ambient_light": 0.1
+  },
+  "rendering": {
+    "sky": {
+      "sky_color": 7907327,
+      "sunrise_color": 16777087,
+      "custom_sky": true,
+      "has_stars": true,
+      "star_count": 15000,
+      "star_brightness": 1.0,
+      "star_visibility": "night_only"
+    },
+    "fog": {
+      "fog_color": 65280,
+      "has_fog": true,
+      "fog_density": 0.5,
+      "near_plane": 192.0,
+      "far_plane": 512.0
+    },
+    "celestial_bodies": {
+      "sun": {
+        "texture": "minecraft:textures/environment/sun.png",
+        "scale": 1.0,
+        "color": 16777215,
+        "visible": false
+      },
+      "moons": [],
+      "visible_planets": []
+    },
+    "weather": {
+      "has_clouds": true,
+      "has_rain": true,
+      "has_snow": true,
+      "has_storms": false,
+      "rain_acidity": 0.0
+    },
+    "particles": {
+      "has_dust": false,
+      "has_ash": false,
+      "has_spores": false,
+      "has_snowfall": false,
+      "particle_density": 0.0,
+      "particle_color": 16777215
+    }
   }
 }

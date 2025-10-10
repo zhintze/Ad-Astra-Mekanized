@@ -1,0 +1,37 @@
+{
+  "name": "Fueling Instructions",
+  "icon": "mekanism:basic_fluid_tank",
+  "category": "adastramekanized:rockets",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Rockets require liquid fuels to launch. You can fuel your rocket in two ways: manually using fluid containers, or automatically using Mekanism's pipe system."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Manual Fueling",
+      "text": "Place your rocket on a launch pad, then sneak-right-click to open the inventory."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Automated Fueling",
+      "text": "For automated fueling, connect Mekanism mechanical pipes directly to the $(bold)bottom$() of your launch pad.$(br)$(br)The launch pad will automatically transfer liquid fuel from the pipes into any rocket placed on top of it."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Convert Gas to Liquid",
+      "text": "Mekanism produces fuels in gas form, but rockets require liquids. Use a Rotary Condensentrator to convert gases to liquids.$(br)$(br)Set the Rotary Condensentrator to 'Condensating' mode to convert gas into liquid form."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "mekanism:rotary_condensentrator",
+      "text": "$(bold)Rotary Condensentrator$()$(br)$(br)Converts between gas and liquid states. Set to Condensating mode (arrow pointing down) to produce liquid fuel for your rockets."
+    },
+
+    {
+      "type": "patchouli:text",
+      "title": "Fuel Types",
+      "text": "$(bold)Tier 1:$() Liquid Ethanol$(br)$(bold)Tier 2:$() Propane$(br)$(bold)Tier 3:$() Ethylene$(br)$(bold)Tier 4:$() Methane"
+    }
+  ]
+}

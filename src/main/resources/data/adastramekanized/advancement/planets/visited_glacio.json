@@ -1,0 +1,10 @@
+{
+  "criteria": {
+    "visited_glacio": {
+      "trigger": "minecraft:changed_dimension",
+      "conditions": {
+        "to": "adastramekanized:glacio"
+      }
+    }
+  }
+}

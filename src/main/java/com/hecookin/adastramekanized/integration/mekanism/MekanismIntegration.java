@@ -682,6 +682,78 @@ public class MekanismIntegration implements IChemicalIntegration, IEnergyIntegra
     }
 
     /**
+     * Add (insert) chemical to an ItemStack
+     */
+    public void addChemical(ItemStack stack, String chemicalName, long amount) {
+        if (!isChemicalSystemAvailable() || stack.isEmpty() || amount <= 0) {
+            return;
+        }
+
+        try {
+            // Get the chemical instance
+            Object chemical;
+            if (chemicalName.equalsIgnoreCase("oxygen")) {
+                chemical = oxygenInstance;
+            } else if (chemicalName.equalsIgnoreCase("nitrogen")) {
+                // Get nitrogen from ChemLibMekanized
+                try {
+                    Class<?> chemLibChemicalsClass = Class.forName("com.hecookin.chemlibmekanized.registry.ChemlibMekanizedChemicals");
+                    Class<?> holderClass = Class.forName("net.minecraft.core.Holder");
+                    Object nitrogenHolder = chemLibChemicalsClass.getField("NITROGEN").get(null);
+                    java.lang.reflect.Method getValue = holderClass.getMethod("value");
+                    chemical = getValue.invoke(nitrogenHolder);
+                } catch (Exception e) {
+                    AdAstraMekanized.LOGGER.debug("ChemLibMekanized nitrogen not available: {}", e.getMessage());
+                    return;
+                }
+            } else {
+                chemical = getHydrogenInstance();
+            }
+
+            if (chemical == null) {
+                AdAstraMekanized.LOGGER.debug("Chemical instance not found for: {}", chemicalName);
+                return;
+            }
+
+            // Create a ChemicalStack with the chemical and amount
+            Constructor<?> stackConstructor = chemicalStackClass.getConstructor(chemicalClass, long.class);
+            Object chemicalStack = stackConstructor.newInstance(chemical, amount);
+
+            // Get chemical handler capability
+            Class<?> capabilitiesClass = Class.forName("mekanism.common.capabilities.Capabilities");
+            java.lang.reflect.Field chemicalField = capabilitiesClass.getField("CHEMICAL");
+            Object chemicalCapability = chemicalField.get(null);
+
+            Method getCapabilityMethod = chemicalCapability.getClass().getMethod("getCapability", ItemStack.class);
+            Object handler = getCapabilityMethod.invoke(chemicalCapability, stack);
+
+            if (handler != null && chemicalHandlerClass.isInstance(handler)) {
+                AdAstraMekanized.LOGGER.debug("Got chemical handler, calling insertChemical with {} mB of {}", amount, chemicalName);
+                // Insert the chemical (false = actually insert, not simulate)
+                Object result = insertChemicalMethod.invoke(handler, chemicalStack, false);
+                AdAstraMekanized.LOGGER.debug("insertChemical returned: {}", result);
+
+                // Check if anything was inserted (result should be the remainder, EMPTY if all inserted)
+                if (result != null) {
+                    try {
+                        Method getAmountMethod = result.getClass().getMethod("getAmount");
+                        long remainder = (Long) getAmountMethod.invoke(result);
+                        long inserted = amount - remainder;
+                        AdAstraMekanized.LOGGER.debug("Added {} mB of {} to ItemStack ({} mB remainder)", inserted, chemicalName, remainder);
+                    } catch (Exception e2) {
+                        AdAstraMekanized.LOGGER.debug("Added {} mB of {} to ItemStack", amount, chemicalName);
+                    }
+                }
+            } else {
+                AdAstraMekanized.LOGGER.warn("Chemical handler is null or wrong type! handler={}, expected type={}",
+                    handler, chemicalHandlerClass);
+            }
+        } catch (Exception e) {
+            AdAstraMekanized.LOGGER.error("Could not add chemical to ItemStack: ", e);
+        }
+    }
+
+    /**
      * Add chemical tooltip information
      */
     public void addChemicalTooltip(ItemStack stack, List<Component> tooltip, String chemicalName, long capacity) {

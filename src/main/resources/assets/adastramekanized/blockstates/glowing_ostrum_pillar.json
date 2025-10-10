@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "adastramekanized:block/glowing_ostrum_pillar",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "adastramekanized:block/glowing_ostrum_pillar"
+    },
+    "axis=z": {
+      "model": "adastramekanized:block/glowing_ostrum_pillar",
+      "x": 90
+    }
+  }
+}
